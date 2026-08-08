@@ -35,6 +35,8 @@ Open [http://localhost:3000](http://localhost:3000).
 ## Status
 
 Scaffolded: Next.js + Tailwind + shadcn/ui, brand tokens wired into the dark theme, base
-primitives installed (`button`, `input`, `textarea`, `card`, `select`). Homepage/Work/About/
-Contact routes and the ASCII canvas layer are not built yet — see `docs/tasks/` for in-progress
-work and `CLAUDE.md` §0 for current status.
+primitives installed (`button`, `input`, `textarea`, `card`, `select`). Homepage is built
+(static sections, no ASCII canvas layer yet) — nav, hero, about teaser, services grid, how
+we work, selected work, pricing, footer. Work/About/Contact routes and the ASCII canvas layer
+are not built yet — see `docs/tasks/` for in-progress work and `CLAUDE.md` §0 for current
+status.
