@@ -1,5 +1,16 @@
 # TASK: Scaffold the Next.js app
 
+**Status: done.** Scaffolded via `create-next-app` (merged in from a sibling temp dir —
+`create-next-app` refuses to scaffold into a non-empty directory, and hit an unrelated
+upstream timing bug when run directly against the target path). shadcn/ui initialized with
+`button`, `input`, `textarea`, `card`, `select`. Design tokens wired into the `.dark` theme
+block in `src/app/globals.css`. Fonts (Space Grotesk + JetBrains Mono) and hardcoded dark
+theme wired into `src/app/layout.tsx`. Build and lint both pass. Additionally moved the
+wireframe handoff (`Blessed Moon — Website Wireframes.dc.html` → `docs/design/wireframes.dc.html`,
+`screenshots/` → `docs/design/screenshots/`) and split `README.md` into an implementation
+README plus `docs/design-handoff.md`, per `CLAUDE.md` §3.1 — not originally scoped in this
+doc's plan below, but a direct consequence of the app now existing.
+
 ## Current scenario
 
 Wireframe-only repo. No app code exists — only `README.md` (design handoff spec),

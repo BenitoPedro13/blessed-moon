@@ -12,12 +12,14 @@
 
 ## 0. Project context — Blessed Moon Studio website
 
-**Design-stage project entering build. No app code exists yet.** The full design handoff
-lives in `README.md` (screens, tokens, interactions, files) plus
-`Blessed Moon — Website Wireframes.dc.html` (static wireframe reference) and
-`screenshots/*.png` (captures of the four selected screens). `README.md` is the source of
-truth for structure, copy, and design tokens — do not duplicate its content here; this file
-covers *how to work*, not *what to build*.
+**Scaffolded, no pages built yet.** Next.js + Tailwind v4 + shadcn/ui are installed and the
+brand design tokens are wired into the dark theme (`TASK-scaffold-nextjs.md`). The full
+design handoff lives in `docs/design-handoff.md` (screens, tokens, interactions, files) plus
+`docs/design/wireframes.dc.html` (static wireframe reference) and
+`docs/design/screenshots/*.png` (captures of the four selected screens).
+`docs/design-handoff.md` is the source of truth for structure, copy, and design tokens — do
+not duplicate its content here; this file covers *how to work*, not *what to build*. The root
+`README.md` is the implementation README (setup, scripts, status).
 
 Blessed Moon Studio is a software/web design agency. This repo is its marketing site:
 homepage + Work, About, Contact subpages. Chosen direction: **dark, terminal/TUI-inspired,
@@ -42,45 +44,47 @@ aesthetic).
   was written by the same voice — if it reads like generic SaaS marketing copy, it's wrong
   for this brand.
 
-### Stack (per `README.md` "About the Design Files")
+### Stack (per `docs/design-handoff.md` "About the Design Files")
 
-| Layer | Choice |
-|---|---|
-| Framework | **Next.js** (App Router, TypeScript) — always the latest stable major, never a pinned number (see §2.0) |
-| Styling / components | **Tailwind CSS + shadcn/ui** — restyle shadcn primitives (Button, Input, Textarea, Card, Select) to match the design tokens in `README.md`, don't hand-roll equivalents |
-| Atmosphere effect | Custom **WebGL/canvas ASCII shader** layer, full-bleed behind page content, scroll-driven keyframe morph between sections — see `README.md` References for the two source techniques (offscreencanvas.com) this is built from. Not an off-the-shelf package; expect to write and tune the shader/canvas code directly |
-| Deployment target | Not yet decided — treat as an open question, don't assume Vercel/Railway/etc. without asking |
+| Layer | Choice | Status |
+|---|---|---|
+| Framework | **Next.js 16** (App Router, TypeScript, Turbopack, `src/` dir, `@/*` alias) — always the latest stable major, never a pinned number (see §2.0) | scaffolded |
+| Styling / components | **Tailwind CSS v4 + shadcn/ui** — CSS-first config in `src/app/globals.css` (no `tailwind.config.*`); brand tokens (bg `#050505`, accent `#ff6a1f`, radius `0`, fonts) wired into the `.dark` theme block; `button`, `input`, `textarea`, `card`, `select` primitives installed | scaffolded |
+| Atmosphere effect | Custom **WebGL/canvas ASCII shader** layer, full-bleed behind page content, scroll-driven keyframe morph between sections — see `docs/design-handoff.md` References for the two source techniques (offscreencanvas.com) this is built from. Not an off-the-shelf package; expect to write and tune the shader/canvas code directly | not started |
+| Pages | `/`, `/work`, `/about`, `/contact` per `docs/design-handoff.md` Screens | not started (placeholder `src/app/page.tsx` only) |
+| Deployment target | Not yet decided — treat as an open question, don't assume Vercel/Railway/etc. without asking | open |
 
-**Version numbers written anywhere in this file or `README.md` are a snapshot at time of
-writing, not a pin.** Treat every one as potentially stale — see §2.0 before scaffolding or
-adding a dependency.
+**Version numbers written anywhere in this file or `docs/design-handoff.md` are a snapshot at
+time of writing, not a pin.** Treat every one as potentially stale — see §2.0 before adding a
+dependency.
 
 ### Things that must not break
 
 - **No border-radius / sharp corners** — explicit intentional choice per the TUI aesthetic
-  (`README.md` Design Tokens). Don't let shadcn's default rounded corners slip through
-  unstyled.
-- **Dark theme only** — this is not a site with a light-mode toggle; don't add one
-  speculatively.
+  (`docs/design-handoff.md` Design Tokens; `--radius: 0rem` in `src/app/globals.css`). Don't
+  let shadcn's default rounded corners slip back in on new components.
+- **Dark theme only** — `<html class="dark">` is hardcoded in `src/app/layout.tsx`; this is
+  not a site with a light-mode toggle, don't add one speculatively.
 - **The ASCII effect must degrade gracefully.** Feature-detect WebGL support; a user without
   it should still get a fully readable, correctly laid-out page (plain dark background is an
   acceptable fallback) — never a blank or broken hero.
 - **Section numbering (`01 / ABOUT`, `02 / SERVICES`, …) drives the scroll-morph keyframes**
-  — it's a structural/interaction contract from the Dragonfly reference (`README.md`
-  References), not decorative. Don't renumber or drop a section without checking what keyframe
-  it drove.
-- **Wireframe copy and section order are final** per `README.md` ("Fidelity"). Colors/type
-  are a starting palette, not locked — but section content and structure should not be
-  silently rewritten; if something in the wireframe seems wrong, flag it before changing it.
+  — it's a structural/interaction contract from the Dragonfly reference
+  (`docs/design-handoff.md` References), not decorative. Don't renumber or drop a section
+  without checking what keyframe it drove.
+- **Wireframe copy and section order are final** per `docs/design-handoff.md` ("Fidelity").
+  Colors/type are a starting palette, not locked — but section content and structure should
+  not be silently rewritten; if something in the wireframe seems wrong, flag it before
+  changing it.
 
 ### Start here
 
-1. `README.md` — the design handoff: screens, copy, interactions, design tokens, files,
-   references.
-2. `Blessed Moon — Website Wireframes.dc.html` + `screenshots/*.png` — visual reference for
+1. `docs/design-handoff.md` — the design handoff: screens, copy, interactions, design
+   tokens, files, references.
+2. `docs/design/wireframes.dc.html` + `docs/design/screenshots/*.png` — visual reference for
    the four selected screens (`homepage-1c`, `work-1d`, `about-1e`, `contact-1f`).
-3. **Next step:** scaffold the Next.js app (see §1 — this itself gets a task doc first) and
-   start on the homepage per the wireframe.
+3. **Next step:** build the homepage per the wireframe (new task doc — start with static
+   sections, add the ASCII canvas layer once the layout is right).
 
 ---
 
@@ -187,18 +191,19 @@ change.
 
 - **`CLAUDE.md`** — if the change alters the stack, architecture, or any of §0's "things
   that must not break," update the corresponding section here.
-- **`README.md`** — this is the design spec/handoff (screens, tokens, interactions,
-  references). Once the app exists, `README.md` should evolve into the *implementation*
-  README (setup, scripts, structure) — fold the wireframe-handoff content into a `docs/`
-  location at that point rather than deleting it, since it's the historical source of truth
-  for *why* the design looks the way it does.
+- **`README.md`** — the *implementation* README (setup, scripts, status). Update when
+  scripts, stack, or the "Status" section change.
+- **`docs/design-handoff.md`** — the design spec (screens, tokens, interactions, references).
+  Historical source of truth for *why* the design looks the way it does — update it only if
+  a design decision genuinely changes (not just because the implementation differs slightly
+  from the wireframe pixels).
 - **`docs/tasks/`** — keep task docs in sync while work is in progress (§1.2).
 
 ### 3.2 How to apply it
 
 Treat "docs updated" as an explicit checklist item before declaring a task complete. When
 unsure whether a doc is affected, grep for the thing you changed (a section name, a design
-token, a route) across `README.md` and `CLAUDE.md`.
+token, a route) across `README.md`, `docs/design-handoff.md`, and `CLAUDE.md`.
 
 ### 3.3 Why this matters
 
@@ -213,20 +218,26 @@ the wrong spec.
 **Rule:** Single Next.js app, not a monorepo — no need for workspace tooling unless a real
 second package emerges.
 
-- **Layout (proposed, once scaffolded):**
+- **Layout (current + proposed):**
 
   ```
-  app/              Next.js App Router routes: /, /work, /about, /contact
-  components/       shadcn primitives + restyled composites (ascii-canvas, nav, cards, …)
-  docs/tasks/        task docs (§1)
-  screenshots/       wireframe reference captures (existing)
+  src/app/            Next.js App Router routes: / (placeholder) — /work, /about, /contact proposed
+  src/components/ui/  shadcn primitives (button, input, textarea, card, select) — scaffolded
+  src/lib/             shadcn's cn() helper etc. — scaffolded
+  docs/design-handoff.md   design spec (screens, tokens, interactions, references)
+  docs/design/         wireframes.dc.html + screenshots/ (design reference assets)
+  docs/tasks/          task docs (§1)
   ```
 
-- **Package manager:** decide at scaffold time (the initial `TASK-scaffold-nextjs.md`),
-  then never mix.
-- **Styling:** Tailwind CSS + shadcn/ui, restyled to the design tokens in `README.md` —
-  don't introduce a second styling system (CSS-in-JS, another component library) alongside
-  it.
+  Composites not yet created: `src/components/` (restyled composites — nav, ascii-canvas,
+  section cards, etc.) will live alongside `src/components/ui/` once the homepage build
+  starts.
+
+- **Package manager:** **pnpm** (decided at scaffold time via `TASK-scaffold-nextjs.md`),
+  never mixed.
+- **Styling:** Tailwind CSS v4 + shadcn/ui, restyled to the design tokens in
+  `docs/design-handoff.md` (already wired into `src/app/globals.css`) — don't introduce a
+  second styling system (CSS-in-JS, another component library) alongside it.
 
 **Why:** this is a marketing site, not a distributed system — the process should stay
 lightweight and match the size of the problem, not import heavyweight process from
@@ -239,8 +250,6 @@ unrelated prior projects.
   to work that followed the task-doc process in §1; it is not blanket permission for
   destructive git operations (force-push, `reset --hard`, etc.), which still require
   explicit confirmation.
-- Note: **this directory is not yet a git repository.** Confirm with the user before
-  running `git init` and making the first commit.
 
 ---
 
@@ -248,10 +257,10 @@ unrelated prior projects.
 
 | Phase | Rule | Output |
 |-------|------|--------|
-| **Stack** | Next.js + Tailwind + shadcn/ui + custom WebGL ASCII shader layer (design-decided; nothing scaffolded yet) | Single-app repo: `app/`, `components/`, `docs/tasks/` |
-| **Before** | Write a task document first — including for the initial scaffold | `docs/tasks/TASK-<slug>.md`: current scenario, planned changes (file by file), why, affected-files table |
+| **Stack** | Next.js 16 + Tailwind v4 + shadcn/ui (scaffolded) + custom WebGL ASCII shader layer (not started) | Single-app repo: `src/app/`, `src/components/ui/`, `docs/tasks/` |
+| **Before** | Write a task document first | `docs/tasks/TASK-<slug>.md`: current scenario, planned changes (file by file), why, affected-files table |
 | **During** | Use CLIs / generators — `create-next-app`, shadcn CLI; never hand-roll what a generator produces | Canonical, reproducible output; `[VERIFY: ...]` inline for anything unconfirmed (esp. WebGL) |
-| **After** | Update `README.md` / `CLAUDE.md` as needed, then commit — auto-committed once verified | Docs in sync, a commit |
+| **After** | Update `README.md` / `docs/design-handoff.md` / `CLAUDE.md` as needed, then commit — auto-committed once verified | Docs in sync, a commit |
 
 **The loop:** plan → align → build with tooling → document → commit → done. **Never
 broken:** sharp corners / no border-radius, dark-only theme, graceful WebGL fallback,
