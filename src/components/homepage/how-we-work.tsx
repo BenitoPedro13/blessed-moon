@@ -1,3 +1,4 @@
+import { Reveal } from "@/components/reveal";
 import { SectionHeading } from "@/components/section-heading";
 
 const STEPS = [
@@ -9,7 +10,7 @@ const STEPS = [
 
 export function HowWeWork() {
   return (
-    <section data-ascii-keyframe="2" className="px-7 py-13 sm:py-16">
+    <section data-ascii-keyframe="2" className="px-7 py-16 sm:py-20">
       <SectionHeading number="03" label="HOW WE WORK" />
       <div className="flex flex-col sm:flex-row">
         {STEPS.map((step, i) => (
@@ -19,12 +20,14 @@ export function HowWeWork() {
               i > 0 ? "border-t border-border/60 sm:border-t-0 sm:border-l" : ""
             }`}
           >
-            <span className="mb-2 block font-mono text-xl font-semibold text-primary">
-              {step.number}
-            </span>
-            <p className="max-w-[16ch] font-sans text-[13px] leading-[1.3] text-foreground/85">
-              {step.text}
-            </p>
+            <Reveal delay={i * 0.07}>
+              <span className="mb-2 block font-mono text-xl font-semibold text-primary">
+                {step.number}
+              </span>
+              <p className="max-w-[16ch] font-sans text-[13px] leading-[1.3] text-foreground/85">
+                {step.text}
+              </p>
+            </Reveal>
           </div>
         ))}
       </div>

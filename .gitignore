@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local screen recordings used for design/debugging review — not repo assets
+/VIDEOS/

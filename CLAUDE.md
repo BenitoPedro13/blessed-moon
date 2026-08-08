@@ -50,7 +50,8 @@ aesthetic).
 |---|---|---|
 | Framework | **Next.js 16** (App Router, TypeScript, Turbopack, `src/` dir, `@/*` alias) — always the latest stable major, never a pinned number (see §2.0) | scaffolded |
 | Styling / components | **Tailwind CSS v4 + shadcn/ui** — CSS-first config in `src/app/globals.css` (no `tailwind.config.*`); brand tokens (bg `#050505`, accent `#ff6a1f`, radius `0`, fonts) wired into the `.dark` theme block; `button`, `input`, `textarea`, `card`, `select` primitives installed | scaffolded |
-| Atmosphere effect | Custom **WebGL2/canvas ASCII shader** layer, full-bleed behind page content, scroll-driven keyframe morph between sections — see `docs/design-handoff.md` References for the two source techniques (offscreencanvas.com) this is built from. Hand-written raw WebGL2 (no Three.js): one fragment shader blends procedural SDF shapes per keyframe, then post-processes through a glyph-atlas ASCII pass (`TASK-ascii-canvas-layer.md`) | built on homepage (`src/components/ascii-canvas.tsx`, `src/lib/ascii-canvas/`) |
+| Atmosphere effect | Full-bleed ASCII moon background, scroll-driven zoom/rotation/drift, built on canvasui.dev's **AsciiObject** component (via shadcn CLI — see §2, `TASK-ascii-canvas-layer.md`). A hand-written raw-WebGL2 version was tried first and dropped in favor of this: AsciiObject's edge-aware glyph matching, DRACO support, and reduced-motion handling all beat what was being hand-rolled. Plus animate-ui's **StarsBackground** behind it, and canvasui's **ParticleObject**/**ParticleScroll** for a closing-CTA moment and the content-dissolve panel (`TASK-sound-and-boot.md`) | built on homepage |
+| Sound / loading | Opt-in sound system (`src/components/sound-provider.tsx`, muted by default) and a terminal boot sequence on load (`src/components/boot-sequence.tsx`) — `TASK-sound-and-boot.md` | built on homepage |
 | Pages | `/`, `/work`, `/about`, `/contact` per `docs/design-handoff.md` Screens | `/` (homepage) built as static sections (`TASK-homepage-sections.md`) with the ASCII canvas layer wired in (`TASK-ascii-canvas-layer.md`); `/work`, `/about`, `/contact` not started |
 | Deployment target | Not yet decided — treat as an open question, don't assume Vercel/Railway/etc. without asking | open |
 
@@ -225,13 +226,19 @@ second package emerges.
   ```
   src/app/                  Next.js App Router routes: / (built) — /work, /about, /contact proposed
   src/components/ui/        shadcn primitives (button, input, textarea, card, select) — scaffolded
-  src/components/homepage/  homepage-only section composites (hero, about-teaser, services-grid,
-                             how-we-work, selected-work, pricing-table) — built, each carries a
-                             data-ascii-keyframe attribute for the canvas morph
+  src/components/canvasui/  canvasui.dev components via shadcn CLI: AsciiObject (moon bg),
+                             ParticleObject (closing CTA), ParticleScroll (dissolve panel),
+                             DecryptReveal (installed, currently unused) — built
+  src/components/animate-ui/ StarsBackground via shadcn CLI — built
+  src/components/homepage/  homepage-only section composites (hero, about-teaser, services-focus,
+                             how-we-work, selected-work, pricing-table, closing-cta) — built,
+                             each carries a data-ascii-keyframe attribute for the moon's morph
   src/components/           shared composites (site-nav, site-footer, section-heading,
-                             ascii-canvas) — built
-  src/lib/                   shadcn's cn() helper etc.; ascii-canvas/ — shader source, glyph
-                             atlas, scroll-progress tracker — built
+                             ascii-canvas, sound-provider, sound-toggle, boot-sequence) — built
+  src/lib/                   shadcn's cn() helper etc.; ascii-canvas/scroll-progress.ts —
+                             scroll-position tracker driving the moon's morph — built
+  public/sounds/              hover/click/toggle/ambient audio, CC0 — see README Credits
+  public/models/               moon.glb — see TASK-ascii-canvas-layer.md for the asset pipeline
   docs/design-handoff.md    design spec (screens, tokens, interactions, references)
   docs/design/               wireframes.dc.html + screenshots/ (design reference assets)
   docs/tasks/                task docs (§1)
@@ -261,12 +268,12 @@ unrelated prior projects.
 
 | Phase | Rule | Output |
 |-------|------|--------|
-| **Stack** | Next.js 16 + Tailwind v4 + shadcn/ui (scaffolded) + custom WebGL ASCII shader layer (not started) | Single-app repo: `src/app/`, `src/components/ui/`, `docs/tasks/` |
+| **Stack** | Next.js 16 + Tailwind v4 + shadcn/ui + canvasui.dev/animate-ui components (ASCII moon bg, particles, dissolve panel, star field) + sound + boot sequence | Single-app repo: `src/app/`, `src/components/`, `docs/tasks/` |
 | **Before** | Write a task document first | `docs/tasks/TASK-<slug>.md`: current scenario, planned changes (file by file), why, affected-files table |
-| **During** | Use CLIs / generators — `create-next-app`, shadcn CLI; never hand-roll what a generator produces | Canonical, reproducible output; `[VERIFY: ...]` inline for anything unconfirmed (esp. WebGL) |
+| **During** | Use CLIs / generators — `create-next-app`, shadcn CLI; never hand-roll what a generator produces | Canonical, reproducible output; `[VERIFY: ...]` inline for anything unconfirmed (esp. WebGL/browser APIs) |
 | **After** | Update `README.md` / `docs/design-handoff.md` / `CLAUDE.md` as needed, then commit — auto-committed once verified | Docs in sync, a commit |
 
 **The loop:** plan → align → build with tooling → document → commit → done. **Never
 broken:** sharp corners / no border-radius, dark-only theme, graceful WebGL fallback,
-section numbering driving the scroll-morph, wireframe copy and structure treated as final
-unless flagged.
+section numbering driving the moon's morph, wireframe copy treated as a starting point (not
+locked — confirmed by the user) with changes flagged in the relevant task doc.

@@ -1,5 +1,9 @@
+"use client";
+
 import Link from "next/link";
 
+import { useSound } from "@/components/sound-provider";
+import { SoundToggle } from "@/components/sound-toggle";
 import { Button } from "@/components/ui/button";
 
 const NAV_LINKS = [
@@ -11,10 +15,14 @@ const NAV_LINKS = [
 ] as const;
 
 export function SiteNav() {
+  const { playHover, playClick } = useSound();
+
   return (
     <header className="sticky top-0 z-50 flex items-center justify-between border-b border-border/60 bg-background/90 px-7 py-4 backdrop-blur-sm">
       <Link
         href="/"
+        onMouseEnter={playHover}
+        onClick={playClick}
         className="font-mono text-sm font-semibold tracking-[2px] text-foreground"
       >
         {">|<"}
@@ -24,20 +32,25 @@ export function SiteNav() {
           <Link
             key={link.label}
             href={link.href}
+            onMouseEnter={playHover}
+            onClick={playClick}
             className="transition-colors hover:text-foreground"
           >
             {link.label}
           </Link>
         ))}
       </nav>
-      <Button
-        variant="outline"
-        size="sm"
-        render={<Link href="/contact" />}
-        className="rounded-none border-primary font-mono text-[10px] tracking-[0.6px] text-primary uppercase hover:bg-primary hover:text-primary-foreground"
-      >
-        Book a call
-      </Button>
+      <div className="flex items-center gap-3">
+        <SoundToggle />
+        <Button
+          variant="outline"
+          size="sm"
+          render={<Link href="/contact" onMouseEnter={playHover} onClick={playClick} />}
+          className="rounded-none border-primary font-mono text-[10px] tracking-[0.6px] text-primary uppercase hover:bg-primary hover:text-primary-foreground"
+        >
+          Book a call
+        </Button>
+      </div>
     </header>
   );
 }

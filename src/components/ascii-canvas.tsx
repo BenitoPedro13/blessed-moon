@@ -2,185 +2,163 @@
 
 import { useEffect, useRef } from "react";
 
-import { createGlyphAtlas, GLYPH_COUNT } from "@/lib/ascii-canvas/glyph-atlas";
+import { createAsciiObject } from "@/components/canvasui/AsciiObject";
 import { createScrollTracker } from "@/lib/ascii-canvas/scroll-progress";
-import {
-  CELL_SIZE_PX,
-  FRAGMENT_SHADER,
-  intensityForMorph,
-  VERTEX_SHADER,
-} from "@/lib/ascii-canvas/shaders";
 
-function compileShader(
-  gl: WebGL2RenderingContext,
-  type: number,
-  source: string,
-): WebGLShader | null {
-  const shader = gl.createShader(type);
-  if (!shader) return null;
-  gl.shaderSource(shader, source);
-  gl.compileShader(shader);
-  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    console.error("ascii-canvas: shader compile error", gl.getShaderInfoLog(shader));
-    gl.deleteShader(shader);
-    return null;
-  }
-  return shader;
+/** Zoom (scale) at morph values 0 (Hero) through 5 (closing CTA). Effective
+ * world-space radius is scale/2 (see modelMaxDim in AsciiObject) — stays
+ * under ~3 so there's always real clearance from the camera's fixed
+ * 4.2-unit distance; a more aggressive close-up previously put the camera
+ * almost inside the sphere, clipping it into a jagged wedge instead of a
+ * circle. From keyframe 2 (Services) onward the pinned-focus sections put
+ * large centered text in the middle of the viewport, so the moon shrinks
+ * hard and moves to a corner there instead of competing with it — it was
+ * previously sitting directly on top of the Services text, unreadable. */
+const SCALE_BY_MORPH = [6.0, 3.6, 1.3, 1.1, 1.0, 0.9];
+
+/** Horizontal/vertical drift (scene units) at the same morph values — the
+ * moon sweeps across the frame as the page scrolls, breaking the frame
+ * edges at Hero, rather than spinning in place dead-center the whole time.
+ * Modeled on the Dragonfly reference. From keyframe 2 onward it parks in a
+ * corner (alternating per section) to stay clear of the pinned-focus
+ * content's centered text. */
+const OFFSET_X_BY_MORPH = [1.3, 0.6, 1.7, -1.7, 1.7, -1.7];
+const OFFSET_Y_BY_MORPH = [0.3, 0.1, 0.9, 0.9, -0.9, -0.9];
+
+/** How quickly the displayed transform eases toward the scroll-driven
+ * target each frame (0–1, higher = snappier). Without this the moon
+ * rotation/zoom tracks the scrollbar exactly 1:1, which reads as
+ * mechanical; easing gives it weight/lag, closer to a directed camera
+ * move than a scrollbar-driven puppet. */
+const EASE = 0.07;
+
+function interpolate(table: number[], morph: number): number {
+  const idx = Math.max(0, Math.min(Math.floor(morph), table.length - 1));
+  const next = Math.min(idx + 1, table.length - 1);
+  const frac = idx === next ? 0 : morph - idx;
+  return table[idx] + (table[next] - table[idx]) * frac;
 }
 
-function linkProgram(
-  gl: WebGL2RenderingContext,
-  vertexShader: WebGLShader,
-  fragmentShader: WebGLShader,
-): WebGLProgram | null {
-  const program = gl.createProgram();
-  if (!program) return null;
-  gl.attachShader(program, vertexShader);
-  gl.attachShader(program, fragmentShader);
-  gl.linkProgram(program);
-  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-    console.error("ascii-canvas: program link error", gl.getProgramInfoLog(program));
-    gl.deleteProgram(program);
-    return null;
-  }
-  return program;
+/** Full presence through Hero/About, recedes to a dim ambient corner
+ * presence from Services through Pricing (keyframe 2–4) so it doesn't
+ * compete with the pinned-focus sections' large centered text, then fades
+ * nearly all the way out across the Pricing → closing-CTA transition
+ * (keyframe 5) — the CTA has its own dedicated ParticleObject moon, so
+ * this one needs to get out of its way rather than visually collide with
+ * it. "Nearly" rather than fully to 0: it should never go fully dead, per
+ * the "don't stop before the footer" rule, but a redundant second moon
+ * fighting the featured one for the same space is worse than a very faint
+ * residual presence. */
+function opacityForMorph(morph: number): number {
+  if (morph <= 1) return 1;
+  if (morph <= 2) return 1 - (morph - 1) * 0.6;
+  if (morph <= 4) return 0.4;
+  return 0.4 - Math.min(1, morph - 4) * 0.35;
 }
 
 /**
- * Full-bleed WebGL2 ASCII background, scroll-morphed between the keyframe
- * shapes registered by `data-ascii-keyframe` elements elsewhere on the page.
- * Renders nothing (leaving the flat `bg-background` fallback) if WebGL2 or
- * shader compilation isn't available — see CLAUDE.md "graceful WebGL fallback".
+ * Full-bleed ASCII background: a single moon model, present for the whole
+ * page, all the way through the footer — it should never stop animating or
+ * fully disappear. Scroll drives its zoom, rotation, and drift continuously;
+ * no swapping between unrelated objects. See TASK-ascii-canvas-layer.md: an
+ * earlier version cross-faded between moon, microchip, and monitor models
+ * per section, which read as a slideshow of random stock objects rather
+ * than one coherent form,
+ * so it was dropped in favor of this. The moon also happens to be the one
+ * asset that's actually on-brand (the "circuit-moon" logo mark).
  */
 export function AsciiCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const gl = canvas.getContext("webgl2", {
-      alpha: true,
-      antialias: false,
-      premultipliedAlpha: true,
-    });
-    if (!gl) return;
-
-    const vertexShader = compileShader(gl, gl.VERTEX_SHADER, VERTEX_SHADER);
-    const fragmentShader = compileShader(gl, gl.FRAGMENT_SHADER, FRAGMENT_SHADER);
-    if (!vertexShader || !fragmentShader) return;
-
-    const program = linkProgram(gl, vertexShader, fragmentShader);
-    if (!program) return;
-
-    gl.useProgram(program);
-    gl.enable(gl.BLEND);
-    gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-
-    const uniforms = {
-      resolution: gl.getUniformLocation(program, "uResolution"),
-      time: gl.getUniformLocation(program, "uTime"),
-      morph: gl.getUniformLocation(program, "uMorph"),
-      intensity: gl.getUniformLocation(program, "uIntensity"),
-      cellSize: gl.getUniformLocation(program, "uCellSize"),
-      glyphCount: gl.getUniformLocation(program, "uGlyphCount"),
-      glyphAtlas: gl.getUniformLocation(program, "uGlyphAtlas"),
-    };
-
-    const texture = gl.createTexture();
-    gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    const instance = createAsciiObject(
+      { canvas },
+      {
+        src: "/models/moon.glb",
+        scale: SCALE_BY_MORPH[0],
+        cellSize: 6,
+        colored: false,
+        color: "#c9c7c0",
+        // Lower edgeContrast (was 2.4) so the crater/regolith shading
+        // itself drives glyph choice instead of the algorithm snapping
+        // almost everything to edge-tracing glyphs and flattening the
+        // photographic tonal detail into a near-blank disc. Higher
+        // contrast + exposure pull that subtle tonal range out further.
+        contrast: 2.2,
+        edgeContrast: 1.3,
+        exposure: 1.4,
+        orbit: false,
+        zoom: false,
+        autoRotate: false,
+        floatIntensity: 0.6,
+        rotationIntensity: 0.3,
+        environmentIntensity: 0.8,
+      },
+    );
+    if (!instance) return;
 
     const tracker = createScrollTracker();
-    const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-
-    let disposed = false;
+    tracker.measure();
     let raf = 0;
-    let atlasReady = false;
+    let displayedScale = SCALE_BY_MORPH[0];
+    let displayedRotation = 0;
+    let displayedX = OFFSET_X_BY_MORPH[0];
+    let displayedY = OFFSET_Y_BY_MORPH[0];
 
-    function resize() {
-      if (!canvas || !gl) return;
-      const width = Math.round(canvas.clientWidth * dpr);
-      const height = Math.round(canvas.clientHeight * dpr);
-      if (canvas.width !== width || canvas.height !== height) {
-        canvas.width = width;
-        canvas.height = height;
-        gl.viewport(0, 0, width, height);
+    function frame() {
+      const morph = tracker.read();
+      const targetScale = interpolate(SCALE_BY_MORPH, morph);
+      const targetRotation = morph * 24;
+      const targetX = interpolate(OFFSET_X_BY_MORPH, morph);
+      const targetY = interpolate(OFFSET_Y_BY_MORPH, morph);
+
+      displayedScale += (targetScale - displayedScale) * EASE;
+      displayedRotation += (targetRotation - displayedRotation) * EASE;
+      displayedX += (targetX - displayedX) * EASE;
+      displayedY += (targetY - displayedY) * EASE;
+
+      instance!.setTransform({
+        scale: displayedScale,
+        rotateY: displayedRotation,
+        xOffset: displayedX,
+        yOffset: displayedY,
+      });
+      if (wrapperRef.current) {
+        wrapperRef.current.style.opacity = String(opacityForMorph(morph));
       }
+      raf = requestAnimationFrame(frame);
+    }
+
+    function handleResize() {
       tracker.measure();
     }
 
-    const resizeObserver = new ResizeObserver(resize);
-    resizeObserver.observe(canvas);
-    window.addEventListener("resize", tracker.measure);
-    resize();
-
-    const start = performance.now();
-
-    function frame(now: number) {
-      if (disposed || !gl || !canvas) return;
-      raf = requestAnimationFrame(frame);
-      if (!atlasReady) return;
-
-      const reduced = reducedMotionQuery.matches;
-      const t = reduced ? 0 : (now - start) / 1000;
-      const morph = tracker.read();
-
-      gl.clearColor(0, 0, 0, 0);
-      gl.clear(gl.COLOR_BUFFER_BIT);
-
-      gl.uniform2f(uniforms.resolution, canvas.width, canvas.height);
-      gl.uniform1f(uniforms.time, t);
-      gl.uniform1f(uniforms.morph, morph);
-      gl.uniform1f(uniforms.intensity, intensityForMorph(morph));
-      gl.uniform1f(uniforms.cellSize, CELL_SIZE_PX * dpr);
-      gl.uniform1f(uniforms.glyphCount, GLYPH_COUNT);
-      gl.activeTexture(gl.TEXTURE0);
-      gl.bindTexture(gl.TEXTURE_2D, texture);
-      gl.uniform1i(uniforms.glyphAtlas, 0);
-
-      gl.drawArrays(gl.TRIANGLES, 0, 3);
-    }
-
-    document.fonts.ready.then(() => {
-      if (disposed || !gl) return;
-      const atlas = createGlyphAtlas();
-      gl.bindTexture(gl.TEXTURE_2D, texture);
-      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, atlas);
-      atlasReady = true;
-    });
-
+    window.addEventListener("resize", handleResize);
+    // Re-measure once more shortly after mount: fonts/images can still be
+    // settling layout at effect-mount time, which would otherwise bake in
+    // stale section boundaries for the rest of the page's life (the effect
+    // only runs once).
+    const remeasure = window.setTimeout(() => tracker.measure(), 500);
     raf = requestAnimationFrame(frame);
 
-    function handleVisibility() {
-      if (document.hidden) {
-        cancelAnimationFrame(raf);
-      } else {
-        raf = requestAnimationFrame(frame);
-      }
-    }
-    document.addEventListener("visibilitychange", handleVisibility);
-
     return () => {
-      disposed = true;
       cancelAnimationFrame(raf);
-      resizeObserver.disconnect();
-      window.removeEventListener("resize", tracker.measure);
-      document.removeEventListener("visibilitychange", handleVisibility);
-      gl.deleteTexture(texture);
-      gl.deleteProgram(program);
-      gl.deleteShader(vertexShader);
-      gl.deleteShader(fragmentShader);
+      window.clearTimeout(remeasure);
+      window.removeEventListener("resize", handleResize);
+      instance.destroy();
     };
   }, []);
 
   return (
-    <div className="pointer-events-none fixed inset-0 z-0" aria-hidden="true">
+    <div
+      ref={wrapperRef}
+      className="pointer-events-none fixed inset-0 z-0"
+      aria-hidden="true"
+    >
       <canvas ref={canvasRef} className="h-full w-full" />
     </div>
   );

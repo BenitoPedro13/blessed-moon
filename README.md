@@ -1,8 +1,8 @@
 # Blessed Moon Studio
 
 Marketing site for Blessed Moon Studio — a web design/dev agency. Dark, terminal/TUI-inspired
-aesthetic: full-bleed WebGL ASCII canvas background that morphs on scroll, amber (`#ff6a1f`)
-accent on near-black, sharp corners throughout.
+aesthetic: a full-bleed ASCII moon background that reacts to scroll, amber (`#ff6a1f`) accent
+on near-black, sharp corners throughout, sound, and a terminal boot sequence on load.
 
 Design source of truth: [`docs/design-handoff.md`](docs/design-handoff.md) (screens, copy,
 interactions, design tokens, reference links). Process/working rules: [`CLAUDE.md`](CLAUDE.md).
@@ -12,9 +12,19 @@ interactions, design tokens, reference links). Process/working rules: [`CLAUDE.m
 - [Next.js](https://nextjs.org) (App Router, TypeScript, Turbopack)
 - [Tailwind CSS v4](https://tailwindcss.com) (CSS-first config, no `tailwind.config.*`)
 - [shadcn/ui](https://ui.shadcn.com) — restyled to the brand tokens in `src/app/globals.css`
-- A hand-written WebGL2 ASCII-shader background, scroll-morphed via `data-ascii-keyframe`
-  sections (`src/components/ascii-canvas.tsx`, `src/lib/ascii-canvas/`) — see
-  `docs/design-handoff.md` References
+- [canvasui.dev](https://canvasui.dev) components (via the shadcn CLI, `src/components/canvasui/`):
+  `AsciiObject` for the scroll-driven moon background, `ParticleObject` for the closing CTA's
+  cursor-reactive particle moon, `ParticleScroll` for the dissolve-panel effect wrapping the
+  homepage's content sections
+- [animate-ui](https://animate-ui.com) `StarsBackground` (also via shadcn CLI) for the star
+  field
+- [Motion](https://motion.dev) (`motion/react`) for scroll-reveal and hover animations
+- A small sound system (`src/components/sound-provider.tsx`) — opt-in UI/ambient sound, CC0
+  assets in `public/sounds/`
+- A terminal boot sequence (`src/components/boot-sequence.tsx`) on initial load
+
+See `docs/tasks/TASK-ascii-canvas-layer.md`, `TASK-services-scroll-focus.md`, and
+`TASK-sound-and-boot.md` for how and why this stack evolved.
 
 ## Getting started
 
@@ -38,8 +48,21 @@ Open [http://localhost:3000](http://localhost:3000).
 
 Scaffolded: Next.js + Tailwind + shadcn/ui, brand tokens wired into the dark theme, base
 primitives installed (`button`, `input`, `textarea`, `card`, `select`). Homepage is built —
-nav, hero, about teaser, services grid, how we work, selected work, pricing, footer — with
-the full-bleed WebGL2 ASCII canvas layer mounted behind it, morphing between keyframe shapes
-(mesh → crescent moon → circuit lines → silhouette → dissolve) as the page scrolls.
-Work/About/Contact routes are not built yet — see `docs/tasks/` for in-progress work and
-`CLAUDE.md` §0 for current status.
+nav, hero, about teaser, services, how we work, selected work, pricing, a closing CTA, footer
+— with a full-bleed `AsciiObject` moon background (scroll-driven zoom/rotation/drift) and a
+star field behind it. Everything below Hero lives inside a terminal-framed `ParticleScroll`
+panel (About through the closing CTA). Sound (opt-in, muted by default) and a terminal boot
+sequence are wired in. Work/About/Contact routes are not built yet — see `docs/tasks/` for
+in-progress work and `CLAUDE.md` §0 for current status.
+
+## Credits
+
+Third-party assets used on the homepage, all confirmed free-to-use:
+
+- **Moon 3D model** — rebuilt from a real NASA lunar surface texture combined with a model
+  sourced via [poly.pizza](https://poly.pizza) ("Poly by Google", CC-BY). See
+  `docs/tasks/TASK-ascii-canvas-layer.md` for the asset pipeline.
+- **UI sounds** (`public/sounds/hover.ogg`, `click.ogg`, `toggle.ogg`) — [Kenney.nl](https://kenney.nl)
+  "UI Audio" / "Interface Sounds" packs, CC0.
+- **Ambient loop** (`public/sounds/ambient.mp3`) — "Scifi City - Ambient Loop" by TinyWorlds,
+  [opengameart.org](https://opengameart.org/content/scifi-city-ambient-loop), CC0.

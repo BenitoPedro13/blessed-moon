@@ -1,3 +1,5 @@
+import { Reveal } from "@/components/reveal";
+
 const CORNER_LABELS = [
   { label: "B", className: "top-6 left-7 sm:top-8 sm:left-10" },
   { label: "S", className: "top-6 right-7 sm:top-8 sm:right-10" },
@@ -21,11 +23,19 @@ export function Hero() {
           {corner.label}
         </span>
       ))}
-      <h1 className="max-w-4xl font-sans text-5xl leading-[1.04] font-semibold tracking-[-0.01em] text-primary uppercase sm:text-6xl md:text-7xl">
-        Clarity is
-        <br />
-        the feature.
-      </h1>
+      {/* DecryptReveal was tried here — its idle state shows a scrambled
+          cipher at low opacity (passthrough: 0.15 by default), which
+          camouflaged almost invisibly into the ASCII moon's own texture
+          right behind it, on top of an earlier 0x0-collapse bug. The
+          headline is the site's actual tagline; it shouldn't depend on an
+          experimental effect that can blend into its own background. */}
+      <Reveal>
+        <h1 className="max-w-4xl font-sans text-5xl leading-[1.04] font-semibold tracking-[-0.01em] text-primary uppercase sm:text-6xl md:text-7xl">
+          Clarity is
+          <br />
+          the feature.
+        </h1>
+      </Reveal>
     </section>
   );
 }
