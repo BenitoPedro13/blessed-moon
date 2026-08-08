@@ -22,9 +22,15 @@ interactions, design tokens, reference links). Process/working rules: [`CLAUDE.m
 - A small sound system (`src/components/sound-provider.tsx`) — opt-in UI/ambient sound, CC0
   assets in `public/sounds/`
 - A terminal boot sequence (`src/components/boot-sequence.tsx`) on initial load
+- SEO: expanded `Metadata` in `src/app/layout.tsx` (title template, Open Graph, Twitter card,
+  robots), plus `src/app/robots.ts` and `src/app/sitemap.ts`
+- Favicon, apple touch icon, and the Open Graph/Twitter share image (`src/app/icon.tsx`,
+  `apple-icon.tsx`, `opengraph-image.tsx`, `twitter-image.tsx`) are generated via `next/og`
+  `ImageResponse` from one shared logo mark (`src/lib/logo-mark.ts`) — a pixel-art crescent
+  moon, also used as the nav's logo (`src/components/logo-mark.tsx`)
 
-See `docs/tasks/TASK-ascii-canvas-layer.md`, `TASK-services-scroll-focus.md`, and
-`TASK-sound-and-boot.md` for how and why this stack evolved.
+See `docs/tasks/TASK-ascii-canvas-layer.md`, `TASK-services-scroll-focus.md`,
+`TASK-sound-and-boot.md`, and `TASK-seo-favicon-and-logo.md` for how and why this stack evolved.
 
 ## Getting started
 
@@ -52,7 +58,10 @@ nav, hero, about teaser, services, how we work, selected work, pricing, a closin
 — with a full-bleed `AsciiObject` moon background (scroll-driven zoom/rotation/drift) and a
 star field behind it. Everything below Hero lives inside a terminal-framed `ParticleScroll`
 panel (About through the closing CTA). Sound (opt-in, muted by default) and a terminal boot
-sequence are wired in. Work/About/Contact routes are not built yet — see `docs/tasks/` for
+sequence are wired in. A real logo (pixel-crescent mark + wordmark) is in the nav, driving the
+generated favicon, apple touch icon, and Open Graph/Twitter share image; SEO metadata,
+`robots.ts`, and `sitemap.ts` are wired in, targeting `https://blessed-moon.vercel.app` (see
+`src/lib/site-config.ts`). Work/About/Contact routes are not built yet — see `docs/tasks/` for
 in-progress work and `CLAUDE.md` §0 for current status.
 
 ## Credits

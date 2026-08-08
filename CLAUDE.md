@@ -52,8 +52,9 @@ aesthetic).
 | Styling / components | **Tailwind CSS v4 + shadcn/ui** — CSS-first config in `src/app/globals.css` (no `tailwind.config.*`); brand tokens (bg `#050505`, accent `#ff6a1f`, radius `0`, fonts) wired into the `.dark` theme block; `button`, `input`, `textarea`, `card`, `select` primitives installed | scaffolded |
 | Atmosphere effect | Full-bleed ASCII moon background, scroll-driven zoom/rotation/drift, built on canvasui.dev's **AsciiObject** component (via shadcn CLI — see §2, `TASK-ascii-canvas-layer.md`). A hand-written raw-WebGL2 version was tried first and dropped in favor of this: AsciiObject's edge-aware glyph matching, DRACO support, and reduced-motion handling all beat what was being hand-rolled. Plus animate-ui's **StarsBackground** behind it, and canvasui's **ParticleObject**/**ParticleScroll** for a closing-CTA moment and the content-dissolve panel (`TASK-sound-and-boot.md`) | built on homepage |
 | Sound / loading | Opt-in sound system (`src/components/sound-provider.tsx`, muted by default) and a terminal boot sequence on load (`src/components/boot-sequence.tsx`) — `TASK-sound-and-boot.md` | built on homepage |
+| Brand / SEO | Logo: a literal pixel-art crescent (`src/lib/logo-mark.ts`, one shared outline path) + `Blessed_Moon` wordmark, in the nav (`LogoMark`) and generated into the favicon, apple touch icon, and Open Graph/Twitter image via `next/og` `ImageResponse` (`src/app/icon.tsx`, `apple-icon.tsx`, `opengraph-image.tsx`, `twitter-image.tsx`). Metadata (title template, OG/Twitter tags, robots), `robots.ts`, `sitemap.ts` all target `src/lib/site-config.ts`'s `SITE_URL` — `TASK-seo-favicon-and-logo.md` | built |
 | Pages | `/`, `/work`, `/about`, `/contact` per `docs/design-handoff.md` Screens | `/` (homepage) built as static sections (`TASK-homepage-sections.md`) with the ASCII canvas layer wired in (`TASK-ascii-canvas-layer.md`); `/work`, `/about`, `/contact` not started |
-| Deployment target | Not yet decided — treat as an open question, don't assume Vercel/Railway/etc. without asking | open |
+| Deployment target | Current production URL is `https://blessed-moon.vercel.app` (confirmed by the user, used as `SITE_URL` for SEO metadata) — whether that stays the final domain, or a custom domain gets attached later, is still open; don't assume otherwise without asking | live at a Vercel URL, final domain open |
 
 **Version numbers written anywhere in this file or `docs/design-handoff.md` are a snapshot at
 time of writing, not a pin.** Treat every one as potentially stale — see §2.0 before adding a
@@ -224,7 +225,9 @@ second package emerges.
 - **Layout (current + proposed):**
 
   ```
-  src/app/                  Next.js App Router routes: / (built) — /work, /about, /contact proposed
+  src/app/                  Next.js App Router routes: / (built) — /work, /about, /contact proposed;
+                             icon.tsx, apple-icon.tsx, opengraph-image.tsx, twitter-image.tsx,
+                             robots.ts, sitemap.ts — generated brand/SEO assets — built
   src/components/ui/        shadcn primitives (button, input, textarea, card, select) — scaffolded
   src/components/canvasui/  canvasui.dev components via shadcn CLI: AsciiObject (moon bg),
                              ParticleObject (closing CTA), ParticleScroll (dissolve panel),
@@ -234,9 +237,11 @@ second package emerges.
                              how-we-work, selected-work, pricing-table, closing-cta) — built,
                              each carries a data-ascii-keyframe attribute for the moon's morph
   src/components/           shared composites (site-nav, site-footer, section-heading,
-                             ascii-canvas, sound-provider, sound-toggle, boot-sequence) — built
+                             ascii-canvas, sound-provider, sound-toggle, boot-sequence,
+                             logo-mark) — built
   src/lib/                   shadcn's cn() helper etc.; ascii-canvas/scroll-progress.ts —
-                             scroll-position tracker driving the moon's morph — built
+                             scroll-position tracker driving the moon's morph; logo-mark.ts —
+                             shared pixel-crescent path; site-config.ts — SITE_URL — built
   public/sounds/              hover/click/toggle/ambient audio, CC0 — see README Credits
   public/models/               moon.glb — see TASK-ascii-canvas-layer.md for the asset pipeline
   docs/design-handoff.md    design spec (screens, tokens, interactions, references)
@@ -268,7 +273,7 @@ unrelated prior projects.
 
 | Phase | Rule | Output |
 |-------|------|--------|
-| **Stack** | Next.js 16 + Tailwind v4 + shadcn/ui + canvasui.dev/animate-ui components (ASCII moon bg, particles, dissolve panel, star field) + sound + boot sequence | Single-app repo: `src/app/`, `src/components/`, `docs/tasks/` |
+| **Stack** | Next.js 16 + Tailwind v4 + shadcn/ui + canvasui.dev/animate-ui components (ASCII moon bg, particles, dissolve panel, star field) + sound + boot sequence + generated logo/favicon/OG/SEO | Single-app repo: `src/app/`, `src/components/`, `docs/tasks/` |
 | **Before** | Write a task document first | `docs/tasks/TASK-<slug>.md`: current scenario, planned changes (file by file), why, affected-files table |
 | **During** | Use CLIs / generators — `create-next-app`, shadcn CLI; never hand-roll what a generator produces | Canonical, reproducible output; `[VERIFY: ...]` inline for anything unconfirmed (esp. WebGL/browser APIs) |
 | **After** | Update `README.md` / `docs/design-handoff.md` / `CLAUDE.md` as needed, then commit — auto-committed once verified | Docs in sync, a commit |

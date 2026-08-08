@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 
+import { LogoMark } from "@/components/logo-mark";
 import { useSound } from "@/components/sound-provider";
 import { SoundToggle } from "@/components/sound-toggle";
 import { Button } from "@/components/ui/button";
@@ -23,9 +24,12 @@ export function SiteNav() {
         href="/"
         onMouseEnter={playHover}
         onClick={playClick}
-        className="font-mono text-sm font-semibold tracking-[2px] text-foreground"
+        className="group flex items-center gap-2"
       >
-        {">|<"}
+        <LogoMark className="h-4 w-4 text-primary transition-colors group-hover:text-foreground" />
+        <span className="font-mono text-xs font-semibold tracking-[3px] text-foreground uppercase transition-colors group-hover:text-primary">
+          Blessed_Moon
+        </span>
       </Link>
       <nav className="hidden items-center gap-6 font-mono text-[10.5px] tracking-[0.6px] text-muted-foreground uppercase md:flex">
         {NAV_LINKS.map((link) => (

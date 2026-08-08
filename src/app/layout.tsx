@@ -5,6 +5,7 @@ import { AsciiCanvas } from "@/components/ascii-canvas";
 import { StarsBackground } from "@/components/animate-ui/components/backgrounds/stars";
 import { BootSequence } from "@/components/boot-sequence";
 import { SoundProvider } from "@/components/sound-provider";
+import { SITE_URL } from "@/lib/site-config";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -17,10 +18,40 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
 });
 
+const DESCRIPTION =
+  "Blessed Moon Studio designs and builds digital systems for founders and product leaders who value craftsmanship over hype — clarity is the feature.";
+
 export const metadata: Metadata = {
-  title: "Blessed Moon Studio",
-  description:
-    "Blessed Moon Studio develops, designs, and executes advanced software programs — clarity is the feature.",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "Blessed Moon Studio",
+    template: "%s · Blessed Moon Studio",
+  },
+  description: DESCRIPTION,
+  keywords: [
+    "Blessed Moon Studio",
+    "software studio",
+    "web design agency",
+    "product engineering",
+    "brand and web systems",
+  ],
+  openGraph: {
+    type: "website",
+    url: SITE_URL,
+    siteName: "Blessed Moon Studio",
+    title: "Blessed Moon Studio",
+    description: DESCRIPTION,
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Blessed Moon Studio",
+    description: DESCRIPTION,
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

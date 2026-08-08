@@ -19,7 +19,7 @@ const MAX_WAIT_MS = 2200;
 
 /**
  * A real terminal boot log — matches the TUI identity already established
- * by the nav's ">|<" mark and the section numbering. Dismisses on
+ * by the nav's pixel-crescent logo mark and the section numbering. Dismisses on
  * document.fonts.ready, capped at MAX_WAIT_MS so it can never hang. Click
  * or any key skips straight to the exit. Respects prefers-reduced-motion.
  *
