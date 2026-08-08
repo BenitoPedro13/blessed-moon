@@ -13,7 +13,7 @@ const SERVICES = [
 
 export function ServicesGrid() {
   return (
-    <section id="services" className="px-7 py-13 sm:py-16">
+    <section id="services" data-ascii-keyframe="2" className="px-7 py-13 sm:py-16">
       <SectionHeading number="02" label="SERVICES" />
       <div className="grid grid-cols-2 gap-px border border-border/60 bg-border/60 sm:grid-cols-4">
         {SERVICES.map((service) => (

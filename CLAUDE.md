@@ -50,8 +50,8 @@ aesthetic).
 |---|---|---|
 | Framework | **Next.js 16** (App Router, TypeScript, Turbopack, `src/` dir, `@/*` alias) — always the latest stable major, never a pinned number (see §2.0) | scaffolded |
 | Styling / components | **Tailwind CSS v4 + shadcn/ui** — CSS-first config in `src/app/globals.css` (no `tailwind.config.*`); brand tokens (bg `#050505`, accent `#ff6a1f`, radius `0`, fonts) wired into the `.dark` theme block; `button`, `input`, `textarea`, `card`, `select` primitives installed | scaffolded |
-| Atmosphere effect | Custom **WebGL/canvas ASCII shader** layer, full-bleed behind page content, scroll-driven keyframe morph between sections — see `docs/design-handoff.md` References for the two source techniques (offscreencanvas.com) this is built from. Not an off-the-shelf package; expect to write and tune the shader/canvas code directly | not started |
-| Pages | `/`, `/work`, `/about`, `/contact` per `docs/design-handoff.md` Screens | `/` (homepage) built as static sections (`TASK-homepage-sections.md`); `/work`, `/about`, `/contact` not started |
+| Atmosphere effect | Custom **WebGL2/canvas ASCII shader** layer, full-bleed behind page content, scroll-driven keyframe morph between sections — see `docs/design-handoff.md` References for the two source techniques (offscreencanvas.com) this is built from. Hand-written raw WebGL2 (no Three.js): one fragment shader blends procedural SDF shapes per keyframe, then post-processes through a glyph-atlas ASCII pass (`TASK-ascii-canvas-layer.md`) | built on homepage (`src/components/ascii-canvas.tsx`, `src/lib/ascii-canvas/`) |
+| Pages | `/`, `/work`, `/about`, `/contact` per `docs/design-handoff.md` Screens | `/` (homepage) built as static sections (`TASK-homepage-sections.md`) with the ASCII canvas layer wired in (`TASK-ascii-canvas-layer.md`); `/work`, `/about`, `/contact` not started |
 | Deployment target | Not yet decided — treat as an open question, don't assume Vercel/Railway/etc. without asking | open |
 
 **Version numbers written anywhere in this file or `docs/design-handoff.md` are a snapshot at
@@ -83,9 +83,10 @@ dependency.
    tokens, files, references.
 2. `docs/design/wireframes.dc.html` + `docs/design/screenshots/*.png` — visual reference for
    the four selected screens (`homepage-1c`, `work-1d`, `about-1e`, `contact-1f`).
-3. **Next step:** add the WebGL ASCII canvas layer and its scroll-driven morph keyframes
-   (new task doc — the homepage's static sections are built per `TASK-homepage-sections.md`;
-   `/work`, `/about`, `/contact` still need their own tasks too).
+3. **Next step:** build `/work`, `/about`, `/contact` (each needs its own task doc). When
+   built, extend the ASCII canvas's keyframe mapping onto their sections too — see
+   `TASK-ascii-canvas-layer.md`'s mapping table for the two spots (`Work`, `Contact`) that
+   are currently approximated onto homepage sections for lack of those routes.
 
 ---
 
@@ -225,10 +226,12 @@ second package emerges.
   src/app/                  Next.js App Router routes: / (built) — /work, /about, /contact proposed
   src/components/ui/        shadcn primitives (button, input, textarea, card, select) — scaffolded
   src/components/homepage/  homepage-only section composites (hero, about-teaser, services-grid,
-                             how-we-work, selected-work, pricing-table) — built, no canvas layer yet
-  src/components/           shared composites (site-nav, site-footer, section-heading) — built;
-                             ascii-canvas still to come
-  src/lib/                   shadcn's cn() helper etc. — scaffolded
+                             how-we-work, selected-work, pricing-table) — built, each carries a
+                             data-ascii-keyframe attribute for the canvas morph
+  src/components/           shared composites (site-nav, site-footer, section-heading,
+                             ascii-canvas) — built
+  src/lib/                   shadcn's cn() helper etc.; ascii-canvas/ — shader source, glyph
+                             atlas, scroll-progress tracker — built
   docs/design-handoff.md    design spec (screens, tokens, interactions, references)
   docs/design/               wireframes.dc.html + screenshots/ (design reference assets)
   docs/tasks/                task docs (§1)

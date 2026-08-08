@@ -8,7 +8,7 @@ const TIERS = [
 
 export function PricingTable() {
   return (
-    <section id="pricing" className="px-7 py-13 sm:py-16">
+    <section id="pricing" data-ascii-keyframe="4" className="px-7 py-13 sm:py-16">
       <SectionHeading number="05" label="PRICING" />
       <div className="flex flex-col">
         {TIERS.map((tier, i) => (

@@ -9,6 +9,7 @@ export function Hero() {
   return (
     <section
       aria-label="Hero"
+      data-ascii-keyframe="0"
       className="relative flex min-h-[70vh] flex-col items-center justify-center px-7 py-24 text-center sm:min-h-[80vh]"
     >
       {CORNER_LABELS.map((corner) => (

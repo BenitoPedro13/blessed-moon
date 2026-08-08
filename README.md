@@ -12,7 +12,9 @@ interactions, design tokens, reference links). Process/working rules: [`CLAUDE.m
 - [Next.js](https://nextjs.org) (App Router, TypeScript, Turbopack)
 - [Tailwind CSS v4](https://tailwindcss.com) (CSS-first config, no `tailwind.config.*`)
 - [shadcn/ui](https://ui.shadcn.com) — restyled to the brand tokens in `src/app/globals.css`
-- A hand-written WebGL/canvas ASCII-shader background (not yet built — see `docs/design-handoff.md` References)
+- A hand-written WebGL2 ASCII-shader background, scroll-morphed via `data-ascii-keyframe`
+  sections (`src/components/ascii-canvas.tsx`, `src/lib/ascii-canvas/`) — see
+  `docs/design-handoff.md` References
 
 ## Getting started
 
@@ -35,8 +37,9 @@ Open [http://localhost:3000](http://localhost:3000).
 ## Status
 
 Scaffolded: Next.js + Tailwind + shadcn/ui, brand tokens wired into the dark theme, base
-primitives installed (`button`, `input`, `textarea`, `card`, `select`). Homepage is built
-(static sections, no ASCII canvas layer yet) — nav, hero, about teaser, services grid, how
-we work, selected work, pricing, footer. Work/About/Contact routes and the ASCII canvas layer
-are not built yet — see `docs/tasks/` for in-progress work and `CLAUDE.md` §0 for current
-status.
+primitives installed (`button`, `input`, `textarea`, `card`, `select`). Homepage is built —
+nav, hero, about teaser, services grid, how we work, selected work, pricing, footer — with
+the full-bleed WebGL2 ASCII canvas layer mounted behind it, morphing between keyframe shapes
+(mesh → crescent moon → circuit lines → silhouette → dissolve) as the page scrolls.
+Work/About/Contact routes are not built yet — see `docs/tasks/` for in-progress work and
+`CLAUDE.md` §0 for current status.
