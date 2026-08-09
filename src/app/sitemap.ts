@@ -1,16 +1,24 @@
 import type { MetadataRoute } from "next";
 
 import { SITE_URL } from "@/lib/site-config";
+import { STUDIO_PROJECTS } from "@/lib/studio-data";
 
-// /work, /about, /contact aren't built yet (see CLAUDE.md §0) — add them
-// here once those routes ship, not before.
 export default function sitemap(): MetadataRoute.Sitemap {
-  return [
-    {
-      url: SITE_URL,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 1,
-    },
+  const routes: { path: string; priority: number }[] = [
+    { path: "", priority: 1 },
+    { path: "/work", priority: 0.9 },
+    ...STUDIO_PROJECTS.map((project) => ({
+      path: `/work/${project.slug}`,
+      priority: 0.8,
+    })),
+    { path: "/about", priority: 0.8 },
+    { path: "/contact", priority: 0.9 },
   ];
+
+  return routes.map(({ path, priority }) => ({
+    url: `${SITE_URL}${path}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly",
+    priority,
+  }));
 }

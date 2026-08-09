@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 
 import { createAsciiObject } from "@/components/canvasui/AsciiObject";
 import { createScrollTracker } from "@/lib/ascii-canvas/scroll-progress";
@@ -31,6 +32,15 @@ const OFFSET_Y_BY_MORPH = [0.3, 0.1, 0.9, 0.9, -0.9, -0.9];
  * mechanical; easing gives it weight/lag, closer to a directed camera
  * move than a scrollbar-driven puppet. */
 const EASE = 0.07;
+
+function viewportTransform() {
+  const mobile = window.innerWidth < 768;
+  return {
+    scale: mobile ? 0.42 : 1,
+    x: mobile ? 0.9 : 1,
+    y: mobile ? 0.7 : 1,
+  };
+}
 
 function interpolate(table: number[], morph: number): number {
   const idx = Math.max(0, Math.min(Math.floor(morph), table.length - 1));
@@ -70,16 +80,20 @@ function opacityForMorph(morph: number): number {
 export function AsciiCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const trackerRef = useRef<ReturnType<typeof createScrollTracker> | null>(null);
+  const pathname = usePathname();
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
+    let viewport = viewportTransform();
+
     const instance = createAsciiObject(
       { canvas },
       {
         src: "/models/moon.glb",
-        scale: SCALE_BY_MORPH[0],
+        scale: SCALE_BY_MORPH[0] * viewport.scale,
         cellSize: 6,
         colored: false,
         color: "#c9c7c0",
@@ -102,19 +116,20 @@ export function AsciiCanvas() {
     if (!instance) return;
 
     const tracker = createScrollTracker();
+    trackerRef.current = tracker;
     tracker.measure();
     let raf = 0;
-    let displayedScale = SCALE_BY_MORPH[0];
+    let displayedScale = SCALE_BY_MORPH[0] * viewport.scale;
     let displayedRotation = 0;
-    let displayedX = OFFSET_X_BY_MORPH[0];
-    let displayedY = OFFSET_Y_BY_MORPH[0];
+    let displayedX = OFFSET_X_BY_MORPH[0] * viewport.x;
+    let displayedY = OFFSET_Y_BY_MORPH[0] * viewport.y;
 
     function frame() {
       const morph = tracker.read();
-      const targetScale = interpolate(SCALE_BY_MORPH, morph);
+      const targetScale = interpolate(SCALE_BY_MORPH, morph) * viewport.scale;
       const targetRotation = morph * 24;
-      const targetX = interpolate(OFFSET_X_BY_MORPH, morph);
-      const targetY = interpolate(OFFSET_Y_BY_MORPH, morph);
+      const targetX = interpolate(OFFSET_X_BY_MORPH, morph) * viewport.x;
+      const targetY = interpolate(OFFSET_Y_BY_MORPH, morph) * viewport.y;
 
       displayedScale += (targetScale - displayedScale) * EASE;
       displayedRotation += (targetRotation - displayedRotation) * EASE;
@@ -134,6 +149,7 @@ export function AsciiCanvas() {
     }
 
     function handleResize() {
+      viewport = viewportTransform();
       tracker.measure();
     }
 
@@ -149,9 +165,23 @@ export function AsciiCanvas() {
       cancelAnimationFrame(raf);
       window.clearTimeout(remeasure);
       window.removeEventListener("resize", handleResize);
+      trackerRef.current = null;
       instance.destroy();
     };
   }, []);
+
+  useEffect(() => {
+    // The root layout persists during App Router navigation. Re-measure after
+    // the new route commits instead of keeping the previous page's section
+    // boundaries until a resize happens.
+    const frame = requestAnimationFrame(() => trackerRef.current?.measure());
+    const settled = window.setTimeout(() => trackerRef.current?.measure(), 300);
+
+    return () => {
+      cancelAnimationFrame(frame);
+      window.clearTimeout(settled);
+    };
+  }, [pathname]);
 
   return (
     <div

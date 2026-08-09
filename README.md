@@ -52,17 +52,20 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Status
 
-Scaffolded: Next.js + Tailwind + shadcn/ui, brand tokens wired into the dark theme, base
-primitives installed (`button`, `input`, `textarea`, `card`, `select`). Homepage is built —
-nav, hero, about teaser, services, how we work, selected work, pricing, a closing CTA, footer
-— with a full-bleed `AsciiObject` moon background (scroll-driven zoom/rotation/drift) and a
-star field behind it. Everything below Hero lives inside a terminal-framed `ParticleScroll`
-panel (About through the closing CTA). Sound (opt-in, muted by default) and a terminal boot
-sequence are wired in. A real logo (pixel-crescent mark + wordmark) is in the nav, driving the
-generated favicon, apple touch icon, and Open Graph/Twitter share image; SEO metadata,
-`robots.ts`, and `sitemap.ts` are wired in, targeting `https://blessed-moon.vercel.app` (see
-`src/lib/site-config.ts`). Work/About/Contact routes are not built yet — see `docs/tasks/` for
-in-progress work and `CLAUDE.md` §0 for current status.
+Complete for the design-handoff scope: `/`, `/work`, `/about`, and `/contact` are implemented,
+responsive, statically generated, and included in the sitemap. The homepage includes the nav,
+hero, about teaser, services, process, selected work, pricing, closing CTA, and footer inside the
+scroll-reactive ASCII/particle system. Work presents Markado, Bee Dash, and Sua Mesa Fit using
+verified portfolio data and project-specific terminal schematics. About includes the final
+mission, values, two-pillar structure, and direct-partnership statement. Contact includes a real
+project form, booking link, email, LinkedIn, and GitHub; until an email provider is configured,
+the form transparently opens a prefilled email draft instead of pretending to submit to a
+backend.
+
+Sound remains opt-in and muted by default. The terminal boot sequence, pixel-crescent logo,
+generated favicon/apple/OG/Twitter assets, metadata, `robots.ts`, and responsive scroll-driven
+ASCII moon are all wired in, targeting `https://blessed-moon.vercel.app` through
+`src/lib/site-config.ts`.
 
 ## Credits
 

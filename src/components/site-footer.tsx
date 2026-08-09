@@ -6,8 +6,8 @@ import { useSound } from "@/components/sound-provider";
 
 const FOOTER_LINKS = [
   { label: "Work", href: "/work" },
-  { label: "Services", href: "#services" },
-  { label: "Pricing", href: "#pricing" },
+  { label: "Services", href: "/#services" },
+  { label: "Pricing", href: "/#pricing" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
 ] as const;

@@ -12,8 +12,9 @@
 
 ## 0. Project context — Blessed Moon Studio website
 
-**Scaffolded, no pages built yet.** Next.js + Tailwind v4 + shadcn/ui are installed and the
-brand design tokens are wired into the dark theme (`TASK-scaffold-nextjs.md`). The full
+**Design-handoff route scope complete.** Next.js + Tailwind v4 + shadcn/ui are installed, the
+brand design tokens are wired into the dark theme (`TASK-scaffold-nextjs.md`), and all four
+routes are implemented (`TASK-finish-studio-subpages.md`). The full
 design handoff lives in `docs/design-handoff.md` (screens, tokens, interactions, files) plus
 `docs/design/wireframes.dc.html` (static wireframe reference) and
 `docs/design/screenshots/*.png` (captures of the four selected screens).
@@ -53,7 +54,7 @@ aesthetic).
 | Atmosphere effect | Full-bleed ASCII moon background, scroll-driven zoom/rotation/drift, built on canvasui.dev's **AsciiObject** component (via shadcn CLI — see §2, `TASK-ascii-canvas-layer.md`). A hand-written raw-WebGL2 version was tried first and dropped in favor of this: AsciiObject's edge-aware glyph matching, DRACO support, and reduced-motion handling all beat what was being hand-rolled. Plus animate-ui's **StarsBackground** behind it, and canvasui's **ParticleObject**/**ParticleScroll** for a closing-CTA moment and the content-dissolve panel (`TASK-sound-and-boot.md`) | built on homepage |
 | Sound / loading | Opt-in sound system (`src/components/sound-provider.tsx`, muted by default) and a terminal boot sequence on load (`src/components/boot-sequence.tsx`) — `TASK-sound-and-boot.md` | built on homepage |
 | Brand / SEO | Logo: a literal pixel-art crescent (`src/lib/logo-mark.ts`, one shared outline path) + `Blessed_Moon` wordmark, in the nav (`LogoMark`) and generated into the favicon, apple touch icon, and Open Graph/Twitter image via `next/og` `ImageResponse` (`src/app/icon.tsx`, `apple-icon.tsx`, `opengraph-image.tsx`, `twitter-image.tsx`). Metadata (title template, OG/Twitter tags, robots), `robots.ts`, `sitemap.ts` all target `src/lib/site-config.ts`'s `SITE_URL` — `TASK-seo-favicon-and-logo.md` | built |
-| Pages | `/`, `/work`, `/about`, `/contact` per `docs/design-handoff.md` Screens | `/` (homepage) built as static sections (`TASK-homepage-sections.md`) with the ASCII canvas layer wired in (`TASK-ascii-canvas-layer.md`); `/work`, `/about`, `/contact` not started |
+| Pages | `/`, `/work`, `/about`, `/contact` per `docs/design-handoff.md` Screens | complete — all four routes built, statically generated, responsive, and included in the sitemap (`TASK-finish-studio-subpages.md`) |
 | Deployment target | Current production URL is `https://blessed-moon.vercel.app` (confirmed by the user, used as `SITE_URL` for SEO metadata) — whether that stays the final domain, or a custom domain gets attached later, is still open; don't assume otherwise without asking | live at a Vercel URL, final domain open |
 
 **Version numbers written anywhere in this file or `docs/design-handoff.md` are a snapshot at
@@ -85,10 +86,9 @@ dependency.
    tokens, files, references.
 2. `docs/design/wireframes.dc.html` + `docs/design/screenshots/*.png` — visual reference for
    the four selected screens (`homepage-1c`, `work-1d`, `about-1e`, `contact-1f`).
-3. **Next step:** build `/work`, `/about`, `/contact` (each needs its own task doc). When
-   built, extend the ASCII canvas's keyframe mapping onto their sections too — see
-   `TASK-ascii-canvas-layer.md`'s mapping table for the two spots (`Work`, `Contact`) that
-   are currently approximated onto homepage sections for lack of those routes.
+3. **Current route scope is complete:** `/work`, `/about`, and `/contact` now extend the ASCII
+   canvas keyframes across their own sections. Any new route or production integration still
+   requires a task document before code changes.
 
 ---
 

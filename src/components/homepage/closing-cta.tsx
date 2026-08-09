@@ -50,11 +50,12 @@ export function ClosingCta() {
           Tell us what you&apos;re building — we&apos;ll tell you what it takes.
         </p>
         <Button
+          nativeButton={false}
           size="lg"
           render={<Link href="/contact" onMouseEnter={playHover} onClick={playClick} />}
           className="mt-8 rounded-none bg-primary font-mono text-[11px] tracking-[0.6px] text-primary-foreground uppercase hover:bg-primary/85"
         >
-          Book a call
+          Start a project
         </Button>
       </Reveal>
     </section>
