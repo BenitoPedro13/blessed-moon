@@ -25,7 +25,13 @@ const PILLARS = [
   {
     id: "A",
     title: "Client Consultation, Strategy & Brand Identity",
-    lead: "M D R",
+    lead: "Myelle de Raat",
+    titleLine: "Co-Founder (CEO) · Chief Creative Officer (CCO)",
+    roles: [
+      "Brand Identity & Visual Designer",
+      "Backend Web Developer",
+      "Web Designer",
+    ],
     paragraphs: [
       "Serving as your primary partner for high-level consultations, ideation, and project-scoping sessions.",
       "This pillar directs the commercial growth strategy, market positioning, and corporate visual architecture.",
@@ -36,6 +42,13 @@ const PILLARS = [
     id: "B",
     title: "Enterprise Architecture & Full-Stack Development",
     lead: "Benito Pedro Xavier",
+    titleLine: "Founder (CEO) · Chief Technology Officer (CTO)",
+    roles: [
+      "Lead Software Developer / Engineer",
+      "API Architect",
+      "Full-Stack Web Developer",
+      "Web Designer",
+    ],
     paragraphs: [
       "Directing the heavy programmatic mechanics, server-side infrastructure, and database ecosystems.",
       "This pillar constructs enterprise-grade software frameworks capable of cross-border scaling.",
@@ -111,6 +124,19 @@ export default function AboutPage() {
                     <p className="mt-3 font-mono text-[9px] tracking-[0.08em] text-primary uppercase">
                       Executive Lead — {pillar.lead}
                     </p>
+                    <p className="mt-2 text-[12px] leading-[1.6] text-foreground/80">
+                      {pillar.titleLine}
+                    </p>
+                    <ul className="mt-4 flex flex-wrap gap-2">
+                      {pillar.roles.map((role) => (
+                        <li
+                          key={role}
+                          className="border border-border/80 bg-background/55 px-3 py-2 font-mono text-[9px] tracking-[0.06em] text-muted-foreground"
+                        >
+                          {role}
+                        </li>
+                      ))}
+                    </ul>
                     <div className="mt-8 space-y-4">
                       {pillar.paragraphs.map((paragraph) => (
                         <p
