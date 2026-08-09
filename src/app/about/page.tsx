@@ -28,6 +28,7 @@ const PILLARS = [
     lead: "Myelle de Raat",
     titleLine: "Co-Founder (CEO) · Chief Creative Officer (CCO)",
     roles: [
+      "Marketing Strategist",
       "Brand Identity & Visual Designer",
       "Backend Web Developer",
       "Web Designer",
@@ -122,7 +123,7 @@ export default function AboutPage() {
                       {pillar.title}
                     </h2>
                     <p className="mt-3 font-mono text-[9px] tracking-[0.08em] text-primary uppercase">
-                      Executive Lead — {pillar.lead}
+                      {pillar.lead}
                     </p>
                     <p className="mt-2 text-[12px] leading-[1.6] text-foreground/80">
                       {pillar.titleLine}
