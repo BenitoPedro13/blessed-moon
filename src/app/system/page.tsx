@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import { AsciiObject } from "@/components/canvasui/AsciiObject";
 import { ParticleObject } from "@/components/canvasui/ParticleObject";
 import { ContactForm } from "@/components/contact-form";
+import { BorderGlow } from "@/components/react-bits/border-glow";
+import { ParticleText } from "@/components/react-bits/particle-text";
 import { Reveal } from "@/components/reveal";
 import { SectionHeading } from "@/components/section-heading";
 import { SiteFooter } from "@/components/site-footer";
@@ -267,6 +269,63 @@ export default function SystemPage() {
                 className="h-full w-full"
               />
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="space-y-4">
+        <h2 className="font-sans text-xl font-semibold tracking-[-0.01em] text-foreground">
+          React Bits candidates
+        </h2>
+        <p className="max-w-prose text-[13px] leading-[1.6] text-muted-foreground">
+          Under review, not yet on a live page — restyled to brand tokens (sharp corners,
+          single-hue amber) from{" "}
+          <a
+            href="https://github.com/DavidHDev/react-bits"
+            target="_blank"
+            rel="noreferrer"
+            className="text-primary underline underline-offset-2"
+          >
+            React Bits
+          </a>
+          . See <code className="font-mono text-[12px] text-foreground/80">TASK-react-bits-mcp-registry.md</code>.
+        </p>
+        <div className="space-y-2">
+          <span className="block font-mono text-[10px] text-muted-foreground uppercase">
+            ParticleText — hero headline candidate (hover to re-gather)
+          </span>
+          <div className="h-56 border border-border/60 bg-background">
+            <ParticleText
+              text="Clarity is the feature."
+              trigger="hover"
+              fontSize="clamp(1.5rem, 5vw, 3rem)"
+              fontWeight={600}
+            />
+          </div>
+        </div>
+        <div className="space-y-2">
+          <span className="block font-mono text-[10px] text-muted-foreground uppercase">
+            BorderGlow — unified card-hover candidate (move cursor across each)
+          </span>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <BorderGlow>
+              <div className="p-6">
+                <span className="mb-2.5 block font-mono text-[9.5px] text-muted-foreground/70">01</span>
+                <span className="mb-1.5 block font-sans text-sm text-foreground">Web Apps</span>
+                <span className="block text-[11px] leading-[1.5] text-muted-foreground">
+                  Full-stack products, built to handle real traffic and real edge cases.
+                </span>
+              </div>
+            </BorderGlow>
+            <BorderGlow animated>
+              <div className="p-6">
+                <span className="mb-2.5 block font-mono text-[9.5px] text-muted-foreground/70">02</span>
+                <span className="mb-1.5 block font-sans text-sm text-foreground">Mobile Apps</span>
+                <span className="block text-[11px] leading-[1.5] text-muted-foreground">
+                  animated — plays the sweep once on mount, then behaves like the first card.
+                </span>
+              </div>
+            </BorderGlow>
           </div>
         </div>
       </section>

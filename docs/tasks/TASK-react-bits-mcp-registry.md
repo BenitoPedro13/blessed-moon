@@ -15,9 +15,17 @@ registry entry and no shadcn MCP server configured for this repo (no `.mcp.json`
 2. Run `pnpm dlx shadcn@latest mcp init --client claude` to generate/update the Claude
    Code MCP server config for the shadcn CLI (project uses pnpm exclusively per §4, not
    npx, even though React Bits' own docs show `npx`).
-3. No component is being installed yet — this task only wires up the registry + MCP
-   server so React Bits components can be browsed/added via natural-language prompts in
-   a later task, per this repo's use-tooling-not-hand-rolled-markup convention (§2).
+3. **Extended scope (still this task, updated in place per §1.2):** pull a small,
+   deliberately-chosen shortlist of candidate components via the CLI — not to ship
+   directly, but to read their real source/dependencies and stage them as panels on
+   `/system` for visual review, since neither `WebFetch` nor the Chrome browser tools
+   could reach reactbits.dev's rendered demos in this session (SPA shell, extension not
+   connected). Candidates, chosen from the earlier design audit:
+   - `ascii-text` or `particle-text` (text-animations) — hero headline treatment
+   - `spotlight-card` or `border-glow` (components/animations) — candidate for the
+     unified card-hover treatment across Services/Selected-Work/Pricing/About/Work
+   Each gets restyled to sharp corners + brand tokens before landing on `/system`, not
+   used with its own default (likely rounded) styling.
 
 Alternative considered: skip the MCP server and just add the registry entry, using
 `pnpm dlx shadcn@latest add @react-bits/<name>` manually per component. Rejected — the
