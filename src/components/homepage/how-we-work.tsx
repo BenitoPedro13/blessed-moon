@@ -58,11 +58,11 @@ export function HowWeWork() {
   return (
     <div>
       {/* Untransformed: holds the arriving token. */}
-      <p className="flex items-end gap-3">
+      <p className="flex items-baseline gap-3">
         <MorphToken id="count-4" side="to" className={COUNT_DISPLAY}>
           4
         </MorphToken>
-        <span className="pb-1.5 font-sans text-xl font-semibold tracking-[-0.02em] text-foreground sm:text-2xl">
+        <span className="font-sans text-xl font-semibold tracking-[-0.02em] text-foreground sm:text-2xl">
           steps, every time.
         </span>
       </p>

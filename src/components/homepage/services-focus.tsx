@@ -75,11 +75,11 @@ export function ServicesFocus() {
       <div className="lg:grid lg:grid-cols-[0.9fr_2.1fr] lg:items-center lg:gap-12">
         {/* Untransformed: holds both tokens. */}
         <div>
-          <p className="flex items-end gap-3">
+          <p className="flex items-baseline gap-3">
             <MorphToken id="count-8" side="to" className={COUNT_DISPLAY}>
               8
             </MorphToken>
-            <span className="pb-1.5 font-sans text-xl font-semibold tracking-[-0.02em] text-foreground sm:text-2xl">
+            <span className="font-sans text-xl font-semibold tracking-[-0.02em] text-foreground sm:text-2xl">
               kinds of systems.
             </span>
           </p>

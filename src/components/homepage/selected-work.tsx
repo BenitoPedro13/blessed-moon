@@ -55,11 +55,11 @@ export function SelectedWork() {
       <div className="lg:grid lg:grid-cols-[0.85fr_2.15fr] lg:items-center lg:gap-12">
         {/* Untransformed: holds both tokens. */}
         <div>
-          <p className="flex items-end gap-3">
+          <p className="flex items-baseline gap-3">
             <MorphToken id="count-3" side="to" className={COUNT_DISPLAY}>
               3
             </MorphToken>
-            <span className="pb-1.5 font-sans text-xl font-semibold tracking-[-0.02em] text-foreground sm:text-2xl">
+            <span className="font-sans text-xl font-semibold tracking-[-0.02em] text-foreground sm:text-2xl">
               still in production.
             </span>
           </p>
@@ -92,7 +92,13 @@ export function SelectedWork() {
                     alt={project.imageAlt}
                     fill
                     sizes="(min-width: 640px) 192px, 144px"
-                    className="object-cover object-top transition-transform duration-300 group-hover:scale-[1.03]"
+                    // Held slightly back at rest, full on hover. These are
+                    // screenshots of light-UI products, so at full strength
+                    // they were the brightest thing in the window — brighter
+                    // than the amber token, which inverts the hierarchy the
+                    // whole page is built on. Hovering a row is the moment you
+                    // actually want to look at the work.
+                    className="object-cover object-top opacity-80 transition-all duration-300 group-hover:scale-[1.03] group-hover:opacity-100"
                   />
                 </div>
                 <div className="min-w-0 flex-1">

@@ -27,6 +27,13 @@ export const COUNT_INLINE =
 /** The display end — the largest type on the page after the Hero headline,
  * deliberately: this is what the eye tracks across the boundary.
  *
+ * Set these lockups with `flex items-baseline`, never `items-end`. Bottom
+ * alignment lines up the *boxes*, and since the numeral's box is tight
+ * (`leading-[0.78]`, no descender) while the phrase's carries descender space,
+ * that left the numeral hanging about 10px below its own sentence in every
+ * section — visible immediately at full resolution. A numeral and the phrase
+ * it belongs to share a baseline.
+ *
  * Mono, and big, on purpose. Space Grotesk carries every headline on the
  * site; JetBrains Mono is otherwise confined to eyebrows and captions, so
  * blowing it up to display size is the one place the utility face becomes the

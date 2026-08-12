@@ -156,6 +156,46 @@ export function ScrollMorphStage({
   const [active, setActive] = useState(0);
   const reduceMotion = useReducedMotion();
 
+  /**
+   * Horizontal room for the window, remeasured only on viewport resize — never
+   * during the scroll animation. That distinction is the whole point.
+   *
+   * The frame's width animates between sections. If the content inside were
+   * laid out against that animating width, every frame would re-wrap it: line
+   * breaks shifting continuously, "still in production." snapping between one
+   * line and two, paragraphs growing and shrinking by a line as the window
+   * moved. That's exactly what happened on desktop.
+   *
+   * So content is laid out at a FIXED width per layer and the frame animates
+   * around it. The frame is the thing that morphs; the text inside it is
+   * already set and simply gets revealed or cropped. It also makes each
+   * layer's height independent of the animation, which is what lets the height
+   * interpolation below be smooth instead of chasing a moving measurement.
+   *
+   * Starts wide so the server render and first client render agree; the effect
+   * corrects it on mount.
+   */
+  const [avail, setAvail] = useState(4096);
+  const resolvedWidths = layers.map((l) => Math.min(l.width, avail));
+  // The rAF loop can't read `resolvedWidths` (it's a new array each render and
+  // the loop is set up once), so it reads this mirror instead — written after
+  // render rather than during it, which is the rule a ref has to follow.
+  const widthsRef = useRef<number[]>(resolvedWidths);
+  useEffect(() => {
+    widthsRef.current = resolvedWidths;
+  });
+
+  useEffect(() => {
+    if (reduceMotion) return;
+    function measure() {
+      // Matches the sticky container's px-4 gutter on both sides.
+      setAvail(window.innerWidth - 32);
+    }
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [reduceMotion]);
+
   useEffect(() => {
     if (reduceMotion) return;
     const observer = new ResizeObserver(() => {
@@ -173,7 +213,6 @@ export function ScrollMorphStage({
     const inner = innerRef.current;
     if (!wrapper || !inner || count === 0) return;
 
-    const widths = layers.map((l) => l.width);
     let raf = 0;
     let lastActive = -1;
 
@@ -221,6 +260,7 @@ export function ScrollMorphStage({
       const win = windowRef.current;
       const body = bodyRef.current;
       if (win && body) {
+        const widths = widthsRef.current;
         const w = widths[i0] + (widths[i1] - widths[i0]) * f;
         win.style.width = `${Math.round(w)}px`;
         const h0 = heightsRef.current[i0] ?? 0;
@@ -239,7 +279,11 @@ export function ScrollMorphStage({
     raf = requestAnimationFrame(frame);
 
     return () => cancelAnimationFrame(raf);
-  }, [count, span, layers, reduceMotion]);
+    // Deliberately not depending on `layers`: it's a fresh array literal on
+    // every render from page.tsx, so including it tore down and restarted the
+    // rAF loop constantly. Everything the loop needs from it comes through
+    // widthsRef/heightsRef instead.
+  }, [count, span, reduceMotion]);
 
   // Stacked, unpinned, every section legible and reachable in its own static
   // window, nothing crossfading or flying. Deliberately not "the same thing,
@@ -310,7 +354,7 @@ export function ScrollMorphStage({
         <LayoutGroup>
           <div
             ref={windowRef}
-            style={{ width: layers[0]?.width, maxWidth: "100%" }}
+            style={{ width: resolvedWidths[0], maxWidth: "100%" }}
             className={`${WINDOW_FRAME} max-h-[86dvh] overflow-hidden`}
           >
             {/* One title bar, with each section's identifier crossfading in
@@ -375,9 +419,18 @@ export function ScrollMorphStage({
                       "--morph-away": i,
                     } as React.CSSProperties
                   }
-                  className="absolute inset-0 flex flex-col justify-center"
+                  className="absolute inset-0 flex flex-col items-center justify-center"
                 >
-                  <div ref={(el) => { contentRefs.current[i] = el; }} className={WINDOW_BODY}>
+                  {/* Fixed width, not the frame's animating one — see the
+                      `avail` note above. This is what stops the text
+                      re-wrapping while the window resizes. */}
+                  <div
+                    ref={(el) => {
+                      contentRefs.current[i] = el;
+                    }}
+                    style={{ width: resolvedWidths[i] }}
+                    className={`shrink-0 ${WINDOW_BODY}`}
+                  >
                     <MorphLayerContext.Provider
                       value={{ index: i, active, isActive: i === active, morphing: true }}
                     >

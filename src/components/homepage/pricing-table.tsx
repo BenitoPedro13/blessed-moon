@@ -28,11 +28,11 @@ export function PricingTable() {
   return (
     <div className="text-center">
       {/* Untransformed: holds the arriving token. */}
-      <p className="flex items-end justify-center gap-3">
+      <p className="flex items-baseline justify-center gap-3">
         <MorphToken id="count-1" side="to" className={COUNT_DISPLAY}>
           1
         </MorphToken>
-        <span className="pb-1.5 font-sans text-xl font-semibold tracking-[-0.02em] text-foreground sm:text-2xl">
+        <span className="font-sans text-xl font-semibold tracking-[-0.02em] text-foreground sm:text-2xl">
           number, agreed up front.
         </span>
       </p>
