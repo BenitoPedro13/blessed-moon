@@ -32,17 +32,24 @@ export function createFrameTracker(anchorRatio = 0.35) {
       .sort((a, b) => a.top - b.top);
   }
 
-  function read(): string | null {
+  function read(): { index: number; label: string } | null {
     if (boundaries.length === 0) return null;
 
     const anchor = window.scrollY + window.innerHeight * anchorRatio;
     let i = 0;
     while (i < boundaries.length - 1 && boundaries[i + 1].top <= anchor) i++;
 
-    return boundaries[i].label;
+    return { index: i, label: boundaries[i].label };
   }
 
-  return { measure, read };
+  /** The full ordered label list — populated by the same `measure()` call,
+   * a sidebar's static `items` list and this tracker's moving "current
+   * index" pick this way always agree on what section N actually is. */
+  function labels(): string[] {
+    return boundaries.map((b) => b.label);
+  }
+
+  return { measure, read, labels };
 }
 
 /**

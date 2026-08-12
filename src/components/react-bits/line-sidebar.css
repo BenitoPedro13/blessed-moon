@@ -1,0 +1,120 @@
+/**
+ * Adapted from React Bits' LineSidebar — see line-sidebar.tsx for
+ * provenance notes. Structure and math unchanged from upstream; left as a
+ * co-located plain CSS file for the same reason as border-glow.css (the
+ * --effect-driven color-mix/transform chain isn't a good fit for
+ * hand-transcribed Tailwind arbitrary values, per CLAUDE.md §2.2).
+ */
+
+.line-sidebar {
+  --accent-color: var(--primary);
+  --text-color: var(--muted-foreground);
+  --marker-color: var(--border);
+  --marker-length: 60px;
+  --marker-gap: 0px;
+  --tick-scale: 0.5;
+  --max-shift: 30px;
+  --item-gap: 20px;
+  --font-size: 1.1rem;
+  --smoothing: 100ms;
+
+  position: relative;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.line-sidebar--markers {
+  padding-left: calc(var(--marker-length) + var(--marker-gap));
+}
+
+.line-sidebar__list {
+  list-style: none;
+  margin: 0;
+  padding: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--item-gap);
+}
+
+/* --effect (0..1) is driven per item by a rAF lerp in JS, so every derived
+   property below reads the same continuously-animating value and stays in
+   step, with no CSS transitions to stagger. */
+.line-sidebar__item {
+  position: relative;
+}
+
+.line-sidebar__label {
+  /* Reset: this is a <button> now (see line-sidebar.tsx), not a <span> —
+     needed for real keyboard focus/activation, but buttons carry browser
+     chrome (border, background, padding, font, cursor default) that has to
+     be stripped back to how the original span looked. */
+  appearance: none;
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  cursor: pointer;
+  text-align: left;
+
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+  font-size: var(--font-size);
+  line-height: 1.2;
+  color: color-mix(in srgb, var(--accent-color) calc(var(--effect, 0) * 100%), var(--text-color));
+  transform: translateX(calc(var(--effect, 0) * var(--max-shift)));
+}
+
+.line-sidebar__label:focus-visible {
+  outline: 1px solid var(--accent-color);
+  outline-offset: 4px;
+}
+
+/* Widen the button's actual hit area (not just its visible label) so items
+   react — and are clickable — a touch before the cursor precisely lands on
+   the text. Was on the <li> pointing at a plain, non-interactive span
+   before the button change; moved onto the button itself since it's what's
+   now genuinely clickable/focusable. */
+.line-sidebar__label::before {
+  content: "";
+  position: absolute;
+  inset: -6px -48px;
+}
+
+.line-sidebar__index {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  margin-right: 0.6rem;
+  font-size: 0.85em;
+  opacity: calc(0.55 + var(--effect, 0) * 0.45);
+}
+
+.line-sidebar__marker {
+  position: absolute;
+  top: 50%;
+  left: calc(-1 * var(--marker-length) - var(--marker-gap));
+  height: 1px;
+  width: var(--marker-length);
+  background-color: color-mix(in srgb, var(--accent-color) calc(var(--effect, 0) * 100%), var(--marker-color));
+  transform-origin: left center;
+  transform: translateY(-50%) scaleX(calc(0.7 + var(--effect, 0) * 0.5));
+}
+
+/* Short static tick centered in the gap between two menu items */
+.line-sidebar--markers .line-sidebar__item:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: calc(100% + var(--item-gap) / 2);
+  left: calc(-1 * var(--marker-length) - var(--marker-gap));
+  height: 1px;
+  width: calc(var(--marker-length) * var(--tick-scale));
+  background-color: var(--marker-color);
+  opacity: 0.5;
+  transform: translateY(-50%);
+}
+
+/* When enabled, the in-between ticks grow with cursor proximity too */
+.line-sidebar--scale-tick .line-sidebar__item:not(:last-child)::after {
+  transform-origin: left center;
+  transform: translateY(-50%) scaleX(calc(0.7 + var(--effect, 0) * 0.6));
+}

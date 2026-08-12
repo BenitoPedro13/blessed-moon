@@ -4,6 +4,7 @@ import { AsciiObject } from "@/components/canvasui/AsciiObject";
 import { ParticleObject } from "@/components/canvasui/ParticleObject";
 import { ContactForm } from "@/components/contact-form";
 import { BorderGlow } from "@/components/react-bits/border-glow";
+import { LineSidebar } from "@/components/react-bits/line-sidebar";
 import { ParticleText } from "@/components/react-bits/particle-text";
 import { Reveal } from "@/components/reveal";
 import { ScrollStage } from "@/components/scroll-stage";
@@ -398,6 +399,24 @@ export default function SystemPage() {
                 </span>
               </div>
             </BorderGlow>
+          </div>
+        </div>
+        <div className="space-y-2">
+          <span className="block font-mono text-[10px] text-muted-foreground uppercase">
+            LineSidebar — used by SectionSidebar (site-wide, hover/click the items)
+          </span>
+          <div className="border border-border/60 bg-background px-10 py-8">
+            <LineSidebar
+              items={["Hero", "About", "Services", "Selected Work", "Pricing"]}
+              defaultActive={0}
+              showIndex
+              showMarker
+              fontSize={0.85}
+              itemGap={16}
+              markerLength={36}
+              className="font-mono uppercase tracking-[0.06em]"
+              aria-label="Section navigation demo"
+            />
           </div>
         </div>
       </section>
