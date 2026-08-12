@@ -23,13 +23,12 @@ import { useReducedMotion } from "motion/react";
  * `prevent` opts out any subtree marked `data-lenis-prevent` from Lenis's
  * smoothing (native scroll applies instead) — needed for a genuinely
  * separate nested scroll container that should handle its own wheel input.
- * Currently used by the homepage's ParticleScroll panel (`app/page.tsx`):
- * without it, Lenis intercepts wheel input at the window level before it
- * ever reaches that panel's own `overflow: auto` content div. A later
- * attempt to instead drive that panel's scrollTop programmatically from an
- * outer scroll-stage pin (removing the need for this exemption) visibly
- * corrupted its html-in-canvas capture and froze page scroll — reverted;
- * see the comment in `app/page.tsx` for what actually happened.
+ * Was used by the homepage's ParticleScroll panel while that panel had its
+ * own independent internal scroll — removed along with that panel
+ * (TASK-homepage-unify-scroll.md: two disconnected scroll contexts was a
+ * real, repeated source of confusion). Not currently applied anywhere; left
+ * in place as available infrastructure for the next genuinely independent
+ * nested scroller (a modal, a dropdown).
  */
 export function LenisProvider({ children }: { children: React.ReactNode }) {
   const reduceMotion = useReducedMotion();

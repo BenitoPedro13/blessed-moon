@@ -2,6 +2,8 @@
 
 import { useEffect, useRef } from "react";
 
+import { ScrollParticles } from "@/components/scroll-particles";
+
 /**
  * Pins its content for a scroll range, exposing how far through that range
  * the visitor is as the CSS custom property `--stage-progress` (0 → 1) on
@@ -27,6 +29,7 @@ export function ScrollStage({
   heightMultiplier = 2,
   className = "",
   onProgress,
+  particles = false,
   children,
 }: {
   /** Wrapper height as a multiple of 100dvh — how much scroll room the pin
@@ -40,6 +43,11 @@ export function ScrollStage({
    * element's own scrollTop), not just CSS. Optional: most consumers just
    * read the CSS variable directly and don't need this. */
   onProgress?: (progress: number) => void;
+  /** Ambient particle-dissolve texture (see scroll-particles.tsx) — the
+   * ParticleScroll replacement. Opt-in, not automatic: Hero already has its
+   * own particle moment via ParticleText, and stacking a second particle
+   * effect there would compete with it rather than add to it. */
+  particles?: boolean;
   children: React.ReactNode;
 }) {
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -74,11 +82,23 @@ export function ScrollStage({
 
   return (
     <div ref={wrapperRef} style={{ height: `${heightMultiplier * 100}dvh` }} className={`relative ${className}`}>
+      {/* overflow-y-auto, not overflow-hidden: content taller than one
+          viewport (a dense grid on a short/mobile viewport) would otherwise
+          be silently clipped instead of reachable. Modern browsers already
+          clamp justify-center to top-aligned when content overflows its
+          container, so this only ever kicks in as a rare safety net, not
+          the primary interaction model. overflow-x-hidden has to be
+          explicit alongside it — per spec, overflow-y: auto with
+          overflow-x left at its default `visible` silently promotes
+          overflow-x to `auto` too, so any section using a negative-margin
+          trick (pricing-table.tsx's `-mx-3` rows) turned into a real
+          horizontal scrollbar on the whole pinned panel. */}
       <div
         ref={innerRef}
         style={{ "--stage-progress": 0 } as React.CSSProperties}
-        className="sticky top-0 flex h-dvh flex-col items-center justify-center overflow-hidden"
+        className="sticky top-0 flex h-dvh flex-col items-center justify-center overflow-x-hidden overflow-y-auto"
       >
+        {particles && <ScrollParticles />}
         {children}
       </div>
     </div>

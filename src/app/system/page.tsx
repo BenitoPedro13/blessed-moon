@@ -264,12 +264,16 @@ export default function SystemPage() {
           Pins content for a scroll range via <code className="font-mono text-[12px] text-foreground/80">position: sticky</code>{" "}
           (no scroll-jacking), exposing progress as <code className="font-mono text-[12px] text-foreground/80">--stage-progress</code>{" "}
           for children to read. Scroll through this panel — the number fades/scales as the
-          pin plays out, matching how the homepage hero&apos;s headline now dissolves against
-          the moon. Phase 1 of <code className="font-mono text-[12px] text-foreground/80">TASK-apple-scroll-journey.md</code>;
-          not yet applied beyond the hero.
+          pin plays out. Used site-wide now (Hero, PageHero, every homepage section below
+          Hero) — see <code className="font-mono text-[12px] text-foreground/80">TASK-apple-scroll-journey.md</code> /{" "}
+          <code className="font-mono text-[12px] text-foreground/80">TASK-homepage-unify-scroll.md</code>. The{" "}
+          <code className="font-mono text-[12px] text-foreground/80">particles</code> prop below is the
+          ParticleScroll replacement — an ambient dissolve texture, not DOM capture (see
+          scroll-particles.tsx); density peaks as the section arrives/leaves, thins out once
+          it&apos;s fully legible.
         </p>
         <div className="border border-border/60">
-          <ScrollStage heightMultiplier={1.4}>
+          <ScrollStage heightMultiplier={1.4} particles>
             <div
               style={{
                 opacity: "calc(1 - var(--stage-progress, 0))",

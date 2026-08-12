@@ -125,6 +125,11 @@ export interface ParticleTextProps {
    * for that shape, not a lower `density` (see its own doc comment).
    */
   densityDivisor?: number;
+  /** Horizontal placement of the sampled text within the container.
+   * "center" (default) is upstream's only behavior — a CSS `text-align`
+   * on the wrapper has no effect, since particle positions are computed
+   * in JS from the canvas sample, not laid out via CSS. */
+  align?: "center" | "left";
   className?: string;
   style?: React.CSSProperties;
 }
@@ -165,6 +170,7 @@ export const ParticleText = forwardRef<ParticleTextHandle, ParticleTextProps>(fu
     fontFamily = "inherit",
     glow = true,
     densityDivisor = 90,
+    align = "center",
     className = "",
     style,
   }: ParticleTextProps,
@@ -373,12 +379,14 @@ export const ParticleText = forwardRef<ParticleTextHandle, ParticleTextProps>(fu
       const targets: { x: number; y: number; alpha: number }[] = [];
       const step = Math.max(1, Math.floor(density));
 
+      const originX = align === "left" ? 0 : width / 2 - offscreen.width / 2;
+
       for (let y = 0; y < offscreen.height; y += step) {
         for (let x = 0; x < offscreen.width; x += step) {
           const alpha = imageData.data[(y * offscreen.width + x) * 4 + 3];
           if (alpha > 40) {
             targets.push({
-              x: width / 2 - offscreen.width / 2 + x,
+              x: originX + x,
               y: height / 2 - offscreen.height / 2 + y,
               alpha: alpha / 255,
             });
@@ -510,6 +518,7 @@ export const ParticleText = forwardRef<ParticleTextHandle, ParticleTextProps>(fu
     fontFamily,
     glow,
     densityDivisor,
+    align,
   ]);
 
   return (
