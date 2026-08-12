@@ -60,8 +60,15 @@ function interpolate(table: number[], morph: number): number {
  * fighting the featured one for the same space is worse than a very faint
  * residual presence. */
 function opacityForMorph(morph: number): number {
-  if (morph <= 1) return 1;
-  if (morph <= 2) return 1 - (morph - 1) * 0.6;
+  // Full only at Hero, where nothing but the headline sits over it. It now
+  // eases down across the Hero → About sweep instead of holding at 1 through
+  // About: the moon is still near its largest there (scale 3.6) and centered
+  // in the frame, so About's body copy ran straight across the glyph texture
+  // and was genuinely hard to read (caught in videos/afterhomerework.mov).
+  // Scale and drift are untouched — the big-to-small camera move is the point
+  // of that beat, it just doesn't need full contrast behind live text.
+  if (morph <= 1) return 1 - morph * 0.45;
+  if (morph <= 2) return 0.55 - (morph - 1) * 0.15;
   if (morph <= 4) return 0.4;
   return 0.4 - Math.min(1, morph - 4) * 0.35;
 }
