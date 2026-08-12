@@ -34,11 +34,21 @@ export function PricingTable() {
           <Reveal>
             <SectionHeading number="05" label="PRICING" />
           </Reveal>
-          <div className="flex flex-col">
+          {/* Deliberately calmer than Services/Selected Work — Pricing is
+              the "quiet confidence" beat, not another loud statement. A
+              short line, not a big headline, matching the section's own
+              restraint (no fixed numbers, per docs/design-handoff.md). */}
+          <Reveal delay={0.05}>
+            <p className="max-w-lg text-[14px] leading-[1.6] text-muted-foreground">
+              Priced like the work it actually is — project-based, confirmed
+              on a call, never a number pulled from a rate card.
+            </p>
+          </Reveal>
+          <div className="mt-10 flex max-w-2xl flex-col sm:mt-12">
             {TIERS.map((tier, i) => (
               <motion.div
                 key={tier.name}
-                className={`-mx-3 px-3 py-3.5 text-[12.5px] ${
+                className={`-mx-4 px-4 py-5 text-[13px] ${
                   i < TIERS.length - 1 ? "border-b border-border/60" : ""
                 }`}
                 initial={false}
@@ -48,9 +58,9 @@ export function PricingTable() {
               >
                 <Reveal
                   className="flex items-baseline justify-between gap-4"
-                  delay={0.06 + i * 0.07}
+                  delay={0.12 + i * 0.07}
                 >
-                  <span className="font-sans text-[13.5px] text-foreground">
+                  <span className="font-sans text-base text-foreground">
                     {tier.name}
                   </span>
                   <span className="text-right text-muted-foreground">

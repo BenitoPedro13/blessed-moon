@@ -80,21 +80,29 @@ export function ServicesFocus() {
             <SectionHeading number="02" label="SERVICES" />
           </Reveal>
           {/* The grid used to appear with no framing at all — a bare list
-              of eight names. This line is the question the grid answers,
-              not decoration; without it "Web Apps, Mobile Apps, Landing
-              Pages..." reads as a menu rather than a scope statement. */}
+              of eight names, at a scale that read as small text lost in a
+              mostly-empty pinned frame. A real statement (not particle-
+              text — that's About and Hero's specific move; variety matters
+              more than repeating the same effect everywhere) plus a
+              shorter supporting line gives the grid the same visual weight
+              Hero and About now have. */}
           <Reveal delay={0.05}>
-            <p className="mb-6 max-w-xl text-[13px] leading-[1.55] text-muted-foreground">
-              Eight kinds of systems. Different shape, same standard — built
-              by the same senior partnership end to end, not handed off
-              between teams that never talk to each other.
+            <h2 className="max-w-3xl font-sans text-3xl font-semibold tracking-[-0.02em] text-foreground sm:text-4xl md:text-[2.75rem]">
+              Different shape. Same standard.
+            </h2>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <p className="mt-4 max-w-xl text-[14px] leading-[1.6] text-muted-foreground">
+              Eight kinds of systems, built by the same senior partnership end
+              to end — not handed off between teams that never talk to each
+              other.
             </p>
           </Reveal>
-          <div className="grid grid-cols-2 gap-px border border-border/60 bg-border/60 sm:grid-cols-4">
+          <div className="mt-8 grid grid-cols-2 gap-px border border-border/60 bg-border/60 sm:grid-cols-4 sm:mt-10">
             {SERVICES.map((service, i) => (
               <motion.div
                 key={service.index}
-                className="relative bg-background/55 px-4 py-5 backdrop-blur-sm"
+                className="relative bg-background/55 px-5 py-6 backdrop-blur-sm sm:px-6 sm:py-7"
                 initial={false}
                 whileHover="hover"
                 onHoverStart={playHover}
@@ -109,14 +117,14 @@ export function ServicesFocus() {
                   variants={{ hover: { y: -3 } }}
                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
                 >
-                  <Reveal delay={0.1 + i * 0.04}>
-                    <span className="mb-2.5 block font-mono text-[9.5px] text-muted-foreground/70">
+                  <Reveal delay={0.16 + i * 0.04}>
+                    <span className="mb-3 block font-mono text-[10px] text-muted-foreground/70">
                       {service.index}
                     </span>
-                    <span className="mb-1.5 block font-sans text-sm text-foreground">
+                    <span className="mb-2 block font-sans text-base text-foreground">
                       {service.name}
                     </span>
-                    <span className="block text-[11px] leading-[1.5] text-muted-foreground">
+                    <span className="block text-[12px] leading-[1.55] text-muted-foreground">
                       {service.description}
                     </span>
                   </Reveal>

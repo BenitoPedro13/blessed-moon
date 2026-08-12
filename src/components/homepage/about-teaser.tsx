@@ -1,10 +1,8 @@
 "use client";
 
-import { useCallback, useRef } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
-import { ParticleText, type ParticleTextHandle } from "@/components/react-bits/particle-text";
 import { Reveal } from "@/components/reveal";
 import { ScrollStage } from "@/components/scroll-stage";
 import { SectionHeading } from "@/components/section-heading";
@@ -12,18 +10,6 @@ import { useSound } from "@/components/sound-provider";
 
 export function AboutTeaser() {
   const { playHover, playClick } = useSound();
-  const headlineRef = useRef<ParticleTextHandle>(null);
-
-  // Same pattern as hero.tsx: ScrollStage's pin progress drives the
-  // headline's gather/scatter directly via the imperative ref, not a
-  // generic ambient particle overlay layered on top of static text — the
-  // actual words are what's built from particles, materializing as the
-  // section pins and dissolving as it releases. Matches the surrounding
-  // block's own `1 - stage-progress` opacity formula exactly — gather and
-  // fade need to move together, not on two different schedules.
-  const handleProgress = useCallback((progress: number) => {
-    headlineRef.current?.setGatherProgress(1 - progress);
-  }, []);
 
   return (
     <section
@@ -31,63 +17,73 @@ export function AboutTeaser() {
       data-frame-label="ABOUT"
       className="relative"
     >
-      <ScrollStage heightMultiplier={1.4} onProgress={handleProgress}>
+      <ScrollStage heightMultiplier={1.6}>
+        {/* Plain text, not ParticleText — Hero is the one particle-text
+            spectacle on this page; About matching it (previously even
+            bigger than Hero's own scale) read as a second hero rather
+            than a distinct, secondary moment. What differentiates this
+            section is the asymmetric split composition instead: label
+            top, headline owning the vertical center, supporting text +
+            CTA offset to the bottom-right — a diagonal reading path
+            across the full pinned frame, `lg:` only (see the mobile note
+            below). `h-full` matters for the lg grid: without it this
+            wrapper only takes its own content's height inside
+            ScrollStage's centered flex panel, not the panel's actual
+            h-dvh, so grid-rows would have nothing real to distribute
+            across. */}
         <div
           style={{
             opacity: "calc(1 - var(--stage-progress, 0))",
-            transform: "scale(calc(1 - var(--stage-progress, 0) * 0.12))",
+            transform: "scale(calc(1 - var(--stage-progress, 0) * 0.08))",
           }}
-          className="w-full px-7 py-16 sm:py-20"
+          className="flex h-full w-full flex-col justify-center gap-8 px-7 py-14 sm:py-16 lg:grid lg:grid-rows-[auto_1fr_auto] lg:justify-normal lg:gap-0"
         >
           <Reveal>
             <SectionHeading number="01" label="ABOUT" />
           </Reveal>
-          {/* align="left": ParticleText's default centers the sampled text
-              within its container (right for Hero's centered headline,
-              wrong here — About's other text is left-aligned, and a CSS
-              text-align has no effect since particle x-positions are
-              computed in JS, not laid out via CSS). See particle-text.tsx. */}
-          <ParticleText
-            ref={headlineRef}
-            text="BUILT TO LAST LONGER THAN THE BRIEF."
-            align="left"
-            fontSize="clamp(1.5rem, 4vw, 1.75rem)"
-            fontWeight={600}
-            density={1}
-            densityDivisor={40}
-            particleSize={2}
-            scatter={110}
-            gatherDuration={1200}
-            className="h-16 w-full max-w-2xl sm:h-14"
-          />
-          <Reveal delay={0.16}>
-            <p className="mt-3.5 max-w-md text-[13px] leading-[1.55] text-muted-foreground">
-              We develop, design and execute advanced software programs. With our
-              innovative technology we resolve cases and help clients world-wide.
-            </p>
-          </Reveal>
-          {/* Previously ended on the "See what we build" link alone, with
-              nothing actually bridging to Services — the section just
-              stopped, and Services picked up as an unrelated list. This
-              line is the bridge; the link stays as the action. */}
-          <Reveal delay={0.22}>
-            <p className="mt-5 max-w-md text-[13px] leading-[1.55] text-muted-foreground">
-              That starts with a clear answer to what we actually build —
-              eight kinds of systems, each one we&apos;ve shipped enough times
-              to know where it breaks.
-            </p>
-          </Reveal>
-          <Reveal delay={0.3}>
-            <Link
-              href="#services"
-              onMouseEnter={playHover}
-              onClick={playClick}
-              className="mt-6 inline-flex items-center gap-1.5 border border-primary/60 px-4 py-2 font-mono text-[10.5px] tracking-[0.5px] text-primary uppercase transition-colors hover:bg-primary hover:text-primary-foreground"
-            >
-              See what we build
-              <ArrowRight className="size-3" aria-hidden="true" />
-            </Link>
-          </Reveal>
+
+          {/* Sized well under Hero's headline (Hero tops out at 4.5rem) —
+              deliberately: this is the second-place statement on the
+              page, not a rival to it. */}
+          <div className="flex items-center">
+            <Reveal>
+              <h2 className="max-w-3xl font-sans text-4xl font-semibold tracking-[-0.02em] text-foreground sm:text-5xl md:text-[3.5rem]">
+                Built to last longer than the brief.
+              </h2>
+            </Reveal>
+          </div>
+
+          <div className="max-w-md lg:ml-auto lg:text-right">
+            <Reveal delay={0.1}>
+              <p className="text-[14.5px] leading-[1.6] text-muted-foreground">
+                We develop, design and execute advanced software programs.
+                With our innovative technology we resolve cases and help
+                clients world-wide.
+              </p>
+            </Reveal>
+            {/* Previously ended on the "See what we build" link alone, with
+                nothing actually bridging to Services — the section just
+                stopped, and Services picked up as an unrelated list. This
+                line is the bridge; the link stays as the action. */}
+            <Reveal delay={0.18}>
+              <p className="mt-4 text-[14.5px] leading-[1.6] text-muted-foreground">
+                That starts with a clear answer to what we actually build —
+                eight kinds of systems, each one we&apos;ve shipped enough
+                times to know where it breaks.
+              </p>
+            </Reveal>
+            <Reveal delay={0.26}>
+              <Link
+                href="#services"
+                onMouseEnter={playHover}
+                onClick={playClick}
+                className="mt-6 inline-flex items-center gap-1.5 border border-primary/60 px-5 py-2.5 font-mono text-[10.5px] tracking-[0.5px] text-primary uppercase transition-colors hover:bg-primary hover:text-primary-foreground"
+              >
+                See what we build
+                <ArrowRight className="size-3" aria-hidden="true" />
+              </Link>
+            </Reveal>
+          </div>
         </div>
       </ScrollStage>
     </section>
