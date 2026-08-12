@@ -1,12 +1,32 @@
 interface Boundary {
   index: number;
-  top: number;
+  el: HTMLElement;
 }
 
 interface LabeledBoundary {
   label: string;
-  top: number;
+  el: HTMLElement;
 }
+
+/**
+ * Both trackers below read each boundary element's live
+ * `getBoundingClientRect().top` on every `read()` call instead of caching a
+ * document-relative position once at `measure()` time. That used to be
+ * `rect.top + window.scrollY`, cached — correct only as long as every
+ * tracked element sits in normal document flow, where a fixed relationship
+ * holds between an element's position and `window.scrollY`. Most of the
+ * homepage's sections live inside ParticleScroll's own independently
+ * scrolling panel (`app/page.tsx`) — scrolling *inside* that panel doesn't
+ * change `window.scrollY` at all, so the cached position went stale the
+ * moment that inner scroll moved, silently mis-tracking which section was
+ * actually on screen (confirmed via SectionSidebar highlighting the wrong
+ * item while scrolled well into Pricing). `getBoundingClientRect()` always
+ * reflects true on-screen position regardless of what caused an element to
+ * move — outer scroll, inner scroll, or both — so reading it live is what
+ * actually works for both. The cost is a `getBoundingClientRect()` call per
+ * tracked element per frame instead of per `measure()` — for the ~10-20
+ * elements a page has, that's not a meaningful cost.
+ */
 
 /**
  * Tracks which `[data-frame-label]` element the same anchor line currently
@@ -27,17 +47,20 @@ export function createFrameTracker(anchorRatio = 0.35) {
     boundaries = elements
       .map((el) => ({
         label: el.dataset.frameLabel ?? "",
+        el,
         top: el.getBoundingClientRect().top + window.scrollY,
       }))
-      .sort((a, b) => a.top - b.top);
+      .sort((a, b) => a.top - b.top)
+      .map(({ label, el }) => ({ label, el }));
   }
 
   function read(): { index: number; label: string } | null {
     if (boundaries.length === 0) return null;
 
-    const anchor = window.scrollY + window.innerHeight * anchorRatio;
+    const tops = boundaries.map((b) => b.el.getBoundingClientRect().top);
+    const anchor = window.innerHeight * anchorRatio;
     let i = 0;
-    while (i < boundaries.length - 1 && boundaries[i + 1].top <= anchor) i++;
+    while (i < boundaries.length - 1 && tops[i + 1] <= anchor) i++;
 
     return { index: i, label: boundaries[i].label };
   }
@@ -69,24 +92,27 @@ export function createScrollTracker(anchorRatio = 0.35) {
     boundaries = elements
       .map((el) => ({
         index: Number(el.dataset.asciiKeyframe),
+        el,
         top: el.getBoundingClientRect().top + window.scrollY,
       }))
-      .sort((a, b) => a.top - b.top);
+      .sort((a, b) => a.top - b.top)
+      .map(({ index, el }) => ({ index, el }));
   }
 
   function read(): number {
     if (boundaries.length === 0) return 0;
 
-    const anchor = window.scrollY + window.innerHeight * anchorRatio;
+    const tops = boundaries.map((b) => b.el.getBoundingClientRect().top);
+    const anchor = window.innerHeight * anchorRatio;
     let i = 0;
-    while (i < boundaries.length - 1 && boundaries[i + 1].top <= anchor) i++;
+    while (i < boundaries.length - 1 && tops[i + 1] <= anchor) i++;
 
     const current = boundaries[i];
     const next = boundaries[i + 1];
     if (!next) return current.index;
 
-    const span = next.top - current.top;
-    const progress = span > 0 ? Math.min(1, Math.max(0, (anchor - current.top) / span)) : 0;
+    const span = tops[i + 1] - tops[i];
+    const progress = span > 0 ? Math.min(1, Math.max(0, (anchor - tops[i]) / span)) : 0;
     return current.index + progress * (next.index - current.index);
   }
 
