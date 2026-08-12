@@ -1,5 +1,13 @@
 # TASK: Unify homepage scroll under native scroll + ScrollStage
 
+> **Superseded by `TASK-homepage-morph-redesign.md`** for About/Services/How We
+> Work/Selected Work/Pricing — building this surfaced a real limit (independent
+> `ScrollStage` pins can't be simultaneously visible, so true section-to-section
+> morphing isn't reachable from this structure) that the next task addresses with a
+> different architecture. Kept, not deleted: real history of what was tried, what broke
+> (the ParticleScroll scrollTop bridge, the overflow-y-auto sidescroll, the oversized
+> image rows), and why each fix was made the way it was.
+
 ## Current scenario
 
 `app/page.tsx` wraps everything below Hero (About, Services, How We Work, Selected Work,

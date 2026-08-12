@@ -1,13 +1,45 @@
+"use client";
+
+import { useRef } from "react";
+import { useInView } from "motion/react";
+
+import { Counter } from "@/components/react-bits/counter";
 import { Reveal } from "@/components/reveal";
 import { ScrollStage } from "@/components/scroll-stage";
 import { SectionHeading } from "@/components/section-heading";
 
 const STEPS = [
-  { number: "01", text: "Understand before building" },
-  { number: "02", text: "Design the system, then the screen" },
-  { number: "03", text: "Build in reviewable slices" },
-  { number: "04", text: "Ship it and keep it alive" },
+  { text: "Understand before building" },
+  { text: "Design the system, then the screen" },
+  { text: "Build in reviewable slices" },
+  { text: "Ship it and keep it alive" },
 ] as const;
+
+/** Rolls 0 → its target number (odometer-style, via Counter) once this
+ * step actually scrolls into view, instead of just appearing already
+ * formed — "the numbers changing in place, to give emphasis" was the
+ * direct ask. `once: true`: it should roll up the first time you reach
+ * it, not re-roll every time you scroll past 50% again. */
+function StepNumber({ target }: { target: number }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, amount: 0.6 });
+
+  return (
+    <span ref={ref} className="block">
+      <Counter
+        value={inView ? target : 0}
+        places={[10, 1]}
+        fontSize={72}
+        textColor="var(--primary)"
+        fontWeight={600}
+        gap={0}
+        horizontalPadding={0}
+        gradientHeight={0}
+        containerStyle={{ fontFamily: "var(--font-mono)" }}
+      />
+    </span>
+  );
+}
 
 export function HowWeWork() {
   return (
@@ -42,13 +74,11 @@ export function HowWeWork() {
           <div className="mt-12 grid grid-cols-2 gap-x-6 gap-y-12 sm:mt-16 lg:grid-cols-4 lg:gap-x-8">
             {STEPS.map((step, i) => (
               <div
-                key={step.number}
+                key={step.text}
                 className={`${i > 0 ? "lg:border-l lg:border-border/60 lg:pl-8" : ""}`}
               >
                 <Reveal delay={0.14 + i * 0.08}>
-                  <span className="block font-mono text-6xl font-semibold leading-none text-primary sm:text-7xl lg:text-8xl">
-                    {step.number}
-                  </span>
+                  <StepNumber target={i + 1} />
                   <p className="mt-4 max-w-[16ch] font-sans text-[15px] leading-[1.4] text-foreground/85">
                     {step.text}
                   </p>

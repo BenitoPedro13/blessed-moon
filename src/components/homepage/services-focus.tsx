@@ -69,13 +69,7 @@ export function ServicesFocus() {
       className="relative"
     >
       <ScrollStage heightMultiplier={1.7} particles>
-        <div
-          style={{
-            opacity: "calc(1 - var(--stage-progress, 0))",
-            transform: "scale(calc(1 - var(--stage-progress, 0) * 0.12))",
-          }}
-          className="w-full px-7 py-14 sm:py-16"
-        >
+        <div className="w-full px-7 py-14 sm:py-16">
           {/* Side-column composition, not centered-above-a-grid: a narrow
               statement column plus a wide grid reads as an editorial
               spread, distinct from About's diagonal split and from a plain
@@ -83,19 +77,52 @@ export function ServicesFocus() {
               the same shape is its own kind of monotony even once each
               one is individually bigger/bolder. Stacks on mobile — a
               side-by-side split has no room to read as intentional below
-              `lg`, same reasoning as About's `lg:`-only grid. */}
+              `lg`, same reasoning as About's `lg:`-only grid.
+
+              Each piece below moves on its own schedule as the section's
+              pin plays out, instead of one wrapper fading as a block —
+              label slides left, headline floats up, paragraph sinks down,
+              grid follows slightly delayed. Same `--stage-progress` CSS
+              variable everything else in this scroll system already reads
+              (ScrollStage, ScrollParticles), just with a different
+              coefficient/direction per element — this is the "components
+              move independently, not just fade" request, built without a
+              new dependency (checked React Bits' ScrollFloat/ScrollReveal
+              first; both are GSAP+ScrollTrigger, which would mean a second
+              animation library running alongside Motion for something this
+              CSS-variable approach already covers). */}
           <div className="lg:grid lg:grid-cols-[0.85fr_2.15fr] lg:items-center lg:gap-12">
             <div>
               <Reveal>
-                <SectionHeading number="02" label="SERVICES" />
+                <div
+                  style={{
+                    opacity: "calc(1 - var(--stage-progress, 0))",
+                    transform: "translateX(calc(var(--stage-progress, 0) * -32px))",
+                  }}
+                >
+                  <SectionHeading number="02" label="SERVICES" />
+                </div>
               </Reveal>
               <Reveal delay={0.05}>
-                <h2 className="max-w-md font-sans text-3xl font-semibold tracking-[-0.02em] text-foreground sm:text-4xl">
+                <h2
+                  style={{
+                    opacity: "calc(1 - var(--stage-progress, 0))",
+                    transform:
+                      "translateY(calc(var(--stage-progress, 0) * -36px)) scale(calc(1 - var(--stage-progress, 0) * 0.08))",
+                  }}
+                  className="max-w-md font-sans text-3xl font-semibold tracking-[-0.02em] text-foreground sm:text-4xl"
+                >
                   Different shape. Same standard.
                 </h2>
               </Reveal>
               <Reveal delay={0.1}>
-                <p className="mt-4 max-w-sm text-[14px] leading-[1.6] text-muted-foreground">
+                <p
+                  style={{
+                    opacity: "calc(1 - var(--stage-progress, 0))",
+                    transform: "translateY(calc(var(--stage-progress, 0) * 28px))",
+                  }}
+                  className="mt-4 max-w-sm text-[14px] leading-[1.6] text-muted-foreground"
+                >
                   Eight kinds of systems, built by the same senior partnership
                   end to end — not handed off between teams that never talk to
                   each other.

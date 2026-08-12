@@ -4,6 +4,7 @@ import { AsciiObject } from "@/components/canvasui/AsciiObject";
 import { ParticleObject } from "@/components/canvasui/ParticleObject";
 import { ContactForm } from "@/components/contact-form";
 import { BorderGlow } from "@/components/react-bits/border-glow";
+import { Counter } from "@/components/react-bits/counter";
 import { LineSidebar } from "@/components/react-bits/line-sidebar";
 import { ParticleText } from "@/components/react-bits/particle-text";
 import { Reveal } from "@/components/reveal";
@@ -420,6 +421,24 @@ export default function SystemPage() {
               markerLength={36}
               className="font-mono uppercase tracking-[0.06em]"
               aria-label="Section navigation demo"
+            />
+          </div>
+        </div>
+        <div className="space-y-2">
+          <span className="block font-mono text-[10px] text-muted-foreground uppercase">
+            Counter — used by How We Work (odometer digit-roll, refresh to re-see it)
+          </span>
+          <div className="flex gap-8 border border-border/60 bg-background px-10 py-8">
+            <Counter
+              value={7}
+              places={[10, 1]}
+              fontSize={72}
+              textColor="var(--primary)"
+              fontWeight={600}
+              gap={0}
+              horizontalPadding={0}
+              gradientHeight={0}
+              containerStyle={{ fontFamily: "var(--font-mono)" }}
             />
           </div>
         </div>

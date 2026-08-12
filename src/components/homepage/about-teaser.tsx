@@ -31,10 +31,23 @@ export function AboutTeaser() {
             ScrollStage's centered flex panel, not the panel's actual
             h-dvh, so grid-rows would have nothing real to distribute
             across. */}
+        {/* Holds fully visible until 55% through the pin, then dissolves
+            fast over the remaining 45% — not a linear fade the whole way
+            through. ScrollStage's panels are full-viewport position:
+            sticky, so About and Services are never simultaneously on
+            screen (true overlap would need a bigger restructure — fixed-
+            position cross-fade layering across the section boundary); this
+            is the achievable version of "evolving into the next section":
+            a held, legible statement that then snaps away right at the
+            handoff instead of a slow fade-to-black followed by an abrupt
+            appearance. About's own closing line ("eight kinds of
+            systems") sets up Services' 8-card grid content-wise; this
+            timing is what makes the handoff itself feel deliberate rather
+            than a hard cut. */}
         <div
           style={{
-            opacity: "calc(1 - var(--stage-progress, 0))",
-            transform: "scale(calc(1 - var(--stage-progress, 0) * 0.08))",
+            opacity: "calc(1 - max(0, var(--stage-progress, 0) - 0.55) * 2.2)",
+            transform: "scale(calc(1 - max(0, var(--stage-progress, 0) - 0.55) * 0.16))",
           }}
           className="flex h-full w-full flex-col justify-center gap-8 px-7 py-14 sm:py-16 lg:grid lg:grid-rows-[auto_1fr_auto] lg:justify-normal lg:gap-0"
         >
