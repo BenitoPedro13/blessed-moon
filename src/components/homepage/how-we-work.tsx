@@ -16,35 +16,40 @@ export function HowWeWork() {
       data-frame-label="PROCESS"
       className="relative"
     >
-      <ScrollStage heightMultiplier={1.3} particles>
+      <ScrollStage heightMultiplier={1.4} particles>
+        {/* A horizontal manifesto band, not another column split — the
+            numbers are the dominant visual element here (a real sequence,
+            so the numbering is earning its place, not decorating), text
+            underneath is a caption, not a paragraph. Distinct shape from
+            About's diagonal split and Services' side-column-plus-grid;
+            every section reading as "heading, then content below" would
+            be its own kind of monotony even at a bigger scale. */}
         <div
           style={{
             opacity: "calc(1 - var(--stage-progress, 0))",
-            transform: "scale(calc(1 - var(--stage-progress, 0) * 0.12))",
+            transform: "scale(calc(1 - var(--stage-progress, 0) * 0.1))",
           }}
-          className="w-full px-7 py-16 sm:py-20"
+          className="w-full px-7 py-14 sm:py-16"
         >
           <Reveal>
             <SectionHeading number="03" label="HOW WE WORK" />
           </Reveal>
           <Reveal delay={0.05}>
-            <h2 className="max-w-2xl font-sans text-3xl font-semibold tracking-[-0.02em] text-foreground sm:text-4xl">
+            <h2 className="max-w-xl font-sans text-2xl font-semibold tracking-[-0.02em] text-foreground sm:text-3xl">
               No surprises after kickoff.
             </h2>
           </Reveal>
-          <div className="mt-10 flex flex-col sm:mt-14 sm:flex-row">
+          <div className="mt-12 grid grid-cols-2 gap-x-6 gap-y-12 sm:mt-16 lg:grid-cols-4 lg:gap-x-8">
             {STEPS.map((step, i) => (
               <div
                 key={step.number}
-                className={`flex-1 py-6 sm:px-6 sm:py-0 ${
-                  i > 0 ? "border-t border-border/60 sm:border-t-0 sm:border-l" : ""
-                }`}
+                className={`${i > 0 ? "lg:border-l lg:border-border/60 lg:pl-8" : ""}`}
               >
-                <Reveal delay={0.14 + i * 0.07}>
-                  <span className="mb-3 block font-mono text-3xl font-semibold text-primary sm:text-4xl">
+                <Reveal delay={0.14 + i * 0.08}>
+                  <span className="block font-mono text-6xl font-semibold leading-none text-primary sm:text-7xl lg:text-8xl">
                     {step.number}
                   </span>
-                  <p className="max-w-[18ch] font-sans text-[15px] leading-[1.4] text-foreground/85">
+                  <p className="mt-4 max-w-[16ch] font-sans text-[15px] leading-[1.4] text-foreground/85">
                     {step.text}
                   </p>
                 </Reveal>

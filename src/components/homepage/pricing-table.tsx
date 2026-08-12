@@ -23,28 +23,33 @@ export function PricingTable() {
       data-frame-label="PRICING"
       className="relative"
     >
-      <ScrollStage heightMultiplier={1.2} particles>
+      <ScrollStage heightMultiplier={1.3} particles>
+        {/* Deliberately the calm counterpoint — every other section this
+            pass got louder (bigger type, more layout invention); Pricing
+            stays quiet on purpose, matching its own restraint (no fixed
+            numbers, per docs/design-handoff.md). Centered within generous
+            surrounding space rather than another asymmetric composition —
+            negative space is the distinguishing move here, not more
+            visual weight. */}
         <div
           style={{
             opacity: "calc(1 - var(--stage-progress, 0))",
-            transform: "scale(calc(1 - var(--stage-progress, 0) * 0.12))",
+            transform: "scale(calc(1 - var(--stage-progress, 0) * 0.1))",
           }}
-          className="w-full px-7 py-16 sm:py-20"
+          className="mx-auto w-full max-w-xl px-7 py-14 text-center sm:py-16"
         >
           <Reveal>
-            <SectionHeading number="05" label="PRICING" />
+            <div className="mx-auto w-fit">
+              <SectionHeading number="05" label="PRICING" />
+            </div>
           </Reveal>
-          {/* Deliberately calmer than Services/Selected Work — Pricing is
-              the "quiet confidence" beat, not another loud statement. A
-              short line, not a big headline, matching the section's own
-              restraint (no fixed numbers, per docs/design-handoff.md). */}
           <Reveal delay={0.05}>
-            <p className="max-w-lg text-[14px] leading-[1.6] text-muted-foreground">
+            <p className="mx-auto max-w-md text-[14px] leading-[1.6] text-muted-foreground">
               Priced like the work it actually is — project-based, confirmed
               on a call, never a number pulled from a rate card.
             </p>
           </Reveal>
-          <div className="mt-10 flex max-w-2xl flex-col sm:mt-12">
+          <div className="mt-10 flex flex-col text-left sm:mt-12">
             {TIERS.map((tier, i) => (
               <motion.div
                 key={tier.name}
