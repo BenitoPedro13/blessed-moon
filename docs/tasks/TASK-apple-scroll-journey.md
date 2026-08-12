@@ -59,6 +59,20 @@ transition on the homepage as a proof of concept, verify it visually together, t
 to the rest of the homepage and the subpages in a follow-up pass once the primitive is
 proven.
 
+### 3b. ParticleScroll panel — attempted and reverted
+
+Tried wrapping the homepage's `ParticleScroll` panel in `ScrollStage` and driving its
+internal `scrollTop` programmatically from the pin's own progress, to fix the panel's scroll
+feeling disconnected from the rest of the page (had to find it with the cursor). This
+**visibly corrupted the html-in-canvas capture** (overlapping/ghosted content from more than
+one scroll position rendered simultaneously) and **froze page scroll entirely** partway
+through the Services section. Reverted to the original `data-lenis-prevent` + independent
+native internal scroll. `ParticleScroll`'s capture pipeline apparently assumes natural,
+wheel-paced `scrollTop` changes, not instant per-frame jumps to an arbitrary value — not
+safe to fight further without understanding its internals much better than treating it as a
+black-box `scrollTop` poll allows. The "have to find the box with your cursor" friction is
+real but stays as a known limitation, not a broken capture and frozen scroll.
+
 ### 4. Every framed element gets a label (done, this session)
 
 `data-frame-label` now sits alongside every `data-ascii-keyframe` element site-wide,

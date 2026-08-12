@@ -9,7 +9,7 @@ import { LogoMark } from "@/components/logo-mark";
 import { useSound } from "@/components/sound-provider";
 import { SoundToggle } from "@/components/sound-toggle";
 import { Button } from "@/components/ui/button";
-import { createFrameTracker, createScrollTracker } from "@/lib/ascii-canvas/scroll-progress";
+import { createScrollTracker } from "@/lib/ascii-canvas/scroll-progress";
 
 const NAV_LINKS = [
   { label: "Work", href: "/work" },
@@ -29,7 +29,6 @@ export function SiteNav() {
   const { playHover, playClick } = useSound();
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [frameLabel, setFrameLabel] = useState<string | null>(null);
   const chromeRef = useRef<HTMLElement>(null);
 
   function isActive(href: string) {
@@ -38,23 +37,28 @@ export function SiteNav() {
     return pathname === href;
   }
 
-  // Reuses the exact scroll-position machinery that already drives the ASCII
-  // moon (createScrollTracker) and the same [data-frame-label] convention
-  // introduced for the boot-sequence/system-page work (createFrameTracker) —
-  // the nav becomes part of the same scroll-frame system instead of a static
-  // bar floating on top of it. Own rAF loop and own tracker instances rather
-  // than sharing AsciiCanvas's: these are independent components, and a
-  // shared instance would mean threading state through the tree for no real
-  // benefit — both trackers are just cheap DOM reads.
+  // Reuses the exact scroll-position machinery that already drives the
+  // ASCII moon (createScrollTracker) — the nav's chrome becomes part of the
+  // same scroll-frame system instead of a static bar floating on top of it.
+  // Own rAF loop and own tracker instance rather than sharing AsciiCanvas's:
+  // these are independent components, and a shared instance would mean
+  // threading state through the tree for no real benefit — the tracker is
+  // just a cheap DOM read.
+  //
+  // A live section-name label used to render here too (createFrameTracker,
+  // same [data-frame-label] convention now used by the sidebar instead) —
+  // removed: variable-width text in a `justify-between` flex row shifted
+  // the nav's balance every time the label changed, visibly throwing off
+  // the link group's centering and making the links harder to hit
+  // accurately. A fixed-width slot could have fixed that, but a dedicated
+  // sidebar is a better home for "which section am I in" than competing
+  // for space in an already-tight top bar.
   useEffect(() => {
     const morphTracker = createScrollTracker();
-    const frameTracker = createFrameTracker();
     morphTracker.measure();
-    frameTracker.measure();
 
     let raf = 0;
     let displayedChrome = 0;
-    let lastLabel: string | null = null;
 
     function frame() {
       const morph = morphTracker.read();
@@ -66,19 +70,12 @@ export function SiteNav() {
         chrome.style.setProperty("--nav-chrome", displayedChrome.toFixed(3));
       }
 
-      const label = frameTracker.read();
-      if (label !== lastLabel) {
-        lastLabel = label;
-        setFrameLabel(label);
-      }
-
       raf = requestAnimationFrame(frame);
     }
     raf = requestAnimationFrame(frame);
 
     function handleResize() {
       morphTracker.measure();
-      frameTracker.measure();
     }
     window.addEventListener("resize", handleResize);
     const remeasure = window.setTimeout(handleResize, 500);
@@ -129,14 +126,6 @@ export function SiteNav() {
         ))}
       </nav>
       <div className="flex items-center gap-3">
-        {frameLabel && (
-          <span
-            aria-hidden="true"
-            className="hidden font-mono text-[9px] tracking-[0.2em] text-muted-foreground/70 uppercase lg:inline"
-          >
-            — {frameLabel}
-          </span>
-        )}
         <SoundToggle />
         <button
           type="button"
