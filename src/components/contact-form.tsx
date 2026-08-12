@@ -17,8 +17,11 @@ import { Textarea } from "@/components/ui/textarea";
 
 const PROJECT_TYPES = ["Web App", "Mobile App", "Website", "Other"] as const;
 
+/** Panel tokens, and no `backdrop-blur`: these sit inside a `TerminalPanel`
+ * that already blurs what's behind it, so a per-field backdrop pass would be a
+ * second full-surface filter buying nothing. */
 const FIELD_CLASS =
-  "h-11 rounded-none border-border/80 bg-background/55 px-3 font-sans text-[13px] backdrop-blur-sm placeholder:text-muted-foreground/55 focus-visible:ring-1";
+  "h-11 rounded-none border-border/80 bg-panel px-3 font-sans text-[13px] placeholder:text-muted-foreground/55 focus-visible:ring-1";
 
 type FormStatus = "idle" | "working" | "copied" | "failed";
 
@@ -106,7 +109,7 @@ export function ContactForm({ agencyEmail }: { agencyEmail: string | null }) {
         >
           <SelectTrigger
             id="project-type"
-            className="h-11 w-full rounded-none border-border/80 bg-background/55 px-3 font-sans text-[13px] backdrop-blur-sm focus-visible:ring-1"
+            className="h-11 w-full rounded-none border-border/80 bg-panel px-3 font-sans text-[13px] focus-visible:ring-1"
           >
             <SelectValue />
           </SelectTrigger>
@@ -127,7 +130,7 @@ export function ContactForm({ agencyEmail }: { agencyEmail: string | null }) {
           required
           rows={7}
           placeholder="What are you building, who is it for, and what needs to be true when it ships?"
-          className="min-h-40 resize-y rounded-none border-border/80 bg-background/55 px-3 py-3 font-sans text-[13px] leading-[1.6] backdrop-blur-sm placeholder:text-muted-foreground/55 focus-visible:ring-1"
+          className="min-h-40 resize-y rounded-none border-border/80 bg-panel px-3 py-3 font-sans text-[13px] leading-[1.6] placeholder:text-muted-foreground/55 focus-visible:ring-1"
         />
       </Field>
 

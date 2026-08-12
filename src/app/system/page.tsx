@@ -5,6 +5,11 @@ import { ParticleObject } from "@/components/canvasui/ParticleObject";
 import { CellGrid } from "@/components/cell-grid";
 import { ContactForm } from "@/components/contact-form";
 import { COUNT_DISPLAY, COUNT_INLINE } from "@/components/homepage/morph-count";
+import {
+  TOKEN_DISPLAY,
+  TOKEN_DISPLAY_WORD,
+  TOKEN_INLINE,
+} from "@/components/morph-tokens";
 import { BorderGlow } from "@/components/react-bits/border-glow";
 import { Counter } from "@/components/react-bits/counter";
 import { LineSidebar } from "@/components/react-bits/line-sidebar";
@@ -311,9 +316,14 @@ export default function SystemPage() {
           morph token spends most of its flight mounted in the destination panel while still
           positioned over the origin, far outside that panel&apos;s bounds.
         </p>
-        <div className="relative overflow-hidden border border-border/60 bg-background p-8">
+        <div className="relative space-y-6 overflow-hidden border border-border/60 bg-background p-8">
           <CellGrid />
-          <TerminalPanel number="00" label="EXAMPLE" className="relative max-w-lg">
+          <TerminalPanel
+            number="00"
+            label="EXAMPLE"
+            status="local draft"
+            className="relative max-w-lg"
+          >
             <p className="text-[15.5px] leading-[1.65] text-foreground/75">
               Lead tier — brighter and a step larger than the supporting line.
             </p>
@@ -322,6 +332,66 @@ export default function SystemPage() {
               which reads flat however good the words are.
             </p>
           </TerminalPanel>
+          <TerminalPanel
+            number="01"
+            label="ROWS"
+            status="live"
+            padded={false}
+            className="relative max-w-lg"
+          >
+            <div className="border-b border-border/60 px-5 py-4 text-[13px] text-muted-foreground">
+              <code className="font-mono text-[12px] text-foreground/80">padded={"{false}"}</code>{" "}
+              for a body of full-bleed rows that own their padding.
+            </div>
+            <div className="px-5 py-4 text-[13px] text-muted-foreground">
+              Not a <code className="font-mono text-[12px] text-foreground/80">bodyClassName</code>{" "}
+              override — Tailwind resolves conflicts by stylesheet order, not attribute order,
+              so <code className="font-mono text-[12px] text-foreground/80">p-0</code> would not
+              reliably beat the body padding.
+            </div>
+          </TerminalPanel>
+        </div>
+      </section>
+
+      <section className="space-y-4">
+        <h2 className="font-sans text-xl font-semibold tracking-[-0.01em] text-foreground">
+          Morph token type scale
+        </h2>
+        <p className="max-w-prose text-[13px] leading-[1.6] text-muted-foreground">
+          Three pages run a{" "}
+          <code className="font-mono text-[12px] text-foreground/80">ScrollMorphStage</code>, and
+          they share this type language but not a motif. An amber glyph at display size means
+          one thing everywhere: <em>this is the object in flight</em>. What travels is chosen
+          per page — <code className="font-mono text-[12px] text-foreground/80">/</code> counts{" "}
+          8 → 4 → 3 → 1 (breadth narrowing to one commitment),{" "}
+          <code className="font-mono text-[12px] text-foreground/80">/work</code> travels the
+          project name (the row you pick becomes the page), and{" "}
+          <code className="font-mono text-[12px] text-foreground/80">/about</code> travels{" "}
+          A → B → 0 (two pillars, zero layers between). Copying the count onto all three would
+          have been the same trick with meaning only the first time. Amber&apos;s other job —
+          small, on a control, meaning <em>interactive</em> — must never land on the same glyph.
+        </p>
+        <div className="flex flex-wrap items-baseline gap-x-10 gap-y-6 border border-border/60 bg-background px-8 py-8">
+          <div>
+            <p className="mb-3 font-mono text-[10.5px] tracking-[0.5px] text-muted-foreground">
+              TOKEN_INLINE
+            </p>
+            <p className="text-[13.5px] leading-[2.1] text-muted-foreground">
+              in a sentence, <span className={TOKEN_INLINE}>4</span> steps
+            </p>
+          </div>
+          <div>
+            <p className="mb-3 font-mono text-[10.5px] tracking-[0.5px] text-muted-foreground">
+              TOKEN_DISPLAY
+            </p>
+            <span className={TOKEN_DISPLAY}>4</span>
+          </div>
+          <div>
+            <p className="mb-3 font-mono text-[10.5px] tracking-[0.5px] text-muted-foreground">
+              TOKEN_DISPLAY_WORD
+            </p>
+            <span className={TOKEN_DISPLAY_WORD}>Markado</span>
+          </div>
         </div>
       </section>
 

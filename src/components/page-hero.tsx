@@ -1,3 +1,4 @@
+import { CellGrid } from "@/components/cell-grid";
 import { Reveal } from "@/components/reveal";
 import { ScrollStage } from "@/components/scroll-stage";
 
@@ -26,14 +27,21 @@ export function PageHero({ eyebrow, title, description, code }: PageHeroProps) {
     <section
       data-ascii-keyframe="0"
       data-frame-label={code}
-      className="relative isolate overflow-hidden border-b border-border/60"
+      className="relative isolate overflow-hidden border-b border-panel-edge"
     >
       <ScrollStage heightMultiplier={1.6}>
+        {/* The character-cell ground the homepage stands on, so a subpage hero
+            reads as the same surface rather than as a different site. This
+            replaced a 48px amber square grid: two grounds, and the square one
+            was the graph-paper wallpaper `cell-grid.tsx` was written to get
+            rid of (see its note on why the cell is 1:2, not square). */}
         <div
           aria-hidden="true"
-          style={{ opacity: "calc(0.35 * (1 - var(--stage-progress, 0)))" }}
-          className="pointer-events-none absolute inset-0 [background-image:linear-gradient(rgba(255,106,31,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(255,106,31,0.08)_1px,transparent_1px)] [background-size:48px_48px] [mask-image:linear-gradient(to_bottom,black,transparent_82%)]"
-        />
+          style={{ opacity: "calc(1 - var(--stage-progress, 0) * 0.7)" }}
+          className="pointer-events-none absolute inset-0"
+        >
+          <CellGrid />
+        </div>
         <span
           style={{ opacity: "calc(1 - var(--stage-progress, 0) * 0.85)" }}
           className="absolute left-7 top-24 font-mono text-[9px] tracking-[0.25em] text-primary/70 uppercase"
@@ -54,7 +62,11 @@ export function PageHero({ eyebrow, title, description, code }: PageHeroProps) {
           }}
           className="relative mt-auto w-full px-7 pb-14 sm:pb-20"
         >
-          <div className="relative mx-auto w-full max-w-6xl bg-background/70 p-4 backdrop-blur-[1px] sm:bg-transparent sm:p-0 sm:backdrop-blur-none">
+          {/* The pane is a phone-only measure: at that width the headline sits
+              directly on the moon's glyph texture and stops being readable.
+              Panel tokens rather than `bg-background/70`, so it's the same
+              translucent surface as every window on the site. */}
+          <div className="relative mx-auto w-full max-w-6xl bg-panel p-4 backdrop-blur-md sm:bg-transparent sm:p-0 sm:backdrop-blur-none">
             <Reveal>
               <p className="font-mono text-[10.5px] tracking-[0.08em] text-primary uppercase">
                 {eyebrow}

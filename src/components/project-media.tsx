@@ -9,8 +9,14 @@ export function ProjectCover({
   image: ProjectImage;
   title: string;
 }) {
+  // Panel tokens, and no amber frame. An amber border around a static image
+  // put the "interactive" reading on something that isn't, and inside a
+  // `/work` layer it competed directly with the traveling token, which is the
+  // one thing on screen allowed to be amber at size (morph-tokens.ts). No
+  // `backdrop-blur` either: this sits inside a window that already blurs, and
+  // a nested backdrop pass costs a second full-surface filter for no gain.
   return (
-    <figure className="overflow-hidden border border-primary/30 bg-background/85 font-mono backdrop-blur-sm">
+    <figure className="overflow-hidden border border-panel-edge bg-panel font-mono">
       <figcaption className="flex items-center justify-between gap-4 border-b border-border/60 px-3 py-2 text-[8px] tracking-[0.12em] text-muted-foreground uppercase">
         <span>{title.toLowerCase().replaceAll(" ", "_")}.capture</span>
         <span className="text-primary">● verified</span>
@@ -44,7 +50,7 @@ export function ProjectGallery({
       {images.map((image, index) => (
         <figure
           key={image.src}
-          className="overflow-hidden border border-border/70 bg-background/85 font-mono backdrop-blur-sm"
+          className="overflow-hidden border border-panel-edge bg-panel font-mono backdrop-blur-md"
         >
           <figcaption className="flex items-center justify-between gap-4 border-b border-border/60 px-3 py-2 text-[8px] tracking-[0.1em] uppercase">
             <span className="truncate text-muted-foreground">{image.alt}</span>

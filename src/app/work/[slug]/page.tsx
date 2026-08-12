@@ -120,7 +120,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
               </Reveal>
 
               <Reveal delay={0.1}>
-                <div className="flex h-full flex-col justify-between border border-border/60 bg-background/80 p-6 backdrop-blur-sm sm:p-8">
+                <div className="flex h-full flex-col justify-between border border-border/60 bg-panel p-6 backdrop-blur-sm sm:p-8">
                   <div>
                     <p className="font-mono text-[9px] tracking-[0.12em] text-primary uppercase">
                       project overview
@@ -150,7 +150,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           </div>
         </section>
 
-        <section data-ascii-keyframe="2" data-frame-label="CASE STUDY" className="border-y border-border/60 bg-background/55 px-7 py-16 backdrop-blur-sm sm:py-24">
+        <section data-ascii-keyframe="2" data-frame-label="CASE STUDY" className="border-y border-border/60 bg-panel px-7 py-16 backdrop-blur-sm sm:py-24">
           <div className="mx-auto grid max-w-6xl gap-px border border-border/60 bg-border/60 lg:grid-cols-3">
             <CaseTextBlock index="01" label="The problem" body={project.problem} />
             <CaseTextBlock index="02" label="The approach" body={project.approach} />
@@ -173,7 +173,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           </div>
         </section>
 
-        <section data-ascii-keyframe="4" data-frame-label="DELIVERY PROCESS" className="border-y border-border/60 bg-background/55 px-7 py-16 backdrop-blur-sm sm:py-24">
+        <section data-ascii-keyframe="4" data-frame-label="DELIVERY PROCESS" className="border-y border-border/60 bg-panel px-7 py-16 backdrop-blur-sm sm:py-24">
           <div className="mx-auto max-w-6xl">
             <Reveal>
               <SectionIntro
@@ -186,7 +186,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             <div className="mt-10 grid gap-px border border-border/60 bg-border/60 sm:grid-cols-2 lg:grid-cols-4">
               {project.process.map((step, index) => (
                 <Reveal key={step.phase} delay={index * 0.06}>
-                  <article className="h-full bg-background/90 p-6">
+                  <article className="h-full bg-panel p-6">
                     <span className="font-mono text-[9px] tracking-[0.12em] text-primary">
                       {step.phase}
                     </span>
@@ -216,7 +216,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                   {project.stack.map((technology) => (
                     <span
                       key={technology}
-                      className="border border-border/80 bg-background/70 px-2.5 py-1.5 font-mono text-[8.5px] tracking-[0.06em] text-muted-foreground uppercase"
+                      className="border border-border/80 bg-panel px-2.5 py-1.5 font-mono text-[8.5px] tracking-[0.06em] text-muted-foreground uppercase"
                     >
                       {technology}
                     </span>
@@ -228,7 +228,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
               </div>
             </Reveal>
 
-            <div className="border border-border/60 bg-background/85">
+            <div className="border border-border/60 bg-panel">
               {project.architecture.map((item, index) => (
                 <Reveal key={item.layer} delay={index * 0.06}>
                   <div className="grid gap-3 border-b border-border/60 p-5 last:border-b-0 sm:grid-cols-[7rem_1fr] sm:p-6">
@@ -250,7 +250,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           </div>
         </section>
 
-        <section data-ascii-keyframe="5" data-frame-label="WHAT SHIPPED" className="border-t border-border/60 bg-background/55 px-7 py-16 backdrop-blur-sm sm:py-24">
+        <section data-ascii-keyframe="5" data-frame-label="WHAT SHIPPED" className="border-t border-border/60 bg-panel px-7 py-16 backdrop-blur-sm sm:py-24">
           <div className="mx-auto max-w-6xl">
             <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
               <DetailList
@@ -335,7 +335,7 @@ function ProjectFact({ label, value }: { label: string; value: string }) {
 function CaseTextBlock({ index, label, body }: { index: string; label: string; body: string }) {
   return (
     <Reveal>
-      <article className="h-full bg-background/90 p-6 sm:p-8">
+      <article className="h-full bg-panel p-6 sm:p-8">
         <div className="flex items-center justify-between font-mono text-[8.5px] tracking-[0.1em] uppercase">
           <span className="text-primary">{label}</span>
           <span className="text-muted-foreground">{index}</span>

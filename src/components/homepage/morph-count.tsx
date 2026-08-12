@@ -1,3 +1,5 @@
+import { TOKEN_DISPLAY, TOKEN_INLINE } from "@/components/morph-tokens";
+
 /**
  * The homepage body's one running motif: an amber numeral is the object that
  * carries you from each section to the next (TASK-homepage-morph-redesign.md
@@ -7,47 +9,28 @@
  *
  *   8 kinds of systems → 4 steps → 3 in production → 1 number
  *
- * Breadth narrowing to a single commitment. These two class strings are what
- * keep the two ends of every handoff reading as one object rather than four
- * unrelated flourishes, so they live here rather than being retyped per
- * section.
+ * Breadth narrowing to a single commitment. Both ends of every handoff must
+ * stay in sync: change a section's copy so its number no longer matches what
+ * the next section shows and the sequence has nothing left to be about.
+ *
+ * The *type treatment* moved to `morph-tokens.ts` when `/work` and `/about`
+ * got stages of their own (TASK-subpage-morph-expansion.md) — they share the
+ * language (an amber glyph at display size means "in flight"), not this motif.
+ * A descending count is the homepage's argument; `/work` travels a project
+ * name and `/about` travels `A → B → 0`. The aliases below stay so the
+ * homepage's sections keep naming what they actually carry: a count.
+ *
+ * See `morph-tokens.ts` for the rule separating amber-as-control from
+ * amber-as-token, and for why 1.5em and 8rem are ceilings rather than taste.
  */
 
-/** The inline end. `em`-sized so it scales with whatever sentence it sits in;
- * `vertical-align` rather than a translate because Motion owns `transform` on
- * a token mid-flight and would overwrite it.
- *
- * 1.5em is a ceiling, not a taste call: every sentence holding a token is set
- * at `leading-[2.1]`, and a glyph much past this overflows its own line box
- * and collides with the line above it. Raise one and you have to raise the
- * other. */
-export const COUNT_INLINE =
-  "font-mono text-[1.5em] font-semibold leading-[0.9] align-[-0.14em] text-primary";
+/** The inline end — small, in the closing sentence of a section. */
+export const COUNT_INLINE = TOKEN_INLINE;
 
-/** The display end — the largest type on the page after the Hero headline,
- * deliberately: this is what the eye tracks across the boundary.
+/** The display end — the numeral heading the section that receives it.
  *
- * Set these lockups with `flex items-baseline`, never `items-end`. Bottom
- * alignment lines up the *boxes*, and since the numeral's box is tight
- * (`leading-[0.78]`, no descender) while the phrase's carries descender space,
- * that left the numeral hanging about 10px below its own sentence in every
- * section — visible immediately at full resolution. A numeral and the phrase
- * it belongs to share a baseline.
- *
- * Mono, and big, on purpose. Space Grotesk carries every headline on the
- * site; JetBrains Mono is otherwise confined to eyebrows and captions, so
- * blowing it up to display size is the one place the utility face becomes the
- * loudest thing on screen. That's what makes the token read as terminal
- * output — an emitted value — rather than as another headline.
- *
- * ## An amber numeral means "this is the thing that travels"
- *
- * Amber does two jobs on this page and they must not blur into each other.
- * Small and on a control — a CTA border, a link arrow, a card's hover edge —
- * it means *interactive*. On a numeral, at size, it means *this is a token
- * mid-journey*, and nothing else in the homepage body is allowed to look like
- * that. How We Work's step numbers were amber until this rule existed, three
- * lines under the amber display 4, and the section had two competing numeric
- * systems with no way to tell which one mattered; they're foreground now. */
-export const COUNT_DISPLAY =
-  "font-mono text-[5rem] font-semibold leading-[0.78] tracking-[-0.04em] text-primary sm:text-[6.5rem] lg:text-[8rem]";
+ * How We Work's step numbers were amber until the control/token rule existed,
+ * three lines under the amber display 4, which gave that section two competing
+ * numeric systems and no way to tell which one mattered. They're foreground
+ * now. */
+export const COUNT_DISPLAY = TOKEN_DISPLAY;

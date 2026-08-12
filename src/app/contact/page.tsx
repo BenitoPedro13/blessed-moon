@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import { ArrowUpRight, CalendarClock, CalendarDays, Mail } from "lucide-react";
 
+import { CellGrid } from "@/components/cell-grid";
 import { ContactForm } from "@/components/contact-form";
 import { PageHero } from "@/components/page-hero";
 import { Reveal } from "@/components/reveal";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
+import { TerminalPanel } from "@/components/terminal-panel";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -13,6 +15,14 @@ export const metadata: Metadata = {
     "Prepare a project brief for Blessed Moon Studio. Agency email and scheduling channels will be published here when they are provisioned.",
 };
 
+/**
+ * Chrome, deliberately without the stage (TASK-subpage-morph-expansion.md
+ * §2.0). This page gets the window frame, the cool surfaces, and the cell-grid
+ * ground so it is visibly the same system as the rest of the site — but not
+ * the pin. It is the one conversion action here, and putting a form behind a
+ * scroll journey would make the single thing this page exists to make easy the
+ * hardest thing on the site. A form should open, not unfold.
+ */
 export default function ContactPage() {
   const agencyEmail = process.env.AGENCY_CONTACT_EMAIL?.trim() || null;
   const bookingUrl = process.env.AGENCY_BOOKING_URL?.trim() || null;
@@ -28,69 +38,71 @@ export default function ContactPage() {
           code="CONTACT"
         />
 
-        <section data-ascii-keyframe="2" data-frame-label="PROJECT ENQUIRY" className="px-7 py-16 sm:py-24">
-          <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[1.08fr_0.92fr] lg:gap-14">
+        <section
+          data-ascii-keyframe="2"
+          data-frame-label="PROJECT ENQUIRY"
+          className="relative px-7 py-16 sm:py-24"
+        >
+          <CellGrid />
+          <div className="relative mx-auto grid max-w-6xl gap-6 lg:grid-cols-[1.08fr_0.92fr] lg:gap-8">
             <Reveal>
-              <div className="border border-border/60 bg-background/70 p-6 backdrop-blur-sm sm:p-8">
-                <div className="mb-8 flex items-center justify-between border-b border-border/60 pb-3 font-mono text-[8.5px] tracking-[0.12em] text-muted-foreground uppercase">
-                  <span>project_enquiry.form</span>
-                  <span className="text-primary">
-                    {agencyEmail ? "email ready" : "local draft"}
-                  </span>
-                </div>
+              <TerminalPanel
+                number="01"
+                label="PROJECT ENQUIRY"
+                status={agencyEmail ? "email ready" : "local draft"}
+              >
                 <ContactForm agencyEmail={agencyEmail} />
-              </div>
+              </TerminalPanel>
             </Reveal>
 
-            <div className="space-y-5">
+            <div className="space-y-6">
               <Reveal delay={0.08}>
-                <div className="relative min-h-72 overflow-hidden border border-primary/40 bg-background/75 p-7 backdrop-blur-sm">
-                  <div
-                    aria-hidden="true"
-                    className="absolute inset-0 opacity-25 [background-image:linear-gradient(rgba(255,106,31,0.12)_1px,transparent_1px),linear-gradient(90deg,rgba(255,106,31,0.12)_1px,transparent_1px)] [background-size:32px_32px]"
-                  />
-                  <div className="relative flex h-full min-h-56 flex-col justify-between">
-                    <div>
-                      <CalendarDays className="size-6 text-primary" aria-hidden="true" />
-                      <p className="mt-8 font-mono text-[9px] tracking-[0.12em] text-primary uppercase">
-                        {bookingUrl ? "agency scheduling" : "calendar provisioning"}
-                      </p>
-                      <h2 className="mt-3 font-sans text-2xl font-semibold tracking-[-0.025em] text-foreground">
-                        {bookingUrl
-                          ? "Pick a clear 30-minute window."
-                          : "Scheduling opens with the agency calendar."}
-                      </h2>
-                      <p className="mt-3 max-w-sm text-[12.5px] leading-[1.65] text-muted-foreground">
-                        {bookingUrl
-                          ? "Choose a time in your timezone. The invite and meeting details are handled automatically."
-                          : "We are not substituting a personal calendar for a studio channel. Use the brief builder while the official calendar is being prepared."}
-                      </p>
-                    </div>
-                    {bookingUrl ? (
-                      <a
-                        href={bookingUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="mt-8 inline-flex w-fit items-center gap-2 border border-primary bg-primary px-4 py-3 font-mono text-[9.5px] tracking-[0.08em] text-primary-foreground uppercase transition-colors hover:bg-transparent hover:text-primary"
-                      >
-                        Open booking calendar
-                        <ArrowUpRight className="size-3" aria-hidden="true" />
-                      </a>
-                    ) : (
-                      <span className="mt-8 inline-flex w-fit items-center gap-2 border border-border/80 px-4 py-3 font-mono text-[9.5px] tracking-[0.08em] text-muted-foreground uppercase">
-                        Calendar not live yet
-                        <CalendarClock className="size-3" aria-hidden="true" />
-                      </span>
-                    )}
-                  </div>
-                </div>
+                {/* The 32px amber square grid that used to sit inside this card
+                    is gone — same reason as the hero's (see page-hero.tsx):
+                    the section already stands on a cell grid, and a second,
+                    square one read as wallpaper. */}
+                <TerminalPanel
+                  number="02"
+                  label="SCHEDULING"
+                  status={bookingUrl ? "open" : "provisioning"}
+                >
+                  <CalendarDays className="size-6 text-primary" aria-hidden="true" />
+                  <h2 className="mt-7 font-sans text-2xl font-semibold tracking-[-0.025em] text-foreground">
+                    {bookingUrl
+                      ? "Pick a clear 30-minute window."
+                      : "Scheduling opens with the agency calendar."}
+                  </h2>
+                  <p className="mt-3 max-w-sm text-[12.5px] leading-[1.65] text-muted-foreground">
+                    {bookingUrl
+                      ? "Choose a time in your timezone. The invite and meeting details are handled automatically."
+                      : "We are not substituting a personal calendar for a studio channel. Use the brief builder while the official calendar is being prepared."}
+                  </p>
+                  {bookingUrl ? (
+                    <a
+                      href={bookingUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="mt-7 inline-flex w-fit items-center gap-2 border border-primary bg-primary px-4 py-3 font-mono text-[10.5px] tracking-[0.5px] text-primary-foreground uppercase transition-colors hover:bg-transparent hover:text-primary"
+                    >
+                      Open booking calendar
+                      <ArrowUpRight className="size-3" aria-hidden="true" />
+                    </a>
+                  ) : (
+                    <span className="mt-7 inline-flex w-fit items-center gap-2 border border-border/80 px-4 py-3 font-mono text-[10.5px] tracking-[0.5px] text-muted-foreground uppercase">
+                      Calendar not live yet
+                      <CalendarClock className="size-3" aria-hidden="true" />
+                    </span>
+                  )}
+                </TerminalPanel>
               </Reveal>
 
               <Reveal delay={0.16}>
-                <div className="border border-border/60 bg-background/70 backdrop-blur-sm">
-                  <div className="border-b border-border/60 px-5 py-3 font-mono text-[8.5px] tracking-[0.12em] text-muted-foreground uppercase">
-                    agency channel
-                  </div>
+                <TerminalPanel
+                  number="03"
+                  label="AGENCY CHANNEL"
+                  padded={false}
+                  status={agencyEmail ? "live" : "pending"}
+                >
                   {agencyEmail ? (
                     <a
                       href={`mailto:${agencyEmail}`}
@@ -121,12 +133,9 @@ export default function ContactPage() {
                           Agency inbox provisioning
                         </span>
                       </div>
-                      <span className="font-mono text-[8px] tracking-[0.08em] text-primary uppercase">
-                        pending
-                      </span>
                     </div>
                   )}
-                </div>
+                </TerminalPanel>
               </Reveal>
 
               <Reveal delay={0.24}>

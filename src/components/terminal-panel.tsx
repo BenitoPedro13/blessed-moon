@@ -31,6 +31,8 @@ export function TitleRule() {
 export function TerminalPanel({
   number,
   label,
+  status,
+  padded = true,
   className = "",
   bodyClassName = "",
   style,
@@ -38,6 +40,16 @@ export function TerminalPanel({
 }: {
   number: string;
   label: string;
+  /** Optional right-hand end of the title bar — a live state, the way a real
+   * window's title bar carries one (`local draft`, `email ready`). Sits past
+   * the rule, so the rule still measures the window. */
+  status?: React.ReactNode;
+  /** Set false for a body that owns its own padding, e.g. a list of full-bleed
+   * rows. Not a class override: Tailwind resolves conflicting utilities by
+   * source order in the generated stylesheet, not by their order in the
+   * attribute, so passing `p-0` through `bodyClassName` would not reliably
+   * beat `WINDOW_BODY`. */
+  padded?: boolean;
   className?: string;
   bodyClassName?: string;
   style?: React.CSSProperties;
@@ -48,8 +60,13 @@ export function TerminalPanel({
       <div className={WINDOW_TITLEBAR}>
         <SectionHeading number={number} label={label} className="whitespace-nowrap" />
         <TitleRule />
+        {status && (
+          <span className="shrink-0 font-mono text-[10.5px] tracking-[0.5px] text-muted-foreground">
+            {status}
+          </span>
+        )}
       </div>
-      <div className={`${WINDOW_BODY} ${bodyClassName}`}>{children}</div>
+      <div className={`${padded ? WINDOW_BODY : ""} ${bodyClassName}`}>{children}</div>
     </div>
   );
 }

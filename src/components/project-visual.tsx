@@ -8,7 +8,7 @@ const BAR_HEIGHTS = [32, 48, 40, 70, 58, 82, 64, 90];
 
 export function ProjectVisual({ title, variant }: ProjectVisualProps) {
   return (
-    <div className="relative min-h-72 overflow-hidden border border-primary/30 bg-background/80 p-3 font-mono backdrop-blur-sm sm:min-h-80">
+    <div className="relative min-h-72 overflow-hidden border border-panel-edge bg-panel p-3 font-mono backdrop-blur-sm sm:min-h-80">
       <div className="flex items-center justify-between border-b border-border/60 pb-2 text-[8px] tracking-[0.12em] text-muted-foreground uppercase">
         <span>{title.toLowerCase().replaceAll(" ", "_")}.sys</span>
         <span className="text-primary">● online</span>

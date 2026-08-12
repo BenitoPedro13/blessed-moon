@@ -52,10 +52,10 @@ aesthetic).
 | Framework | **Next.js 16** (App Router, TypeScript, Turbopack, `src/` dir, `@/*` alias) — always the latest stable major, never a pinned number (see §2.0) | scaffolded |
 | Styling / components | **Tailwind CSS v4 + shadcn/ui** — CSS-first config in `src/app/globals.css` (no `tailwind.config.*`); brand tokens (bg `#050505`, accent `#ff6a1f`, radius `0`, fonts) wired into the `.dark` theme block; `button`, `input`, `textarea`, `card`, `select` primitives installed | scaffolded |
 | Atmosphere effect | Full-bleed ASCII moon background, scroll-driven zoom/rotation/drift, built on canvasui.dev's **AsciiObject** component (via shadcn CLI — see §2, `TASK-ascii-canvas-layer.md`). A hand-written raw-WebGL2 version was tried first and dropped in favor of this: AsciiObject's edge-aware glyph matching, DRACO support, and reduced-motion handling all beat what was being hand-rolled. Plus animate-ui's **StarsBackground** behind it, and canvasui's **ParticleObject** for the closing-CTA moment. `ParticleScroll` previously wrapped the homepage's post-Hero content as a content-dissolve panel with its own independent internal scroll — removed (`TASK-homepage-unify-scroll.md`): two disconnected scroll contexts was a real, repeated source of confusion, and the panel had to stay shorter than its content, capping section depth. The component stays in the codebase, just not wired into a live page — same status as `DecryptReveal`, whose native effect (like `ParticleScroll`'s) depends on the experimental, Chrome-only `html-in-canvas` API, gated per-origin by a Chrome Origin Trial (`TASK-html-in-canvas-origin-trial.md`) | built on homepage |
-| Scroll journey | Lenis (`src/components/lenis-provider.tsx`) gives the whole site eased/smoothed native scroll — skipped entirely under `prefers-reduced-motion`. `ScrollStage` (`src/components/scroll-stage.tsx`) pins **one** section for a taller scroll range via `position: sticky` (no scroll-jacking) and exposes progress as `--stage-progress` for children to fade/scale/transform against; used on Hero, the shared `PageHero`, and the subpages' sections. `ScrollMorphStage` (`src/components/scroll-morph-stage.tsx`) pins **several** in one shared sticky frame, all mounted at once and crossfading — which is what makes a real shared-element handoff possible, since two `ScrollStage` pins are never simultaneously on screen and so nothing can travel between them. It drives the whole homepage body; see `TASK-apple-scroll-journey.md` / `TASK-homepage-unify-scroll.md` / `TASK-homepage-morph-redesign.md`. **Two rules for content inside a morph layer:** a layer animates `opacity` only (a per-frame `transform` on an ancestor makes Motion's layout measurement drift mid-flight, so the token lands wrong), and `Reveal` does not work in there (it's `whileInView`-driven and every layer is permanently inside the viewport) — use `morphDrift()` instead | built site-wide |
+| Scroll journey | Lenis (`src/components/lenis-provider.tsx`) gives the whole site eased/smoothed native scroll — skipped entirely under `prefers-reduced-motion`. `ScrollStage` (`src/components/scroll-stage.tsx`) pins **one** section for a taller scroll range via `position: sticky` (no scroll-jacking) and exposes progress as `--stage-progress` for children to fade/scale/transform against; used on Hero, the shared `PageHero`, and the subpages' sections. `ScrollMorphStage` (`src/components/scroll-morph-stage.tsx`) pins **several** in one shared sticky frame, all mounted at once and crossfading — which is what makes a real shared-element handoff possible, since two `ScrollStage` pins are never simultaneously on screen and so nothing can travel between them. It drives the whole homepage body **and, since `TASK-subpage-morph-expansion.md`, `/work` and `/about`** — `/contact` and `/work/[slug]` deliberately take the window chrome without a pin (a form should open rather than unfold; a long case study inside a scroll-driven window nests two scroll contexts). See `TASK-apple-scroll-journey.md` / `TASK-homepage-unify-scroll.md` / `TASK-homepage-morph-redesign.md`. **Two rules for content inside a morph layer:** a layer animates `opacity` only (a per-frame `transform` on an ancestor makes Motion's layout measurement drift mid-flight, so the token lands wrong), and `Reveal` does not work in there (it's `whileInView`-driven and every layer is permanently inside the viewport) — use `morphDrift()` instead | built site-wide |
 | Sound / loading | Opt-in sound system (`src/components/sound-provider.tsx`, muted by default) and an interactive terminal boot sequence on load (`src/components/boot-sequence.tsx`) — sound-enable prompt, then a real scroll-to-begin gate (keyboard/button equivalents, fallback timeout so it can never trap a visitor) — `TASK-sound-and-boot.md`, `TASK-boot-sequence-gate.md` | built on homepage |
 | Brand / SEO | Logo: a literal pixel-art crescent (`src/lib/logo-mark.ts`, one shared outline path) + `Blessed_Moon` wordmark, in the nav (`LogoMark`) and generated into the favicon, apple touch icon, and Open Graph/Twitter image via `next/og` `ImageResponse` (`src/app/icon.tsx`, `apple-icon.tsx`, `opengraph-image.tsx`, `twitter-image.tsx`). Metadata (title template, OG/Twitter tags, robots), `robots.ts`, `sitemap.ts` all target `src/lib/site-config.ts`'s `SITE_URL` — `TASK-seo-favicon-and-logo.md` | built |
-| Pages | `/`, `/work`, `/about`, `/contact` per `docs/design-handoff.md` Screens | complete — all four routes built, statically generated, responsive, and included in the sitemap (`TASK-finish-studio-subpages.md`) |
+| Pages | `/`, `/work`, `/about`, `/contact` per `docs/design-handoff.md` Screens | complete — all four routes built, statically generated, responsive, and included in the sitemap (`TASK-finish-studio-subpages.md`), then restructured onto the homepage's morphing-window system (`TASK-subpage-morph-expansion.md`) |
 | Deployment target | Current production URL is `https://blessed-moon.vercel.app` (confirmed by the user, used as `SITE_URL` for SEO metadata) — whether that stays the final domain, or a custom domain gets attached later, is still open; don't assume otherwise without asking | live at a Vercel URL, final domain open |
 
 **Version numbers written anywhere in this file or `docs/design-handoff.md` are a snapshot at
@@ -97,6 +97,16 @@ dependency.
   `layoutId` (`MorphToken`, `src/components/homepage/morph-count.tsx`). Changing a section's
   copy so its number no longer matches what the next section shows breaks the one thing the
   sequence is built around. Both sides of a handoff must stay in sync.
+- **Every staged page shares the token *language*, never the *motif*.** An amber glyph at
+  display size means "this is the object in flight" everywhere (`src/components/
+  morph-tokens.ts`); what travels is chosen per page, because a motif copied across three
+  pages is the same trick with meaning only the first time. `/` counts down (breadth →
+  one commitment), `/work` travels the project name (the row you pick becomes the page,
+  chained through each entry's `next →` line), `/about` travels `A → B → 0` (two pillars,
+  zero layers between — the pillar letters are already in the data). Adding a stage to a
+  new page means choosing what that page has to say, not reusing one of these. Amber's
+  other job — small, on a control, meaning *interactive* — must never land on the same
+  glyph, which is why `/work`'s index rows are a listing rather than three links.
 - **Wireframe copy and section order are final** per `docs/design-handoff.md` ("Fidelity").
   Colors/type are a starting palette, not locked — but section content and structure should
   not be silently rewritten; if something in the wireframe seems wrong, flag it before
@@ -251,7 +261,7 @@ second package emerges.
 - **Layout (current + proposed):**
 
   ```
-  src/app/                  Next.js App Router routes: / (built) — /work, /about, /contact proposed;
+  src/app/                  Next.js App Router routes: /, /work, /work/[slug], /about, /contact — built;
                              /system — hidden, noindex design-system page, unlinked — built;
                              icon.tsx, apple-icon.tsx, opengraph-image.tsx, twitter-image.tsx,
                              robots.ts, sitemap.ts — generated brand/SEO assets — built
@@ -265,10 +275,14 @@ second package emerges.
                              The five between Hero and the CTA are layers of one
                              ScrollMorphStage (see morph-count.tsx for the 8→4→3→1 motif they
                              hand between them); Hero and closing-cta keep their own pins
+  src/components/work/      /work morph layers (work-index, work-case) — built
+  src/components/about/     /about morph layers (about-principle, about-pillar,
+                             about-dynamic) — built
   src/components/           shared composites (site-nav, site-footer, section-heading,
                              ascii-canvas, sound-provider, sound-toggle, boot-sequence,
                              logo-mark, scroll-stage, scroll-morph-stage, terminal-panel,
-                             cell-grid) — built
+                             cell-grid, page-hero, page-cta, morph-tokens — the token type
+                             language every staged page shares) — built
   src/lib/                   shadcn's cn() helper etc.; ascii-canvas/scroll-progress.ts —
                              scroll-position tracker driving the moon's morph; logo-mark.ts —
                              shared pixel-crescent path; site-config.ts — SITE_URL — built

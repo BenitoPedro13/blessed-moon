@@ -24,8 +24,10 @@ export function PageCta({
     <section
       data-ascii-keyframe={keyframe}
       data-frame-label="START A PROJECT"
-      className="relative overflow-hidden border-y border-primary/30 bg-background/65 px-7 py-20 text-center backdrop-blur-sm sm:py-24"
+      className="relative overflow-hidden border-y border-primary/30 bg-panel px-7 py-20 text-center backdrop-blur-md sm:py-24"
     >
+      {/* The amber edge rules stay amber: this whole band is one control, and
+          on a control amber means interactive (morph-tokens.ts). */}
       <div aria-hidden="true" className="absolute inset-y-0 left-0 w-px bg-primary" />
       <div aria-hidden="true" className="absolute inset-y-0 right-0 w-px bg-primary" />
       <Reveal>

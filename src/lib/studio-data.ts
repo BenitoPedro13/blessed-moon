@@ -473,3 +473,64 @@ export const STUDIO_PROJECTS: readonly StudioProject[] = [
 export function getStudioProject(slug: string) {
   return STUDIO_PROJECTS.find((project) => project.slug === slug);
 }
+
+/** The About page's values chips. Verbatim from the brand identity — these are
+ * named words, not a paraphrasable list (CLAUDE.md §0). */
+export const STUDIO_VALUES = [
+  "Clarity",
+  "Craft",
+  "Integrity",
+  "Quiet confidence",
+  "Long-term thinking",
+  "Respect for attention and time",
+] as const;
+
+export type StudioPillar = {
+  /** Also the traveling token on `/about`: A hands off to B, and B to the 0
+   * that closes the page. Change one and the handoff has nothing to carry. */
+  id: string;
+  title: string;
+  lead: string;
+  titleLine: string;
+  roles: readonly string[];
+  paragraphs: readonly string[];
+};
+
+/** Moved out of `src/app/about/page.tsx` when the page became a morph stage —
+ * two components read it now, so a route file is no longer its right home. */
+export const STUDIO_PILLARS: readonly StudioPillar[] = [
+  {
+    id: "A",
+    title: "Client Consultation, Strategy & Brand Identity",
+    lead: "Myelle de Raat",
+    titleLine: "Co-Founder (CEO) · Chief Creative Officer (CCO)",
+    roles: [
+      "Marketing Strategist",
+      "Brand Identity & Visual Designer",
+      "Backend Web Developer",
+      "Web Designer",
+    ],
+    paragraphs: [
+      "Serving as your primary partner for high-level consultations, ideation, and project-scoping sessions.",
+      "This pillar directs the commercial growth strategy, market positioning, and corporate visual architecture.",
+      "Every interface is engineered around conversion-focused UI/UX layouts, ensuring your product resonates deeply with international audiences while maintaining a hardened, secure infrastructure from the front-end up.",
+    ],
+  },
+  {
+    id: "B",
+    title: "Enterprise Architecture & Full-Stack Development",
+    lead: "Benito Pedro Xavier",
+    titleLine: "Founder (CEO) · Chief Technology Officer (CTO)",
+    roles: [
+      "Lead Software Developer / Engineer",
+      "API Architect",
+      "Full-Stack Web Developer",
+      "Web Designer",
+    ],
+    paragraphs: [
+      "Directing the heavy programmatic mechanics, server-side infrastructure, and database ecosystems.",
+      "This pillar constructs enterprise-grade software frameworks capable of cross-border scaling.",
+      "By developing custom API architectures and deep multi-language software logic, this engine ensures that the invisible foundations of your web application are lightning-fast, ultra-secure, and endlessly adaptable to future business requirements.",
+    ],
+  },
+] as const;

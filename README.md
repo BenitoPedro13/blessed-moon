@@ -80,6 +80,13 @@ project form, booking link, email, LinkedIn, and GitHub; until an email provider
 the form transparently opens a prefilled email draft instead of pretending to submit to a
 backend.
 
+`/work` and `/about` run the same one-morphing-terminal-window structure as the homepage body
+(`ScrollMorphStage`), each with its own traveling motif rather than a copy of the homepage's
+count: `/work` hands the project name from the index listing into each entry, `/about` hands
+`A → B → 0`. `/contact` and the case-study pages take the window chrome and the cell-grid ground
+but no pin — a form should open rather than unfold, and a long case study inside a scroll-driven
+window would nest two scroll contexts. See `docs/tasks/TASK-subpage-morph-expansion.md`.
+
 Sound remains opt-in and muted by default. The terminal boot sequence, pixel-crescent logo,
 generated favicon/apple/OG/Twitter assets, metadata, `robots.ts`, and responsive scroll-driven
 ASCII moon are all wired in, targeting `https://blessed-moon.vercel.app` through

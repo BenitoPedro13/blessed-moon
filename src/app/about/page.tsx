@@ -1,62 +1,20 @@
 import type { Metadata } from "next";
 
+import { AboutDynamic } from "@/components/about/about-dynamic";
+import { AboutPillar } from "@/components/about/about-pillar";
+import { AboutPrinciple } from "@/components/about/about-principle";
 import { PageCta } from "@/components/page-cta";
 import { PageHero } from "@/components/page-hero";
-import { Reveal } from "@/components/reveal";
+import { ScrollMorphStage } from "@/components/scroll-morph-stage";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
+import { STUDIO_PILLARS } from "@/lib/studio-data";
 
 export const metadata: Metadata = {
   title: "About",
   description:
     "Blessed Moon Studio combines strategy, brand identity, enterprise architecture, and full-stack development in one direct senior partnership.",
 };
-
-const VALUES = [
-  "Clarity",
-  "Craft",
-  "Integrity",
-  "Quiet confidence",
-  "Long-term thinking",
-  "Respect for attention and time",
-] as const;
-
-const PILLARS = [
-  {
-    id: "A",
-    title: "Client Consultation, Strategy & Brand Identity",
-    lead: "Myelle de Raat",
-    titleLine: "Co-Founder (CEO) · Chief Creative Officer (CCO)",
-    roles: [
-      "Marketing Strategist",
-      "Brand Identity & Visual Designer",
-      "Backend Web Developer",
-      "Web Designer",
-    ],
-    paragraphs: [
-      "Serving as your primary partner for high-level consultations, ideation, and project-scoping sessions.",
-      "This pillar directs the commercial growth strategy, market positioning, and corporate visual architecture.",
-      "Every interface is engineered around conversion-focused UI/UX layouts, ensuring your product resonates deeply with international audiences while maintaining a hardened, secure infrastructure from the front-end up.",
-    ],
-  },
-  {
-    id: "B",
-    title: "Enterprise Architecture & Full-Stack Development",
-    lead: "Benito Pedro Xavier",
-    titleLine: "Founder (CEO) · Chief Technology Officer (CTO)",
-    roles: [
-      "Lead Software Developer / Engineer",
-      "API Architect",
-      "Full-Stack Web Developer",
-      "Web Designer",
-    ],
-    paragraphs: [
-      "Directing the heavy programmatic mechanics, server-side infrastructure, and database ecosystems.",
-      "This pillar constructs enterprise-grade software frameworks capable of cross-border scaling.",
-      "By developing custom API architectures and deep multi-language software logic, this engine ensures that the invisible foundations of your web application are lightning-fast, ultra-secure, and endlessly adaptable to future business requirements.",
-    ],
-  },
-] as const;
 
 export default function AboutPage() {
   return (
@@ -70,116 +28,39 @@ export default function AboutPage() {
           code="ABOUT"
         />
 
-        <section
-          data-ascii-keyframe="2"
-          data-frame-label="OPERATING PRINCIPLE"
-          className="border-b border-border/60 bg-background/70 px-7 py-16 backdrop-blur-sm sm:py-20"
-        >
-          <div className="mx-auto max-w-6xl">
-            <Reveal>
-              <p className="font-mono text-[9.5px] tracking-[0.12em] text-primary uppercase">
-                01 / operating principle
-              </p>
-              <h2 className="mt-4 max-w-2xl font-sans text-3xl font-semibold tracking-[-0.03em] text-foreground sm:text-4xl">
-                Technology that works with quiet excellence.
-              </h2>
-            </Reveal>
-            <Reveal delay={0.1}>
-              <div className="mt-8 flex max-w-4xl flex-wrap gap-2">
-                {VALUES.map((value) => (
-                  <span
-                    key={value}
-                    className="border border-border/80 bg-background/55 px-3 py-2 font-mono text-[9px] tracking-[0.06em] text-muted-foreground backdrop-blur-sm"
-                  >
-                    {value}
-                  </span>
-                ))}
-              </div>
-            </Reveal>
-          </div>
-        </section>
+        {/* One window, four views, with `A → B → 0` traveling through them —
+            the page's own motif, not the homepage's count
+            (TASK-subpage-morph-expansion.md §2.3). The window widens for the
+            pillars, which are the only two-column views here, and contracts
+            hard for the closing claim. */}
+        <ScrollMorphStage
+          heightPerLayer={1.6}
+          layers={[
+            {
+              number: "01",
+              keyframe: 1,
+              label: "PRINCIPLE",
+              width: 860,
+              content: <AboutPrinciple />,
+            },
+            ...STUDIO_PILLARS.map((pillar, i) => ({
+              number: String(i + 2).padStart(2, "0"),
+              keyframe: i + 2,
+              label: `PILLAR ${pillar.id}`,
+              width: 1020,
+              content: <AboutPillar pillar={pillar} />,
+            })),
+            {
+              number: "04",
+              keyframe: 4,
+              label: "THE DYNAMIC",
+              width: 720,
+              content: <AboutDynamic />,
+            },
+          ]}
+        />
 
-        <section data-ascii-keyframe="3" data-frame-label="HOW WE'RE STRUCTURED" className="px-7 py-16 sm:py-24">
-          <div className="mx-auto max-w-6xl">
-            <Reveal>
-              <p className="font-mono text-[9.5px] tracking-[0.12em] text-primary uppercase">
-                02 / how we&apos;re structured
-              </p>
-            </Reveal>
-
-            <div className="mt-8 grid border border-border/60 bg-border/60 lg:grid-cols-2 lg:gap-px">
-              {PILLARS.map((pillar, index) => (
-                <div
-                  key={pillar.id}
-                  className={`bg-background/75 p-7 backdrop-blur-sm sm:p-10 ${
-                    index === 0 ? "border-b border-border/60 lg:border-b-0" : ""
-                  }`}
-                >
-                  <Reveal delay={index * 0.1}>
-                    <div className="flex items-center justify-between gap-4 font-mono text-[8.5px] tracking-[0.12em] text-muted-foreground uppercase">
-                      <span>Pillar {pillar.id}</span>
-                      <span>executive / direct</span>
-                    </div>
-                    <h2 className="mt-8 max-w-lg font-sans text-2xl font-semibold tracking-[-0.025em] text-foreground">
-                      {pillar.title}
-                    </h2>
-                    <p className="mt-3 font-mono text-[9px] tracking-[0.08em] text-primary uppercase">
-                      {pillar.lead}
-                    </p>
-                    <p className="mt-2 text-[12px] leading-[1.6] text-foreground/80">
-                      {pillar.titleLine}
-                    </p>
-                    <ul className="mt-4 flex flex-wrap gap-2">
-                      {pillar.roles.map((role) => (
-                        <li
-                          key={role}
-                          className="border border-border/80 bg-background/55 px-3 py-2 font-mono text-[9px] tracking-[0.06em] text-muted-foreground"
-                        >
-                          {role}
-                        </li>
-                      ))}
-                    </ul>
-                    <div className="mt-8 space-y-4">
-                      {pillar.paragraphs.map((paragraph) => (
-                        <p
-                          key={paragraph}
-                          className="max-w-xl text-[12.5px] leading-[1.72] text-muted-foreground"
-                        >
-                          {paragraph}
-                        </p>
-                      ))}
-                    </div>
-                  </Reveal>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section
-          data-ascii-keyframe="4"
-          data-frame-label="WHY CHOOSE OUR DYNAMIC"
-          className="border-y border-border/60 bg-background/55 px-7 py-16 backdrop-blur-sm sm:py-20"
-        >
-          <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[0.45fr_1fr]">
-            <Reveal>
-              <p className="font-mono text-[9.5px] tracking-[0.12em] text-primary uppercase">
-                03 / why choose our dynamic
-              </p>
-            </Reveal>
-            <Reveal delay={0.1}>
-              <p className="max-w-3xl font-sans text-xl leading-[1.55] tracking-[-0.015em] text-foreground/90 sm:text-2xl">
-                By structuring our agency as a specialized duo, we eliminate layers of corporate bureaucracy. You consult directly with the executives executing your vision, ensuring rapid deployment, seamless communication, and a digital product that is both commercially dominant and technically unshakeable.
-              </p>
-            </Reveal>
-          </div>
-        </section>
-
-        <div className="px-7 py-16">
-          <div className="mx-auto max-w-6xl">
-            <PageCta keyframe="5" />
-          </div>
-        </div>
+        <PageCta keyframe="5" />
       </main>
       <SiteFooter />
     </>
