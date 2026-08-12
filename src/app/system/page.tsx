@@ -3,11 +3,13 @@ import type { Metadata } from "next";
 import { AsciiObject } from "@/components/canvasui/AsciiObject";
 import { ParticleObject } from "@/components/canvasui/ParticleObject";
 import { ContactForm } from "@/components/contact-form";
+import { COUNT_DISPLAY, COUNT_INLINE } from "@/components/homepage/morph-count";
 import { BorderGlow } from "@/components/react-bits/border-glow";
 import { Counter } from "@/components/react-bits/counter";
 import { LineSidebar } from "@/components/react-bits/line-sidebar";
 import { ParticleText } from "@/components/react-bits/particle-text";
 import { Reveal } from "@/components/reveal";
+import { MorphToken, ScrollMorphStage } from "@/components/scroll-morph-stage";
 import { ScrollStage } from "@/components/scroll-stage";
 import { SectionHeading } from "@/components/section-heading";
 import { SiteFooter } from "@/components/site-footer";
@@ -285,6 +287,67 @@ export default function SystemPage() {
               --stage-progress
             </div>
           </ScrollStage>
+        </div>
+      </section>
+
+      <section className="space-y-4">
+        <h2 className="font-sans text-xl font-semibold tracking-[-0.01em] text-foreground">
+          Scroll morph stage
+        </h2>
+        <p className="max-w-prose text-[13px] leading-[1.6] text-muted-foreground">
+          What <code className="font-mono text-[12px] text-foreground/80">ScrollStage</code> can&apos;t
+          do: two of its pins are never simultaneously on screen, so nothing can travel
+          between them. This mounts every layer at once in ONE sticky frame and crossfades
+          between them, which makes a real shared-element handoff possible —{" "}
+          <code className="font-mono text-[12px] text-foreground/80">MorphToken</code> declares the
+          same <code className="font-mono text-[12px] text-foreground/80">layoutId</code> on both
+          sides of a boundary, and Motion interpolates its position and size across. Scroll
+          through: the numeral flies from inside the sentence up to display size, and back
+          on the way up. Drives the whole homepage body (
+          <code className="font-mono text-[12px] text-foreground/80">TASK-homepage-morph-redesign.md</code>).
+          Two rules for layer content — a layer animates opacity only (a transformed
+          ancestor makes Motion&apos;s measurement drift mid-flight), and{" "}
+          <code className="font-mono text-[12px] text-foreground/80">Reveal</code> doesn&apos;t work
+          in here (every layer is permanently in the viewport, so{" "}
+          <code className="font-mono text-[12px] text-foreground/80">whileInView</code> can&apos;t fire
+          per layer); use <code className="font-mono text-[12px] text-foreground/80">morphDrift()</code>{" "}
+          instead.
+        </p>
+        <div className="border border-border/60">
+          <ScrollMorphStage
+            heightPerLayer={1.4}
+            layers={[
+              {
+                keyframe: 0,
+                label: "SYSTEM DEMO A",
+                content: (
+                  <div className="px-8 text-center">
+                    <p className="text-[14px] leading-[1.75] text-muted-foreground">
+                      A sentence that happens to contain{" "}
+                      <MorphToken id="system-demo-token" side="from" className={COUNT_INLINE}>
+                        8
+                      </MorphToken>{" "}
+                      of something.
+                    </p>
+                  </div>
+                ),
+              },
+              {
+                keyframe: 0,
+                label: "SYSTEM DEMO B",
+                content: (
+                  <div className="flex items-end justify-center gap-3 px-8">
+                    <MorphToken id="system-demo-token" side="to" className={COUNT_DISPLAY}>
+                      8
+                    </MorphToken>
+                    <span className="pb-1.5 font-sans text-xl font-semibold tracking-[-0.02em] text-foreground">
+                      of something.
+                    </span>
+                  </div>
+                ),
+              },
+            ]}
+          />
         </div>
       </section>
 

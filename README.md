@@ -14,8 +14,12 @@ interactions, design tokens, reference links). Process/working rules: [`CLAUDE.m
 - [shadcn/ui](https://ui.shadcn.com) — restyled to the brand tokens in `src/app/globals.css`
 - [canvasui.dev](https://canvasui.dev) components (via the shadcn CLI, `src/components/canvasui/`):
   `AsciiObject` for the scroll-driven moon background, `ParticleObject` for the closing CTA's
-  cursor-reactive particle moon, `ParticleScroll` for the dissolve-panel effect wrapping the
-  homepage's content sections
+  cursor-reactive particle moon (`ParticleScroll` and `DecryptReveal` are installed but not
+  wired into a live page — their native effect needs the experimental `html-in-canvas` API)
+- Scroll journey: Lenis for eased native scroll, `ScrollStage` to pin one section for a
+  taller scroll range, and `ScrollMorphStage` to pin *several* in one shared frame so a
+  single element can physically travel between them (the homepage body's 8 → 4 → 3 → 1
+  count) — see `docs/tasks/TASK-homepage-morph-redesign.md`
 - [animate-ui](https://animate-ui.com) `StarsBackground` (also via shadcn CLI) for the star
   field
 - [Motion](https://motion.dev) (`motion/react`) for scroll-reveal and hover animations

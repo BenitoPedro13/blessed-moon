@@ -2,8 +2,8 @@
 
 import { motion } from "motion/react";
 
-import { Reveal } from "@/components/reveal";
-import { ScrollStage } from "@/components/scroll-stage";
+import { COUNT_DISPLAY, COUNT_INLINE } from "@/components/homepage/morph-count";
+import { MorphToken, morphDrift } from "@/components/scroll-morph-stage";
 import { SectionHeading } from "@/components/section-heading";
 import { useSound } from "@/components/sound-provider";
 
@@ -58,124 +58,90 @@ const SERVICES = [
   },
 ] as const;
 
+/**
+ * Layer 1. Receives the **8** from About — it lands here as the display
+ * numeral directly above the eight-card grid, so the number you just read in
+ * a sentence turns out to be the label for the thing it was describing — then
+ * hands the **4** on to How We Work.
+ *
+ * Side-column composition (narrow statement column, wide grid), distinct from
+ * About's diagonal split: every section reading as "heading, then content
+ * below" is its own kind of monotony.
+ */
 export function ServicesFocus() {
   const { playHover } = useSound();
 
   return (
-    <section
-      id="services"
-      data-ascii-keyframe="2"
-      data-frame-label="SERVICES"
-      className="relative"
-    >
-      <ScrollStage heightMultiplier={1.7} particles>
-        <div className="w-full px-7 py-14 sm:py-16">
-          {/* Side-column composition, not centered-above-a-grid: a narrow
-              statement column plus a wide grid reads as an editorial
-              spread, distinct from About's diagonal split and from a plain
-              "heading, then content below" stack — every section having
-              the same shape is its own kind of monotony even once each
-              one is individually bigger/bolder. Stacks on mobile — a
-              side-by-side split has no room to read as intentional below
-              `lg`, same reasoning as About's `lg:`-only grid.
-
-              Each piece below moves on its own schedule as the section's
-              pin plays out, instead of one wrapper fading as a block —
-              label slides left, headline floats up, paragraph sinks down,
-              grid follows slightly delayed. Same `--stage-progress` CSS
-              variable everything else in this scroll system already reads
-              (ScrollStage, ScrollParticles), just with a different
-              coefficient/direction per element — this is the "components
-              move independently, not just fade" request, built without a
-              new dependency (checked React Bits' ScrollFloat/ScrollReveal
-              first; both are GSAP+ScrollTrigger, which would mean a second
-              animation library running alongside Motion for something this
-              CSS-variable approach already covers). */}
-          <div className="lg:grid lg:grid-cols-[0.85fr_2.15fr] lg:items-center lg:gap-12">
-            <div>
-              <Reveal>
-                <div
-                  style={{
-                    opacity: "calc(1 - var(--stage-progress, 0))",
-                    transform: "translateX(calc(var(--stage-progress, 0) * -32px))",
-                  }}
-                >
-                  <SectionHeading number="02" label="SERVICES" />
-                </div>
-              </Reveal>
-              <Reveal delay={0.05}>
-                <h2
-                  style={{
-                    opacity: "calc(1 - var(--stage-progress, 0))",
-                    transform:
-                      "translateY(calc(var(--stage-progress, 0) * -36px)) scale(calc(1 - var(--stage-progress, 0) * 0.08))",
-                  }}
-                  className="max-w-md font-sans text-3xl font-semibold tracking-[-0.02em] text-foreground sm:text-4xl"
-                >
-                  Different shape. Same standard.
-                </h2>
-              </Reveal>
-              <Reveal delay={0.1}>
-                <p
-                  style={{
-                    opacity: "calc(1 - var(--stage-progress, 0))",
-                    transform: "translateY(calc(var(--stage-progress, 0) * 28px))",
-                  }}
-                  className="mt-4 max-w-sm text-[14px] leading-[1.6] text-muted-foreground"
-                >
-                  Eight kinds of systems, built by the same senior partnership
-                  end to end — not handed off between teams that never talk to
-                  each other.
-                </p>
-              </Reveal>
-            </div>
-            {/* Card padding/description visibility is deliberately
-                smaller at the base (mobile, 2-col × 4-row) breakpoint —
-                the sm:px-6 sm:py-7 scale-up was tuned assuming a 4-col
-                layout; at 2 columns the same padding stacks four full
-                rows tall enough to exceed one pinned viewport, triggering
-                ScrollStage's overflow-y-auto safety net (a second,
-                independent scroll inside the pin — see selected-work.tsx
-                for the same bug and the fuller explanation). Hiding the
-                description below `sm` keeps each row short instead of
-                needing that fallback at all. */}
-            <div className="mt-8 grid grid-cols-2 gap-px border border-border/60 bg-border/60 sm:grid-cols-4 lg:mt-0">
-              {SERVICES.map((service, i) => (
-                <motion.div
-                  key={service.index}
-                  className="relative bg-background/55 px-3.5 py-4 backdrop-blur-sm sm:px-6 sm:py-7"
-                  initial={false}
-                  whileHover="hover"
-                  onHoverStart={playHover}
-                >
-                  <motion.span
-                    aria-hidden="true"
-                    className="pointer-events-none absolute inset-0 border border-transparent"
-                    variants={{ hover: { borderColor: "var(--primary)" } }}
-                    transition={{ type: "spring", stiffness: 300, damping: 24 }}
-                  />
-                  <motion.div
-                    variants={{ hover: { y: -3 } }}
-                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                  >
-                    <Reveal delay={0.16 + i * 0.04}>
-                      <span className="mb-1.5 block font-mono text-[9px] text-muted-foreground/70 sm:mb-3 sm:text-[10px]">
-                        {service.index}
-                      </span>
-                      <span className="block font-sans text-[13px] text-foreground sm:mb-2 sm:text-base">
-                        {service.name}
-                      </span>
-                      <span className="hidden text-[12px] leading-[1.55] text-muted-foreground sm:block">
-                        {service.description}
-                      </span>
-                    </Reveal>
-                  </motion.div>
-                </motion.div>
-              ))}
-            </div>
+    <div className="w-full px-7 py-14 sm:py-16">
+      <div className="lg:grid lg:grid-cols-[0.9fr_2.1fr] lg:items-center lg:gap-12">
+        {/* Untransformed: holds both tokens. */}
+        <div>
+          <div style={morphDrift({ y: 0, x: -34 })}>
+            <SectionHeading number="02" label="SERVICES" />
           </div>
+          <p className="flex items-end gap-3">
+            <MorphToken id="count-8" side="to" className={COUNT_DISPLAY}>
+              8
+            </MorphToken>
+            <span className="pb-1.5 font-sans text-xl font-semibold tracking-[-0.02em] text-foreground sm:text-2xl">
+              kinds of systems.
+            </span>
+          </p>
+          <p className="mt-5 max-w-sm text-[14px] leading-[1.6] text-muted-foreground">
+            Different shape, same standard — one senior partnership across all
+            eight, not a bench of specialists handed your project in turn.
+          </p>
+          <p className="mt-4 max-w-sm text-[14px] leading-[1.75] text-muted-foreground">
+            Whichever one you need, the build runs the same{" "}
+            <MorphToken id="count-4" side="from" className={COUNT_INLINE}>
+              4
+            </MorphToken>{" "}
+            steps.
+          </p>
         </div>
-      </ScrollStage>
-    </section>
+
+        {/* Card padding and description visibility are deliberately smaller at
+            the base (mobile, 2-col × 4-row) breakpoint — the sm: scale-up was
+            tuned for a 4-col layout; at 2 columns the same padding stacks four
+            rows past one pinned viewport, which would trigger the layer's
+            overflow-y-auto safety net (a second scroll inside the pin, the
+            exact bug this whole redesign exists to keep out). */}
+        <div
+          className="mt-9 grid grid-cols-2 gap-px border border-border/60 bg-border/60 sm:grid-cols-4 lg:mt-0"
+          style={morphDrift({ y: 56, order: 1 })}
+        >
+          {SERVICES.map((service) => (
+            <motion.div
+              key={service.index}
+              className="relative bg-background/55 px-3.5 py-4 backdrop-blur-sm sm:px-6 sm:py-7"
+              initial={false}
+              whileHover="hover"
+              onHoverStart={playHover}
+            >
+              <motion.span
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 border border-transparent"
+                variants={{ hover: { borderColor: "var(--primary)" } }}
+                transition={{ type: "spring", stiffness: 300, damping: 24 }}
+              />
+              <motion.div
+                variants={{ hover: { y: -3 } }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              >
+                <span className="mb-1.5 block font-mono text-[9px] text-muted-foreground/70 sm:mb-3 sm:text-[10px]">
+                  {service.index}
+                </span>
+                <span className="block font-sans text-[13px] text-foreground sm:mb-2 sm:text-base">
+                  {service.name}
+                </span>
+                <span className="hidden text-[12px] leading-[1.55] text-muted-foreground sm:block">
+                  {service.description}
+                </span>
+              </motion.div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }

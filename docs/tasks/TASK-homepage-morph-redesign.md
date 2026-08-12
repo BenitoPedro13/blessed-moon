@@ -80,17 +80,57 @@ This section intentionally stops short of final copy — that's the next step on
 technical approach below is confirmed, not something to lock before knowing what the
 mechanism can actually support.
 
-### 3. What ships in phase 1 (scoped, not everything at once)
+### 3. Scope: all five at once, not a two-section phase 1
 
-Given the size of this relative to everything else attempted this session (and its real
-technical risk — confirmed as the "bigger undertaking" option going in), phase 1 is:
+This originally proposed a two-section proof of concept (About → Services) before
+extending. Superseded by direct user direction — *"u can rebuild all home from scratch
+dont mind it"* — so all five body sections land in one pass, with fresh copy, and the
+existing section content is explicitly not something to preserve.
 
-1. Build the shared-container primitive with **two** layered sections (About → Services)
-   and one real shared-element morph at that boundary, as the proof of concept.
-2. Verify it — actually works, doesn't reintroduce the overflow/overlap bugs found while
-   building the previous version, degrades sanely under `prefers-reduced-motion`.
-3. Only then extend to the remaining three sections (How We Work, Selected Work,
-   Pricing) and write their fresh copy.
+### 4. The shared element: one descending count, 8 → 4 → 3 → 1
+
+Rather than four unrelated ad-hoc handoffs, the four boundaries share **one motif**: an
+amber numeral is the token that carries you between sections. It appears small, inline, in
+the closing line of section *N*, and lands as the display numeral heading section *N+1* —
+the same DOM element, interpolated by Motion's `layoutId`.
+
+| Boundary | Token | Reads as |
+|---|---|---|
+| 01 → 02 | **8** | "…8 kinds of systems" → **8** *kinds of systems.* over the 8-card grid |
+| 02 → 03 | **4** | "…the build follows the same 4 steps" → **4** *steps, every time.* |
+| 03 → 04 | **3** | "…3 of them still in production" → **3** *still in production.* |
+| 04 → 05 | **1** | "…priced the same way: 1 number" → **1** *number, agreed up front.* |
+
+The count descends the whole way down the page — breadth (what we build) narrowing to a
+single commitment (what it costs). That's the "written as one considered sequence" the
+task called for, and it makes the mechanism legible rather than decorative: the number you
+just read is physically the thing that carries you into the next beat.
+
+In How We Work the arriving **4** then splits into the four step numbers, which keep the
+odometer `Counter` roll committed in `001e562` — re-gated on the layer becoming active
+rather than `useInView` (every layer is permanently inside the viewport once it's a
+sticky-frame child, so `useInView` can no longer fire per section).
+
+### 5. Constraints the mechanism imposes
+
+- **A layer may animate `opacity` only, never `transform`.** Motion's layout projection
+  measures real bounding boxes; an ancestor with a per-frame `transform` makes the
+  measurement drift mid-flight. Per-element motion therefore lives on individual children
+  (which are not ancestors of a token), driven by the `--morph-local` signed-distance
+  variable each layer exposes.
+- **`Reveal` doesn't work inside a layer.** It's `whileInView`-based, and every layer is
+  permanently in the viewport, so all five would fire once at mount and never replay.
+  Replaced inside the stage by scroll-linked drift off `--morph-local` — continuous and
+  reversible, which is what the rest of this scroll system already does.
+- **`data-ascii-keyframe` can't live on the sections any more.** Absolutely positioned
+  inside one sticky frame, all five report the same `getBoundingClientRect().top`, so the
+  moon tracker (`src/lib/ascii-canvas/scroll-progress.ts`) can't order or interpolate
+  between them. The stage instead emits zero-size marker elements inside the *tall
+  wrapper*, at the scroll offset where each layer is centered — real, distinct positions
+  that move with scroll normally. Keyframe values are carried over unchanged (1, 2, 2, 3,
+  4 — Services and How We Work genuinely share 2 today), so the moon's behaviour is
+  untouched. A second marker per layer, without the tracker's 35dvh anchor offset, carries
+  the `id` so `#services` / `#pricing` anchor links still land in the right place.
 
 ## Why
 
@@ -105,11 +145,13 @@ mechanics (className merges, width-resolution chains, a missing Provider, an
 
 | File | Change type | Notes |
 |------|-------------|-------|
-| `src/components/scroll-morph-stage.tsx` | new | the N-layer shared-container primitive (phase 1: 2 layers) |
-| `src/components/homepage/about-teaser.tsx` | rewrite | becomes a layer inside the shared container, fresh copy |
-| `src/components/homepage/services-focus.tsx` | rewrite | becomes a layer inside the shared container, fresh copy |
-| `src/components/homepage/how-we-work.tsx` | edit (phase 2) | folded into the shared container once proven |
-| `src/components/homepage/selected-work.tsx` | edit (phase 2) | folded into the shared container once proven |
-| `src/components/homepage/pricing-table.tsx` | edit (phase 2) | folded into the shared container once proven |
-| `src/app/page.tsx` | edit | swap the five independent sections for the shared container |
-| `docs/tasks/TASK-homepage-unify-scroll.md` | note | mark superseded by this task, not deleted (real history of what was tried/why) |
+| `src/components/scroll-morph-stage.tsx` | new | the N-layer shared-container primitive + `MorphToken` (`layoutId` handoff) + `morphDrift` |
+| `src/components/homepage/about-teaser.tsx` | rewrite | layer 0, fresh copy, hands off the **8** |
+| `src/components/homepage/services-focus.tsx` | rewrite | layer 1, receives **8**, hands off the **4** |
+| `src/components/homepage/how-we-work.tsx` | rewrite | layer 2, receives **4** (splits into the 4 Counter steps), hands off the **3** |
+| `src/components/homepage/selected-work.tsx` | rewrite | layer 3, receives **3**, hands off the **1** |
+| `src/components/homepage/pricing-table.tsx` | rewrite | layer 4, receives **1** |
+| `src/app/page.tsx` | edit | swap the five independent `ScrollStage` sections for one `ScrollMorphStage` |
+| `src/app/system/page.tsx` | edit | `ScrollMorphStage` / `MorphToken` panel (§3 of CLAUDE.md — a shared component without a panel is unfinished) |
+| `CLAUDE.md` / `README.md` | edit | stack table + status: the homepage body is one morph container now, not five pins |
+| `docs/tasks/TASK-homepage-unify-scroll.md` | note | already marked superseded (`001e562`) |

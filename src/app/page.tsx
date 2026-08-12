@@ -1,5 +1,6 @@
 import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
+import { ScrollMorphStage } from "@/components/scroll-morph-stage";
 import { AboutTeaser } from "@/components/homepage/about-teaser";
 import { ClosingCta } from "@/components/homepage/closing-cta";
 import { Hero } from "@/components/homepage/hero";
@@ -13,27 +14,34 @@ export default function Home() {
     <>
       <SiteNav />
       <main className="flex flex-col">
-        {/* Every section below used to live inside one terminal-framed
-            ParticleScroll panel with its own independent internal scroll,
-            separate from the page's own — see TASK-homepage-unify-scroll.md
-            for why that got removed: two disconnected scroll contexts was a
-            real, repeated point of confusion, and a box that has to stay
-            shorter than its content put a hard cap on how much room any
-            section could have. Each section now pins itself via ScrollStage
-            (same pattern as Hero) in normal document flow, one scroll
-            context for the whole page — matching how /about, /work, and
-            /contact already work. */}
+        {/* Hero and the closing CTA keep their own pins. Hero's scroll-linked
+            ParticleText gather is the page's one thesis moment and shouldn't
+            be diluted into a shared sequence; the CTA is the landing beat,
+            with its own ParticleObject. The five beats between them are the
+            journey, and they now share ONE pinned frame.
+
+            Why one frame: each of those five used to be its own ScrollStage,
+            and two independently-pinned full-viewport panels are never
+            simultaneously on screen — section A's sticky panel releases the
+            exact instant B's begins. Adjusting A's fade curve makes the cut
+            feel better but can never make it a morph, because there is no
+            moment when an element could exist in both. Mounted together in
+            one frame, they overlap for real, which is what lets a single
+            numeral physically travel between them: 8 kinds of systems → 4
+            steps → 3 in production → 1 number. See
+            TASK-homepage-morph-redesign.md. */}
         <Hero />
         <hr className="border-border/60" />
-        <AboutTeaser />
-        <hr className="border-border/60" />
-        <ServicesFocus />
-        <hr className="border-border/60" />
-        <HowWeWork />
-        <hr className="border-border/60" />
-        <SelectedWork />
-        <hr className="border-border/60" />
-        <PricingTable />
+        <ScrollMorphStage
+          heightPerLayer={1.6}
+          layers={[
+            { keyframe: 1, label: "ABOUT", content: <AboutTeaser /> },
+            { id: "services", keyframe: 2, label: "SERVICES", content: <ServicesFocus /> },
+            { keyframe: 2, label: "PROCESS", content: <HowWeWork /> },
+            { keyframe: 3, label: "SELECTED WORK", content: <SelectedWork /> },
+            { id: "pricing", keyframe: 4, label: "PRICING", content: <PricingTable /> },
+          ]}
+        />
         <hr className="border-border/60" />
         <ClosingCta />
       </main>

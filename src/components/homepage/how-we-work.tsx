@@ -1,93 +1,96 @@
 "use client";
 
-import { useRef } from "react";
-import { useInView } from "motion/react";
-
+import { COUNT_DISPLAY, COUNT_INLINE } from "@/components/homepage/morph-count";
 import { Counter } from "@/components/react-bits/counter";
-import { Reveal } from "@/components/reveal";
-import { ScrollStage } from "@/components/scroll-stage";
+import { MorphToken, morphDrift, useMorphLayer } from "@/components/scroll-morph-stage";
 import { SectionHeading } from "@/components/section-heading";
 
 const STEPS = [
-  { text: "Understand before building" },
-  { text: "Design the system, then the screen" },
-  { text: "Build in reviewable slices" },
-  { text: "Ship it and keep it alive" },
+  "Understand before building",
+  "Design the system, then the screen",
+  "Build in reviewable slices",
+  "Ship it and keep it alive",
 ] as const;
 
-/** Rolls 0 → its target number (odometer-style, via Counter) once this
- * step actually scrolls into view, instead of just appearing already
- * formed — "the numbers changing in place, to give emphasis" was the
- * direct ask. `once: true`: it should roll up the first time you reach
- * it, not re-roll every time you scroll past 50% again. */
+/** Rolls 0 → its target odometer-style once this layer is the one on screen,
+ * instead of appearing already formed — "the numbers changing in place, to
+ * give emphasis" was the direct ask.
+ *
+ * Gated on the layer being active rather than `useInView` (how this worked
+ * before the morph stage): every layer is permanently inside the viewport
+ * once it's a child of one shared sticky frame, so an in-view check can
+ * never fire per section again. Re-rolling on each return is the better
+ * behaviour anyway — it matches the rest of this scroll system, which plays
+ * in both directions rather than one-shotting. */
 function StepNumber({ target }: { target: number }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, amount: 0.6 });
+  const { isActive } = useMorphLayer();
 
   return (
-    <span ref={ref} className="block">
-      <Counter
-        value={inView ? target : 0}
-        places={[10, 1]}
-        fontSize={72}
-        textColor="var(--primary)"
-        fontWeight={600}
-        gap={0}
-        horizontalPadding={0}
-        gradientHeight={0}
-        containerStyle={{ fontFamily: "var(--font-mono)" }}
-      />
-    </span>
+    <Counter
+      value={isActive ? target : 0}
+      places={[1]}
+      fontSize={44}
+      textColor="var(--primary)"
+      fontWeight={600}
+      gap={0}
+      horizontalPadding={0}
+      gradientHeight={0}
+      containerStyle={{ fontFamily: "var(--font-mono)" }}
+    />
   );
 }
 
+/**
+ * Layer 2. Receives the **4** from Services and then — the point of putting
+ * it here — splits it into the four step numbers underneath, each rolling up
+ * from zero as the section takes the screen. The token arrives as a quantity
+ * and immediately becomes the thing it was counting.
+ *
+ * A horizontal manifesto band, not another column split: the numbers are the
+ * dominant element and the text under each is a caption, not a paragraph.
+ */
 export function HowWeWork() {
   return (
-    <section
-      data-ascii-keyframe="2"
-      data-frame-label="PROCESS"
-      className="relative"
-    >
-      <ScrollStage heightMultiplier={1.4} particles>
-        {/* A horizontal manifesto band, not another column split — the
-            numbers are the dominant visual element here (a real sequence,
-            so the numbering is earning its place, not decorating), text
-            underneath is a caption, not a paragraph. Distinct shape from
-            About's diagonal split and Services' side-column-plus-grid;
-            every section reading as "heading, then content below" would
-            be its own kind of monotony even at a bigger scale. */}
-        <div
-          style={{
-            opacity: "calc(1 - var(--stage-progress, 0))",
-            transform: "scale(calc(1 - var(--stage-progress, 0) * 0.1))",
-          }}
-          className="w-full px-7 py-14 sm:py-16"
-        >
-          <Reveal>
-            <SectionHeading number="03" label="HOW WE WORK" />
-          </Reveal>
-          <Reveal delay={0.05}>
-            <h2 className="max-w-xl font-sans text-2xl font-semibold tracking-[-0.02em] text-foreground sm:text-3xl">
-              No surprises after kickoff.
-            </h2>
-          </Reveal>
-          <div className="mt-12 grid grid-cols-2 gap-x-6 gap-y-12 sm:mt-16 lg:grid-cols-4 lg:gap-x-8">
-            {STEPS.map((step, i) => (
-              <div
-                key={step.text}
-                className={`${i > 0 ? "lg:border-l lg:border-border/60 lg:pl-8" : ""}`}
-              >
-                <Reveal delay={0.14 + i * 0.08}>
-                  <StepNumber target={i + 1} />
-                  <p className="mt-4 max-w-[16ch] font-sans text-[15px] leading-[1.4] text-foreground/85">
-                    {step.text}
-                  </p>
-                </Reveal>
-              </div>
-            ))}
+    <div className="w-full px-7 py-14 sm:py-16">
+      <div style={morphDrift({ y: 0, x: -34 })}>
+        <SectionHeading number="03" label="HOW WE WORK" />
+      </div>
+
+      {/* Untransformed: holds the arriving token. */}
+      <p className="flex items-end gap-3">
+        <MorphToken id="count-4" side="to" className={COUNT_DISPLAY}>
+          4
+        </MorphToken>
+        <span className="pb-1.5 font-sans text-xl font-semibold tracking-[-0.02em] text-foreground sm:text-2xl">
+          steps, every time.
+        </span>
+      </p>
+
+      <div
+        className="mt-10 grid grid-cols-2 gap-x-6 gap-y-10 sm:mt-12 lg:grid-cols-4 lg:gap-x-8"
+        style={morphDrift({ y: 52, order: 1 })}
+      >
+        {STEPS.map((step, i) => (
+          <div
+            key={step}
+            className={i > 0 ? "lg:border-l lg:border-border/60 lg:pl-8" : ""}
+          >
+            <StepNumber target={i + 1} />
+            <p className="mt-3 max-w-[16ch] font-sans text-[15px] leading-[1.4] text-foreground/85">
+              {step}
+            </p>
           </div>
-        </div>
-      </ScrollStage>
-    </section>
+        ))}
+      </div>
+
+      {/* Untransformed: holds the outgoing token. */}
+      <p className="mt-10 max-w-md text-[14px] leading-[1.75] text-muted-foreground sm:mt-12">
+        Run often enough that{" "}
+        <MorphToken id="count-3" side="from" className={COUNT_INLINE}>
+          3
+        </MorphToken>{" "}
+        of the systems we shipped this way are still in production today.
+      </p>
+    </div>
   );
 }

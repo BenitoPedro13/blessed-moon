@@ -2,8 +2,8 @@
 
 import { motion } from "motion/react";
 
-import { Reveal } from "@/components/reveal";
-import { ScrollStage } from "@/components/scroll-stage";
+import { COUNT_DISPLAY } from "@/components/homepage/morph-count";
+import { MorphToken, morphDrift } from "@/components/scroll-morph-stage";
 import { SectionHeading } from "@/components/section-heading";
 import { useSound } from "@/components/sound-provider";
 
@@ -13,70 +13,65 @@ const TIERS = [
   { name: "Full product build" },
 ] as const;
 
+/**
+ * Layer 4, and where the count lands: 8 → 4 → 3 → **1**. The token arrives as
+ * the section's whole argument — one number, agreed up front — so the copy
+ * doesn't have to assert restraint, the sequence has already demonstrated it.
+ *
+ * Deliberately the calm counterpoint: every other layer is louder, this one
+ * is centered in generous space with no fixed figures (per
+ * docs/design-handoff.md, pricing is confirmed on a call, never a rate card).
+ * Negative space is the distinguishing move here, not more visual weight.
+ */
 export function PricingTable() {
   const { playHover } = useSound();
 
   return (
-    <section
-      id="pricing"
-      data-ascii-keyframe="4"
-      data-frame-label="PRICING"
-      className="relative"
-    >
-      <ScrollStage heightMultiplier={1.3} particles>
-        {/* Deliberately the calm counterpoint — every other section this
-            pass got louder (bigger type, more layout invention); Pricing
-            stays quiet on purpose, matching its own restraint (no fixed
-            numbers, per docs/design-handoff.md). Centered within generous
-            surrounding space rather than another asymmetric composition —
-            negative space is the distinguishing move here, not more
-            visual weight. */}
-        <div
-          style={{
-            opacity: "calc(1 - var(--stage-progress, 0))",
-            transform: "scale(calc(1 - var(--stage-progress, 0) * 0.1))",
-          }}
-          className="mx-auto w-full max-w-xl px-7 py-14 text-center sm:py-16"
-        >
-          <Reveal>
-            <div className="mx-auto w-fit">
-              <SectionHeading number="05" label="PRICING" />
-            </div>
-          </Reveal>
-          <Reveal delay={0.05}>
-            <p className="mx-auto max-w-md text-[14px] leading-[1.6] text-muted-foreground">
-              Priced like the work it actually is — project-based, confirmed
-              on a call, never a number pulled from a rate card.
-            </p>
-          </Reveal>
-          <div className="mt-10 flex flex-col text-left sm:mt-12">
-            {TIERS.map((tier, i) => (
-              <motion.div
-                key={tier.name}
-                className={`-mx-4 px-4 py-5 text-[13px] ${
-                  i < TIERS.length - 1 ? "border-b border-border/60" : ""
-                }`}
-                initial={false}
-                whileHover={{ backgroundColor: "var(--accent)", x: 4 }}
-                onHoverStart={playHover}
-                transition={{ type: "spring", stiffness: 300, damping: 24 }}
-              >
-                <Reveal
-                  className="flex items-baseline justify-between gap-4"
-                  delay={0.12 + i * 0.07}
-                >
-                  <span className="font-sans text-base text-foreground">
-                    {tier.name}
-                  </span>
-                  <span className="text-right text-muted-foreground">
-                    range confirmed on call
-                  </span>
-                </Reveal>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </ScrollStage>
-    </section>
+    <div className="mx-auto w-full max-w-xl px-7 py-14 text-center sm:py-16">
+      <div className="mx-auto w-fit" style={morphDrift({ y: 0, x: -34 })}>
+        <SectionHeading number="05" label="PRICING" />
+      </div>
+
+      {/* Untransformed: holds the arriving token. */}
+      <p className="flex items-end justify-center gap-3">
+        <MorphToken id="count-1" side="to" className={COUNT_DISPLAY}>
+          1
+        </MorphToken>
+        <span className="pb-1.5 font-sans text-xl font-semibold tracking-[-0.02em] text-foreground sm:text-2xl">
+          number, agreed up front.
+        </span>
+      </p>
+
+      <p
+        className="mx-auto mt-6 max-w-md text-[14px] leading-[1.6] text-muted-foreground"
+        style={morphDrift({ y: 44, order: 1 })}
+      >
+        Priced like the work it actually is — project-based, confirmed on a
+        call, and it does not move afterwards.
+      </p>
+
+      <div
+        className="mt-10 flex flex-col text-left sm:mt-12"
+        style={morphDrift({ y: 52, order: 2 })}
+      >
+        {TIERS.map((tier, i) => (
+          <motion.div
+            key={tier.name}
+            className={`-mx-4 flex items-baseline justify-between gap-4 px-4 py-5 text-[13px] ${
+              i < TIERS.length - 1 ? "border-b border-border/60" : ""
+            }`}
+            initial={false}
+            whileHover={{ backgroundColor: "var(--accent)", x: 4 }}
+            onHoverStart={playHover}
+            transition={{ type: "spring", stiffness: 300, damping: 24 }}
+          >
+            <span className="font-sans text-base text-foreground">{tier.name}</span>
+            <span className="text-right text-muted-foreground">
+              range confirmed on call
+            </span>
+          </motion.div>
+        ))}
+      </div>
+    </div>
   );
 }

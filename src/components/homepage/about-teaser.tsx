@@ -3,102 +3,66 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
-import { Reveal } from "@/components/reveal";
-import { ScrollStage } from "@/components/scroll-stage";
+import { COUNT_INLINE } from "@/components/homepage/morph-count";
+import { MorphToken, morphDrift } from "@/components/scroll-morph-stage";
 import { SectionHeading } from "@/components/section-heading";
 import { useSound } from "@/components/sound-provider";
 
+/**
+ * Layer 0 of the homepage's `ScrollMorphStage`. Hands the **8** off to
+ * Services — the first beat of the descending count (see morph-count.tsx).
+ *
+ * Composition is an asymmetric diagonal: label top-left, headline owning the
+ * vertical center, supporting text and the handoff line offset to the
+ * bottom-right. `lg:` only — a diagonal split has no room to read as
+ * intentional on a phone, where it stacks instead.
+ *
+ * No `Reveal` and no wrapper transform: both are forbidden inside a morph
+ * layer, and for different reasons — see scroll-morph-stage.tsx.
+ */
 export function AboutTeaser() {
   const { playHover, playClick } = useSound();
 
   return (
-    <section
-      data-ascii-keyframe="1"
-      data-frame-label="ABOUT"
-      className="relative"
-    >
-      <ScrollStage heightMultiplier={1.6}>
-        {/* Plain text, not ParticleText — Hero is the one particle-text
-            spectacle on this page; About matching it (previously even
-            bigger than Hero's own scale) read as a second hero rather
-            than a distinct, secondary moment. What differentiates this
-            section is the asymmetric split composition instead: label
-            top, headline owning the vertical center, supporting text +
-            CTA offset to the bottom-right — a diagonal reading path
-            across the full pinned frame, `lg:` only (see the mobile note
-            below). `h-full` matters for the lg grid: without it this
-            wrapper only takes its own content's height inside
-            ScrollStage's centered flex panel, not the panel's actual
-            h-dvh, so grid-rows would have nothing real to distribute
-            across. */}
-        {/* Holds fully visible until 55% through the pin, then dissolves
-            fast over the remaining 45% — not a linear fade the whole way
-            through. ScrollStage's panels are full-viewport position:
-            sticky, so About and Services are never simultaneously on
-            screen (true overlap would need a bigger restructure — fixed-
-            position cross-fade layering across the section boundary); this
-            is the achievable version of "evolving into the next section":
-            a held, legible statement that then snaps away right at the
-            handoff instead of a slow fade-to-black followed by an abrupt
-            appearance. About's own closing line ("eight kinds of
-            systems") sets up Services' 8-card grid content-wise; this
-            timing is what makes the handoff itself feel deliberate rather
-            than a hard cut. */}
-        <div
-          style={{
-            opacity: "calc(1 - max(0, var(--stage-progress, 0) - 0.55) * 2.2)",
-            transform: "scale(calc(1 - max(0, var(--stage-progress, 0) - 0.55) * 0.16))",
-          }}
-          className="flex h-full w-full flex-col justify-center gap-8 px-7 py-14 sm:py-16 lg:grid lg:grid-rows-[auto_1fr_auto] lg:justify-normal lg:gap-0"
+    <div className="flex h-full w-full flex-col justify-center gap-8 px-7 py-14 sm:py-16 lg:grid lg:grid-rows-[auto_1fr_auto] lg:justify-normal lg:gap-0">
+      <div style={morphDrift({ y: 0, x: -34 })}>
+        <SectionHeading number="01" label="ABOUT" />
+      </div>
+
+      {/* Sized well under Hero's headline (Hero tops out at 4.5rem) —
+          deliberately: the second-place statement on the page, not a rival. */}
+      <div className="flex items-center" style={morphDrift({ y: 46, order: 1 })}>
+        <h2 className="max-w-3xl font-sans text-4xl font-semibold tracking-[-0.02em] text-foreground sm:text-5xl md:text-[3.5rem]">
+          Built to last longer than the brief.
+        </h2>
+      </div>
+
+      {/* Untransformed on purpose: this column contains the token, and a
+          transformed ancestor makes Motion's layout measurement drift
+          mid-flight. Its opacity still moves — the layer's does. */}
+      <div className="max-w-md lg:ml-auto lg:text-right">
+        <p className="text-[14.5px] leading-[1.6] text-muted-foreground">
+          Two senior people on the work, end to end. No account layer, no
+          handoff, no one learning your product on your time.
+        </p>
+        <p className="mt-4 text-[14.5px] leading-[1.75] text-muted-foreground">
+          Which is why we can name exactly what we build —{" "}
+          <MorphToken id="count-8" side="from" className={COUNT_INLINE}>
+            8
+          </MorphToken>{" "}
+          kinds of systems, each one shipped enough times that we know where it
+          breaks.
+        </p>
+        <Link
+          href="#services"
+          onMouseEnter={playHover}
+          onClick={playClick}
+          className="mt-6 inline-flex items-center gap-1.5 border border-primary/60 px-5 py-2.5 font-mono text-[10.5px] tracking-[0.5px] text-primary uppercase transition-colors hover:bg-primary hover:text-primary-foreground"
         >
-          <Reveal>
-            <SectionHeading number="01" label="ABOUT" />
-          </Reveal>
-
-          {/* Sized well under Hero's headline (Hero tops out at 4.5rem) —
-              deliberately: this is the second-place statement on the
-              page, not a rival to it. */}
-          <div className="flex items-center">
-            <Reveal>
-              <h2 className="max-w-3xl font-sans text-4xl font-semibold tracking-[-0.02em] text-foreground sm:text-5xl md:text-[3.5rem]">
-                Built to last longer than the brief.
-              </h2>
-            </Reveal>
-          </div>
-
-          <div className="max-w-md lg:ml-auto lg:text-right">
-            <Reveal delay={0.1}>
-              <p className="text-[14.5px] leading-[1.6] text-muted-foreground">
-                We develop, design and execute advanced software programs.
-                With our innovative technology we resolve cases and help
-                clients world-wide.
-              </p>
-            </Reveal>
-            {/* Previously ended on the "See what we build" link alone, with
-                nothing actually bridging to Services — the section just
-                stopped, and Services picked up as an unrelated list. This
-                line is the bridge; the link stays as the action. */}
-            <Reveal delay={0.18}>
-              <p className="mt-4 text-[14.5px] leading-[1.6] text-muted-foreground">
-                That starts with a clear answer to what we actually build —
-                eight kinds of systems, each one we&apos;ve shipped enough
-                times to know where it breaks.
-              </p>
-            </Reveal>
-            <Reveal delay={0.26}>
-              <Link
-                href="#services"
-                onMouseEnter={playHover}
-                onClick={playClick}
-                className="mt-6 inline-flex items-center gap-1.5 border border-primary/60 px-5 py-2.5 font-mono text-[10.5px] tracking-[0.5px] text-primary uppercase transition-colors hover:bg-primary hover:text-primary-foreground"
-              >
-                See what we build
-                <ArrowRight className="size-3" aria-hidden="true" />
-              </Link>
-            </Reveal>
-          </div>
-        </div>
-      </ScrollStage>
-    </section>
+          See what we build
+          <ArrowRight className="size-3" aria-hidden="true" />
+        </Link>
+      </div>
+    </div>
   );
 }
