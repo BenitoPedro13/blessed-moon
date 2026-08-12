@@ -46,6 +46,18 @@ import { ScrollParticles } from "@/components/scroll-particles";
  * screen. */
 const OVERLAP = 0.3;
 
+/** Shapes the crossfade so the boundary dips toward the background instead of
+ * holding two half-opaque layers on top of each other.
+ *
+ * A linear ramp (gamma 1) puts both neighbours at exactly 0.5 at the
+ * crossover, which sums to a constant 1.0 — mathematically tidy, and wrong to
+ * look at: these layers are dense text, and two 50% text blocks stacked
+ * render as unreadable interference rather than a transition. At 1.7 each
+ * side sits at ~0.31 there, so the page briefly settles toward near-black and
+ * the crossover reads as a deliberate dissolve. Not higher: the token is in
+ * flight at exactly that moment and still has to be legible. */
+const CROSSFADE_GAMMA = 1.7;
+
 /** Extra scroll room, in layer-units, held at each end of the range. Without
  * it the first and last layers get half the screen-time of the middle ones
  * (they only have a boundary on one side), so the page opens by immediately
@@ -157,10 +169,10 @@ export function ScrollMorphStage({
         layer.style.setProperty("--morph-local", local.toFixed(4));
         layer.style.setProperty("--morph-away", away.toFixed(4));
         // Full opacity across a plateau, then a fast crossfade in the
-        // OVERLAP band centered on the boundary — at the exact midpoint
-        // both neighbours sit at 0.5.
-        const opacity = (0.5 + OVERLAP / 2 - away) / OVERLAP;
-        layer.style.opacity = String(Math.min(1, Math.max(0, opacity)));
+        // OVERLAP band centered on the boundary, shaped by CROSSFADE_GAMMA
+        // so the crossover dips rather than stacking two half-lit layers.
+        const ramp = Math.min(1, Math.max(0, (0.5 + OVERLAP / 2 - away) / OVERLAP));
+        layer.style.opacity = String(Math.pow(ramp, CROSSFADE_GAMMA));
       }
 
       const next = Math.round(progress);
