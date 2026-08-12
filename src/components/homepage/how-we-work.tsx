@@ -3,7 +3,6 @@
 import { COUNT_DISPLAY, COUNT_INLINE } from "@/components/homepage/morph-count";
 import { Counter } from "@/components/react-bits/counter";
 import { MorphToken, morphDrift, useMorphLayer } from "@/components/scroll-morph-stage";
-import { SectionHeading } from "@/components/section-heading";
 
 const STEPS = [
   "Understand before building",
@@ -57,9 +56,7 @@ function StepNumber({ target }: { target: number }) {
  */
 export function HowWeWork() {
   return (
-    <div className="w-full px-7 py-14 sm:py-16">
-      <SectionHeading number="03" label="HOW WE WORK" />
-
+    <div>
       {/* Untransformed: holds the arriving token. */}
       <p className="flex items-end gap-3">
         <MorphToken id="count-4" side="to" className={COUNT_DISPLAY}>

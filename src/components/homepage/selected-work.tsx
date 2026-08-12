@@ -7,7 +7,6 @@ import { motion } from "motion/react";
 
 import { COUNT_DISPLAY, COUNT_INLINE } from "@/components/homepage/morph-count";
 import { MorphToken, morphDrift } from "@/components/scroll-morph-stage";
-import { SectionHeading } from "@/components/section-heading";
 import { useSound } from "@/components/sound-provider";
 
 const PROJECTS = [
@@ -52,11 +51,10 @@ export function SelectedWork() {
   const { playHover, playClick } = useSound();
 
   return (
-    <div className="w-full px-7 py-10 sm:py-12">
+    <div>
       <div className="lg:grid lg:grid-cols-[0.85fr_2.15fr] lg:items-center lg:gap-12">
         {/* Untransformed: holds both tokens. */}
         <div>
-          <SectionHeading number="04" label="SELECTED WORK" />
           <p className="flex items-end gap-3">
             <MorphToken id="count-3" side="to" className={COUNT_DISPLAY}>
               3

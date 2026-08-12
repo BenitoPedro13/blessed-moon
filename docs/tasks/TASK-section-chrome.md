@@ -32,19 +32,38 @@ framing was never replaced. That's the hole.
 
 ## Planned changes
 
-### 1. `TerminalPanel` — the clothing
+### 1. ONE terminal window that morphs — not a panel per section
 
-A new shared component wrapping each morph layer's content:
+First built as five windows crossfading, one per layer. That was wrong, and the reason is
+worth writing down: *if the page's whole premise is one thing morphing, the window is a
+thing, and it should morph too.* Five frames dissolving past each other contradicts the
+mechanism the rest of the page is built on.
 
-- Hairline border and a barely-there surface fill, so content sits on a defined plane
-  instead of floating over the particle field.
+So `ScrollMorphStage` now owns a single persistent window whose **width and height
+interpolate continuously with scroll** between each section's natural size — it expands for
+the wide grids (Services, Selected Work) and contracts hard for Pricing, whose restraint is
+the content. One terminal, five views. Heights come from a `ResizeObserver` per layer rather
+than `offsetHeight` in the rAF loop, which would force a layout flush 60×/second; width is
+declared per layer in `page.tsx`. Side benefit: one backdrop-blur over the live WebGL canvas
+instead of five.
+
+`TerminalPanel` survives as the static single-view version, for `/system` and the
+reduced-motion fallback. Its shared classes (`WINDOW_FRAME`, `WINDOW_TITLEBAR`,
+`WINDOW_BODY`) are what the stage composes, so the look lives in one place.
+
+The window carries:
+
+- A hairline border and a translucent blurred pane, so content sits on a defined plane
+  instead of floating over the particle field. The blur is load-bearing, not styling: body
+  copy sits over a live ASCII moon and would otherwise land on moving glyph texture.
 - **The section eyebrow moves into the top border**, interrupting it the way a fieldset
   legend or a TUI window title does: `┌─ 01 / ABOUT ──────────────┐`. This is what gives
   the number a job — it stops being a floating label and becomes part of the frame. Fixes
   "only numbers on this starts" without deleting the numbering (which is a pinned contract,
   per CLAUDE.md, because it drives the moon's keyframes).
-- Small corner marks, and a status line in the bottom rule carrying something true for that
-  section rather than decoration.
+- **Cut:** corner marks and a bottom status line. Reviewing the plan against the skill's own
+  calibration, "hairline boxes with corner ticks and a status bar" is the templated terminal
+  answer — three accessories where the title bar's single trailing rule does the work.
 
 Consistent chrome around deliberately varied content is how a real TUI works, so this does
 *not* undo the "each section its own composition" work — the frame is the window, the
@@ -76,7 +95,10 @@ mode to watch in review.
 
 | File | Change type | Notes |
 |------|-------------|-------|
-| `src/components/terminal-panel.tsx` | new | frame, surface, legend-style eyebrow, corner marks, status line |
+| `src/components/terminal-panel.tsx` | new | window look in one place: `WINDOW_FRAME`/`WINDOW_TITLEBAR`/`WINDOW_BODY` + static `TerminalPanel` |
+| `src/components/cell-grid.tsx` | new | 1:2 character-cell ground behind the stage (a square grid is graph paper) |
+| `src/components/scroll-morph-stage.tsx` | edit | owns the single morphing window; per-layer `number`/`width`; ResizeObserver heights |
+| `src/app/page.tsx` | edit | per-layer window widths — what makes the window expand and contract |
 | `src/app/globals.css` | edit | cool-cast surface/border tokens; body-tier text token |
 | `src/components/homepage/*.tsx` (5 layers) | edit | wrap in `TerminalPanel`, hand the eyebrow to it |
 | `src/components/section-heading.tsx` | edit | gains the in-border variant used as a panel legend |

@@ -4,7 +4,6 @@ import { motion } from "motion/react";
 
 import { COUNT_DISPLAY } from "@/components/homepage/morph-count";
 import { MorphToken, morphDrift } from "@/components/scroll-morph-stage";
-import { SectionHeading } from "@/components/section-heading";
 import { useSound } from "@/components/sound-provider";
 
 const TIERS = [
@@ -27,12 +26,7 @@ export function PricingTable() {
   const { playHover } = useSound();
 
   return (
-    <div className="mx-auto w-full max-w-xl px-7 py-14 text-center sm:py-16">
-      <div className="mx-auto w-fit">
-        <SectionHeading number="05" label="PRICING" />
-      </div>
-
-
+    <div className="text-center">
       {/* Untransformed: holds the arriving token. */}
       <p className="flex items-end justify-center gap-3">
         <MorphToken id="count-1" side="to" className={COUNT_DISPLAY}>

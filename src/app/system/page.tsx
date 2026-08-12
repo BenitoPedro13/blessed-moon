@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { AsciiObject } from "@/components/canvasui/AsciiObject";
 import { ParticleObject } from "@/components/canvasui/ParticleObject";
+import { CellGrid } from "@/components/cell-grid";
 import { ContactForm } from "@/components/contact-form";
 import { COUNT_DISPLAY, COUNT_INLINE } from "@/components/homepage/morph-count";
 import { BorderGlow } from "@/components/react-bits/border-glow";
@@ -15,6 +16,7 @@ import { SectionHeading } from "@/components/section-heading";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
 import { SoundToggle } from "@/components/sound-toggle";
+import { TerminalPanel } from "@/components/terminal-panel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -292,6 +294,39 @@ export default function SystemPage() {
 
       <section className="space-y-4">
         <h2 className="font-sans text-xl font-semibold tracking-[-0.01em] text-foreground">
+          Terminal panel + cell grid
+        </h2>
+        <p className="max-w-prose text-[13px] leading-[1.6] text-muted-foreground">
+          The homepage body&apos;s &ldquo;clothes.&rdquo; Sections used to be unbounded text
+          on a drifting particle field — no surface, no edge, and a{" "}
+          <code className="font-mono text-[12px] text-foreground/80">01 / ABOUT</code> eyebrow
+          floating above the headline doing no structural work. The panel is a translucent
+          blurred window whose title bar carries that eyebrow, which is what finally gives
+          the number a job. <code className="font-mono text-[12px] text-foreground/80">CellGrid</code>{" "}
+          is the ground behind it: one monospace character cell, 1:2 not square, because a
+          square grid is graph paper and a 1:2 cell is what a terminal is made of. The blur
+          is load-bearing — body copy sits over a live WebGL moon and would otherwise land on
+          moving glyph texture. Never give the panel{" "}
+          <code className="font-mono text-[12px] text-foreground/80">overflow: hidden</code>: a
+          morph token spends most of its flight mounted in the destination panel while still
+          positioned over the origin, far outside that panel&apos;s bounds.
+        </p>
+        <div className="relative overflow-hidden border border-border/60 bg-background p-8">
+          <CellGrid />
+          <TerminalPanel number="00" label="EXAMPLE" className="relative max-w-lg">
+            <p className="text-[15.5px] leading-[1.65] text-foreground/75">
+              Lead tier — brighter and a step larger than the supporting line.
+            </p>
+            <p className="mt-3 text-[13.5px] leading-[1.6] text-muted-foreground">
+              Supporting tier. Body copy used to be binary between near-white and 55% grey,
+              which reads flat however good the words are.
+            </p>
+          </TerminalPanel>
+        </div>
+      </section>
+
+      <section className="space-y-4">
+        <h2 className="font-sans text-xl font-semibold tracking-[-0.01em] text-foreground">
           Scroll morph stage
         </h2>
         <p className="max-w-prose text-[13px] leading-[1.6] text-muted-foreground">
@@ -318,7 +353,9 @@ export default function SystemPage() {
             heightPerLayer={1.4}
             layers={[
               {
+                number: "00",
                 keyframe: 0,
+                width: 420,
                 label: "SYSTEM DEMO A",
                 content: (
                   <div className="px-8 text-center">
@@ -333,7 +370,9 @@ export default function SystemPage() {
                 ),
               },
               {
+                number: "00",
                 keyframe: 0,
+                width: 560,
                 label: "SYSTEM DEMO B",
                 content: (
                   <div className="flex items-end justify-center gap-3 px-8">

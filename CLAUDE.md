@@ -80,6 +80,18 @@ dependency.
   sticky frame, all five report the same `getBoundingClientRect().top`, which the tracker
   can neither order nor interpolate between. `ScrollMorphStage` emits them as zero-size
   markers in its tall wrapper instead, at the scroll offset where each layer is centered.
+- **Surfaces are cool, the accent is warm.** Every surface token in `globals.css` (`--border`,
+  `--muted-foreground`, `--accent`, `--panel`, `--panel-edge`, `--cell-line`) carries a blue
+  cast; the ground stays near-black and `#ff6a1f` stays the only hue with warmth. That
+  contrast is what makes the amber read as light rather than as orange-on-grey — don't
+  "fix" a surface token back to neutral white-alpha, and don't introduce a second accent
+  colour, which is the wrong answer to a palette that feels thin.
+- **The homepage body is ONE terminal window, not five panels.** `ScrollMorphStage` owns a
+  single persistent `TerminalPanel`-styled frame whose width and height interpolate with
+  scroll between each section's size, with the views crossfading inside it. It was built as
+  five crossfading windows first and that was wrong: if the page's premise is one thing
+  morphing, the window is a thing and it morphs too. The section eyebrow lives in that
+  window's title bar — that's the one honest job for a number that isn't a sequence.
 - **The homepage body's descending count (8 → 4 → 3 → 1) is the morph mechanism, not
   decoration** — each numeral is one DOM element handed between two sections via Motion's
   `layoutId` (`MorphToken`, `src/components/homepage/morph-count.tsx`). Changing a section's
@@ -255,7 +267,8 @@ second package emerges.
                              hand between them); Hero and closing-cta keep their own pins
   src/components/           shared composites (site-nav, site-footer, section-heading,
                              ascii-canvas, sound-provider, sound-toggle, boot-sequence,
-                             logo-mark, scroll-stage, scroll-morph-stage) — built
+                             logo-mark, scroll-stage, scroll-morph-stage, terminal-panel,
+                             cell-grid) — built
   src/lib/                   shadcn's cn() helper etc.; ascii-canvas/scroll-progress.ts —
                              scroll-position tracker driving the moon's morph; logo-mark.ts —
                              shared pixel-crescent path; site-config.ts — SITE_URL — built

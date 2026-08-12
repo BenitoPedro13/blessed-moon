@@ -26,6 +26,8 @@
   --color-ring: var(--ring);
   --color-input: var(--input);
   --color-border: var(--border);
+  --color-panel: var(--panel);
+  --color-panel-edge: var(--panel-edge);
   --color-destructive: var(--destructive);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
@@ -73,6 +75,9 @@
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
   --radius: 0rem;
+  --panel: rgba(0, 0, 0, 0.03);
+  --panel-edge: rgba(0, 0, 0, 0.14);
+  --cell-line: rgba(0, 0, 0, 0.05);
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
@@ -95,13 +100,32 @@
   --secondary: #0a0a0a;
   --secondary-foreground: #eeeeee;
   --muted: #0a0a0a;
-  --muted-foreground: rgba(255, 255, 255, 0.55);
-  --accent: rgba(255, 255, 255, 0.06);
+  /* Cool-cast, not neutral white. Every surface token here used to be plain
+     rgba(255,255,255,·) on a neutral near-black, which is why the palette read
+     thin: amber had no temperature to play against, so it landed as
+     orange-on-grey instead of warm light on a cold ground. These are the same
+     luminance, shifted blue. The accent itself is untouched — the brief pins
+     #ff6a1f, and a second hue would be the wrong answer to "colors feel
+     hollow." */
+  --muted-foreground: rgba(205, 219, 238, 0.58);
+  --accent: rgba(200, 218, 240, 0.06);
   --accent-foreground: #eeeeee;
   --destructive: oklch(0.704 0.191 22.216);
-  --border: rgba(255, 255, 255, 0.12);
-  --input: rgba(255, 255, 255, 0.15);
+  --border: rgba(200, 218, 240, 0.14);
+  --input: rgba(200, 218, 240, 0.17);
   --ring: #ff6a1f;
+  /* The terminal window: translucent enough that the moon and star field
+     stay visible through it, opaque enough that body copy over the moon's
+     glyph texture stays readable. Same translucent+blur decision as
+     TASK-homepage-glass-sections.md, applied to the window rather than to
+     individual cards. */
+  --panel: rgba(10, 14, 20, 0.5);
+  --panel-edge: rgba(180, 205, 235, 0.16);
+  /* One monospace character cell. 1:2, not square — a square grid is graph
+     paper, a 1:2 cell is what a terminal is actually made of. */
+  --cell-line: rgba(150, 178, 210, 0.055);
+  --cell-w: 9px;
+  --cell-h: 18px;
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);

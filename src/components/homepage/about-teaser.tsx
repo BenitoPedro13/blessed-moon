@@ -5,7 +5,6 @@ import { ArrowRight } from "lucide-react";
 
 import { COUNT_INLINE } from "@/components/homepage/morph-count";
 import { MorphToken, morphDrift } from "@/components/scroll-morph-stage";
-import { SectionHeading } from "@/components/section-heading";
 import { useSound } from "@/components/sound-provider";
 
 /**
@@ -24,9 +23,7 @@ export function AboutTeaser() {
   const { playHover, playClick } = useSound();
 
   return (
-    <div className="flex h-full w-full flex-col justify-center gap-8 px-7 py-14 sm:py-16 lg:grid lg:grid-rows-[auto_1fr_auto] lg:justify-normal lg:gap-0">
-      <SectionHeading number="01" label="ABOUT" />
-
+    <div className="flex flex-col gap-8">
       {/* Sized well under Hero's headline (Hero tops out at 4.5rem) —
           deliberately: the second-place statement on the page, not a rival. */}
       <div className="flex items-center" style={morphDrift({ y: 46, order: 1 })}>
@@ -39,14 +36,18 @@ export function AboutTeaser() {
           transformed ancestor makes Motion's layout measurement drift
           mid-flight. Its opacity still moves — the layer's does. */}
       <div className="max-w-md lg:ml-auto lg:text-right">
-        <p className="text-[14.5px] leading-[1.6] text-muted-foreground">
+        {/* Lead tier: brighter and a step larger than the supporting line
+            below it. The body copy used to be binary — near-white headings
+            and 55% grey for everything else — which is a flat page however
+            good the words are. */}
+        <p className="text-[15.5px] leading-[1.65] text-foreground/75">
           Two senior people on the work, end to end. No account layer, no
           handoff, no one learning your product on your time.
         </p>
         {/* leading-[2.1] wherever a token sits in a sentence: the inline
             numeral is 1.5em, and at normal body leading it overflows its own
             line box into the line above. Raise one, raise the other. */}
-        <p className="mt-4 text-[14.5px] leading-[2.1] text-muted-foreground">
+        <p className="mt-4 text-[13.5px] leading-[2.1] text-muted-foreground">
           Which is why we can name exactly what we build —{" "}
           <MorphToken id="count-8" side="from" className={COUNT_INLINE}>
             8

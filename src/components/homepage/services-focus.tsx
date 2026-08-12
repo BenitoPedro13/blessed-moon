@@ -4,7 +4,6 @@ import { motion } from "motion/react";
 
 import { COUNT_DISPLAY, COUNT_INLINE } from "@/components/homepage/morph-count";
 import { MorphToken, morphDrift } from "@/components/scroll-morph-stage";
-import { SectionHeading } from "@/components/section-heading";
 import { useSound } from "@/components/sound-provider";
 
 const SERVICES = [
@@ -72,11 +71,10 @@ export function ServicesFocus() {
   const { playHover } = useSound();
 
   return (
-    <div className="w-full px-7 py-14 sm:py-16">
+    <div>
       <div className="lg:grid lg:grid-cols-[0.9fr_2.1fr] lg:items-center lg:gap-12">
         {/* Untransformed: holds both tokens. */}
         <div>
-          <SectionHeading number="02" label="SERVICES" />
           <p className="flex items-end gap-3">
             <MorphToken id="count-8" side="to" className={COUNT_DISPLAY}>
               8
