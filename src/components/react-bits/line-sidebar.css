@@ -86,7 +86,10 @@
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   margin-right: 0.6rem;
   font-size: 0.85em;
-  opacity: calc(0.55 + var(--effect, 0) * 0.45);
+  /* Was 0.55 at rest, stacked on top of --text-color's own ~0.55 alpha
+     (this site's --muted-foreground) — resting-state indices were nearly
+     unreadable against the near-black background. */
+  opacity: calc(0.8 + var(--effect, 0) * 0.2);
 }
 
 .line-sidebar__marker {

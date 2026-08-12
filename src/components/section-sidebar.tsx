@@ -76,7 +76,13 @@ export function SectionSidebar() {
         fontSize={0.72}
         itemGap={14}
         markerLength={28}
-        proximityRadius={90}
+        // Row pitch here is ~28px (fontSize*lineHeight + itemGap) — a 90px
+        // radius (fine for upstream's much roomier default 20px itemGap)
+        // reached 3+ neighboring items in every direction, so hovering
+        // anywhere near the list lit up most of it at once instead of just
+        // the item under the cursor. 22px keeps the effect on the hovered
+        // item with only a hint of falloff onto its immediate neighbor.
+        proximityRadius={22}
         maxShift={10}
         className="font-mono uppercase tracking-[0.06em]"
         aria-label="Section navigation"
