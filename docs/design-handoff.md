@@ -42,6 +42,7 @@ Two columns: left = form (Name, Email, Company, Project type select, Message tex
 - **ASCII/canvas background**: a full-bleed WebGL ASCII-shader layer over the page (see the offscreencanvas.com references below), which morphs as the user scrolls: hero mesh → crescent-moon glyph entering About → circuit-board lines entering Services → screenshot silhouette entering Work → dissolves to plain dark at Contact. Treat each numbered section label (01/, 02/, …) as a scroll-triggered keyframe index driving the effect.
 - Nav is fixed/sticky; "Book a call" button always visible.
 - No other custom interactions specified at this stage — standard hover states on buttons/links/cards (subtle brightness or border-color shift, no drop shadows).
+- **Fallback disclosure**: on browsers where the homepage panel's dissolve effect can't run (no HTML-in-Canvas support), a collapsed terminal-style notice appears in the panel header explaining the fallback and how to enable the experimental Chrome flag — see `TASK-html-in-canvas-fallback-notice.md`.
 
 ## State Management
 None required beyond the contact form (controlled inputs, submit state) and scroll position driving the canvas effect keyframe.

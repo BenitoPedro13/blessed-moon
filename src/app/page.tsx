@@ -1,4 +1,5 @@
 import { ParticleScroll } from "@/components/canvasui/ParticleScroll";
+import { HtmlInCanvasNotice } from "@/components/html-in-canvas-notice";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
 import { AboutTeaser } from "@/components/homepage/about-teaser";
@@ -32,6 +33,7 @@ export default function Home() {
               <span>blessed_moon --explore</span>
               <span aria-hidden="true">scroll_</span>
             </div>
+            <HtmlInCanvasNotice />
             <ParticleScroll className="h-[80vh] w-full">
               <div className="flex flex-col">
                 <AboutTeaser />
