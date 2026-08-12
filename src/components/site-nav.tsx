@@ -8,7 +8,6 @@ import { usePathname } from "next/navigation";
 import { LogoMark } from "@/components/logo-mark";
 import { useSound } from "@/components/sound-provider";
 import { SoundToggle } from "@/components/sound-toggle";
-import { Button } from "@/components/ui/button";
 import { createScrollTracker } from "@/lib/ascii-canvas/scroll-progress";
 
 const NAV_LINKS = [
@@ -140,15 +139,22 @@ export function SiteNav() {
         >
           {menuOpen ? <X className="size-3.5" /> : <Menu className="size-3.5" />}
         </button>
-        <Button
-          nativeButton={false}
-          variant="outline"
-          size="sm"
-          render={<Link href="/contact" onMouseEnter={playHover} onClick={playClick} />}
-          className="hidden rounded-none border-primary font-mono text-[10px] tracking-[0.6px] text-primary uppercase hover:bg-primary hover:text-primary-foreground sm:inline-flex"
+        {/* A plain Link, not `<Button variant="outline">`. That variant carries
+            `dark:hover:bg-input/50`, and a `.dark`-scoped selector outranks the
+            plain `hover:bg-primary` passed in `className` — Tailwind resolves
+            conflicts by specificity and stylesheet order, never by the order
+            classes appear in the attribute. So the site's one persistent CTA
+            filled pale grey on hover instead of amber. Same treatment as every
+            other outlined CTA here (about-teaser, work-case), which has no
+            variant to fight. */}
+        <Link
+          href="/contact"
+          onMouseEnter={playHover}
+          onClick={playClick}
+          className="hidden items-center border border-primary px-4 py-2 font-mono text-[10px] tracking-[0.6px] text-primary uppercase transition-colors hover:bg-primary hover:text-primary-foreground sm:inline-flex"
         >
           Start a project
-        </Button>
+        </Link>
       </div>
 
       {menuOpen && (
