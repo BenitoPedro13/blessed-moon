@@ -1,4 +1,5 @@
 import { Reveal } from "@/components/reveal";
+import { ScrollStage } from "@/components/scroll-stage";
 
 interface PageHeroProps {
   eyebrow: string;
@@ -7,40 +8,71 @@ interface PageHeroProps {
   code: string;
 }
 
+/**
+ * Phase 2 of TASK-apple-scroll-journey.md: extends the pin-and-dissolve
+ * treatment proven on the homepage's Hero to the shared subpage hero,
+ * covering About/Work/Contact/each case study. Same pattern: ScrollStage
+ * pins the content for a taller scroll range, everything fades/scales out
+ * via `--stage-progress` on a plain wrapper div (not Reveal's own
+ * motion.div, so the pin transform and Reveal's independent mount
+ * animation don't fight over the same style properties — see hero.tsx's
+ * comment for the fuller reasoning). `mt-auto` replaces the original
+ * `items-end` flex alignment: ScrollStage's inner panel centers its
+ * content as a group, so the content block pushes itself to the bottom of
+ * that space instead, keeping the same bottom-anchored look.
+ */
 export function PageHero({ eyebrow, title, description, code }: PageHeroProps) {
   return (
     <section
       data-ascii-keyframe="0"
-      className="relative isolate flex min-h-[52vh] items-end overflow-hidden border-b border-border/60 px-7 pb-14 pt-32 sm:min-h-[58vh] sm:pb-20"
+      data-frame-label={code}
+      className="relative isolate overflow-hidden border-b border-border/60"
     >
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 opacity-35 [background-image:linear-gradient(rgba(255,106,31,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(255,106,31,0.08)_1px,transparent_1px)] [background-size:48px_48px] [mask-image:linear-gradient(to_bottom,black,transparent_82%)]"
-      />
-      <span className="absolute left-7 top-24 font-mono text-[9px] tracking-[0.25em] text-primary/70 uppercase">
-        B / S / M
-      </span>
-      <span className="absolute right-7 top-24 font-mono text-[9px] tracking-[0.25em] text-muted-foreground uppercase">
-        {code} / 26
-      </span>
+      <ScrollStage heightMultiplier={1.6}>
+        <div
+          aria-hidden="true"
+          style={{ opacity: "calc(0.35 * (1 - var(--stage-progress, 0)))" }}
+          className="pointer-events-none absolute inset-0 [background-image:linear-gradient(rgba(255,106,31,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(255,106,31,0.08)_1px,transparent_1px)] [background-size:48px_48px] [mask-image:linear-gradient(to_bottom,black,transparent_82%)]"
+        />
+        <span
+          style={{ opacity: "calc(1 - var(--stage-progress, 0) * 0.85)" }}
+          className="absolute left-7 top-24 font-mono text-[9px] tracking-[0.25em] text-primary/70 uppercase"
+        >
+          B / S / M
+        </span>
+        <span
+          style={{ opacity: "calc(1 - var(--stage-progress, 0) * 0.85)" }}
+          className="absolute right-7 top-24 font-mono text-[9px] tracking-[0.25em] text-muted-foreground uppercase"
+        >
+          {code} / 26
+        </span>
 
-      <div className="relative mx-auto w-full max-w-6xl bg-background/70 p-4 backdrop-blur-[1px] sm:bg-transparent sm:p-0 sm:backdrop-blur-none">
-        <Reveal>
-          <p className="font-mono text-[10.5px] tracking-[0.08em] text-primary uppercase">
-            {eyebrow}
-          </p>
-        </Reveal>
-        <Reveal delay={0.08}>
-          <h1 className="mt-4 max-w-4xl font-sans text-4xl font-semibold tracking-[-0.045em] text-foreground sm:text-6xl lg:text-7xl">
-            {title}
-          </h1>
-        </Reveal>
-        <Reveal delay={0.16}>
-          <p className="mt-5 max-w-xl text-[13px] leading-[1.7] text-muted-foreground sm:text-sm">
-            {description}
-          </p>
-        </Reveal>
-      </div>
+        <div
+          style={{
+            opacity: "calc(1 - var(--stage-progress, 0))",
+            transform: "scale(calc(1 - var(--stage-progress, 0) * 0.12))",
+          }}
+          className="relative mt-auto w-full px-7 pb-14 sm:pb-20"
+        >
+          <div className="relative mx-auto w-full max-w-6xl bg-background/70 p-4 backdrop-blur-[1px] sm:bg-transparent sm:p-0 sm:backdrop-blur-none">
+            <Reveal>
+              <p className="font-mono text-[10.5px] tracking-[0.08em] text-primary uppercase">
+                {eyebrow}
+              </p>
+            </Reveal>
+            <Reveal delay={0.08}>
+              <h1 className="mt-4 max-w-4xl font-sans text-4xl font-semibold tracking-[-0.045em] text-foreground sm:text-6xl lg:text-7xl">
+                {title}
+              </h1>
+            </Reveal>
+            <Reveal delay={0.16}>
+              <p className="mt-5 max-w-xl text-[13px] leading-[1.7] text-muted-foreground sm:text-sm">
+                {description}
+              </p>
+            </Reveal>
+          </div>
+        </div>
+      </ScrollStage>
     </section>
   );
 }

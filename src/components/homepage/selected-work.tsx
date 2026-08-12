@@ -38,7 +38,7 @@ export function SelectedWork() {
   const { playHover, playClick } = useSound();
 
   return (
-    <section data-ascii-keyframe="3" className="px-7 py-16 sm:py-20">
+    <section data-ascii-keyframe="3" data-frame-label="SELECTED WORK" className="px-7 py-16 sm:py-20">
       <SectionHeading number="04" label="SELECTED WORK" />
       <div className="flex flex-col gap-px border border-border/60 bg-border/60">
         {PROJECTS.map((project, i) => (

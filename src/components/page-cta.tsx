@@ -23,6 +23,7 @@ export function PageCta({
   return (
     <section
       data-ascii-keyframe={keyframe}
+      data-frame-label="START A PROJECT"
       className="relative overflow-hidden border-y border-primary/30 bg-background/65 px-7 py-20 text-center backdrop-blur-sm sm:py-24"
     >
       <div aria-hidden="true" className="absolute inset-y-0 left-0 w-px bg-primary" />

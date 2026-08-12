@@ -6,6 +6,7 @@ import { ContactForm } from "@/components/contact-form";
 import { BorderGlow } from "@/components/react-bits/border-glow";
 import { ParticleText } from "@/components/react-bits/particle-text";
 import { Reveal } from "@/components/reveal";
+import { ScrollStage } from "@/components/scroll-stage";
 import { SectionHeading } from "@/components/section-heading";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
@@ -215,6 +216,74 @@ export default function SystemPage() {
 
       <section className="space-y-4">
         <h2 className="font-sans text-xl font-semibold tracking-[-0.01em] text-foreground">
+          Boot sequence gate
+        </h2>
+        <p className="max-w-prose text-[13px] leading-[1.6] text-muted-foreground">
+          A static preview, not a live instance — the real{" "}
+          <code className="font-mono text-[12px] text-foreground/80">BootSequence</code> runs
+          full-viewport and locks body scroll, which would take over this page. See{" "}
+          <code className="font-mono text-[12px] text-foreground/80">TASK-boot-sequence-gate.md</code>;
+          to see it live, reload any real page (it runs once per load, respects{" "}
+          <code className="font-mono text-[12px] text-foreground/80">prefers-reduced-motion</code> by
+          skipping straight through).
+        </p>
+        <div className="flex flex-col gap-6 border border-border/60 bg-background px-7 py-8">
+          <div className="font-mono text-[11px] leading-[1.7] text-muted-foreground">
+            <div>blessed_moon --boot</div>
+            <div>loading brand tokens ......... ok</div>
+            <div>compiling ascii pipeline ...... ok</div>
+            <div>mounting scene ................ ok</div>
+            <div>ready.</div>
+          </div>
+          <div className="flex flex-col gap-5 border-t border-border/60 pt-6 font-mono text-[11px]">
+            <div className="flex flex-wrap items-center gap-3">
+              <span className="text-muted-foreground">enable sound for the full experience?</span>
+              <span className="border border-primary/60 px-3 py-1.5 text-primary uppercase tracking-[0.06em]">
+                enable sound
+              </span>
+              <span className="border border-border/60 px-3 py-1.5 text-muted-foreground uppercase tracking-[0.06em]">
+                continue muted
+              </span>
+            </div>
+            <div className="flex items-center justify-between gap-3">
+              <span className="text-muted-foreground">scroll to begin</span>
+              <span className="inline-flex items-center gap-2 border border-primary/60 px-4 py-2 text-primary uppercase tracking-[0.06em]">
+                begin <span aria-hidden="true">↓</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="space-y-4">
+        <h2 className="font-sans text-xl font-semibold tracking-[-0.01em] text-foreground">
+          Scroll stage
+        </h2>
+        <p className="max-w-prose text-[13px] leading-[1.6] text-muted-foreground">
+          Pins content for a scroll range via <code className="font-mono text-[12px] text-foreground/80">position: sticky</code>{" "}
+          (no scroll-jacking), exposing progress as <code className="font-mono text-[12px] text-foreground/80">--stage-progress</code>{" "}
+          for children to read. Scroll through this panel — the number fades/scales as the
+          pin plays out, matching how the homepage hero&apos;s headline now dissolves against
+          the moon. Phase 1 of <code className="font-mono text-[12px] text-foreground/80">TASK-apple-scroll-journey.md</code>;
+          not yet applied beyond the hero.
+        </p>
+        <div className="border border-border/60">
+          <ScrollStage heightMultiplier={1.4}>
+            <div
+              style={{
+                opacity: "calc(1 - var(--stage-progress, 0))",
+                transform: "scale(calc(1 - var(--stage-progress, 0) * 0.2))",
+              }}
+              className="text-center font-mono text-4xl text-primary"
+            >
+              --stage-progress
+            </div>
+          </ScrollStage>
+        </div>
+      </section>
+
+      <section className="space-y-4">
+        <h2 className="font-sans text-xl font-semibold tracking-[-0.01em] text-foreground">
           Signature effects
         </h2>
         <p className="max-w-prose text-[13px] leading-[1.6] text-muted-foreground">
@@ -300,6 +369,9 @@ export default function SystemPage() {
               trigger="hover"
               fontSize="clamp(1.5rem, 5vw, 3rem)"
               fontWeight={600}
+              density={1}
+              densityDivisor={28}
+              particleSize={2.6}
             />
           </div>
         </div>

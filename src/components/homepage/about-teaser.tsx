@@ -11,7 +11,7 @@ export function AboutTeaser() {
   const { playHover, playClick } = useSound();
 
   return (
-    <section data-ascii-keyframe="1" className="px-7 py-16 sm:py-20">
+    <section data-ascii-keyframe="1" data-frame-label="ABOUT" className="px-7 py-16 sm:py-20">
       <Reveal>
         <SectionHeading number="01" label="ABOUT" />
       </Reveal>

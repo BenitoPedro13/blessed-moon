@@ -20,6 +20,7 @@ export function ClosingCta() {
   return (
     <section
       data-ascii-keyframe="5"
+      data-frame-label="START A PROJECT"
       className="relative flex flex-col items-center overflow-hidden px-7 py-20 text-center sm:py-28"
     >
       {/* Not pointer-events-none: ParticleObject listens for pointermove

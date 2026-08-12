@@ -102,7 +102,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           code={`CASE_${project.index}`}
         />
 
-        <section data-ascii-keyframe="1" className="px-7 py-16 sm:py-24">
+        <section data-ascii-keyframe="1" data-frame-label="PROJECT OVERVIEW" className="px-7 py-16 sm:py-24">
           <div className="mx-auto max-w-6xl">
             <Reveal>
               <Link
@@ -150,7 +150,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           </div>
         </section>
 
-        <section data-ascii-keyframe="2" className="border-y border-border/60 bg-background/55 px-7 py-16 backdrop-blur-sm sm:py-24">
+        <section data-ascii-keyframe="2" data-frame-label="CASE STUDY" className="border-y border-border/60 bg-background/55 px-7 py-16 backdrop-blur-sm sm:py-24">
           <div className="mx-auto grid max-w-6xl gap-px border border-border/60 bg-border/60 lg:grid-cols-3">
             <CaseTextBlock index="01" label="The problem" body={project.problem} />
             <CaseTextBlock index="02" label="The approach" body={project.approach} />
@@ -158,7 +158,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           </div>
         </section>
 
-        <section data-ascii-keyframe="3" className="px-7 py-16 sm:py-24">
+        <section data-ascii-keyframe="3" data-frame-label="INTERFACE EVIDENCE" className="px-7 py-16 sm:py-24">
           <div className="mx-auto max-w-6xl">
             <Reveal>
               <SectionIntro
@@ -173,7 +173,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           </div>
         </section>
 
-        <section data-ascii-keyframe="4" className="border-y border-border/60 bg-background/55 px-7 py-16 backdrop-blur-sm sm:py-24">
+        <section data-ascii-keyframe="4" data-frame-label="DELIVERY PROCESS" className="border-y border-border/60 bg-background/55 px-7 py-16 backdrop-blur-sm sm:py-24">
           <div className="mx-auto max-w-6xl">
             <Reveal>
               <SectionIntro
@@ -203,7 +203,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           </div>
         </section>
 
-        <section data-ascii-keyframe="5" className="px-7 py-16 sm:py-24">
+        <section data-ascii-keyframe="5" data-frame-label="SYSTEM ARCHITECTURE" className="px-7 py-16 sm:py-24">
           <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[0.92fr_1.08fr] lg:gap-16">
             <Reveal>
               <div>
@@ -250,7 +250,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           </div>
         </section>
 
-        <section data-ascii-keyframe="5" className="border-t border-border/60 bg-background/55 px-7 py-16 backdrop-blur-sm sm:py-24">
+        <section data-ascii-keyframe="5" data-frame-label="WHAT SHIPPED" className="border-t border-border/60 bg-background/55 px-7 py-16 backdrop-blur-sm sm:py-24">
           <div className="mx-auto max-w-6xl">
             <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
               <DetailList

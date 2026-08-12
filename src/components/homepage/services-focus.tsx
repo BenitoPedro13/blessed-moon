@@ -61,7 +61,7 @@ export function ServicesFocus() {
   const { playHover } = useSound();
 
   return (
-    <section id="services" data-ascii-keyframe="2" className="px-7 py-16 sm:py-20">
+    <section id="services" data-ascii-keyframe="2" data-frame-label="SERVICES" className="px-7 py-16 sm:py-20">
       <SectionHeading number="02" label="SERVICES" />
       <div className="grid grid-cols-2 gap-px border border-border/60 bg-border/60 sm:grid-cols-4">
         {SERVICES.map((service, i) => (

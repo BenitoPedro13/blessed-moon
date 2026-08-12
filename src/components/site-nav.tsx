@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { usePathname } from "next/navigation";
@@ -9,6 +9,7 @@ import { LogoMark } from "@/components/logo-mark";
 import { useSound } from "@/components/sound-provider";
 import { SoundToggle } from "@/components/sound-toggle";
 import { Button } from "@/components/ui/button";
+import { createFrameTracker, createScrollTracker } from "@/lib/ascii-canvas/scroll-progress";
 
 const NAV_LINKS = [
   { label: "Work", href: "/work" },
@@ -18,10 +19,18 @@ const NAV_LINKS = [
   { label: "Contact", href: "/contact" },
 ] as const;
 
+/** How quickly the displayed background/border opacity eases toward the
+ * scroll-driven target each frame — same easing constant and reasoning as
+ * ascii-canvas.tsx's own EASE: without it, the nav's chrome would snap
+ * exactly to the scrollbar instead of settling with a little weight. */
+const EASE = 0.12;
+
 export function SiteNav() {
   const { playHover, playClick } = useSound();
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [frameLabel, setFrameLabel] = useState<string | null>(null);
+  const chromeRef = useRef<HTMLElement>(null);
 
   function isActive(href: string) {
     if (href.startsWith("/#")) return false;
@@ -29,8 +38,69 @@ export function SiteNav() {
     return pathname === href;
   }
 
+  // Reuses the exact scroll-position machinery that already drives the ASCII
+  // moon (createScrollTracker) and the same [data-frame-label] convention
+  // introduced for the boot-sequence/system-page work (createFrameTracker) —
+  // the nav becomes part of the same scroll-frame system instead of a static
+  // bar floating on top of it. Own rAF loop and own tracker instances rather
+  // than sharing AsciiCanvas's: these are independent components, and a
+  // shared instance would mean threading state through the tree for no real
+  // benefit — both trackers are just cheap DOM reads.
+  useEffect(() => {
+    const morphTracker = createScrollTracker();
+    const frameTracker = createFrameTracker();
+    morphTracker.measure();
+    frameTracker.measure();
+
+    let raf = 0;
+    let displayedChrome = 0;
+    let lastLabel: string | null = null;
+
+    function frame() {
+      const morph = morphTracker.read();
+      const targetChrome = Math.min(1, Math.max(0, morph));
+      displayedChrome += (targetChrome - displayedChrome) * EASE;
+
+      const chrome = chromeRef.current;
+      if (chrome) {
+        chrome.style.setProperty("--nav-chrome", displayedChrome.toFixed(3));
+      }
+
+      const label = frameTracker.read();
+      if (label !== lastLabel) {
+        lastLabel = label;
+        setFrameLabel(label);
+      }
+
+      raf = requestAnimationFrame(frame);
+    }
+    raf = requestAnimationFrame(frame);
+
+    function handleResize() {
+      morphTracker.measure();
+      frameTracker.measure();
+    }
+    window.addEventListener("resize", handleResize);
+    const remeasure = window.setTimeout(handleResize, 500);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      window.clearTimeout(remeasure);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
-    <header className="sticky top-0 z-50 flex items-center justify-between border-b border-border/60 bg-background/90 px-4 py-4 backdrop-blur-sm sm:px-7">
+    <header
+      ref={chromeRef}
+      style={{
+        "--nav-chrome": 0,
+        backgroundColor: "color-mix(in oklch, var(--background) calc(var(--nav-chrome) * 90%), transparent)",
+        borderBottomColor: "color-mix(in oklch, var(--border) calc(var(--nav-chrome) * 100%), transparent)",
+        backdropFilter: "blur(calc(var(--nav-chrome) * 6px))",
+      } as React.CSSProperties}
+      className="sticky top-0 z-50 flex items-center justify-between border-b px-4 py-4 transition-colors sm:px-7"
+    >
       <Link
         href="/"
         onMouseEnter={playHover}
@@ -59,6 +129,14 @@ export function SiteNav() {
         ))}
       </nav>
       <div className="flex items-center gap-3">
+        {frameLabel && (
+          <span
+            aria-hidden="true"
+            className="hidden font-mono text-[9px] tracking-[0.2em] text-muted-foreground/70 uppercase lg:inline"
+          >
+            — {frameLabel}
+          </span>
+        )}
         <SoundToggle />
         <button
           type="button"

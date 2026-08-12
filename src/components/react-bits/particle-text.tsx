@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
+
+import { cn } from "@/lib/utils";
 
 /**
  * Adapted from React Bits' ParticleText (github.com/DavidHDev/react-bits,
@@ -99,6 +101,8 @@ interface Particle {
 export interface ParticleTextProps {
   text?: string;
   particleSize?: number;
+  /** Sampling stride in px — lower is denser. Floored at 1 (below that,
+   * the sampling loop below this interface clamps it to 1 anyway). */
   density?: number;
   color?: string;
   highlightColor?: string;
@@ -113,32 +117,75 @@ export interface ParticleTextProps {
   fontWeight?: number;
   fontFamily?: string;
   glow?: boolean;
+  /**
+   * Divides container area (px²) to cap particle count — upstream's fixed
+   * 90 was tuned for a big, tall hero container; a short single-line
+   * container (like this site's headline) has much less area to work
+   * with, so a lower divisor is what actually increases visible density
+   * for that shape, not a lower `density` (see its own doc comment).
+   */
+  densityDivisor?: number;
   className?: string;
   style?: React.CSSProperties;
 }
 
-export function ParticleText({
-  text = "Blessed Moon",
-  particleSize = 2,
-  density = 4,
-  color = "#e9e7e1",
-  highlightColor = "#ff6a1f",
-  scatter = 180,
-  gatherDuration = 1600,
-  stagger = 420,
-  pointerRepel = 40,
-  repelRadius = 120,
-  idleDrift = 0.7,
-  trigger = "mount",
-  fontSize = "clamp(3rem, 12vw, 8rem)",
-  fontWeight = 700,
-  fontFamily = "inherit",
-  glow = true,
-  className = "",
-  style,
-}: ParticleTextProps) {
+/**
+ * Imperative instance API — matches AsciiObject/ParticleObject's own
+ * `setTransform`-style pattern for continuous, scroll- or pointer-driven
+ * updates: a parent can drive gather/scatter every animation frame via a
+ * ref without forcing this component (or React) to re-render on every
+ * frame, the same reason those two canvas components use instance methods
+ * instead of a plain prop for their own scroll-driven transforms.
+ */
+export interface ParticleTextHandle {
+  /** 0 = fully scattered, 1 = fully gathered/legible. Overrides the
+   * mount/hover/click trigger once called — for continuous external
+   * control (e.g. scroll position), not one-shot triggers. */
+  setGatherProgress: (progress: number) => void;
+  /** Hands control back to the internal mount/hover/click trigger. */
+  releaseGatherProgress: () => void;
+}
+
+export const ParticleText = forwardRef<ParticleTextHandle, ParticleTextProps>(function ParticleText(
+  {
+    text = "Blessed Moon",
+    particleSize = 2,
+    density = 4,
+    color = "#e9e7e1",
+    highlightColor = "#ff6a1f",
+    scatter = 180,
+    gatherDuration = 1600,
+    stagger = 420,
+    pointerRepel = 40,
+    repelRadius = 120,
+    idleDrift = 0.7,
+    trigger = "mount",
+    fontSize = "clamp(3rem, 12vw, 8rem)",
+    fontWeight = 700,
+    fontFamily = "inherit",
+    glow = true,
+    densityDivisor = 90,
+    className = "",
+    style,
+  }: ParticleTextProps,
+  ref,
+) {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const gatherProgressRef = useRef<number | null>(null);
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      setGatherProgress(progress: number) {
+        gatherProgressRef.current = clamp(progress, 0, 1);
+      },
+      releaseGatherProgress() {
+        gatherProgressRef.current = null;
+      },
+    }),
+    [],
+  );
 
   useEffect(() => {
     const container = containerRef.current;
@@ -216,7 +263,12 @@ export function ParticleText({
         let baseY = particle.targetY;
         let progress = 1;
 
-        if (gathering) {
+        if (gatherProgressRef.current !== null) {
+          progress = reducedMotion ? Math.round(gatherProgressRef.current) : gatherProgressRef.current;
+          const eased = easeOutCubic(progress);
+          baseX = particle.startX + (particle.targetX - particle.startX) * eased;
+          baseY = particle.startY + (particle.targetY - particle.startY) * eased;
+        } else if (gathering) {
           const local = (now - gatherStart - particle.delay) / Math.max(1, reducedMotion ? 1 : gatherDuration);
           progress = clamp(local, 0, 1);
           const eased = easeOutCubic(progress);
@@ -319,7 +371,7 @@ export function ParticleText({
 
       const imageData = offCtx.getImageData(0, 0, offscreen.width, offscreen.height);
       const targets: { x: number; y: number; alpha: number }[] = [];
-      const step = Math.max(2, Math.floor(density));
+      const step = Math.max(1, Math.floor(density));
 
       for (let y = 0; y < offscreen.height; y += step) {
         for (let x = 0; x < offscreen.width; x += step) {
@@ -334,7 +386,7 @@ export function ParticleText({
         }
       }
 
-      const maxParticles = Math.max(900, Math.min(5200, Math.floor((width * height) / 90)));
+      const maxParticles = Math.max(900, Math.min(5200, Math.floor((width * height) / densityDivisor)));
       const stride = Math.max(1, Math.ceil(targets.length / maxParticles));
       const baseRgb = hexToRgb(color);
       const highlightRgb = hexToRgb(highlightColor);
@@ -457,12 +509,13 @@ export function ParticleText({
     fontWeight,
     fontFamily,
     glow,
+    densityDivisor,
   ]);
 
   return (
     <div
       ref={containerRef}
-      className={`relative isolate block h-full min-h-60 w-full touch-none overflow-hidden ${className}`}
+      className={cn("relative isolate block h-full min-h-10 w-full touch-none overflow-hidden", className)}
       style={style}
       aria-label={text}
     >
@@ -470,6 +523,6 @@ export function ParticleText({
       <span className="sr-only">{text}</span>
     </div>
   );
-}
+});
 
 export default ParticleText;

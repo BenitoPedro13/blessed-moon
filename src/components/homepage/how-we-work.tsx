@@ -10,7 +10,7 @@ const STEPS = [
 
 export function HowWeWork() {
   return (
-    <section data-ascii-keyframe="2" className="px-7 py-16 sm:py-20">
+    <section data-ascii-keyframe="2" data-frame-label="PROCESS" className="px-7 py-16 sm:py-20">
       <SectionHeading number="03" label="HOW WE WORK" />
       <div className="flex flex-col sm:flex-row">
         {STEPS.map((step, i) => (

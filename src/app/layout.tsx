@@ -4,6 +4,7 @@ import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import { AsciiCanvas } from "@/components/ascii-canvas";
 import { StarsBackground } from "@/components/animate-ui/components/backgrounds/stars";
 import { BootSequence } from "@/components/boot-sequence";
+import { LenisProvider } from "@/components/lenis-provider";
 import { SoundProvider } from "@/components/sound-provider";
 import { SITE_URL } from "@/lib/site-config";
 import "./globals.css";
@@ -71,19 +72,21 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Script id="disable-scroll-restoration" strategy="beforeInteractive">
           {`if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }`}
         </Script>
-        <StarsBackground
-          className="fixed inset-0 -z-10 bg-transparent"
-          starColor="#e9e7e1"
-          factor={0.02}
-          speed={80}
-        />
-        <AsciiCanvas />
-        <BootSequence />
-        <SoundProvider>
-          <div className="relative z-10 flex min-h-full flex-1 flex-col">
-            {children}
-          </div>
-        </SoundProvider>
+        <LenisProvider>
+          <StarsBackground
+            className="fixed inset-0 -z-10 bg-transparent"
+            starColor="#e9e7e1"
+            factor={0.02}
+            speed={80}
+          />
+          <AsciiCanvas />
+          <SoundProvider>
+            <BootSequence />
+            <div className="relative z-10 flex min-h-full flex-1 flex-col">
+              {children}
+            </div>
+          </SoundProvider>
+        </LenisProvider>
       </body>
     </html>
   );

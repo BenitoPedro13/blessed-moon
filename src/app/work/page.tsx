@@ -34,6 +34,7 @@ export default function WorkPage() {
               key={project.slug}
               id={project.slug}
               data-ascii-keyframe={String(index + 2)}
+              data-frame-label={project.title.toUpperCase()}
               className="grid gap-8 border-b border-border/60 py-16 lg:grid-cols-[0.9fr_1.1fr] lg:gap-14 lg:py-24"
             >
               <Reveal>

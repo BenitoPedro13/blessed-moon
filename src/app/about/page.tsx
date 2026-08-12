@@ -72,6 +72,7 @@ export default function AboutPage() {
 
         <section
           data-ascii-keyframe="2"
+          data-frame-label="OPERATING PRINCIPLE"
           className="border-b border-border/60 bg-background/70 px-7 py-16 backdrop-blur-sm sm:py-20"
         >
           <div className="mx-auto max-w-6xl">
@@ -98,7 +99,7 @@ export default function AboutPage() {
           </div>
         </section>
 
-        <section data-ascii-keyframe="3" className="px-7 py-16 sm:py-24">
+        <section data-ascii-keyframe="3" data-frame-label="HOW WE'RE STRUCTURED" className="px-7 py-16 sm:py-24">
           <div className="mx-auto max-w-6xl">
             <Reveal>
               <p className="font-mono text-[9.5px] tracking-[0.12em] text-primary uppercase">
@@ -157,6 +158,7 @@ export default function AboutPage() {
 
         <section
           data-ascii-keyframe="4"
+          data-frame-label="WHY CHOOSE OUR DYNAMIC"
           className="border-y border-border/60 bg-background/55 px-7 py-16 backdrop-blur-sm sm:py-20"
         >
           <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[0.45fr_1fr]">

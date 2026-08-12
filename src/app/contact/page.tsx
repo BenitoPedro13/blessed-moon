@@ -28,7 +28,7 @@ export default function ContactPage() {
           code="CONTACT"
         />
 
-        <section data-ascii-keyframe="2" className="px-7 py-16 sm:py-24">
+        <section data-ascii-keyframe="2" data-frame-label="PROJECT ENQUIRY" className="px-7 py-16 sm:py-24">
           <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[1.08fr_0.92fr] lg:gap-14">
             <Reveal>
               <div className="border border-border/60 bg-background/70 p-6 backdrop-blur-sm sm:p-8">

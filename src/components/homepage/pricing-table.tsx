@@ -16,7 +16,7 @@ export function PricingTable() {
   const { playHover } = useSound();
 
   return (
-    <section id="pricing" data-ascii-keyframe="4" className="px-7 py-16 sm:py-20">
+    <section id="pricing" data-ascii-keyframe="4" data-frame-label="PRICING" className="px-7 py-16 sm:py-20">
       <SectionHeading number="05" label="PRICING" />
       <div className="flex flex-col">
         {TIERS.map((tier, i) => (
