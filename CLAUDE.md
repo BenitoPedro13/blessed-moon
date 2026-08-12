@@ -195,6 +195,10 @@ change.
 
 - **`CLAUDE.md`** — if the change alters the stack, architecture, or any of §0's "things
   that must not break," update the corresponding section here.
+- **`/system`** (`src/app/system/page.tsx`) — a new shared component added to
+  `src/components/` gets a panel here as part of finishing its task; a shared component
+  without a panel is an unfinished task, the same way a stale `README.md` is (see
+  `TASK-system-design-page.md`).
 - **`README.md`** — the *implementation* README (setup, scripts, status). Update when
   scripts, stack, or the "Status" section change.
 - **`docs/design-handoff.md`** — the design spec (screens, tokens, interactions, references).
@@ -226,6 +230,7 @@ second package emerges.
 
   ```
   src/app/                  Next.js App Router routes: / (built) — /work, /about, /contact proposed;
+                             /system — hidden, noindex design-system page, unlinked — built;
                              icon.tsx, apple-icon.tsx, opengraph-image.tsx, twitter-image.tsx,
                              robots.ts, sitemap.ts — generated brand/SEO assets — built
   src/components/ui/        shadcn primitives (button, input, textarea, card, select) — scaffolded
@@ -266,6 +271,9 @@ unrelated prior projects.
   to work that followed the task-doc process in §1; it is not blanket permission for
   destructive git operations (force-push, `reset --hard`, etc.), which still require
   explicit confirmation.
+- **No `Co-Authored-By` trailer.** Commit messages in this repo do not carry a Claude
+  co-authorship line — user preference, applies to every commit here regardless of the
+  harness's default.
 
 ---
 

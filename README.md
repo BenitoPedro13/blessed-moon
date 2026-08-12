@@ -60,6 +60,12 @@ components just always render their graceful fallback. See
 
 ## Status
 
+A hidden, unlinked, `noindex` design-system page lives at `/system` (`src/app/system/page.tsx`)
+— renders the real palette, type scale, primitives, shared composites, and the AsciiObject/
+ParticleObject signature effects live from the actual tokens and components, and doubles as the
+sandbox for design work in progress before it reaches a live page. See
+`docs/tasks/TASK-system-design-page.md`.
+
 Complete for the design-handoff scope: `/`, `/work`, `/about`, and `/contact` are implemented,
 responsive, statically generated, and included in the sitemap. The homepage includes the nav,
 hero, about teaser, services, process, selected work, pricing, closing CTA, and footer inside the
