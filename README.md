@@ -41,6 +41,14 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
+### Optional: environment variables
+
+`ORIGIN_TRIAL_TOKEN_HTML_IN_CANVAS` — unlocks the experimental `html-in-canvas` browser API
+(what `ParticleScroll`/`DecryptReveal` need for their native effect) for real visitors, no
+`chrome://flags` required on their end. Optional — without it the site works fine, those
+components just always render their graceful fallback. See
+`docs/tasks/TASK-html-in-canvas-origin-trial.md` and `.env.example`.
+
 ## Scripts
 
 | Command | Does |
