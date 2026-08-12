@@ -76,9 +76,7 @@ export function ServicesFocus() {
       <div className="lg:grid lg:grid-cols-[0.9fr_2.1fr] lg:items-center lg:gap-12">
         {/* Untransformed: holds both tokens. */}
         <div>
-          <div style={morphDrift({ y: 0, x: -34 })}>
-            <SectionHeading number="02" label="SERVICES" />
-          </div>
+          <SectionHeading number="02" label="SERVICES" />
           <p className="flex items-end gap-3">
             <MorphToken id="count-8" side="to" className={COUNT_DISPLAY}>
               8
@@ -88,10 +86,10 @@ export function ServicesFocus() {
             </span>
           </p>
           <p className="mt-5 max-w-sm text-[14px] leading-[1.6] text-muted-foreground">
-            Different shape, same standard — one senior partnership across all
-            eight, not a bench of specialists handed your project in turn.
+            Different shape, same standard. The same two people build all of
+            them — not a bench of specialists handed your project in turn.
           </p>
-          <p className="mt-4 max-w-sm text-[14px] leading-[1.75] text-muted-foreground">
+          <p className="mt-4 max-w-sm text-[14px] leading-[2.1] text-muted-foreground">
             Whichever one you need, the build runs the same{" "}
             <MorphToken id="count-4" side="from" className={COUNT_INLINE}>
               4

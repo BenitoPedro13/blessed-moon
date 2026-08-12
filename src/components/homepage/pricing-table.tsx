@@ -28,9 +28,10 @@ export function PricingTable() {
 
   return (
     <div className="mx-auto w-full max-w-xl px-7 py-14 text-center sm:py-16">
-      <div className="mx-auto w-fit" style={morphDrift({ y: 0, x: -34 })}>
+      <div className="mx-auto w-fit">
         <SectionHeading number="05" label="PRICING" />
       </div>
+
 
       {/* Untransformed: holds the arriving token. */}
       <p className="flex items-end justify-center gap-3">

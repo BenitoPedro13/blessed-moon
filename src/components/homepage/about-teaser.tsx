@@ -25,9 +25,7 @@ export function AboutTeaser() {
 
   return (
     <div className="flex h-full w-full flex-col justify-center gap-8 px-7 py-14 sm:py-16 lg:grid lg:grid-rows-[auto_1fr_auto] lg:justify-normal lg:gap-0">
-      <div style={morphDrift({ y: 0, x: -34 })}>
-        <SectionHeading number="01" label="ABOUT" />
-      </div>
+      <SectionHeading number="01" label="ABOUT" />
 
       {/* Sized well under Hero's headline (Hero tops out at 4.5rem) —
           deliberately: the second-place statement on the page, not a rival. */}
@@ -45,7 +43,10 @@ export function AboutTeaser() {
           Two senior people on the work, end to end. No account layer, no
           handoff, no one learning your product on your time.
         </p>
-        <p className="mt-4 text-[14.5px] leading-[1.75] text-muted-foreground">
+        {/* leading-[2.1] wherever a token sits in a sentence: the inline
+            numeral is 1.5em, and at normal body leading it overflows its own
+            line box into the line above. Raise one, raise the other. */}
+        <p className="mt-4 text-[14.5px] leading-[2.1] text-muted-foreground">
           Which is why we can name exactly what we build —{" "}
           <MorphToken id="count-8" side="from" className={COUNT_INLINE}>
             8

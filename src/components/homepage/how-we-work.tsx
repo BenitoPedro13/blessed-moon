@@ -21,7 +21,13 @@ const STEPS = [
  * once it's a child of one shared sticky frame, so an in-view check can
  * never fire per section again. Re-rolling on each return is the better
  * behaviour anyway — it matches the rest of this scroll system, which plays
- * in both directions rather than one-shotting. */
+ * in both directions rather than one-shotting.
+ *
+ * Foreground, not amber: these were `var(--primary)` and sat three lines
+ * under the amber display 4, which made two competing numeric systems in one
+ * section and left the reader no way to tell which number mattered. Amber is
+ * reserved for the traveling token now (see morph-count.tsx) — once the 4 has
+ * landed and dispersed into these, it isn't the token any more. */
 function StepNumber({ target }: { target: number }) {
   const { isActive } = useMorphLayer();
 
@@ -29,9 +35,9 @@ function StepNumber({ target }: { target: number }) {
     <Counter
       value={isActive ? target : 0}
       places={[1]}
-      fontSize={44}
-      textColor="var(--primary)"
-      fontWeight={600}
+      fontSize={38}
+      textColor="var(--foreground)"
+      fontWeight={500}
       gap={0}
       horizontalPadding={0}
       gradientHeight={0}
@@ -52,9 +58,7 @@ function StepNumber({ target }: { target: number }) {
 export function HowWeWork() {
   return (
     <div className="w-full px-7 py-14 sm:py-16">
-      <div style={morphDrift({ y: 0, x: -34 })}>
-        <SectionHeading number="03" label="HOW WE WORK" />
-      </div>
+      <SectionHeading number="03" label="HOW WE WORK" />
 
       {/* Untransformed: holds the arriving token. */}
       <p className="flex items-end gap-3">
@@ -84,12 +88,12 @@ export function HowWeWork() {
       </div>
 
       {/* Untransformed: holds the outgoing token. */}
-      <p className="mt-10 max-w-md text-[14px] leading-[1.75] text-muted-foreground sm:mt-12">
-        Run often enough that{" "}
+      <p className="mt-10 max-w-md text-[14px] leading-[2.1] text-muted-foreground sm:mt-12">
+        We&apos;ve run it enough times that{" "}
         <MorphToken id="count-3" side="from" className={COUNT_INLINE}>
           3
         </MorphToken>{" "}
-        of the systems we shipped this way are still in production today.
+        of the systems built this way are still in production today.
       </p>
     </div>
   );

@@ -56,9 +56,7 @@ export function SelectedWork() {
       <div className="lg:grid lg:grid-cols-[0.85fr_2.15fr] lg:items-center lg:gap-12">
         {/* Untransformed: holds both tokens. */}
         <div>
-          <div style={morphDrift({ y: 0, x: -34 })}>
-            <SectionHeading number="04" label="SELECTED WORK" />
-          </div>
+          <SectionHeading number="04" label="SELECTED WORK" />
           <p className="flex items-end gap-3">
             <MorphToken id="count-3" side="to" className={COUNT_DISPLAY}>
               3
@@ -67,8 +65,8 @@ export function SelectedWork() {
               still in production.
             </span>
           </p>
-          <p className="mt-5 max-w-sm text-[14px] leading-[1.75] text-muted-foreground">
-            Every one of them priced the same way — a single{" "}
+          <p className="mt-5 max-w-sm text-[14px] leading-[2.1] text-muted-foreground">
+            Every one of them priced the same way:{" "}
             <MorphToken id="count-1" side="from" className={COUNT_INLINE}>
               1
             </MorphToken>{" "}
