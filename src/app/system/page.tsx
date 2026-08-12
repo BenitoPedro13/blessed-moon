@@ -403,7 +403,7 @@ export default function SystemPage() {
         </div>
         <div className="space-y-2">
           <span className="block font-mono text-[10px] text-muted-foreground uppercase">
-            LineSidebar — used by SectionSidebar (site-wide, hover/click the items)
+            LineSidebar — candidate, not on a live page (tried as a site-wide section indicator, removed — felt strange in place)
           </span>
           <div className="border border-border/60 bg-background px-10 py-8">
             <LineSidebar

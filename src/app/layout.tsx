@@ -5,7 +5,6 @@ import { AsciiCanvas } from "@/components/ascii-canvas";
 import { StarsBackground } from "@/components/animate-ui/components/backgrounds/stars";
 import { BootSequence } from "@/components/boot-sequence";
 import { LenisProvider } from "@/components/lenis-provider";
-import { SectionSidebar } from "@/components/section-sidebar";
 import { SoundProvider } from "@/components/sound-provider";
 import { SITE_URL } from "@/lib/site-config";
 import "./globals.css";
@@ -81,7 +80,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             speed={80}
           />
           <AsciiCanvas />
-          <SectionSidebar />
           <SoundProvider>
             <BootSequence />
             <div className="relative z-10 flex min-h-full flex-1 flex-col">

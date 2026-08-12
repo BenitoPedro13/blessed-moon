@@ -45,14 +45,13 @@ export function SiteNav() {
   // threading state through the tree for no real benefit — the tracker is
   // just a cheap DOM read.
   //
-  // A live section-name label used to render here too (createFrameTracker,
-  // same [data-frame-label] convention now used by the sidebar instead) —
+  // A live section-name label used to render here too (a `[data-frame-
+  // label]`-driven tracker, since removed along with the label) —
   // removed: variable-width text in a `justify-between` flex row shifted
   // the nav's balance every time the label changed, visibly throwing off
   // the link group's centering and making the links harder to hit
-  // accurately. A fixed-width slot could have fixed that, but a dedicated
-  // sidebar is a better home for "which section am I in" than competing
-  // for space in an already-tight top bar.
+  // accurately. A follow-up sidebar version of the same idea was also
+  // tried and also removed — see git history if this gets revisited.
   useEffect(() => {
     const morphTracker = createScrollTracker();
     morphTracker.measure();

@@ -13,11 +13,13 @@ import "./line-sidebar.css";
  * border-glow.tsx). Proximity/rAF-lerp logic is unchanged from upstream;
  * changed: TypeScript types, brand-token color defaults (`var(--primary)`
  * etc. instead of hardcoded purple, so it follows theme changes rather than
- * copying a snapshot of it), and an added `activeIndex` controlled-mode
- * prop — upstream only ever sets its active item from a click
- * (`defaultActive` + internal state), with no way for a parent to drive it
- * from something else. `SectionSidebar` (section-sidebar.tsx) drives it
- * from scroll position, which is the reason for this fork.
+ * copying a snapshot of it), an added `activeIndex` controlled-mode prop
+ * (upstream only ever sets its active item from a click), and real
+ * keyboard access (upstream's items were `<li onClick>`, not focusable).
+ *
+ * Was wired site-wide as a scroll-position-driven section indicator
+ * (`SectionSidebar`) — removed, it read as out of place rather than
+ * helpful. Kept here as a reviewed candidate, not on any live page.
  */
 
 const FALLOFF_CURVES: Record<string, (p: number) => number> = {

@@ -34,18 +34,28 @@ export default function Home() {
               reverted. It visibly corrupted the html-in-canvas capture
               (overlapping/ghosted content from more than one scroll
               position rendered at once) and froze page scroll partway
-              through, worse than the UX problem it was meant to fix. This
-              component's capture pipeline apparently assumes natural,
-              wheel-paced scrollTop changes, not instant per-frame jumps to
-              an arbitrary value — not something to fight further without
-              understanding its internals much better than a black-box
+              through, worse than the UX problem it was meant to fix. Likely
+              cause: `content` here renders inside a `<canvas
+              layoutsubtree>` (ParticleScroll.tsx's experimental
+              html-in-canvas capture mode) — programmatically driving its
+              scrollTop may simply be incompatible with how that capture
+              samples the subtree, not a tuning problem fixable by adjusting
+              *how* it's driven. Not safe to retry without much better
+              visibility into that capture's internals than a black-box
               scrollTop poll allows. `data-lenis-prevent` (see
               lenis-provider.tsx) is what actually matters here: it keeps
               this panel's native internal scroll working now that Lenis
-              governs the rest of the page — the "have to find the box with
-              your cursor" friction is real but stays as a known limitation
-              for now rather than a broken capture and frozen scroll. */}
-          <div data-lenis-prevent className="mx-auto max-w-6xl border border-primary/30">
+              governs the rest of the page.
+
+              Widened from max-w-6xl instead — doesn't fix the two-scroll-
+              contexts problem (cursor still has to be over the panel for
+              wheel input to reach it), but a wider target means a normally-
+              centered cursor lands on it during regular scrolling more
+              often, at zero risk to the capture effect. The "have to find
+              the box" friction is reduced, not eliminated — accepted as a
+              known limitation rather than chasing a fix that already broke
+              the page once. */}
+          <div data-lenis-prevent className="border border-primary/30">
             <div className="flex items-center justify-between border-b border-primary/30 bg-background/80 px-4 py-2 font-mono text-[10px] tracking-[0.5px] text-muted-foreground uppercase">
               <span>blessed_moon --explore</span>
               <span aria-hidden="true">scroll_</span>
