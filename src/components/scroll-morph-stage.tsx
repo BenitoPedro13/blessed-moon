@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { LayoutGroup, motion, useReducedMotion } from "motion/react";
 
 import { CellGrid } from "@/components/cell-grid";
+import { subscribeFrame } from "@/components/frame-loop";
 import { ScrollParticles } from "@/components/scroll-particles";
 import { SectionHeading } from "@/components/section-heading";
 import {
@@ -213,14 +214,19 @@ export function ScrollMorphStage({
     const inner = innerRef.current;
     if (!wrapper || !inner || count === 0) return;
 
-    let raf = 0;
     let lastActive = -1;
+    // Written in the read phase, consumed in the write phase — see frame-loop.ts
+    // for why the two are separated across every subscriber on the page.
+    let progress = 0;
 
-    function frame() {
+    function read() {
       const rect = wrapper!.getBoundingClientRect();
       const scrollable = rect.height - window.innerHeight;
       const t = scrollable > 0 ? Math.min(1, Math.max(0, -rect.top / scrollable)) : 0;
-      const progress = Math.min(count - 1, Math.max(0, t * span - END_HOLD));
+      progress = Math.min(count - 1, Math.max(0, t * span - END_HOLD));
+    }
+
+    function write() {
       inner!.style.setProperty("--morph-progress", progress.toFixed(4));
 
       // Per-layer values are computed here rather than as CSS calc() off
@@ -274,11 +280,9 @@ export function ScrollMorphStage({
         lastActive = next;
         setActive(next);
       }
-      raf = requestAnimationFrame(frame);
     }
-    raf = requestAnimationFrame(frame);
 
-    return () => cancelAnimationFrame(raf);
+    return subscribeFrame({ read, write });
     // Deliberately not depending on `layers`: it's a fresh array literal on
     // every render from page.tsx, so including it tore down and restarted the
     // rAF loop constantly. Everything the loop needs from it comes through

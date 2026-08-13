@@ -107,6 +107,22 @@ dependency.
   new page means choosing what that page has to say, not reusing one of these. Amber's
   other job — small, on a control, meaning *interactive* — must never land on the same
   glyph, which is why `/work`'s index rows are a listing rather than three links.
+- **One rAF loop, and reads never interleave with writes.** Every scroll-driven component
+  subscribes to `src/components/frame-loop.ts`, which runs all `read` callbacks before any
+  `write` callback. Seven components previously owned a loop each, and a write from one
+  invalidated layout for the next one's read. Don't call `requestAnimationFrame` directly in
+  a new component, and don't read layout (`getBoundingClientRect`, `getComputedStyle`) in a
+  `write` — that silently reintroduces the thrash for everyone, not just the new component.
+  `scroll-progress.ts` depends on this too: it now caches document-relative offsets and
+  resolves from `scrollY`, which is only valid while everything it tracks is in normal
+  document flow (`TASK-frame-budget-cleanup.md`). A genuinely independent nested scroller
+  would break that assumption and require live rects again.
+- **Performance claims here need medians of repeated runs, never a single measurement.**
+  Run-to-run spread on the homepage is roughly ±1.5fps and ±1.5pp of dropped frames — the
+  same size as most changes worth making. `pnpm profile` handles this (discards a warmup run,
+  reports a median) and aborts if the page didn't load cleanly, because a stale `next-server`
+  serving 500s profiles *beautifully* while running no JavaScript at all. Both mistakes were
+  made and nearly shipped as conclusions; see `TASK-frame-budget-cleanup.md` § Methodology.
 - **The boot screen's animations must only ever supply an *earlier* state to fill backwards
   from.** Every element's base style is its final, visible state; the `@keyframes` add a
   hidden state before it (`animation-fill-mode: backwards`). A browser that drops the
@@ -290,7 +306,9 @@ second package emerges.
                              ascii-canvas, sound-provider, sound-toggle, boot-sequence,
                              logo-mark, scroll-stage, scroll-morph-stage, terminal-panel,
                              cell-grid, page-hero, page-cta, morph-tokens — the token type
-                             language every staged page shares) — built
+                             language every staged page shares; frame-loop — the single
+                             rAF conductor every scroll-driven component subscribes to) — built
+  scripts/                   profile-scroll.mjs — scroll-performance harness (`pnpm profile`)
   src/lib/                   shadcn's cn() helper etc.; ascii-canvas/scroll-progress.ts —
                              scroll-position tracker driving the moon's morph; logo-mark.ts —
                              shared pixel-crescent path (+ LOGO_BOUNDS, the cells it fills);

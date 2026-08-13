@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
+import { subscribeFrame } from "@/components/frame-loop";
 import { ParticleText, type ParticleTextHandle } from "@/components/react-bits/particle-text";
 import { Reveal } from "@/components/reveal";
 import { ScrollStage } from "@/components/scroll-stage";
@@ -23,7 +24,7 @@ export function Hero() {
    * section's content to scroll — dissolving out as it leaves the viewport,
    * re-gathering if the visitor scrolls back up, replaying in both
    * directions rather than a one-shot mount animation. Reads the section's
-   * own bounding rect in a plain rAF loop and drives both ParticleText
+   * own bounding rect on the shared frame loop and drives both ParticleText
    * instances imperatively (see ParticleTextHandle) rather than through
    * React state, for the same reason `ascii-canvas.tsx` drives AsciiObject
    * that way: a per-frame React re-render of the whole hero subtree isn't
@@ -41,17 +42,18 @@ export function Hero() {
     const section = sectionRef.current;
     if (!section) return;
 
-    let raf = 0;
-    function frame() {
-      const rect = section!.getBoundingClientRect();
-      const progress = Math.min(1, Math.max(0, 1 - Math.max(0, -rect.top) / rect.height));
-      line1Ref.current?.setGatherProgress(progress);
-      line2Ref.current?.setGatherProgress(progress);
-      raf = requestAnimationFrame(frame);
-    }
-    raf = requestAnimationFrame(frame);
+    let progress = 0;
 
-    return () => cancelAnimationFrame(raf);
+    return subscribeFrame({
+      read() {
+        const rect = section.getBoundingClientRect();
+        progress = Math.min(1, Math.max(0, 1 - Math.max(0, -rect.top) / rect.height));
+      },
+      write() {
+        line1Ref.current?.setGatherProgress(progress);
+        line2Ref.current?.setGatherProgress(progress);
+      },
+    });
   }, []);
 
   return (

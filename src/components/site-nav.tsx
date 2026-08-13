@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 
+import { subscribeFrame } from "@/components/frame-loop";
 import { LogoMark } from "@/components/logo-mark";
 import { useSound } from "@/components/sound-provider";
 import { SoundToggle } from "@/components/sound-toggle";
@@ -39,10 +40,14 @@ export function SiteNav() {
   // Reuses the exact scroll-position machinery that already drives the
   // ASCII moon (createScrollTracker) — the nav's chrome becomes part of the
   // same scroll-frame system instead of a static bar floating on top of it.
-  // Own rAF loop and own tracker instance rather than sharing AsciiCanvas's:
-  // these are independent components, and a shared instance would mean
-  // threading state through the tree for no real benefit — the tracker is
-  // just a cheap DOM read.
+  // Own tracker instance rather than sharing AsciiCanvas's: these are
+  // independent components, and a shared instance would mean threading state
+  // through the tree for no real benefit — the tracker is now pure arithmetic
+  // over cached offsets.
+  //
+  // The rAF loop *is* shared, via frame-loop.ts. It used to be its own, which
+  // is exactly the pattern that made six loops interleave their layout reads
+  // and writes; see that file for the measurement.
   //
   // A live section-name label used to render here too (a `[data-frame-
   // label]`-driven tracker, since removed along with the label) —
@@ -55,22 +60,23 @@ export function SiteNav() {
     const morphTracker = createScrollTracker();
     morphTracker.measure();
 
-    let raf = 0;
     let displayedChrome = 0;
+    let morph = 0;
 
-    function frame() {
-      const morph = morphTracker.read();
-      const targetChrome = Math.min(1, Math.max(0, morph));
-      displayedChrome += (targetChrome - displayedChrome) * EASE;
+    const unsubscribe = subscribeFrame({
+      read({ scrollY, innerHeight }) {
+        morph = morphTracker.read(scrollY, innerHeight);
+      },
+      write() {
+        const targetChrome = Math.min(1, Math.max(0, morph));
+        displayedChrome += (targetChrome - displayedChrome) * EASE;
 
-      const chrome = chromeRef.current;
-      if (chrome) {
-        chrome.style.setProperty("--nav-chrome", displayedChrome.toFixed(3));
-      }
-
-      raf = requestAnimationFrame(frame);
-    }
-    raf = requestAnimationFrame(frame);
+        const chrome = chromeRef.current;
+        if (chrome) {
+          chrome.style.setProperty("--nav-chrome", displayedChrome.toFixed(3));
+        }
+      },
+    });
 
     function handleResize() {
       morphTracker.measure();
@@ -79,7 +85,7 @@ export function SiteNav() {
     const remeasure = window.setTimeout(handleResize, 500);
 
     return () => {
-      cancelAnimationFrame(raf);
+      unsubscribe();
       window.clearTimeout(remeasure);
       window.removeEventListener("resize", handleResize);
     };

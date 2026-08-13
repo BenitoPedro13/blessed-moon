@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 
 import { createAsciiObject } from "@/components/canvasui/AsciiObject";
+import { subscribeFrame } from "@/components/frame-loop";
 import { createScrollTracker } from "@/lib/ascii-canvas/scroll-progress";
 
 /** Zoom (scale) at morph values 0 (Hero) through 5 (closing CTA). Effective
@@ -32,6 +33,21 @@ const OFFSET_Y_BY_MORPH = [0.3, 0.1, 0.9, 0.9, -0.9, -0.9];
  * mechanical; easing gives it weight/lag, closer to a directed camera
  * move than a scrollbar-driven puppet. */
 const EASE = 0.07;
+
+/** Below this, the eased transform has effectively caught up with its
+ * scroll-driven target and only the moon's own ambient float is still moving.
+ * Scale/offsets are scene units and rotation is degrees, so they're compared
+ * separately rather than against one shared number. */
+const SETTLED_UNITS = 0.002;
+const SETTLED_DEGREES = 0.05;
+
+/** Render cadence while the transform is still converging, and once it has
+ * settled. The float's slowest-moving components have periods of 1.5s and 4s
+ * (see AsciiObject's `tick`), so 30fps is indistinguishable from 60 for the
+ * ambient motion — but it is *very* distinguishable while a scroll-driven camera
+ * move is in flight, which is why this isn't simply pinned at 30. */
+const CADENCE_ACTIVE = 60;
+const CADENCE_SETTLED = 30;
 
 function viewportTransform() {
   const mobile = window.innerWidth < 768;
@@ -125,18 +141,36 @@ export function AsciiCanvas() {
     const tracker = createScrollTracker();
     trackerRef.current = tracker;
     tracker.measure();
-    let raf = 0;
     let displayedScale = SCALE_BY_MORPH[0] * viewport.scale;
     let displayedRotation = 0;
     let displayedX = OFFSET_X_BY_MORPH[0] * viewport.x;
     let displayedY = OFFSET_Y_BY_MORPH[0] * viewport.y;
+    let morph = 0;
+    let cadence = CADENCE_ACTIVE;
 
-    function frame() {
-      const morph = tracker.read();
+    function read({ scrollY, innerHeight }: { scrollY: number; innerHeight: number }) {
+      morph = tracker.read(scrollY, innerHeight);
+    }
+
+    function write() {
       const targetScale = interpolate(SCALE_BY_MORPH, morph) * viewport.scale;
       const targetRotation = morph * 24;
       const targetX = interpolate(OFFSET_X_BY_MORPH, morph) * viewport.x;
       const targetY = interpolate(OFFSET_Y_BY_MORPH, morph) * viewport.y;
+
+      // Checked before easing, so a transform that has converged doesn't get
+      // one more redundant full-rate frame on the way out.
+      const settled =
+        Math.abs(targetScale - displayedScale) < SETTLED_UNITS &&
+        Math.abs(targetX - displayedX) < SETTLED_UNITS &&
+        Math.abs(targetY - displayedY) < SETTLED_UNITS &&
+        Math.abs(targetRotation - displayedRotation) < SETTLED_DEGREES;
+
+      const nextCadence = settled ? CADENCE_SETTLED : CADENCE_ACTIVE;
+      if (nextCadence !== cadence) {
+        cadence = nextCadence;
+        instance!.setCadence(cadence);
+      }
 
       displayedScale += (targetScale - displayedScale) * EASE;
       displayedRotation += (targetRotation - displayedRotation) * EASE;
@@ -152,7 +186,6 @@ export function AsciiCanvas() {
       if (wrapperRef.current) {
         wrapperRef.current.style.opacity = String(opacityForMorph(morph));
       }
-      raf = requestAnimationFrame(frame);
     }
 
     function handleResize() {
@@ -166,10 +199,10 @@ export function AsciiCanvas() {
     // stale section boundaries for the rest of the page's life (the effect
     // only runs once).
     const remeasure = window.setTimeout(() => tracker.measure(), 500);
-    raf = requestAnimationFrame(frame);
+    const unsubscribe = subscribeFrame({ read, write });
 
     return () => {
-      cancelAnimationFrame(raf);
+      unsubscribe();
       window.clearTimeout(remeasure);
       window.removeEventListener("resize", handleResize);
       trackerRef.current = null;

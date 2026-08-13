@@ -97,6 +97,19 @@ export interface AsciiObjectInstance {
   setTransform: (transform: AsciiObjectTransform) => void;
   /** Re-read canvas size. Call when the element is resized. */
   resize: () => void;
+  /**
+   * Cap how often the scene is actually rendered, in frames per second
+   * (default 60). The loop keeps running at display rate and animation stays
+   * time-correct — only the three render passes are skipped — so this changes
+   * the smoothness of the motion, never its speed or phase.
+   *
+   * Added because this component renders unconditionally on every frame, which
+   * on a mid-range phone is the single largest consumer of an already
+   * oversubscribed main thread. A caller that knows the object is only doing
+   * slow ambient motion right now can halve its cost without it being visible.
+   * See `docs/tasks/TASK-frame-budget-cleanup.md`.
+   */
+  setCadence: (fps: number) => void;
   /** Stop the loop and release all GPU resources. */
   destroy: () => void;
 }
@@ -1360,6 +1373,12 @@ export function createAsciiObject(
 
   let inView = true;
   let loopRunning = false;
+  /** Minimum ms between rendered frames; 0 renders every frame. The 0.9 factor
+   * absorbs frame-time jitter — at an exact 1000/fps threshold, a frame
+   * arriving a hair early is skipped and the effective rate drops to the next
+   * divisor of the display rate (30fps quietly becoming 20). */
+  let renderInterval = 0;
+  let lastRender = 0;
 
   function tick(time: number) {
     if (!inView) {
@@ -1369,6 +1388,16 @@ export function createAsciiObject(
     }
     const delta = lastTime ? Math.min((time - lastTime) / 1000, 0.1) : 0;
     lastTime = time;
+
+    // Accumulated before the cadence check, so a skipped frame still advances
+    // animation time. Otherwise the float would slow down in proportion to the
+    // cadence instead of simply being sampled less often, which is a change in
+    // the motion rather than in how often it's drawn.
+    if (!reducedMotion) elapsed += delta * config.floatSpeed;
+
+    if (renderInterval > 0 && time - lastRender < renderInterval) return;
+    lastRender = time;
+
     if (envDirty) {
       envDirty = false;
       refreshEnvironment();
@@ -1376,7 +1405,6 @@ export function createAsciiObject(
     controls.update();
 
     if (!reducedMotion) {
-      elapsed += delta * config.floatSpeed;
       floatGroup.rotation.x =
         (Math.cos(elapsed / 4) / 8) * config.rotationIntensity;
       floatGroup.rotation.y =
@@ -1468,6 +1496,12 @@ export function createAsciiObject(
       applyFit();
     },
     resize,
+    setCadence(fps: number) {
+      // >= 60 means "no cap": the loop is already display-rate, and a 16.7ms
+      // threshold would start skipping frames on any display running at exactly
+      // 60Hz with normal jitter.
+      renderInterval = fps >= 60 ? 0 : (1000 / fps) * 0.9;
+    },
     destroy() {
       disposed = true;
       loadToken += 1;

@@ -2,6 +2,7 @@
 
 import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 
+import { subscribeFrame } from "@/components/frame-loop";
 import { cn } from "@/lib/utils";
 
 /**
@@ -202,7 +203,9 @@ export const ParticleText = forwardRef<ParticleTextHandle, ParticleTextProps>(fu
     if (!ctx) return undefined;
 
     let particles: Particle[] = [];
-    let animationFrame: number | null = null;
+    // BLESSED MOON: was `let animationFrame: number | null` — the render loop's
+    // handle is now an unsubscribe function from the shared frame loop.
+    let unsubscribeRender: (() => void) | null = null;
     let resizeFrame: number | null = null;
     let buildId = 0;
     let gathering = false;
@@ -237,9 +240,22 @@ export const ParticleText = forwardRef<ParticleTextHandle, ParticleTextProps>(fu
       gathering = true;
     };
 
+    // BLESSED MOON: last-set canvas state, so a run of particles sharing a
+    // colour or alpha costs one assignment instead of one each. Every canvas
+    // state write is a potential rasterizer flush, and this loop previously
+    // performed two per particle unconditionally. Values only, no draw-order
+    // change — sorting particles by colour would batch harder but would also
+    // reorder which dot overlaps which. See TASK-frame-budget-cleanup.md.
+    let lastColor = "";
+    let lastAlpha = -1;
+
     const drawParticle = (particle: Particle) => {
       const size = particle.size;
-      ctx.fillStyle = particle.color;
+
+      if (particle.color !== lastColor) {
+        lastColor = particle.color;
+        ctx.fillStyle = particle.color;
+      }
       if (size <= 2.1) {
         ctx.fillRect(particle.x - size / 2, particle.y - size / 2, size, size);
         return;
@@ -302,20 +318,30 @@ export const ParticleText = forwardRef<ParticleTextHandle, ParticleTextProps>(fu
         particle.x += (baseX - particle.x) * follow;
         particle.y += (baseY - particle.y) * follow;
 
-        ctx.globalAlpha = clamp(0.35 + progress * 0.65, 0, 1);
+        const alpha = clamp(0.35 + progress * 0.65, 0, 1);
+        if (alpha !== lastAlpha) {
+          lastAlpha = alpha;
+          ctx.globalAlpha = alpha;
+        }
         drawParticle(particle);
       });
 
       ctx.globalAlpha = 1;
       ctx.shadowBlur = 0;
+      lastAlpha = 1;
+      // shadowBlur/shadowColor are reset above but fillStyle isn't, so the
+      // cached colour stays valid across frames; alpha does not.
 
       if (gathering && complete) gathering = false;
-
-      animationFrame = window.requestAnimationFrame(render);
     };
 
+    // BLESSED MOON: driven by the shared frame loop rather than this
+    // component's own rAF. `render` is otherwise unchanged, including its
+    // `now` timestamp, which frame-loop supplies from the same rAF clock.
     const ensureRenderLoop = () => {
-      if (animationFrame === null) animationFrame = window.requestAnimationFrame(render);
+      if (unsubscribeRender === null) {
+        unsubscribeRender = subscribeFrame({ write: ({ time }) => render(time) });
+      }
     };
 
     const sampleText = async () => {
@@ -497,7 +523,7 @@ export const ParticleText = forwardRef<ParticleTextHandle, ParticleTextProps>(fu
       canvas.removeEventListener("pointermove", handlePointerMove);
       canvas.removeEventListener("pointerleave", handlePointerLeave);
       canvas.removeEventListener("click", handleClick);
-      if (animationFrame !== null) window.cancelAnimationFrame(animationFrame);
+      unsubscribeRender?.();
       if (resizeFrame !== null) window.cancelAnimationFrame(resizeFrame);
     };
   }, [

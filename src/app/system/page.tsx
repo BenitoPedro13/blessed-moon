@@ -23,6 +23,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
 import { SoundToggle } from "@/components/sound-toggle";
 import { TerminalPanel } from "@/components/terminal-panel";
+import { FrameLoopReadout } from "./frame-loop-readout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -636,6 +637,32 @@ export default function SystemPage() {
         <div className="max-w-md border border-border/60 bg-background/55 p-6 backdrop-blur-sm">
           <ContactForm agencyEmail={agencyEmail} />
         </div>
+      </section>
+
+      <section className="space-y-4">
+        <h2 className="font-sans text-xl font-semibold tracking-[-0.01em] text-foreground">
+          Frame loop
+        </h2>
+        <p className="max-w-prose text-[13px] leading-[1.6] text-muted-foreground">
+          Every scroll-driven component on the site shares one{" "}
+          <code className="font-mono text-[12px] text-foreground/80">requestAnimationFrame</code>{" "}
+          via <code className="font-mono text-[12px] text-foreground/80">frame-loop.ts</code>, which
+          runs all <em>read</em> callbacks before any <em>write</em> callback. Seven components
+          previously owned a loop each and interleaved their layout reads with each other&apos;s
+          style writes, forcing the browser to recalculate layout several times per frame. The
+          numbers below are live — this panel is itself a subscriber.
+        </p>
+        <FrameLoopReadout />
+        <p className="max-w-prose text-[13px] leading-[1.6] text-muted-foreground">
+          Adding a scroll-driven component means subscribing here rather than calling{" "}
+          <code className="font-mono text-[12px] text-foreground/80">requestAnimationFrame</code>{" "}
+          directly, and splitting its work at the read/write boundary. See{" "}
+          <code className="font-mono text-[12px] text-foreground/80">
+            docs/tasks/TASK-frame-budget-cleanup.md
+          </code>{" "}
+          — including how to profile this site without fooling yourself, which took two false
+          results to learn.
+        </p>
       </section>
     </div>
   );

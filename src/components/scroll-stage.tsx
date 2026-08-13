@@ -2,7 +2,8 @@
 
 import { useEffect, useRef } from "react";
 
-import { ScrollParticles } from "@/components/scroll-particles";
+import { subscribeFrame } from "@/components/frame-loop";
+import { ScrollParticles, StageProgressContext } from "@/components/scroll-particles";
 
 /**
  * Pins its content for a scroll range, exposing how far through that range
@@ -56,6 +57,12 @@ export function ScrollStage({
   // function passed by the caller would otherwise be a new reference every
   // render, tearing down and restarting the rAF loop each time for no reason.
   const onProgressRef = useRef(onProgress);
+  // The same number that goes into --stage-progress, handed to ScrollParticles
+  // as a value rather than left for it to read back out of the style engine.
+  // It used to recover this with a getComputedStyle() call inside its own rAF
+  // loop — a forced style recalc per frame to retrieve a number this component
+  // had just computed in JS.
+  const progressRef = useRef(0);
 
   useEffect(() => {
     onProgressRef.current = onProgress;
@@ -66,18 +73,19 @@ export function ScrollStage({
     const inner = innerRef.current;
     if (!wrapper || !inner) return;
 
-    let raf = 0;
-    function frame() {
-      const rect = wrapper!.getBoundingClientRect();
-      const scrollable = rect.height - window.innerHeight;
-      const progress = scrollable > 0 ? Math.min(1, Math.max(0, -rect.top / scrollable)) : 0;
-      inner!.style.setProperty("--stage-progress", progress.toFixed(4));
-      onProgressRef.current?.(progress);
-      raf = requestAnimationFrame(frame);
-    }
-    raf = requestAnimationFrame(frame);
-
-    return () => cancelAnimationFrame(raf);
+    return subscribeFrame({
+      read() {
+        const rect = wrapper.getBoundingClientRect();
+        const scrollable = rect.height - window.innerHeight;
+        progressRef.current =
+          scrollable > 0 ? Math.min(1, Math.max(0, -rect.top / scrollable)) : 0;
+      },
+      write() {
+        const progress = progressRef.current;
+        inner.style.setProperty("--stage-progress", progress.toFixed(4));
+        onProgressRef.current?.(progress);
+      },
+    });
   }, []);
 
   return (
@@ -98,8 +106,12 @@ export function ScrollStage({
         style={{ "--stage-progress": 0 } as React.CSSProperties}
         className="sticky top-0 flex h-dvh flex-col items-center justify-center overflow-x-hidden overflow-y-auto"
       >
-        {particles && <ScrollParticles />}
-        {children}
+        {/* A ref object, so the value is stable and providing it costs no
+            re-render — the number inside it changes every frame. */}
+        <StageProgressContext.Provider value={progressRef}>
+          {particles && <ScrollParticles />}
+          {children}
+        </StageProgressContext.Provider>
       </div>
     </div>
   );

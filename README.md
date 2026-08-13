@@ -64,6 +64,7 @@ components just always render their graceful fallback. See
 | `pnpm build` | Production build |
 | `pnpm start` | Serve the production build |
 | `pnpm lint` | ESLint |
+| `pnpm profile` | Scroll-performance harness — needs `pnpm build && pnpm start` running first. `--cpu 6 --runs 3 --url …` |
 
 ## Status
 
@@ -90,6 +91,19 @@ count: `/work` hands the project name from the index listing into each entry, `/
 `A → B → 0`. `/contact` and the case-study pages take the window chrome and the cell-grid ground
 but no pin — a form should open rather than unfold, and a long case study inside a scroll-driven
 window would nest two scroll contexts. See `docs/tasks/TASK-subpage-morph-expansion.md`.
+
+All scroll-driven components share one `requestAnimationFrame` through
+`src/components/frame-loop.ts`, which runs every layout *read* before any style *write* —
+previously seven components each owned a loop and invalidated each other's measurements. Profile
+with `pnpm profile`; it compares medians of repeated runs and refuses to report numbers for a
+page that didn't load cleanly, both of which are lessons rather than preferences
+(`docs/tasks/TASK-frame-budget-cleanup.md`).
+
+Mobile performance is **not yet solved**. On a mid-range phone (6x CPU throttle) the homepage
+sits around 51fps with ~7% of frames over 33ms. The frame-loop work above is a structural
+prerequisite that bought ~3%; the measured headroom is in the canvas layers — disabling them
+reaches ~59fps. That is what `docs/tasks/TASK-ascii-offscreen-worker.md` (moon to a worker) and
+`docs/tasks/TASK-adaptive-quality.md` (measured frame budget, not a breakpoint) are for.
 
 Sound remains opt-in and muted by default. The terminal boot sequence, pixel-crescent logo,
 generated favicon/apple/OG/Twitter assets, metadata, `robots.ts`, and responsive scroll-driven
