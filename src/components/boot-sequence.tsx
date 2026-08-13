@@ -1,19 +1,23 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { useReducedMotion } from "motion/react";
 
 import { useSound } from "@/components/sound-provider";
+import { BOOT_FACTS, BOOT_SWATCHES, bootLeader, type BootFact } from "@/lib/boot-info";
+import { LOGO_ROWS } from "@/lib/logo-mark";
 
-const LINES = [
-  "blessed_moon --boot",
-  "loading brand tokens ......... ok",
-  "compiling ascii pipeline ...... ok",
-  "mounting scene ................ ok",
-  "ready.",
-] as const;
-
-const LINE_DELAY_MS = 220;
+/** How long the lockup's CSS sequence takes to settle, so the gate arrives
+ * after it rather than on top of it. Kept in sync by hand with the delays
+ * below — it's a presentation cue, not a correctness dependency. */
+const SEQUENCE_MS = 1700;
+/** The exit: the lockup takes itself apart, then the plate dissolves onto the
+ * hero that has been sitting behind it the whole time. Long enough to read as
+ * a handover rather than a cut, short enough that nobody waits on it. */
+const EXIT_MS = 900;
+/** Reduced motion gets the plain fade the overlay always had — no choreography
+ * to sit through, and this path also runs at load, where the gate is skipped. */
+const REDUCED_EXIT_MS = 300;
 /** Hard cap so the boot log itself can never get stuck open — document.fonts.ready
  * not resolving (or resolving unexpectedly late) must not be able to leave a solid
  * overlay covering the site indefinitely. */
@@ -26,14 +30,156 @@ const WHEEL_THRESHOLD = 12;
 const TOUCH_THRESHOLD = 24;
 const GATE_KEYS = new Set(["ArrowDown", "PageDown", " ", "Space", "End"]);
 
+/** The mark's raster, cropped to the cells it actually fills — `LOGO_ROWS` is
+ * the full 12x12 grid and the crescent sits in its top-left corner, which as
+ * art would read as an off-centre lockup with dead space beside it. */
+const ART_ROWS = (() => {
+  const filled = LOGO_ROWS.filter((row) => row.includes("#"));
+  const start = Math.min(...filled.map((row) => row.indexOf("#")));
+  const end = Math.max(...filled.map((row) => row.lastIndexOf("#")));
+  return filled.map((row) => row.slice(start, end + 1));
+})();
+
+/** Two block characters per filled cell, two spaces per empty one. The
+ * monospace cell is 1:2 (`--cell-w` / `--cell-h`), so one character per cell
+ * would render the crescent at half width — visibly squashed. Same reasoning
+ * as `cell-grid.tsx`. */
+function artLine(row: string) {
+  return row
+    .split("")
+    .map((cell) => (cell === "#" ? "██" : "  "))
+    .join("");
+}
+
+/**
+ * The art opts out of the site's mono stack on purpose. `--font-mono` leads
+ * with JetBrains Mono, whose latin subset has no Block Elements, so every █
+ * comes from a fallback anyway — naming a system mono directly means the
+ * glyphs and the metrics come from the *same* font, which is what makes the
+ * next line exact: `2ch` is two advance widths of that font, so a cell is two
+ * characters wide by one line tall and lands perfectly square on any platform.
+ * (`leading-[1.2]` only works if the advance happens to be 0.6em, and left the
+ * crescent visibly fat.)
+ */
+const ART_STYLE: CSSProperties = {
+  fontFamily: "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace",
+  lineHeight: "2ch",
+};
+
+/** Entry and exit offsets as custom properties rather than `animation-delay`
+ * directly: the exit rules re-use the same elements, and an inline delay would
+ * apply to whichever animation the cascade picked. */
+function delay(inMs: number, outMs = 0): CSSProperties {
+  return { "--boot-in": `${inMs}ms`, "--boot-out": `${outMs}ms` } as CSSProperties;
+}
+
 type Phase = "booting" | "gating" | "exiting" | "hidden";
 
 /**
- * A real terminal boot log — matches the TUI identity already established by the
- * nav's pixel-crescent logo mark and the section numbering. Two phases:
+ * The lockup itself, presentational — `muted` comes in as a prop rather than
+ * from `useSound()` so `/system` can render the real thing instead of a
+ * hand-copied preview that would drift from it.
+ */
+export function BootLockup({ muted, exiting = false }: { muted: boolean; exiting?: boolean }) {
+  // `sound` is the one live field: it's the state the gate is about to ask the
+  // visitor to change, so it should already be on screen as a fact rather than
+  // arrive only as a question.
+  const facts: BootFact[] = [
+    ...BOOT_FACTS,
+    { key: "sound", value: muted ? "muted" : "on" },
+    // The one word that changes: the gate's verb is "begin", so the machine
+    // reports the state the visitor just put it in rather than being dismissed
+    // mid-sentence.
+    { key: "status", value: exiting ? "beginning" : "ready" },
+  ];
+  const factsStart = 120 + ART_ROWS.length * 40;
+
+  return (
+    <div className="flex w-full max-w-[660px] flex-col items-center gap-7 font-mono text-[12px] leading-[1.7] sm:flex-row sm:items-center sm:gap-10 sm:text-[13px]">
+      <div
+        aria-hidden="true"
+        className="boot-art shrink-0 whitespace-pre text-primary"
+        style={ART_STYLE}
+      >
+        {ART_ROWS.map((row, index) => (
+          <div key={index} className="boot-art-row" style={delay(80 + index * 40)}>
+            {artLine(row)}
+          </div>
+        ))}
+      </div>
+
+      <div className="w-full min-w-0 sm:flex-1">
+        <div className="boot-line whitespace-pre" style={delay(80, 0)}>
+          <span className="text-primary">blessed_moon</span>
+          <span className="text-muted-foreground">@</span>
+          <span className="text-foreground">studio</span>
+        </div>
+        <div className="boot-line mt-1 mb-2 border-t border-border" style={delay(160, 0)} />
+
+        {facts.map((fact, index) => (
+          <div
+            key={fact.key}
+            className="boot-line flex items-baseline"
+            style={delay(factsStart + index * 80, 30 + index * 25)}
+          >
+            <span className="whitespace-pre text-primary">{fact.key}</span>
+            <span className="hidden whitespace-pre text-muted-foreground/35 sm:inline">
+              {bootLeader(fact.key)}
+            </span>
+            <span className="whitespace-pre text-muted-foreground/60">{": "}</span>
+            {/* min-w-0 so a long value wraps on a very narrow phone rather than
+                pushing the fixed overlay into horizontal scroll. */}
+            <span
+              className="boot-value inline-block min-w-0 text-foreground"
+              style={{
+                ...delay(factsStart + index * 80 + 40),
+                animationDuration: `${Math.min(460, 120 + fact.value.length * 12)}ms`,
+                animationTimingFunction: `steps(${fact.value.length})`,
+              }}
+            >
+              {fact.value}
+            </span>
+            {fact.key === "status" && (
+              <span aria-hidden="true" className="boot-caret ml-1 text-primary">
+                ▌
+              </span>
+            )}
+          </div>
+        ))}
+
+        <div aria-hidden="true" className="mt-4 flex gap-1.5">
+          {BOOT_SWATCHES.map((swatch, index) => (
+            <div
+              key={swatch.name}
+              className="boot-swatch h-3.5 w-9 border border-panel-edge/70"
+              style={{
+                background: swatch.color,
+                // Out in reverse: the warm end of the row leaves first, so the
+                // last thing standing is the ground the site is about to be on.
+                ...delay(
+                  factsStart + facts.length * 80 + index * 45,
+                  (BOOT_SWATCHES.length - 1 - index) * 30,
+                ),
+              }}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * A fastfetch-style brand lockup — our own pixel crescent as block art on the
+ * left, aligned `key: value` facts on the right, the site's palette as the
+ * closing swatch row. fastfetch is a real terminal program that reports what a
+ * machine *is*; that register (a machine describing itself, not marketing copy)
+ * is why the form fits this brand. See `TASK-boot-fastfetch-lockup.md`.
  *
- * 1. "booting" — the log lines, same as before. Any click/key fast-forwards past
- *    the loading wait straight to the gate (not past the gate itself).
+ * Two phases:
+ *
+ * 1. "booting" — the lockup. Any click/key fast-forwards past the loading wait
+ *    straight to the gate (not past the gate itself).
  * 2. "gating" — a sound prompt and a "scroll to begin" affordance. Deliberately
  *    requires a real scroll-equivalent action (wheel, touch, ArrowDown/PageDown/
  *    Space/End, or the visible "Begin" button) rather than any arbitrary click —
@@ -45,14 +191,17 @@ type Phase = "booting" | "gating" | "exiting" | "hidden";
  * `GATE_TIMEOUT_MS` is a fallback, not an expected path — this can still never
  * trap a visitor forever, same principle as the original's MAX_WAIT_MS.
  *
- * All boot lines render immediately rather than typing/revealing progressively —
- * a first version staggered them in via a recursive setTimeout chain and,
- * separately, a second version reset to a blank state on mount before
- * re-revealing; both risk showing nothing (root cause of the first was never
- * pinned down, but a broken loading screen blocking real content is worse than
- * one with no reveal animation). The gate phase follows the same rule: the sound
- * prompt and scroll hint appear as static blocks, no new stagger machinery.
- * Respects prefers-reduced-motion by skipping the gate entirely.
+ * **The animation is CSS-only, and its direction is load-bearing.** Two earlier
+ * attempts at revealing this screen progressively — a recursive setTimeout
+ * chain, then a mount-time reset to blank before re-revealing — could show
+ * *nothing*, and a broken loading screen blocking real content is worse than one
+ * that doesn't animate, so animation was removed rather than made safe. Here
+ * every element's base style is its final visible state and the `@keyframes`
+ * only supply an *earlier* hidden state to fill backwards from
+ * (`animation-fill-mode: backwards`). If the animations never run — reduced
+ * motion, a stalled main thread, a browser that drops them — the screen is
+ * already complete and correct. That failure mode is structurally impossible
+ * rather than avoided. No JS timers drive any of it.
  */
 export function BootSequence() {
   const reduceMotion = useReducedMotion();
@@ -68,7 +217,10 @@ export function BootSequence() {
   function exit() {
     if (phaseRef.current === "exiting" || phaseRef.current === "hidden") return;
     setPhase("exiting");
-    window.setTimeout(() => setPhase("hidden"), 300);
+    // Teardown is on a timer, never on `animationend` — this overlay covers the
+    // entire site, so removing it must not depend on an event that a dropped or
+    // disabled animation would never fire.
+    window.setTimeout(() => setPhase("hidden"), reduceMotion ? REDUCED_EXIT_MS : EXIT_MS);
   }
 
   // Phase 1: booting → gating (or straight to hidden under reduced motion).
@@ -92,7 +244,7 @@ export function BootSequence() {
     ]);
     capped.then(() => {
       if (cancelled) return;
-      window.setTimeout(advanceToGate, LINES.length * LINE_DELAY_MS + 300);
+      window.setTimeout(advanceToGate, SEQUENCE_MS);
     });
 
     function skipBoot() {
@@ -157,17 +309,18 @@ export function BootSequence() {
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex flex-col justify-end gap-6 bg-background px-7 py-8 transition-opacity duration-300"
+      className={`fixed inset-0 z-[100] flex flex-col items-center justify-center gap-10 bg-background px-6 py-10 transition-opacity duration-300 ${
+        phase === "exiting" ? "boot-exiting" : ""
+      }`}
+      // The inline opacity + transition is the reduced-motion path: there, the
+      // exit @keyframes are `none`, so this is what fades the plate. When the
+      // animation does run it outranks both (animations beat inline styles).
       style={{ opacity: phase === "exiting" ? 0 : 1 }}
     >
-      <div className="font-mono text-[11px] leading-[1.7] text-muted-foreground">
-        {LINES.map((line) => (
-          <div key={line}>{line}</div>
-        ))}
-      </div>
+      <BootLockup muted={muted} exiting={phase === "exiting"} />
 
       {phase === "gating" && (
-        <div className="flex flex-col gap-5 border-t border-border/60 pt-6 font-mono text-[11px]">
+        <div className="boot-line boot-gate flex w-full max-w-[660px] flex-col gap-5 border-t border-border/60 pt-6 font-mono text-[11px]">
           <div className="flex flex-wrap items-center gap-3">
             <span className="text-muted-foreground">enable sound for the full experience?</span>
             <button

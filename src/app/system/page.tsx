@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { BootLockup } from "@/components/boot-sequence";
 import { AsciiObject } from "@/components/canvasui/AsciiObject";
 import { ParticleObject } from "@/components/canvasui/ParticleObject";
 import { CellGrid } from "@/components/cell-grid";
@@ -227,26 +228,30 @@ export default function SystemPage() {
 
       <section className="space-y-4">
         <h2 className="font-sans text-xl font-semibold tracking-[-0.01em] text-foreground">
-          Boot sequence gate
+          Boot lockup + gate
         </h2>
         <p className="max-w-prose text-[13px] leading-[1.6] text-muted-foreground">
-          A static preview, not a live instance — the real{" "}
+          The real <code className="font-mono text-[12px] text-foreground/80">BootLockup</code>,
+          with a static copy of the gate beside it — the live{" "}
           <code className="font-mono text-[12px] text-foreground/80">BootSequence</code> runs
-          full-viewport and locks body scroll, which would take over this page. See{" "}
-          <code className="font-mono text-[12px] text-foreground/80">TASK-boot-sequence-gate.md</code>;
+          full-viewport and locks body scroll, which would take over this page. A fastfetch
+          lockup: our own 12×12 crescent raster (
+          <code className="font-mono text-[12px] text-foreground/80">LOGO_ROWS</code>) as block
+          art at two characters per cell, facts that are true instead of a fake progress log,
+          and the site&apos;s palette as the closing swatch row — five cool tokens, then the one
+          warm accent. Every movement is CSS with{" "}
+          <code className="font-mono text-[12px] text-foreground/80">animation-fill-mode: backwards</code>,
+          so the base style is the finished state and a browser that never runs the animation
+          still shows a complete screen. See{" "}
+          <code className="font-mono text-[12px] text-foreground/80">TASK-boot-fastfetch-lockup.md</code>{" "}
+          / <code className="font-mono text-[12px] text-foreground/80">TASK-boot-sequence-gate.md</code>;
           to see it live, reload any real page (it runs once per load, respects{" "}
           <code className="font-mono text-[12px] text-foreground/80">prefers-reduced-motion</code> by
           skipping straight through).
         </p>
-        <div className="flex flex-col gap-6 border border-border/60 bg-background px-7 py-8">
-          <div className="font-mono text-[11px] leading-[1.7] text-muted-foreground">
-            <div>blessed_moon --boot</div>
-            <div>loading brand tokens ......... ok</div>
-            <div>compiling ascii pipeline ...... ok</div>
-            <div>mounting scene ................ ok</div>
-            <div>ready.</div>
-          </div>
-          <div className="flex flex-col gap-5 border-t border-border/60 pt-6 font-mono text-[11px]">
+        <div className="flex flex-col items-center gap-8 border border-border/60 bg-background px-7 py-10">
+          <BootLockup muted />
+          <div className="flex w-full max-w-[660px] flex-col gap-5 border-t border-border/60 pt-6 font-mono text-[11px]">
             <div className="flex flex-wrap items-center gap-3">
               <span className="text-muted-foreground">enable sound for the full experience?</span>
               <span className="border border-primary/60 px-3 py-1.5 text-primary uppercase tracking-[0.06em]">
