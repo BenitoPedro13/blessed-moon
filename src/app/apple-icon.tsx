@@ -1,15 +1,18 @@
 import { ImageResponse } from "next/og";
 
-import { LOGO_GRID_SIZE, LOGO_PATH } from "@/lib/logo-mark";
+import { LOGO_BOUNDS, LOGO_PATH } from "@/lib/logo-mark";
 
 export const size = { width: 180, height: 180 };
 export const contentType = "image/png";
 
+/** iOS applies its own rounded mask on top, so the mark keeps padding rather
+ * than filling the square edge to edge: 12px per raster cell is 72x132 inside
+ * 180x180. */
+const CELL = 12;
+
 export default function AppleIcon() {
-  // iOS applies its own rounded mask on top, so the mark is scaled down
-  // with padding rather than filling the full square edge-to-edge.
-  const gridPx = size.width * 0.62;
-  const offset = (size.width - gridPx) / 2;
+  const width = LOGO_BOUNDS.width * CELL;
+  const height = LOGO_BOUNDS.height * CELL;
 
   return new ImageResponse(
     (
@@ -18,15 +21,13 @@ export default function AppleIcon() {
           width: "100%",
           height: "100%",
           display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
           background: "#050505",
         }}
       >
-        <svg width={size.width} height={size.height}>
-          <path
-            d={LOGO_PATH}
-            fill="#ff6a1f"
-            transform={`translate(${offset} ${offset}) scale(${gridPx / LOGO_GRID_SIZE})`}
-          />
+        <svg width={width} height={height} viewBox={`0 0 ${LOGO_BOUNDS.width} ${LOGO_BOUNDS.height}`}>
+          <path d={LOGO_PATH} fill="#ff6a1f" />
         </svg>
       </div>
     ),

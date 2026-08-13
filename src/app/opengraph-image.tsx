@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-import { LOGO_GRID_SIZE, LOGO_PATH } from "@/lib/logo-mark";
+import { LOGO_BOUNDS, LOGO_PATH } from "@/lib/logo-mark";
 import { loadGoogleFont } from "@/lib/og-fonts";
 
 export const alt = "Blessed Moon Studio — Clarity is the feature.";
@@ -16,7 +16,9 @@ export default async function Image() {
     loadGoogleFont("JetBrains Mono", 400, TAGLINE),
   ]);
 
-  const gridPx = 220;
+  // 20px per raster cell: a 120x220 mark. Sized to the mark rather than to a
+  // square, so the flex column centres it against the headline for free.
+  const cell = 20;
 
   return new ImageResponse(
     (
@@ -32,12 +34,12 @@ export default async function Image() {
           background: "#050505",
         }}
       >
-        <svg width={gridPx} height={gridPx}>
-          <path
-            d={LOGO_PATH}
-            fill="#ff6a1f"
-            transform={`scale(${gridPx / LOGO_GRID_SIZE})`}
-          />
+        <svg
+          width={LOGO_BOUNDS.width * cell}
+          height={LOGO_BOUNDS.height * cell}
+          viewBox={`0 0 ${LOGO_BOUNDS.width} ${LOGO_BOUNDS.height}`}
+        >
+          <path d={LOGO_PATH} fill="#ff6a1f" />
         </svg>
         <div
           style={{
