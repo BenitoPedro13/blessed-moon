@@ -58,15 +58,37 @@ above, rows below, the leader dots dropped where the column is too narrow for th
 ### 2.2 The art is *our* crescent, not a moon
 
 `src/lib/logo-mark.ts` documents the mark as "rasterized onto a 12×12 grid, then traced
-into a single outline path." That raster is the thing an ASCII version needs, so it becomes
-real exported data (`LOGO_ROWS`) rather than a fact only recorded in a comment — with a note
-that it and `LOGO_PATH` describe the same mark and must stay in sync.
+into a single outline path." The art is that mark at display size, cropped to the cells it
+actually fills — the crescent is 6×11 inside the 12×12 grid and sits in its top-left, so
+the uncropped mark would read as a lockup with dead space beside it. That crop is exported
+as `LOGO_BOUNDS` next to `LOGO_PATH`, to be kept in sync with it.
 
-Each filled cell renders as **two** block characters, empty as two spaces. That's not
-decoration: the monospace cell is 1:2 (`--cell-w: 9px`, `--cell-h: 18px`), so one character
-per cell would render the crescent at half width — visibly squashed. Two per cell makes the
-12×12 grid land square, and it is the same reasoning already written down in
-`cell-grid.tsx`.
+**Built as block characters first (`██` per filled cell) and changed after measuring.** The
+plan was two block characters per cell, on the reasoning that the monospace cell is 1:2
+(`--cell-w: 9px`, `--cell-h: 18px`) so two of them land square — the same argument written
+down in `cell-grid.tsx`. It cannot be made exact, for a reason that only shows up in a
+browser:
+
+- `next/font` pulls JetBrains Mono's **latin** subset, which contains no Block Elements. So
+  `█` never comes from the site's type at all — it comes from whatever the font stack falls
+  through to. With the stack ending at JetBrains Mono (as it did), that was the browser's
+  default *serif*, and the crescent rendered ~35% too wide.
+- Naming a system mono directly doesn't fix it either. Measured in Chrome on macOS: under
+  `ui-monospace`/`SF Mono`, `█` has a 0.708em advance while the same family's digits are
+  0.5em — the block is coming from yet another fallback, so no `line-height` (including
+  `2ch`) can square the cell. Menlo does render both from one font and tiles horizontally,
+  but its block's ink is 1.02em tall against a 1.204em cell — a 15% gap between every row.
+
+So the art is drawn from `LOGO_PATH` in an inline SVG at `1.2em` per raster cell (the
+proportion the block version was aiming for), `shape-rendering: crispEdges`. The path is one
+seam-free outline at integer coordinates — which is *why it exists*, per the note in
+`logo-mark.ts` — so the pixel-art crescent lands identical on every platform, which block
+characters demonstrably do not.
+
+Two things follow from the same measurement. The `--font-mono` stack in `globals.css` gained
+its generic fallbacks (`ui-monospace, …, monospace`), which is a latent bug fixed for any
+non-latin glyph in mono text site-wide, not just for this screen. And the `status` caret is
+a CSS box rather than `▌` (U+258C), which is in the same missing block.
 
 ### 2.3 The rows say true things
 
@@ -112,7 +134,10 @@ two attempts is structurally impossible here.
 
 Four movements, in one orchestrated sequence rather than four scattered effects:
 
-1. **Art** — rows wipe in top to bottom, ~40ms apart, each fading up from `translateY(4px)`.
+1. **Art** — the crescent scans in a raster row at a time: `clip-path: inset(0 0 100% 0) →
+   inset(0)` on a `steps(11)` timing function, one step per row of the mark. (Planned as
+   eleven separate row elements; it is one element now for the reason in §2.2, and the
+   stepped clip is the same reveal.)
 2. **Rows** — after the art, each row's value wipes left-to-right via `clip-path: inset(0
    100% 0 0) → inset(0)` on a `steps()` timing function, which reads as typing without
    per-character state.
@@ -123,6 +148,28 @@ Four movements, in one orchestrated sequence rather than four scattered effects:
 Under `prefers-reduced-motion` the whole sequence is suppressed in one `@media` block and
 the screen renders complete and static — matching how `ScrollMorphStage` treats reduced
 motion (absent, not compressed).
+
+### 2.5b The exit — added mid-build
+
+The gate released the site by cutting to it: `opacity → 0` over 300ms on an overlay that
+was otherwise unchanged. After the lockup exists, that reads as the screen being *dismissed*
+rather than the site being *entered*, so the exit is choreographed too (900ms total):
+
+1. The rows leave top-to-bottom (up 5px, fading) and the swatch row collapses **in reverse**,
+   warm end first — so the last thing standing is the ground the site is about to be on.
+2. The crescent scales to 1.45 and fades, expanding roughly into the moon that has been
+   behind the plate the whole time.
+3. Only then does the plate itself dissolve — its keyframes hold `opacity: 1` until 45%, so
+   the lockup finishes taking itself apart before anything shows through.
+4. `status` reads `beginning` instead of `ready` while this runs. The gate's verb is
+   "begin"; the machine reports the state the visitor just put it in.
+
+The exit is the one place `forwards` fill is correct, because these elements are removed on
+a timer regardless. **Teardown stays on `setTimeout`, never on `animationend`** — this
+overlay covers the whole site, so its removal must not depend on an event that a dropped
+animation would never fire. Reduced motion keeps the plain 300ms fade the overlay always
+had: the inline `opacity` + Tailwind transition is still there underneath, and the exit
+`@keyframes` (which outrank it when they run) are `none` in that media block.
 
 ### 2.6 What is *not* changing
 
@@ -156,21 +203,28 @@ still filler.
 
 | File | Change type | Notes |
 |------|-------------|-------|
-| `src/lib/logo-mark.ts` | edit | Exports `LOGO_ROWS`, the 12×12 raster `LOGO_PATH` was traced from |
+| `src/lib/logo-mark.ts` | edit | Exports `LOGO_BOUNDS`, the cells `LOGO_PATH` actually covers (see §2.2 — planned as `LOGO_ROWS`, a raster the block-character version needed) |
 | `src/lib/boot-info.ts` | new | The `key: value` rows and the palette swatch tokens, as data |
-| `src/components/boot-sequence.tsx` | edit | New render: centered art + rows + swatches + gate. Phase machinery untouched |
-| `src/app/globals.css` | edit | `@keyframes` for the four movements + one reduced-motion block |
+| `src/components/boot-sequence.tsx` | edit | New render: centered art + rows + swatches + gate, plus the exit choreography. Phase machinery untouched; `BootLockup` split out so `/system` renders the real thing |
+| `src/app/globals.css` | edit | `@keyframes` for the four movements and the exit, one reduced-motion block, and generic fallbacks on `--font-mono` (§2.2) |
 | `src/app/system/page.tsx` | edit | Panel for the boot lockup (`CLAUDE.md` §3.1) |
 | `CLAUDE.md` | edit | Stack table "Sound / loading" row |
 | `README.md` | edit | Status section |
 
 ## 5. Verification
 
-- `pnpm build` and `pnpm lint` clean.
-- The art column renders square, not squashed, at 390px / 768px / 1440px; the lockup stacks
-  on phones without the rows wrapping mid-value.
-- With animations force-disabled in devtools, every element is present and legible — the
-  specific regression this design is built to prevent.
+Done by driving headless Chrome over the DevTools protocol (screenshots + a computed-style
+trace), since the browser extension doesn't respond in this environment:
+
+- `pnpm build` and `pnpm lint` clean (two pre-existing `exhaustive-deps` warnings on `exit`).
+- The art renders at the mark's true proportions at 390px and 1440px; the lockup stacks on
+  phones, keeps its left edge shared with the rows, and no value wraps or overflows.
+- **With `animation: none !important` injected at document start, the whole lockup renders
+  complete and legible** — the specific regression this design is built to prevent,
+  confirmed rather than argued.
+- Exit trace (computed opacity on the overlay, sampled per frame): `1` at 9ms / 223ms /
+  447ms, `0.40` at 671ms, `0.03` at 872ms, element gone by 1072ms. The hold-then-dissolve
+  is real, and teardown happens on the timer.
 - `prefers-reduced-motion`: static, complete, gate skipped as today.
 - The gate still requires a real scroll-equivalent action; `Begin` and the keyboard paths
   still work; neither timeout regressed.

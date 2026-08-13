@@ -177,14 +177,14 @@
    on the visible state — that is precisely the shape that let two earlier
    versions of this screen render nothing at all. Delays are inline, per
    element, so the orchestration lives next to the markup it sequences. */
-@keyframes boot-art-row {
+/* The crescent scans in a raster row at a time — the steps() count is inline,
+   and equals the mark's row count, so each step is exactly one pixel row. */
+@keyframes boot-art {
   from {
-    opacity: 0;
-    transform: translateY(4px);
+    clip-path: inset(0 0 100% 0);
   }
   to {
-    opacity: 1;
-    transform: translateY(0);
+    clip-path: inset(0 0 0 0);
   }
 }
 
@@ -233,8 +233,9 @@
   }
 }
 
-.boot-art-row {
-  animation: boot-art-row 380ms ease-out backwards;
+.boot-art {
+  /* timing function (steps, one per raster row) is inline. */
+  animation: boot-art 440ms backwards;
   animation-delay: var(--boot-in, 0ms);
 }
 
@@ -318,7 +319,6 @@
 
 /* The entry animations are finished by now; clearing them keeps a stale delay
    from re-running one mid-exit. */
-.boot-exiting .boot-art-row,
 .boot-exiting .boot-value,
 .boot-exiting .boot-caret {
   animation: none;
@@ -340,7 +340,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .boot-art-row,
+  .boot-art,
   .boot-line,
   .boot-value,
   .boot-swatch,

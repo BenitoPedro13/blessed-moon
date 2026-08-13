@@ -5,7 +5,7 @@ import { useReducedMotion } from "motion/react";
 
 import { useSound } from "@/components/sound-provider";
 import { BOOT_FACTS, BOOT_SWATCHES, bootLeader, type BootFact } from "@/lib/boot-info";
-import { LOGO_ROWS } from "@/lib/logo-mark";
+import { LOGO_BOUNDS, LOGO_PATH } from "@/lib/logo-mark";
 
 /** How long the lockup's CSS sequence takes to settle, so the gate arrives
  * after it rather than on top of it. Kept in sync by hand with the delays
@@ -30,41 +30,10 @@ const WHEEL_THRESHOLD = 12;
 const TOUCH_THRESHOLD = 24;
 const GATE_KEYS = new Set(["ArrowDown", "PageDown", " ", "Space", "End"]);
 
-/** The mark's raster, cropped to the cells it actually fills — `LOGO_ROWS` is
- * the full 12x12 grid and the crescent sits in its top-left corner, which as
- * art would read as an off-centre lockup with dead space beside it. */
-const ART_ROWS = (() => {
-  const filled = LOGO_ROWS.filter((row) => row.includes("#"));
-  const start = Math.min(...filled.map((row) => row.indexOf("#")));
-  const end = Math.max(...filled.map((row) => row.lastIndexOf("#")));
-  return filled.map((row) => row.slice(start, end + 1));
-})();
-
-/** Two block characters per filled cell, two spaces per empty one. The
- * monospace cell is 1:2 (`--cell-w` / `--cell-h`), so one character per cell
- * would render the crescent at half width — visibly squashed. Same reasoning
- * as `cell-grid.tsx`. */
-function artLine(row: string) {
-  return row
-    .split("")
-    .map((cell) => (cell === "#" ? "██" : "  "))
-    .join("");
-}
-
-/**
- * The art opts out of the site's mono stack on purpose. `--font-mono` leads
- * with JetBrains Mono, whose latin subset has no Block Elements, so every █
- * comes from a fallback anyway — naming a system mono directly means the
- * glyphs and the metrics come from the *same* font, which is what makes the
- * next line exact: `2ch` is two advance widths of that font, so a cell is two
- * characters wide by one line tall and lands perfectly square on any platform.
- * (`leading-[1.2]` only works if the advance happens to be 0.6em, and left the
- * crescent visibly fat.)
- */
-const ART_STYLE: CSSProperties = {
-  fontFamily: "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace",
-  lineHeight: "2ch",
-};
+/** One raster cell of the art, in `em` so it tracks the lockup's type size.
+ * 1.2em is what two monospace characters would have measured — the block-art
+ * proportions, kept after the blocks themselves were dropped (see ART below). */
+const ART_CELL_EM = 1.2;
 
 /** Entry and exit offsets as custom properties rather than `animation-delay`
  * directly: the exit rules re-use the same elements, and an inline delay would
@@ -92,21 +61,39 @@ export function BootLockup({ muted, exiting = false }: { muted: boolean; exiting
     // mid-sentence.
     { key: "status", value: exiting ? "beginning" : "ready" },
   ];
-  const factsStart = 120 + ART_ROWS.length * 40;
+  const factsStart = 120 + LOGO_BOUNDS.height * 40;
 
+  // Stacked on phones the art sits above the facts and shares their left edge —
+  // a narrow terminal wraps a fastfetch lockup exactly that way, and centred art
+  // over left-aligned rows has no edge in common with them.
   return (
-    <div className="flex w-full max-w-[660px] flex-col items-center gap-7 font-mono text-[12px] leading-[1.7] sm:flex-row sm:items-center sm:gap-10 sm:text-[13px]">
-      <div
+    <div className="flex w-full max-w-[660px] flex-col items-start gap-7 font-mono text-[12px] leading-[1.7] sm:flex-row sm:items-center sm:gap-10 sm:text-[13px]">
+      {/* ART. Drawn from the mark's own outline path rather than as block
+          characters (█), which is what this started as and could not be made
+          exact: JetBrains Mono's latin subset has no Block Elements, and the
+          system monos it falls through to don't agree — SF Mono renders █ from
+          yet another fallback at 0.708em advance while its own digits are
+          0.5em, so no line-height squares the cell; Menlo tiles horizontally
+          but leaves a 15% gap between rows. The path is one seam-free outline
+          at integer coordinates (that's why it exists — see logo-mark.ts), so
+          the pixel-art crescent lands identical on every platform. Scanning it
+          in row by row is a steps() clip on the whole shape, which is the same
+          reveal the block rows were going to do. */}
+      <svg
         aria-hidden="true"
-        className="boot-art shrink-0 whitespace-pre text-primary"
-        style={ART_STYLE}
+        viewBox={`0 0 ${LOGO_BOUNDS.width} ${LOGO_BOUNDS.height}`}
+        shapeRendering="crispEdges"
+        fill="currentColor"
+        className="boot-art shrink-0 text-primary"
+        style={{
+          width: `${LOGO_BOUNDS.width * ART_CELL_EM}em`,
+          height: `${LOGO_BOUNDS.height * ART_CELL_EM}em`,
+          animationTimingFunction: `steps(${LOGO_BOUNDS.height})`,
+          ...delay(80),
+        }}
       >
-        {ART_ROWS.map((row, index) => (
-          <div key={index} className="boot-art-row" style={delay(80 + index * 40)}>
-            {artLine(row)}
-          </div>
-        ))}
-      </div>
+        <path d={LOGO_PATH} />
+      </svg>
 
       <div className="w-full min-w-0 sm:flex-1">
         <div className="boot-line whitespace-pre" style={delay(80, 0)}>
@@ -140,9 +127,10 @@ export function BootLockup({ muted, exiting = false }: { muted: boolean; exiting
               {fact.value}
             </span>
             {fact.key === "status" && (
-              <span aria-hidden="true" className="boot-caret ml-1 text-primary">
-                ▌
-              </span>
+              <span
+                aria-hidden="true"
+                className="boot-caret ml-1 inline-block h-[1em] w-[0.5em] translate-y-[0.15em] bg-primary"
+              />
             )}
           </div>
         ))}

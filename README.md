@@ -25,7 +25,10 @@ interactions, design tokens, reference links). Process/working rules: [`CLAUDE.m
 - [Motion](https://motion.dev) (`motion/react`) for scroll-reveal and hover animations
 - A small sound system (`src/components/sound-provider.tsx`) — opt-in UI/ambient sound, CC0
   assets in `public/sounds/`
-- A terminal boot sequence (`src/components/boot-sequence.tsx`) on initial load
+- A terminal boot sequence (`src/components/boot-sequence.tsx`) on initial load — a
+  fastfetch-style brand lockup (the pixel crescent at display size, true `key: value` facts
+  from `src/lib/boot-info.ts`, the site palette as a swatch row), a scroll-to-begin gate, and
+  a choreographed exit that dissolves onto the hero rather than cutting to it
 - SEO: expanded `Metadata` in `src/app/layout.tsx` (title template, Open Graph, Twitter card,
   robots), plus `src/app/robots.ts` and `src/app/sitemap.ts`
 - Favicon, apple touch icon, and the Open Graph/Twitter share image (`src/app/icon.tsx`,

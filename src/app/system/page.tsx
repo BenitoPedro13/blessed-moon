@@ -235,14 +235,17 @@ export default function SystemPage() {
           with a static copy of the gate beside it — the live{" "}
           <code className="font-mono text-[12px] text-foreground/80">BootSequence</code> runs
           full-viewport and locks body scroll, which would take over this page. A fastfetch
-          lockup: our own 12×12 crescent raster (
-          <code className="font-mono text-[12px] text-foreground/80">LOGO_ROWS</code>) as block
-          art at two characters per cell, facts that are true instead of a fake progress log,
-          and the site&apos;s palette as the closing swatch row — five cool tokens, then the one
-          warm accent. Every movement is CSS with{" "}
+          lockup: our own pixel crescent at display size, drawn from the mark&apos;s outline path
+          (<code className="font-mono text-[12px] text-foreground/80">LOGO_PATH</code>) rather than
+          from block characters — JetBrains Mono&apos;s latin subset has none, and the fallbacks
+          that do carry them disagree on width by up to 35%; facts that are true instead of a fake
+          progress log; and the site&apos;s palette as the closing swatch row — five cool tokens,
+          then the one warm accent. Every movement is CSS with{" "}
           <code className="font-mono text-[12px] text-foreground/80">animation-fill-mode: backwards</code>,
           so the base style is the finished state and a browser that never runs the animation
-          still shows a complete screen. See{" "}
+          still shows a complete screen. Leaving is choreographed too: the rows lift off, the
+          swatches collapse warm-end first, the crescent expands into the moon behind, and only
+          then does the plate dissolve. See{" "}
           <code className="font-mono text-[12px] text-foreground/80">TASK-boot-fastfetch-lockup.md</code>{" "}
           / <code className="font-mono text-[12px] text-foreground/80">TASK-boot-sequence-gate.md</code>;
           to see it live, reload any real page (it runs once per load, respects{" "}
