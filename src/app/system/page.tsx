@@ -24,6 +24,7 @@ import { SiteNav } from "@/components/site-nav";
 import { SoundToggle } from "@/components/sound-toggle";
 import { TerminalPanel } from "@/components/terminal-panel";
 import { FrameLoopReadout } from "./frame-loop-readout";
+import { MoonPathReadout } from "./moon-path-readout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -477,6 +478,7 @@ export default function SystemPage() {
           The two canvas layers the whole site is built around: the ASCII-rendered moon
           (site-wide background) and the particle-reconstructed moon (closing CTA moment).
         </p>
+        <MoonPathReadout />
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">
             <span className="block font-mono text-[10px] text-muted-foreground uppercase">

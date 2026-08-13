@@ -51,7 +51,7 @@ aesthetic).
 |---|---|---|
 | Framework | **Next.js 16** (App Router, TypeScript, Turbopack, `src/` dir, `@/*` alias) — always the latest stable major, never a pinned number (see §2.0) | scaffolded |
 | Styling / components | **Tailwind CSS v4 + shadcn/ui** — CSS-first config in `src/app/globals.css` (no `tailwind.config.*`); brand tokens (bg `#050505`, accent `#ff6a1f`, radius `0`, fonts) wired into the `.dark` theme block; `button`, `input`, `textarea`, `card`, `select` primitives installed | scaffolded |
-| Atmosphere effect | Full-bleed ASCII moon background, scroll-driven zoom/rotation/drift, built on canvasui.dev's **AsciiObject** component (via shadcn CLI — see §2, `TASK-ascii-canvas-layer.md`). A hand-written raw-WebGL2 version was tried first and dropped in favor of this: AsciiObject's edge-aware glyph matching, DRACO support, and reduced-motion handling all beat what was being hand-rolled. Plus animate-ui's **StarsBackground** behind it, and canvasui's **ParticleObject** for the closing-CTA moment. `ParticleScroll` previously wrapped the homepage's post-Hero content as a content-dissolve panel with its own independent internal scroll — removed (`TASK-homepage-unify-scroll.md`): two disconnected scroll contexts was a real, repeated source of confusion, and the panel had to stay shorter than its content, capping section depth. The component stays in the codebase, just not wired into a live page — same status as `DecryptReveal`, whose native effect (like `ParticleScroll`'s) depends on the experimental, Chrome-only `html-in-canvas` API, gated per-origin by a Chrome Origin Trial (`TASK-html-in-canvas-origin-trial.md`) | built on homepage |
+| Atmosphere effect | Full-bleed ASCII moon background, scroll-driven zoom/rotation/drift, built on canvasui.dev's **AsciiObject** component (via shadcn CLI — see §2, `TASK-ascii-canvas-layer.md`). A hand-written raw-WebGL2 version was tried first and dropped in favor of this: AsciiObject's edge-aware glyph matching, DRACO support, and reduced-motion handling all beat what was being hand-rolled. The scene runs in an **OffscreenCanvas worker** (`ascii-object.worker.ts`), with a main-thread fallback — see the scroll-journey row and `TASK-ascii-offscreen-worker.md`. Plus animate-ui's **StarsBackground** behind it. canvasui's **ParticleObject** was the closing-CTA moment until its particle moon read as a plain filled circle at that size and was removed (`TASK-ascii-offscreen-worker.md`); the homepage now closes on the shared `PageCta`, and `ParticleObject` keeps the same not-on-a-live-page status as `ParticleScroll`. `ParticleScroll` previously wrapped the homepage's post-Hero content as a content-dissolve panel with its own independent internal scroll — removed (`TASK-homepage-unify-scroll.md`): two disconnected scroll contexts was a real, repeated source of confusion, and the panel had to stay shorter than its content, capping section depth. The component stays in the codebase, just not wired into a live page — same status as `DecryptReveal`, whose native effect (like `ParticleScroll`'s) depends on the experimental, Chrome-only `html-in-canvas` API, gated per-origin by a Chrome Origin Trial (`TASK-html-in-canvas-origin-trial.md`) | built on homepage |
 | Scroll journey | Lenis (`src/components/lenis-provider.tsx`) gives the whole site eased/smoothed native scroll — skipped entirely under `prefers-reduced-motion`. `ScrollStage` (`src/components/scroll-stage.tsx`) pins **one** section for a taller scroll range via `position: sticky` (no scroll-jacking) and exposes progress as `--stage-progress` for children to fade/scale/transform against; used on Hero, the shared `PageHero`, and the subpages' sections. `ScrollMorphStage` (`src/components/scroll-morph-stage.tsx`) pins **several** in one shared sticky frame, all mounted at once and crossfading — which is what makes a real shared-element handoff possible, since two `ScrollStage` pins are never simultaneously on screen and so nothing can travel between them. It drives the whole homepage body **and, since `TASK-subpage-morph-expansion.md`, `/work` and `/about`** — `/contact` and `/work/[slug]` deliberately take the window chrome without a pin (a form should open rather than unfold; a long case study inside a scroll-driven window nests two scroll contexts). See `TASK-apple-scroll-journey.md` / `TASK-homepage-unify-scroll.md` / `TASK-homepage-morph-redesign.md`. **Two rules for content inside a morph layer:** a layer animates `opacity` only (a per-frame `transform` on an ancestor makes Motion's layout measurement drift mid-flight, so the token lands wrong), and `Reveal` does not work in there (it's `whileInView`-driven and every layer is permanently inside the viewport) — use `morphDrift()` instead | built site-wide |
 | Sound / loading | Opt-in sound system (`src/components/sound-provider.tsx`, muted by default) and an interactive terminal boot sequence on load (`src/components/boot-sequence.tsx`) — sound-enable prompt, then a real scroll-to-begin gate (keyboard/button equivalents, fallback timeout so it can never trap a visitor) — `TASK-sound-and-boot.md`, `TASK-boot-sequence-gate.md`. What it renders is a **fastfetch-style lockup** (`BootLockup` + `src/lib/boot-info.ts`): the pixel crescent at display size, aligned `key: value` facts that are true rather than a fake progress log, the site's palette as a swatch row, and a choreographed exit that dissolves onto the hero — `TASK-boot-fastfetch-lockup.md` | built site-wide (runs in the root layout) |
 | Brand / SEO | Logo: a literal pixel-art crescent (`src/lib/logo-mark.ts`, one shared outline path) + `Blessed_Moon` wordmark, in the nav (`LogoMark`) and generated into the favicon, apple touch icon, and Open Graph/Twitter image via `next/og` `ImageResponse` (`src/app/icon.tsx`, `apple-icon.tsx`, `opengraph-image.tsx`, `twitter-image.tsx`). Metadata (title template, OG/Twitter tags, robots), `robots.ts`, `sitemap.ts` all target `src/lib/site-config.ts`'s `SITE_URL` — `TASK-seo-favicon-and-logo.md` | built |
@@ -117,9 +117,22 @@ dependency.
   resolves from `scrollY`, which is only valid while everything it tracks is in normal
   document flow (`TASK-frame-budget-cleanup.md`). A genuinely independent nested scroller
   would break that assumption and require live rects again.
+- **The moon's engine must stay DOM-optional, and nothing may statically import
+  three.js into a page bundle.** `ascii-engine.ts` runs unmodified in a worker
+  (`ascii-object.worker.ts`) and on the main thread; every global it needs that a
+  worker lacks — canvas size, DPR, `prefers-reduced-motion`, both observers,
+  `OrbitControls` — is injected or skipped at one guarded branch. Reaching for
+  `window`/`document` anywhere else in that file breaks the worker path silently,
+  because the fallback looks identical. `moon-transform.ts` is imported by both
+  threads and must import nothing at all. Separately: the 660KB three.js chunk
+  must never reach a page's main-thread bundle through a static import — the
+  closing CTA's `ParticleObject` did exactly that and cancelled out most of the
+  benefit of moving the moon off-thread, which is why the fallback engine is a
+  dynamic `import()`. `/system` reports which path a device actually got
+  (`data-moon-path`), since the two are deliberately indistinguishable by eye.
 - **Performance claims here need medians of repeated runs, never a single measurement.**
   Run-to-run spread on the homepage is roughly ±1.5fps and ±1.5pp of dropped frames — the
-  same size as most changes worth making. `pnpm profile` handles this (discards a warmup run,
+  same size as most changes worth making. `pnpm run profile` handles this (discards a warmup run,
   reports a median) and aborts if the page didn't load cleanly, because a stale `next-server`
   serving 500s profiles *beautifully* while running no JavaScript at all. Both mistakes were
   made and nearly shipped as conclusions; see `TASK-frame-budget-cleanup.md` § Methodology.
@@ -290,15 +303,18 @@ second package emerges.
                              icon.tsx, apple-icon.tsx, opengraph-image.tsx, twitter-image.tsx,
                              robots.ts, sitemap.ts — generated brand/SEO assets — built
   src/components/ui/        shadcn primitives (button, input, textarea, card, select) — scaffolded
-  src/components/canvasui/  canvasui.dev components via shadcn CLI: AsciiObject (moon bg),
-                             ParticleObject (closing CTA), ParticleScroll (dissolve panel),
-                             DecryptReveal (installed, currently unused) — built
+  src/components/canvasui/  canvasui.dev components via shadcn CLI: AsciiObject — now just the
+                             React wrapper over ascii-engine.ts (the headless engine, shared
+                             verbatim by the main thread and ascii-object.worker.ts);
+                             ParticleObject, ParticleScroll, DecryptReveal (installed, none
+                             currently on a live page) — built
   src/components/animate-ui/ StarsBackground via shadcn CLI — built
   src/components/homepage/  homepage-only section composites (hero, about-teaser, services-focus,
-                             how-we-work, selected-work, pricing-table, closing-cta) — built.
+                             how-we-work, selected-work, pricing-table) — built.
                              The five between Hero and the CTA are layers of one
                              ScrollMorphStage (see morph-count.tsx for the 8→4→3→1 motif they
-                             hand between them); Hero and closing-cta keep their own pins
+                             hand between them); Hero keeps its own pin, and the page closes
+                             on the shared PageCta
   src/components/work/      /work morph layers (work-index, work-case) — built
   src/components/about/     /about morph layers (about-principle, about-pillar,
                              about-dynamic) — built
@@ -308,9 +324,12 @@ second package emerges.
                              cell-grid, page-hero, page-cta, morph-tokens — the token type
                              language every staged page shares; frame-loop — the single
                              rAF conductor every scroll-driven component subscribes to) — built
-  scripts/                   profile-scroll.mjs — scroll-performance harness (`pnpm profile`)
+  scripts/                   profile-scroll.mjs — performance harness (`pnpm run profile`;
+                             `--mode scroll` for frame pacing, `--mode load` for cold-load blocking)
   src/lib/                   shadcn's cn() helper etc.; ascii-canvas/scroll-progress.ts —
-                             scroll-position tracker driving the moon's morph; logo-mark.ts —
+                             scroll-position tracker driving the moon's morph;
+                             ascii-canvas/moon-transform.ts — the morph→camera tables and
+                             easing, imported by both threads so it must stay DOM-free; logo-mark.ts —
                              shared pixel-crescent path (+ LOGO_BOUNDS, the cells it fills);
                              boot-info.ts — the boot lockup's facts and swatches;
                              site-config.ts — SITE_URL — built

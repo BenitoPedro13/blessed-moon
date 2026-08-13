@@ -102,11 +102,16 @@ export function SiteNav() {
       } as React.CSSProperties}
       className="sticky top-0 z-50 flex items-center justify-between border-b px-4 py-4 transition-colors sm:px-7"
     >
+      {/* The wordmark beside it is `hidden sm:inline` and the mark itself is
+          aria-hidden, so below 640px this link had no accessible name at all —
+          a screen reader announced it as bare "link". Caught by Lighthouse
+          (mobile emulation) run against production. */}
       <Link
         href="/"
         onMouseEnter={playHover}
         onClick={playClick}
         className="group flex items-center gap-2"
+        aria-label="Blessed Moon Studio — home"
       >
         <LogoMark className="h-4 w-4 text-primary transition-colors group-hover:text-foreground" />
         <span className="hidden font-mono text-xs font-semibold tracking-[3px] text-foreground uppercase transition-colors group-hover:text-primary sm:inline">

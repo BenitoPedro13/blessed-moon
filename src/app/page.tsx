@@ -1,8 +1,8 @@
 import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
+import { PageCta } from "@/components/page-cta";
 import { ScrollMorphStage } from "@/components/scroll-morph-stage";
 import { AboutTeaser } from "@/components/homepage/about-teaser";
-import { ClosingCta } from "@/components/homepage/closing-cta";
 import { Hero } from "@/components/homepage/hero";
 import { HowWeWork } from "@/components/homepage/how-we-work";
 import { PricingTable } from "@/components/homepage/pricing-table";
@@ -16,8 +16,8 @@ export default function Home() {
       <main className="flex flex-col">
         {/* Hero and the closing CTA keep their own pins. Hero's scroll-linked
             ParticleText gather is the page's one thesis moment and shouldn't
-            be diluted into a shared sequence; the CTA is the landing beat,
-            with its own ParticleObject. The five beats between them are the
+            be diluted into a shared sequence; the CTA is the landing beat.
+            The five beats between them are the
             journey, and they now share ONE pinned frame.
 
             Why one frame: each of those five used to be its own ScrollStage,
@@ -47,7 +47,17 @@ export default function Home() {
           ]}
         />
         <hr className="border-border/60" />
-        <ClosingCta />
+        {/* The same CTA band every other page closes on. It used to be a
+            bespoke section wrapped around a ParticleObject moon; the particle
+            reconstruction read as a plain filled circle at this size rather
+            than as the moon, so the effect was carrying no meaning while
+            costing a second three.js scene. The copy is kept — it is the
+            homepage's landing beat and more specific than the shared default. */}
+        <PageCta
+          title="Let's build something that lasts."
+          description="Tell us what you're building — we'll tell you what it takes."
+          keyframe="5"
+        />
       </main>
       <SiteFooter />
     </>

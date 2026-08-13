@@ -5,6 +5,18 @@
  *
  *   node scripts/profile-scroll.mjs
  *   node scripts/profile-scroll.mjs --cpu 6 --runs 3 --url http://localhost:3000/work
+ *   node scripts/profile-scroll.mjs --mode load --cpu 6 --runs 5
+ *
+ * Two modes:
+ *
+ * - `scroll` (default) — frame pacing while the page is scrolled, i.e. the
+ *   steady-state jank a visitor feels moving down the page.
+ * - `load` — long tasks and total blocked main thread during a cold load, with
+ *   no scrolling. This is a different failure and needs its own number: the
+ *   moon used to block the main thread for ~650ms while the boot sequence was
+ *   asking the visitor to scroll, so the first interaction the site invites was
+ *   the one most likely to feel dead. See
+ *   `docs/tasks/TASK-ascii-offscreen-worker.md`.
  *
  * Two guards are built in, because both of these produced confidently wrong
  * numbers while this was being written (see
@@ -36,6 +48,7 @@ const URL = flag("url", "http://localhost:3000/");
 const CPU = Number(flag("cpu", 6));
 const RUNS = Number(flag("runs", 3));
 /** Wheel steps per run, and the pause between them. ~12s of scrolling. */
+const MODE = flag("mode", "scroll");
 const STEPS = Number(flag("steps", 110));
 const STEP_DELAY = 110;
 
@@ -118,11 +131,94 @@ async function profileOnce(browser, { warmup }) {
   };
 }
 
+/**
+ * Cold-load profile: throttle first, then navigate, and count long tasks over
+ * a fixed observation window without touching the page. The CPU throttle is
+ * applied before `goto` here (unlike the scroll mode, which throttles after
+ * load) because the whole point is what loading costs on a slow device.
+ */
+async function profileLoadOnce(browser, { warmup }) {
+  const context = await browser.newContext({
+    viewport: { width: 390, height: 844 },
+    deviceScaleFactor: 3,
+    isMobile: true,
+    hasTouch: true,
+  });
+  const page = await context.newPage();
+
+  const failures = [];
+  page.on("response", (r) => {
+    if (r.status() >= 400) failures.push(`${r.status()} ${r.url()}`);
+  });
+  page.on("pageerror", (e) => failures.push(`pageerror: ${String(e).slice(0, 200)}`));
+  page.on("console", (m) => {
+    if (m.type() === "error") failures.push(`console: ${m.text().slice(0, 200)}`);
+  });
+
+  const cdp = await context.newCDPSession(page);
+  await cdp.send("Emulation.setCPUThrottlingRate", { rate: CPU });
+
+  await page.addInitScript(() => {
+    window.__long = [];
+    new PerformanceObserver((list) => {
+      for (const entry of list.getEntries()) window.__long.push(entry.duration);
+    }).observe({ entryTypes: ["longtask"] });
+  });
+
+  await page.goto(URL, { waitUntil: "load" });
+  await page.waitForTimeout(9000);
+
+  if (failures.length > 0) {
+    await context.close();
+    throw new Error(
+      `Page did not load cleanly — these numbers would be meaningless:\n  ${failures
+        .slice(0, 8)
+        .join("\n  ")}\n\nIf these are 500s on /_next/static chunks, a server from a previous ` +
+        `build is still running: pkill -f next-server`,
+    );
+  }
+
+  const long = await page.evaluate(() => window.__long);
+  await context.close();
+  if (warmup) return null;
+
+  return {
+    tasks: long.length,
+    blocked: long.reduce((a, b) => a + b, 0),
+    worst: long.length ? Math.max(...long) : 0,
+  };
+}
+
 const median = (xs) => [...xs].sort((a, b) => a - b)[Math.floor(xs.length / 2)];
 
 const browser = await chromium.launch({ headless: false });
 try {
-  console.log(`${URL} — ${CPU}x CPU throttle, ${RUNS} runs (plus one discarded warmup)\n`);
+  console.log(
+    `${URL} — ${MODE} mode, ${CPU}x CPU throttle, ${RUNS} runs (plus one discarded warmup)\n`,
+  );
+
+  if (MODE === "load") {
+    await profileLoadOnce(browser, { warmup: true });
+    const runs = [];
+    for (let i = 0; i < RUNS; i++) {
+      const r = await profileLoadOnce(browser, { warmup: false });
+      runs.push(r);
+      console.log(
+        `  run ${i + 1}: ${r.tasks} long tasks   blocked ${r.blocked.toFixed(0)}ms   ` +
+          `worst ${r.worst.toFixed(0)}ms`,
+      );
+    }
+    console.log(
+      `\n  MEDIAN: ${median(runs.map((r) => r.tasks))} long tasks   ` +
+        `blocked ${median(runs.map((r) => r.blocked)).toFixed(0)}ms   ` +
+        `worst ${median(runs.map((r) => r.worst)).toFixed(0)}ms`,
+    );
+    console.log(
+      "\n  Compare medians, never single runs — the spread here is about the size of\n" +
+        "  any effect worth measuring.",
+    );
+  } else {
+
   await profileOnce(browser, { warmup: true });
 
   const results = [];
@@ -143,6 +239,7 @@ try {
     "\n  Compare medians, never single runs — the spread here is about the size of\n" +
       "  any effect worth measuring.",
   );
+  }
 } finally {
   await browser.close();
 }

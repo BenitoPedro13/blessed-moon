@@ -64,7 +64,7 @@ components just always render their graceful fallback. See
 | `pnpm build` | Production build |
 | `pnpm start` | Serve the production build |
 | `pnpm lint` | ESLint |
-| `pnpm profile` | Scroll-performance harness — needs `pnpm build && pnpm start` running first. `--cpu 6 --runs 3 --url …` |
+| `pnpm run profile` | Performance harness — needs `pnpm build && pnpm start` running first. `--mode scroll` (default) measures frame pacing while scrolling; `--mode load` measures long tasks and blocked main thread on a cold load. `--cpu 6 --runs 5 --url …`. Note `pnpm run profile`, not `pnpm profile` — pnpm has a built-in `profile` command that shadows the script. |
 
 ## Status
 
@@ -76,8 +76,8 @@ sandbox for design work in progress before it reaches a live page. See
 
 Complete for the design-handoff scope: `/`, `/work`, `/about`, and `/contact` are implemented,
 responsive, statically generated, and included in the sitemap. The homepage includes the nav,
-hero, about teaser, services, process, selected work, pricing, closing CTA, and footer inside the
-scroll-reactive ASCII/particle system. Work presents Markado, Bee Dash, Sua Mesa Fit, and Prumo
+hero, about teaser, services, process, selected work, pricing, the shared closing CTA band, and
+footer inside the scroll-reactive ASCII/particle system. Work presents Markado, Bee Dash, Sua Mesa Fit, and Prumo
 using verified portfolio data and project-specific terminal schematics — Prumo's is a real-estate
 credit-qualification schematic, `docs/tasks/TASK-add-prumo-case-study.md`. About includes the final
 mission, values, two-pillar structure, and direct-partnership statement. Contact includes a real
@@ -95,15 +95,19 @@ window would nest two scroll contexts. See `docs/tasks/TASK-subpage-morph-expans
 All scroll-driven components share one `requestAnimationFrame` through
 `src/components/frame-loop.ts`, which runs every layout *read* before any style *write* —
 previously seven components each owned a loop and invalidated each other's measurements. Profile
-with `pnpm profile`; it compares medians of repeated runs and refuses to report numbers for a
+with `pnpm run profile`; it compares medians of repeated runs and refuses to report numbers for a
 page that didn't load cleanly, both of which are lessons rather than preferences
 (`docs/tasks/TASK-frame-budget-cleanup.md`).
 
-Mobile performance is **not yet solved**. On a mid-range phone (6x CPU throttle) the homepage
-sits around 51fps with ~7% of frames over 33ms. The frame-loop work above is a structural
-prerequisite that bought ~3%; the measured headroom is in the canvas layers — disabling them
-reaches ~59fps. That is what `docs/tasks/TASK-ascii-offscreen-worker.md` (moon to a worker) and
-`docs/tasks/TASK-adaptive-quality.md` (measured frame budget, not a breakpoint) are for.
+Mobile performance is **improved but not solved**. The background moon's three.js scene now
+runs in an OffscreenCanvas worker (`src/components/canvasui/ascii-object.worker.ts`) sharing
+one engine with the main-thread fallback, and the closing CTA's second three.js scene is gone.
+Measured at 6x CPU throttle with baseline and candidate runs *alternated* (the machine drifts
+enough over a session that sequential blocks are not comparable): blocked main thread on cold
+load 903ms → 694ms, scroll 44.9 → 47.5fps with frames over 33ms down from 10.9% to 8.7%. The
+remaining blocking is hydration, the boot sequence, Lenis and the Canvas2D particle layers, not
+the moon — `docs/tasks/TASK-adaptive-quality.md` is where those get decided
+(`docs/tasks/TASK-ascii-offscreen-worker.md`).
 
 Sound remains opt-in and muted by default. The terminal boot sequence, pixel-crescent logo,
 generated favicon/apple/OG/Twitter assets, metadata, `robots.ts`, and responsive scroll-driven
