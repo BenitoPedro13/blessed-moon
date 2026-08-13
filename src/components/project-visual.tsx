@@ -1,7 +1,9 @@
 interface ProjectVisualProps {
   title: string;
-  variant: "calendar" | "analytics" | "commerce";
+  variant: "calendar" | "analytics" | "commerce" | "realestate";
 }
+
+const QUALIFICATION_STEPS = ["Renda", "Entrada", "Restrições", "Faixa MCMV", "Localidade", "Score"];
 
 const CALENDAR_DAYS = ["M", "T", "W", "T", "F"];
 const BAR_HEIGHTS = [32, 48, 40, 70, 58, 82, 64, 90];
@@ -115,6 +117,45 @@ export function ProjectVisual({ title, variant }: ProjectVisualProps) {
             </div>
             <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">
               checkout
+            </div>
+          </div>
+        </div>
+      )}
+
+      {variant === "realestate" && (
+        <div className="grid h-[250px] grid-cols-[0.85fr_1.15fr] gap-3 pt-3 sm:h-[282px]">
+          <div className="border border-border/60 p-3">
+            <p className="text-[8px] text-primary uppercase">unidade</p>
+            <p className="mt-3 font-sans text-lg font-semibold tracking-[-0.03em] text-foreground">
+              Studio 32m²
+            </p>
+            <p className="mt-1 text-[7px] text-muted-foreground">Porto Maravilha, RJ</p>
+            <div className="mt-5 border-t border-border/60 pt-3">
+              <p className="text-[7px] text-muted-foreground uppercase">faixa indicativa</p>
+              <p className="mt-1 text-[9px] text-primary">R$ 210.000</p>
+            </div>
+            <div className="mt-4 flex items-center gap-1.5 text-[7px] text-muted-foreground">
+              <span className="text-primary">●</span>
+              consultar disponibilidade
+            </div>
+          </div>
+          <div className="border border-primary/40 p-3">
+            <p className="text-[8px] text-primary uppercase">pré-qualificação</p>
+            <div className="mt-3 space-y-1.5">
+              {QUALIFICATION_STEPS.map((step, index) => (
+                <div
+                  key={step}
+                  className="flex items-center justify-between border-b border-border/50 pb-1 text-[7px] text-muted-foreground"
+                >
+                  <span>{step}</span>
+                  <span className={index < 5 ? "text-primary" : "text-muted-foreground"}>
+                    {index < 5 ? "[x]" : "[ ]"}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">
+              dentro da faixa 2
             </div>
           </div>
         </div>

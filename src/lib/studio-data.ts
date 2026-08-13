@@ -1,4 +1,4 @@
-export type ProjectVisualVariant = "calendar" | "analytics" | "commerce";
+export type ProjectVisualVariant = "calendar" | "analytics" | "commerce" | "realestate";
 
 type ProjectStep = {
   phase: string;
@@ -330,6 +330,7 @@ export const STUDIO_PROJECTS: readonly StudioProject[] = [
       },
     ],
     links: [
+      { label: "Visit live site", href: "https://www.thatsbee.co" },
       {
         label: "View source",
         href: "https://github.com/BenitoPedro13/bee-dash-monorepo",
@@ -465,6 +466,137 @@ export const STUDIO_PROJECTS: readonly StudioProject[] = [
       {
         label: "View source",
         href: "https://github.com/BenitoPedro13/sua-mesa-fit",
+      },
+    ],
+  },
+  {
+    slug: "prumo",
+    title: "Prumo",
+    tagline: "Credit pre-qualification before apartment browsing, for MCMV buyers",
+    index: "04",
+    year: "2026",
+    role: "Full-stack product engineering",
+    timeline: "Ongoing",
+    team: "Solo delivery",
+    description:
+      "A marketing and pre-qualification site for a Rio real-estate broker, where a family gets an honest MCMV credit verdict in about a minute, before they ever compare apartments.",
+    problem:
+      "The broker doesn't own inventory or set prices — she resells the same Cury Construtora launches, from the same PDFs, as every other broker in the city. In Minha Casa Minha Vida specifically, the real anxiety is credit approval, not finishes, yet nearly every listing site in the segment answers 'which apartment' first and leaves qualification for a phone call.",
+    approach:
+      "The product puts the credit question first: a six-step pre-qualification flow returns one of five honest outcomes — never a binary yes/no — with zero bureau lookups and zero document uploads. Every policy-sensitive number behind it lives in a CMS global instead of in code, flagged as an illustrative suggestion until confirmed against Caixa's current tables. A proposal sent to a qualified lead freezes its own commercial numbers at creation and refuses outright to generate if its price table has expired.",
+    outcome:
+      "A live product where a visitor gets a real MCMV verdict without typing a CPF, and where a shared proposal always shows both the installment paid today and the INCC-projected one at handover, because the data model makes it structurally impossible to show only one.",
+    tags: ["Real Estate", "MCMV Credit", "Lead Qualification"],
+    stack: [
+      "Next.js",
+      "TypeScript",
+      "Payload CMS",
+      "PostgreSQL",
+      "Tailwind CSS",
+      "shadcn/ui",
+      "Vercel Blob",
+    ],
+    visual: "realestate",
+    cover: {
+      src: "/projects/prumo/home.png",
+      alt: "Prumo homepage stating the credit-before-apartment order",
+      width: 1440,
+      height: 900,
+    },
+    screenshots: [
+      {
+        src: "/projects/prumo/home.png",
+        alt: "Prumo homepage stating the credit-before-apartment order",
+        width: 1440,
+        height: 900,
+      },
+      {
+        src: "/projects/prumo/empreendimentos.png",
+        alt: "Prumo catálogo listing Cury launches by neighbourhood",
+        width: 1440,
+        height: 900,
+      },
+      {
+        src: "/projects/prumo/simulador.png",
+        alt: "Prumo pre-qualification flow with the plumb-rail progress indicator",
+        width: 1440,
+        height: 900,
+      },
+      {
+        src: "/projects/prumo/proposta.png",
+        alt: "Prumo shared proposal page, a personal letter with frozen commercial numbers",
+        width: 1440,
+        height: 900,
+      },
+    ],
+    process: [
+      {
+        phase: "01",
+        title: "Scaffold and legal identity",
+        body: "Next.js and Payload CMS 3 scaffolded together, with the broker's CRECI signature — name, license number, photo, strict proportion rules — built before any page that would need it, since it's a legal requirement on every surface rather than a design nicety.",
+      },
+      {
+        phase: "02",
+        title: "Catálogo and the publication gate",
+        body: "Property and commercial-condition records that Payload itself refuses to publish until registro and cartório fields are filled — an incomplete legal record can't reach a real visitor by construction.",
+      },
+      {
+        phase: "03",
+        title: "The pre-qualification engine",
+        body: "MCMV bracket arithmetic, a plumb-rail progress indicator built as a physically simulated rope rather than a keyframed clip, and a result screen that returns every qualification blocker at once instead of one at a time.",
+      },
+      {
+        phase: "04",
+        title: "The shared proposal and first deployment",
+        body: "A single-use proposal link that freezes its own numbers at creation and hard-blocks generation on an expired price table, shipped to Neon Postgres and Vercel Blob via the Vercel Marketplace integration.",
+      },
+    ],
+    architecture: [
+      {
+        layer: "Client",
+        label: "Next.js App Router",
+        detail: "Public marketing, catálogo, pre-qualification, and proposal routes sharing one app with the CMS admin.",
+      },
+      {
+        layer: "CMS",
+        label: "Payload CMS 3",
+        detail: "Publication-gated property records plus a policy-numbers global flagged as suggestions until confirmed.",
+      },
+      {
+        layer: "Data",
+        label: "Neon Postgres + Vercel Blob",
+        detail: "One managed database across environments, object storage for renders and floor plans.",
+      },
+    ],
+    features: [
+      {
+        title: "Five-outcome pre-qualification",
+        body: "Approved in-band, approved in a different faixa, above the faixas, outside the program, or an honest 'not yet' — the last returning every blocker at once.",
+      },
+      {
+        title: "Frozen, hard-gated proposals",
+        body: "Commercial numbers copied into the document at creation; generation blocked outright by an expired price table.",
+      },
+      {
+        title: "Flagged, not hardcoded, policy numbers",
+        body: "MCMV faixas, rates, and subsidy bands live in the admin behind a visible confirmation flag, never shipped as literals in code.",
+      },
+    ],
+    challenges: [
+      {
+        title: "Housing policy that moves faster than a codebase",
+        body: "MCMV brackets shifted by federal portaria mid-project, which pushed unconfirmed numbers into a flagged, admin-editable global instead of code.",
+      },
+      {
+        title: "An honest 'not yet'",
+        body: "The fifth outcome had to read as useful rather than a rejection — a returned list of every blocker, not just the first one found.",
+      },
+    ],
+    links: [
+      { label: "Visit live preview", href: "https://prumo-drab-three.vercel.app" },
+      {
+        label: "View source",
+        href: "https://github.com/BenitoPedro13/prumo",
       },
     ],
   },

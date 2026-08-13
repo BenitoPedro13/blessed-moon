@@ -76,8 +76,9 @@ sandbox for design work in progress before it reaches a live page. See
 Complete for the design-handoff scope: `/`, `/work`, `/about`, and `/contact` are implemented,
 responsive, statically generated, and included in the sitemap. The homepage includes the nav,
 hero, about teaser, services, process, selected work, pricing, closing CTA, and footer inside the
-scroll-reactive ASCII/particle system. Work presents Markado, Bee Dash, and Sua Mesa Fit using
-verified portfolio data and project-specific terminal schematics. About includes the final
+scroll-reactive ASCII/particle system. Work presents Markado, Bee Dash, Sua Mesa Fit, and Prumo
+using verified portfolio data and project-specific terminal schematics — Prumo's is a real-estate
+credit-qualification schematic, `docs/tasks/TASK-add-prumo-case-study.md`. About includes the final
 mission, values, two-pillar structure, and direct-partnership statement. Contact includes a real
 project form, booking link, email, LinkedIn, and GitHub; until an email provider is configured,
 the form transparently opens a prefilled email draft instead of pretending to submit to a

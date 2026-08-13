@@ -12,7 +12,7 @@ import { STUDIO_PROJECTS } from "@/lib/studio-data";
 export const metadata: Metadata = {
   title: "Work",
   description:
-    "Selected digital products from Blessed Moon Studio: scheduling, marketing analytics, and headless commerce systems built for real operations.",
+    "Selected digital products from Blessed Moon Studio: scheduling, marketing analytics, headless commerce, and credit-qualification systems built for real operations.",
 };
 
 export default function WorkPage() {
@@ -26,16 +26,16 @@ export default function WorkPage() {
         <PageHero
           eyebrow="— Selected work"
           title="Selected Work"
-          description="Built to last longer than the brief. Three systems where product clarity, interface craft, and reliable engineering had to arrive together."
+          description="Built to last longer than the brief. Four systems where product clarity, interface craft, and reliable engineering had to arrive together."
           code="WORK"
         />
 
         {/* The window opens narrow on the listing and expands hard for each
             project, where a cover sits beside its meta — the width morph is
             carrying the difference between reading an index and reading an
-            entry. `00 / INDEX` is a header record, not one of the three, which
+            entry. `00 / INDEX` is a header record, not one of the four, which
             is why the projects keep the numbers they carry in the listing
-            rather than being renumbered 02–04 by their position here. */}
+            rather than being renumbered 02–05 by their position here. */}
         <ScrollMorphStage
           heightPerLayer={1.6}
           layers={[

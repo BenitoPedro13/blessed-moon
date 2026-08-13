@@ -11,12 +11,11 @@ import { useSound } from "@/components/sound-provider";
 
 const PROJECTS = [
   {
-    name: "Markado",
-    slug: "markado",
-    image: "/projects/markado/agendamentos.png",
-    imageAlt: "Markado appointments dashboard",
-    description:
-      "Booking website — one link, a slot, a payment, handled automatically.",
+    name: "Prumo",
+    slug: "prumo",
+    image: "/projects/prumo/home.png",
+    imageAlt: "Prumo homepage stating the credit-before-apartment order",
+    description: "Credit pre-qualification before apartment browsing, for MCMV buyers.",
   },
   {
     name: "Bee Dash",
