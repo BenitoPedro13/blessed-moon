@@ -1,9 +1,17 @@
 interface ProjectVisualProps {
   title: string;
-  variant: "calendar" | "analytics" | "commerce" | "realestate";
+  variant: "calendar" | "analytics" | "commerce" | "realestate" | "portfolio";
 }
 
 const QUALIFICATION_STEPS = ["Renda", "Entrada", "Restrições", "Faixa MCMV", "Localidade", "Score"];
+
+const TRANSITION_STATUS = [
+  ["input", "1 wheel notch"],
+  ["sync", "anchor matched"],
+  ["morph", "webgl running"],
+  ["walker", "15f gait"],
+  ["route", "leaned + held"],
+];
 
 const CALENDAR_DAYS = ["M", "T", "W", "T", "F"];
 const BAR_HEIGHTS = [32, 48, 40, 70, 58, 82, 64, 90];
@@ -156,6 +164,43 @@ export function ProjectVisual({ title, variant }: ProjectVisualProps) {
             </div>
             <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">
               dentro da faixa 2
+            </div>
+          </div>
+        </div>
+      )}
+
+      {variant === "portfolio" && (
+        <div className="grid h-[250px] grid-cols-[0.85fr_1.15fr] gap-3 pt-3 sm:h-[282px]">
+          <div className="border border-border/60 p-3">
+            <p className="text-[8px] text-primary uppercase">active_project</p>
+            <p className="mt-3 font-sans text-lg font-semibold tracking-[-0.03em] text-foreground">
+              Casa 264
+            </p>
+            <p className="mt-1 text-[7px] text-muted-foreground">01 / 05 · 10 frames</p>
+            <div className="mt-5 border-t border-border/60 pt-3">
+              <p className="text-[7px] text-muted-foreground uppercase">surface</p>
+              <p className="mt-1 text-[9px] text-primary">room · vinyl black</p>
+            </div>
+            <div className="mt-4 flex items-center gap-1.5 text-[7px] text-muted-foreground">
+              <span className="text-primary">●</span>
+              walker holding anchor
+            </div>
+          </div>
+          <div className="border border-primary/40 p-3">
+            <p className="text-[8px] text-primary uppercase">transition</p>
+            <div className="mt-3 space-y-1.5">
+              {TRANSITION_STATUS.map(([label, value]) => (
+                <div
+                  key={label}
+                  className="flex items-center justify-between border-b border-border/50 pb-1 text-[7px] text-muted-foreground"
+                >
+                  <span>{label}</span>
+                  <span className="text-primary">{value}</span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">
+              project 02 / 05 queued
             </div>
           </div>
         </div>

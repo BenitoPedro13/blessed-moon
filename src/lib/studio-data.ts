@@ -1,4 +1,4 @@
-export type ProjectVisualVariant = "calendar" | "analytics" | "commerce" | "realestate";
+export type ProjectVisualVariant = "calendar" | "analytics" | "commerce" | "realestate" | "portfolio";
 
 type ProjectStep = {
   phase: string;
@@ -597,6 +597,153 @@ export const STUDIO_PROJECTS: readonly StudioProject[] = [
       {
         label: "View source",
         href: "https://github.com/BenitoPedro13/prumo",
+      },
+    ],
+  },
+  {
+    slug: "art-hur",
+    title: "ART'hur",
+    tagline: "A portfolio built as one authored scene, not a scrolling page",
+    index: "05",
+    year: "2026",
+    role: "Full-stack product engineering",
+    timeline: "Ongoing",
+    team: "Solo delivery",
+    description:
+      "A motion-led portfolio and living archive for a visual director, where one centered stage morphs between projects instead of presenting them as a scrollable grid.",
+    problem:
+      "The starting point was a Next.js and Payload CMS foundation wearing a literal macOS desktop skin — wallpaper, dock, icons, window chrome. It behaved like software demoing itself, not like an archive of a director's actual work, and a generic template grid could never carry the specific rhythm of motion-forward, culturally fluent work.",
+    approach:
+      "The CMS, data model, and Next.js foundation stayed. Everything public-facing was rebuilt around a studied 'Marked Frequencies' direction: one fixed, centered project stage where image, atmosphere, title, and metadata morph in place, advanced by a single wheel notch or short touch gesture instead of an open carousel. A dashed white route and a hand-authored 15-frame walking glyph carry the sense of motion instead of a generic loader, and the app cuts between two surfaces — a dark 'room' for media routes and a light 'sheet' for reading — with no cross-fade.",
+    outcome:
+      "A live archive with five real projects, each carrying production metadata instead of filler copy, where the desktop-simulation shell is gone from every public route, the CMS layer is untouched, and the opening sequence, walker, and morph transition all degrade to a complete, legible page under reduced motion or a failed WebGL context.",
+    tags: ["Portfolio", "Motion Design", "WebGL"],
+    stack: [
+      "Next.js",
+      "TypeScript",
+      "Payload CMS",
+      "PostgreSQL",
+      "Tailwind CSS",
+      "GSAP",
+      "OGL (WebGL)",
+      "Vercel Blob",
+    ],
+    visual: "portfolio",
+    cover: {
+      src: "/projects/art-hur/home.png",
+      alt: "ART'hur's centered archive stage with the dashed route and walker glyph",
+      width: 1440,
+      height: 900,
+    },
+    screenshots: [
+      {
+        src: "/projects/art-hur/home.png",
+        alt: "ART'hur's centered archive stage with the dashed route and walker glyph",
+        width: 1440,
+        height: 900,
+      },
+      {
+        src: "/projects/art-hur/casa-264.png",
+        alt: "ART'hur project case study header for Casa 264",
+        width: 1440,
+        height: 900,
+      },
+      {
+        src: "/projects/art-hur/index.png",
+        alt: "ART'hur contact-sheet index of every project",
+        width: 1440,
+        height: 900,
+      },
+      {
+        src: "/projects/art-hur/about.png",
+        alt: "ART'hur about page running the Living Tag at display scale",
+        width: 1440,
+        height: 900,
+      },
+      {
+        src: "/projects/art-hur/contact.png",
+        alt: "ART'hur contact page with direct paths first",
+        width: 1440,
+        height: 900,
+      },
+    ],
+    process: [
+      {
+        phase: "01",
+        title: "Strip the shell, keep the foundation",
+        body: "Next.js App Router, Payload CMS, PostgreSQL, and Vercel Blob stayed exactly as inherited. Every literal macOS desktop simulation — wallpaper, lock screen, dock, icons, window chrome — was removed from the public experience before any new visual direction was authored on top.",
+      },
+      {
+        phase: "02",
+        title: "Build the one-stage navigation",
+        body: "A centered project stage, a wheel/touch-to-anchor gesture sync, and a controlled WebGL morph transition that completes on its own easing instead of being tied directly to scroll position.",
+      },
+      {
+        phase: "03",
+        title: "Author the motion signature",
+        body: "A continuously breathing dashed route, a hand-drawn 15-frame walking glyph, and a restrained WebGL ripple hover layer over the stable active image — suppressed during transitions, reduced motion, and touch-only use.",
+      },
+      {
+        phase: "04",
+        title: "Interior routes, opening, and SEO",
+        body: "The work case study, contact-sheet index, about, and contact routes; the two-surface room/sheet system; a resilient CSS-only opening sequence; and per-route Open Graph images and structured data.",
+      },
+    ],
+    architecture: [
+      {
+        layer: "Client",
+        label: "Next.js App Router",
+        detail: "Public archive routes sharing one app with the Payload admin route group, plus localized routing.",
+      },
+      {
+        layer: "CMS",
+        label: "Payload CMS 3",
+        detail: "Projects, media, and site settings, publication-gated the way the inherited foundation intended.",
+      },
+      {
+        layer: "Data",
+        label: "PostgreSQL + Vercel Blob",
+        detail: "Relational content plus S3-compatible object storage for project imagery.",
+      },
+      {
+        layer: "Motion",
+        label: "OGL (WebGL) + GSAP / motion",
+        detail: "The centered morph transition and ripple hover run on a controlled OGL renderer; DOM-level choreography runs on GSAP and motion.",
+      },
+    ],
+    features: [
+      {
+        title: "One-stage project navigation",
+        body: "A single wheel notch or short touch gesture selects the adjacent project and syncs the document anchor; the transition then completes on its own authored easing instead of being scrubbed by scroll distance.",
+      },
+      {
+        title: "Dashed route and walker glyph",
+        body: "A continuously breathing dashed line and a hand-authored 15-frame glyph carry direction and motion instead of a generic spinner or carousel arrow.",
+      },
+      {
+        title: "Two-surface cut system",
+        body: "Media routes render on a dark 'room' and reading routes on a light 'sheet', with the surface stamped on the route root so overscroll never reveals the wrong canvas color.",
+      },
+    ],
+    challenges: [
+      {
+        title: "Decoupling gesture from animation",
+        body: "The wheel/touch input had to commit to the adjacent project on one modest gesture rather than scrubbing shader progress directly off scroll distance, so the transition reads as an edit rather than a scroll-linked effect.",
+      },
+      {
+        title: "Keeping data and shell separable",
+        body: "The Payload CMS foundation and its data model had to survive completely intact while every public-facing macOS-simulation layer built on top of it was removed.",
+      },
+      {
+        title: "An overlay that can't fail blank",
+        body: "The full-screen opening sequence is CSS-only and fills backward from a complete final state, so a bug in the animation still renders the finished site instead of hiding it entirely.",
+      },
+    ],
+    links: [
+      { label: "Visit live site", href: "https://art-hur.vercel.app" },
+      {
+        label: "View source",
+        href: "https://github.com/BenitoPedro13/ART-hur",
       },
     ],
   },
