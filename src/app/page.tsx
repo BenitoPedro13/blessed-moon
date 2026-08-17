@@ -14,10 +14,9 @@ export default function Home() {
     <>
       <SiteNav />
       <main className="flex flex-col">
-        {/* Hero and the closing CTA keep their own pins. Hero's scroll-linked
-            ParticleText gather is the page's one thesis moment and shouldn't
-            be diluted into a shared sequence; the CTA is the landing beat.
-            The five beats between them are the
+        {/* Hero and the closing CTA keep their own pins, separate from the
+            shared sequence below; the CTA is the landing beat. The five
+            beats between them are the
             journey, and they now share ONE pinned frame.
 
             Why one frame: each of those five used to be its own ScrollStage,

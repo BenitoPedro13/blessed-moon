@@ -45,9 +45,10 @@ export function ScrollStage({
    * read the CSS variable directly and don't need this. */
   onProgress?: (progress: number) => void;
   /** Ambient particle-dissolve texture (see scroll-particles.tsx) — the
-   * ParticleScroll replacement. Opt-in, not automatic: Hero already has its
-   * own particle moment via ParticleText, and stacking a second particle
-   * effect there would compete with it rather than add to it. */
+   * ParticleScroll replacement. Opt-in, not automatic: nothing currently
+   * on the site turns it on (see TASK-remove-hero-particles.md for the
+   * headline's own canvas-particle effect, which was removed for
+   * performance rather than left as a reason to skip this one). */
   particles?: boolean;
   children: React.ReactNode;
 }) {
