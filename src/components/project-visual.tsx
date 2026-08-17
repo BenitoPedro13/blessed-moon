@@ -1,6 +1,6 @@
 interface ProjectVisualProps {
   title: string;
-  variant: "calendar" | "analytics" | "commerce" | "realestate" | "portfolio";
+  variant: "calendar" | "analytics" | "commerce" | "realestate" | "portfolio" | "geospatial";
 }
 
 const QUALIFICATION_STEPS = ["Renda", "Entrada", "Restrições", "Faixa MCMV", "Localidade", "Score"];
@@ -12,6 +12,15 @@ const TRANSITION_STATUS = [
   ["walker", "15f gait"],
   ["route", "leaned + held"],
 ];
+
+const SPECTRAL_LAYERS = [
+  ["ndvi", true],
+  ["ndmi", true],
+  ["reci", true],
+  ["mcari", true],
+  ["pri (proxy)", true],
+  ["plain ndvi", false],
+] as const;
 
 const CALENDAR_DAYS = ["M", "T", "W", "T", "F"];
 const BAR_HEIGHTS = [32, 48, 40, 70, 58, 82, 64, 90];
@@ -201,6 +210,44 @@ export function ProjectVisual({ title, variant }: ProjectVisualProps) {
             </div>
             <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">
               project 02 / 05 queued
+            </div>
+          </div>
+        </div>
+      )}
+      {variant === "geospatial" && (
+        <div className="grid h-[250px] grid-cols-[0.85fr_1.15fr] gap-3 pt-3 sm:h-[282px]">
+          <div className="border border-border/60 p-3">
+            <p className="text-[8px] text-primary uppercase">field_01</p>
+            <p className="mt-3 font-sans text-lg font-semibold tracking-[-0.03em] text-foreground">
+              25.4 ac
+            </p>
+            <p className="mt-1 text-[7px] text-muted-foreground">15.9469°S / 48.6035°W</p>
+            <div className="mt-5 border-t border-border/60 pt-3">
+              <p className="text-[7px] text-muted-foreground uppercase">stress detected</p>
+              <p className="mt-1 text-[9px] text-primary">20 zones</p>
+            </div>
+            <div className="mt-4 flex items-center gap-1.5 text-[7px] text-muted-foreground">
+              <span className="text-primary">●</span>
+              worker polling · request path idle
+            </div>
+          </div>
+          <div className="border border-primary/40 p-3">
+            <p className="text-[8px] text-primary uppercase">layers / 4.667 pu</p>
+            <div className="mt-3 space-y-1.5">
+              {SPECTRAL_LAYERS.map(([label, available]) => (
+                <div
+                  key={label}
+                  className="flex items-center justify-between border-b border-border/50 pb-1 text-[7px] text-muted-foreground"
+                >
+                  <span>{label}</span>
+                  <span className={available ? "text-primary" : "text-muted-foreground"}>
+                    {available ? "[x]" : "[ ]"}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">
+              10 indices / 1 process call
             </div>
           </div>
         </div>

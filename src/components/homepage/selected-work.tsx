@@ -18,18 +18,18 @@ const PROJECTS = [
     description: "Credit pre-qualification before apartment browsing, for MCMV buyers.",
   },
   {
-    name: "Bee Dash",
-    slug: "bee-dash",
-    image: "/projects/bee-dash/home.png",
-    imageAlt: "Bee Dash campaign analytics dashboard",
-    description: "Marketing dashboard, numbers pulled in automatically.",
+    name: "ART'hur",
+    slug: "art-hur",
+    image: "/projects/art-hur/home.png",
+    imageAlt: "ART'hur's centered archive stage with the dashed route and walker glyph",
+    description: "Motion-led archive for a visual director, one scene at a time.",
   },
   {
-    name: "Sua Mesa Fit",
-    slug: "sua-mesa-fit",
-    image: "/projects/sua-mesa-fit/product-hero.png",
-    imageAlt: "Sua Mesa Fit product presentation page",
-    description: "Custom storefront, Shopify underneath.",
+    name: "Flora",
+    slug: "flora",
+    image: "/projects/flora/stress-ndmi.png",
+    imageAlt: "Flora Crop Stress screen reading NDMI over a real field boundary",
+    description: "Farm operations console reading a real satellite pipeline.",
   },
 ] as const;
 
