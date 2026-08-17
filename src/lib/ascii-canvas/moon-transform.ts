@@ -24,14 +24,63 @@
  * previously sitting directly on top of the Services text, unreadable. */
 export const SCALE_BY_MORPH = [6.0, 3.6, 1.3, 1.1, 1.0, 0.9];
 
-/** Horizontal/vertical drift (scene units) at the same morph values — the
- * moon sweeps across the frame as the page scrolls, breaking the frame
- * edges at Hero, rather than spinning in place dead-center the whole time.
- * Modeled on the Dragonfly reference. From keyframe 2 onward it parks in a
- * corner (alternating per section) to stay clear of the pinned-focus
- * content's centered text. */
-export const OFFSET_X_BY_MORPH = [1.3, 0.6, 1.7, -1.7, 1.7, -1.7];
-export const OFFSET_Y_BY_MORPH = [0.3, 0.1, 0.9, 0.9, -0.9, -0.9];
+/** Horizontal/vertical drift (scene units) — the moon sweeps across the
+ * frame as the page scrolls, breaking the frame edges at Hero, rather than
+ * spinning in place dead-center the whole time. Modeled on the Dragonfly
+ * reference. Keyframes 0 (Hero) and 1 (About) are two hand-picked values;
+ * from keyframe 2 onward the moon parks in a corner that alternates every
+ * section, computed rather than looked up — see `ambientOffsetAt` below for
+ * why a table doesn't work here. */
+const EARLY_OFFSET_X = [1.3, 0.6];
+const EARLY_OFFSET_Y = [0.3, 0.1];
+
+/** Keyframe at which the moon starts parking in a corner instead of
+ * following the Hero→About sweep — Services on the homepage, and every
+ * pinned-focus section after it on any page. */
+const AMBIENT_START = 2;
+const AMBIENT_OFFSET_X = 1.7;
+const AMBIENT_OFFSET_Y = 0.9;
+
+/** The corner the moon parks in at a given (integer) keyframe from
+ * `AMBIENT_START` onward: X flips every keyframe, Y flips every *other*
+ * keyframe, so the four corners cycle through in turn rather than bouncing
+ * between two. A formula instead of a fixed-length table on purpose — this
+ * one used to be `OFFSET_X_BY_MORPH`/`OFFSET_Y_BY_MORPH`, six entries sized
+ * for the four case studies `/work` had when it was written. A fifth and
+ * sixth case study each pushed a keyframe past the table's last index, and
+ * `interpolate()`'s clamp silently froze the moon's position from the
+ * fourth project onward instead of erroring — see
+ * `TASK-work-moon-keyframe-overflow.md`. Reproduces the old table's values
+ * exactly for keyframes 2–5, so every page already using this range is
+ * unaffected; it simply never runs out for keyframe 6, 7, or beyond. */
+function ambientOffsetAt(index: number): { x: number; y: number } {
+  const step = Math.max(0, index - AMBIENT_START);
+  return {
+    x: step % 2 === 0 ? AMBIENT_OFFSET_X : -AMBIENT_OFFSET_X,
+    y: Math.floor(step / 2) % 2 === 0 ? AMBIENT_OFFSET_Y : -AMBIENT_OFFSET_Y,
+  };
+}
+
+function offsetXAt(index: number): number {
+  if (index <= 0) return EARLY_OFFSET_X[0];
+  if (index === 1) return EARLY_OFFSET_X[1];
+  return ambientOffsetAt(index).x;
+}
+
+function offsetYAt(index: number): number {
+  if (index <= 0) return EARLY_OFFSET_Y[0];
+  if (index === 1) return EARLY_OFFSET_Y[1];
+  return ambientOffsetAt(index).y;
+}
+
+/** Same linear blend as `interpolate()`, but backed by a function that can
+ * be asked for any index rather than a fixed-length table. */
+function interpolateFn(valueAt: (index: number) => number, morph: number): number {
+  const idx = Math.max(0, Math.floor(morph));
+  const next = idx + 1;
+  const frac = morph - idx;
+  return valueAt(idx) + (valueAt(next) - valueAt(idx)) * frac;
+}
 
 /** How quickly the displayed transform eases toward the scroll-driven
  * target each frame (0–1, higher = snappier). Without this the moon
@@ -125,8 +174,8 @@ export interface MoonTransform {
 export function createMoonEasing(viewport: ViewportScale) {
   let displayedScale = SCALE_BY_MORPH[0] * viewport.scale;
   let displayedRotation = 0;
-  let displayedX = OFFSET_X_BY_MORPH[0] * viewport.x;
-  let displayedY = OFFSET_Y_BY_MORPH[0] * viewport.y;
+  let displayedX = offsetXAt(0) * viewport.x;
+  let displayedY = offsetYAt(0) * viewport.y;
   let current = viewport;
 
   return {
@@ -136,8 +185,8 @@ export function createMoonEasing(viewport: ViewportScale) {
     step(morph: number): { transform: MoonTransform; cadence: number } {
       const targetScale = interpolate(SCALE_BY_MORPH, morph) * current.scale;
       const targetRotation = morph * 24;
-      const targetX = interpolate(OFFSET_X_BY_MORPH, morph) * current.x;
-      const targetY = interpolate(OFFSET_Y_BY_MORPH, morph) * current.y;
+      const targetX = interpolateFn(offsetXAt, morph) * current.x;
+      const targetY = interpolateFn(offsetYAt, morph) * current.y;
 
       // Checked before easing, so a transform that has converged doesn't get
       // one more redundant full-rate frame on the way out.
