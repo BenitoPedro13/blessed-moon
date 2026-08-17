@@ -1,4 +1,10 @@
-export type ProjectVisualVariant = "calendar" | "analytics" | "commerce" | "realestate" | "portfolio";
+export type ProjectVisualVariant =
+  | "calendar"
+  | "analytics"
+  | "commerce"
+  | "realestate"
+  | "portfolio"
+  | "geospatial";
 
 type ProjectStep = {
   phase: string;
@@ -744,6 +750,158 @@ export const STUDIO_PROJECTS: readonly StudioProject[] = [
       {
         label: "View source",
         href: "https://github.com/BenitoPedro13/ART-hur",
+      },
+    ],
+  },
+  {
+    slug: "flora",
+    title: "Flora",
+    tagline: "An operations console for regenerative farming, built on a real satellite pipeline",
+    index: "06",
+    year: "2026",
+    role: "Full-stack product engineering",
+    timeline: "Ongoing",
+    team: "Solo delivery",
+    description:
+      "A farm operations console where a scheduled worker — never the app itself — asks satellites for ten different plant-health readings per field, so a farmer opens a map and sees exactly which corner of which field is stressed, backed by real Sentinel-2 imagery.",
+    problem:
+      "A first version of this idea existed already, built on Google Earth Engine — but Earth Engine only ships Python and JavaScript bindings, and it's a research compute platform, not an imagery API, which made it slow and awkward to build a real product on. Beyond that starting point: a smaller regenerative farm has no in-house GIS or remote-sensing expertise, but still needs to know which part of which field is stressed, this week, without walking every hectare.",
+    approach:
+      "The whole system is rebuilt around one invariant: no request ever calls the satellite provider. A NestJS worker polls Copernicus's Data Space Ecosystem on a schedule, decodes the returned imagery, computes ten spectral indices from a single Process API call, and writes pre-rendered PNGs to object storage plus rows to Postgres. The API — a separate NestJS service — only ever reads Postgres and Redis, a split enforced by an actual test. Every tenant table sits behind PostGIS row-level security and a repository-level filter, checked by a cross-tenant suite that asserts a 404, never a 403, on another org's data.",
+    outcome:
+      "A working spine — register a field, watch a real stress zone appear from real Sentinel-2 data, act on it as a task — plus a home dashboard scored by a sourced formula, a ten-index spectral switcher, and a weather screen. Several of the sharpest bugs never showed up in a code review: they only appeared once a manual refresh ran against a real Copernicus account and a real field boundary, and got fixed the same way — by looking at what actually rendered.",
+    tags: ["Geospatial", "Multi-tenant SaaS", "Satellite Data"],
+    stack: [
+      "Next.js",
+      "NestJS",
+      "TypeScript",
+      "PostgreSQL + PostGIS",
+      "Drizzle ORM",
+      "BullMQ + Redis",
+      "Mapbox GL JS",
+      "Sentinel Hub (CDSE)",
+    ],
+    visual: "geospatial",
+    cover: {
+      src: "/projects/flora/stress-ndmi.png",
+      alt: "Flora Crop Stress screen reading NDMI over a real field boundary on a Mapbox satellite basemap",
+      width: 1440,
+      height: 900,
+    },
+    screenshots: [
+      {
+        src: "/projects/flora/home.png",
+        alt: "Flora home dashboard with Regeneration Score, planting productivity, and crops stocked",
+        width: 1440,
+        height: 900,
+      },
+      {
+        src: "/projects/flora/fields.png",
+        alt: "Flora Fields screen with field cards and a Mapbox satellite basemap",
+        width: 1440,
+        height: 900,
+      },
+      {
+        src: "/projects/flora/stress-ndvi.png",
+        alt: "Flora Crop Stress screen reading Contrasted NDVI over a real field boundary",
+        width: 1440,
+        height: 900,
+      },
+      {
+        src: "/projects/flora/stress-reci.png",
+        alt: "The same field switched to RECI, a red-edge chlorophyll index",
+        width: 1440,
+        height: 900,
+      },
+      {
+        src: "/projects/flora/tasks.png",
+        alt: "Flora Tasks board with a real drag-and-drop Kanban",
+        width: 1440,
+        height: 900,
+      },
+      {
+        src: "/projects/flora/weather.png",
+        alt: "Flora Weather screen with six instrument cards over Open-Meteo data",
+        width: 1440,
+        height: 900,
+      },
+    ],
+    process: [
+      {
+        phase: "01",
+        title: "Foundations, schema, tenancy",
+        body: "A pnpm/Turborepo monorepo, a Drizzle + PostGIS schema for ten domain tables with composite foreign keys, and identity with RLS enforced twice before any product screen existed.",
+      },
+      {
+        phase: "02",
+        title: "The spine: Fields → Crop Stress → Tasks",
+        body: "Field CRUD and boundary drawing on a Mapbox map, then the satellite write path (a CDSE HTTP client, a decode-to-PNG raster pipeline, a BullMQ per-field scheduler), then the screen that reads it, and finally a Kanban task board with a real @dnd-kit drag.",
+      },
+      {
+        phase: "03",
+        title: "Ten spectral indices",
+        body: "Widened the pipeline from one scheduled index to ten in a single Process API call — verified live to cost 4.667 Processing Units against a 4.0 baseline, since output count turns out to be free and only the input bands matter.",
+      },
+      {
+        phase: "04",
+        title: "Home dashboard and weather",
+        body: "Daily rollups, a Regeneration Score built from AAFC's published agri-environmental performance index instead of an invented composite, and an Open-Meteo weather screen with six instrument cards.",
+      },
+    ],
+    architecture: [
+      {
+        layer: "Web",
+        label: "Next.js App Router",
+        detail: "AlignUI shell, Mapbox map, Recharts — reads only Postgres-backed API endpoints, never a satellite provider directly.",
+      },
+      {
+        layer: "API",
+        label: "NestJS",
+        detail: "A separate service from the web app, reading only Postgres and Redis — enforced by a test, not a convention.",
+      },
+      {
+        layer: "Worker",
+        label: "NestJS standalone + BullMQ",
+        detail: "The only service allowed to call Sentinel Hub — a scheduled per-field job, not a request handler.",
+      },
+      {
+        layer: "Data",
+        label: "PostgreSQL 16 + PostGIS 3.4",
+        detail: "Drizzle ORM with a custom geography type; every tenant table behind RLS and a repository filter, both.",
+      },
+    ],
+    features: [
+      {
+        title: "Ten-index spectral switcher",
+        body: "NDVI, NDRE, EVI, MSAVI, RECI, MCARI, a labelled PRI proxy, NDMI, NDWI, and VSDI, each with its own colour ramp — and an honest disabled state for the ones this pipeline can't produce yet.",
+      },
+      {
+        title: "Real stress-zone detection",
+        body: "A raster overlay clipped to the field's true polygon boundary via its imagery's own 'no data' class, with grouped detections and a popover wired to real task mutations.",
+      },
+      {
+        title: "Tenancy enforced twice",
+        body: "Row-level security and a repository filter on every tenant table, checked by a cross-tenant suite asserting a 404, never a 403, against real RLS.",
+      },
+    ],
+    challenges: [
+      {
+        title: "A missing header that looked like an auth failure",
+        body: "No `Accept: application/tar` on the Process API request meant Copernicus silently returned a bare TIFF instead of the requested archive, and the parser's own error read exactly like a token problem — only testing against the real, live account surfaced the actual cause.",
+      },
+      {
+        title: "A masking bug two indices had and eight didn't",
+        body: "Eight of ten spectral indices are NDVI-shaped ratios, where a masked pixel naturally produces `NaN` outside the field boundary. Two indices with no division in their formula evaluated to a real, in-range number instead, painting a rectangle where a field polygon should have been — fixed by masking on the imagery's own 'no data' class instead of a formula side-effect.",
+      },
+      {
+        title: "A synthetic seed that never clipped to a real boundary",
+        body: "The satellite seed script filled its field's entire bounding-box rectangle with valid pixels, since a synthetic raster has no reason to know the field's real, non-rectangular boundary. Found by looking at a rendered field, not by inspecting the script.",
+      },
+    ],
+    links: [
+      {
+        label: "View source",
+        href: "https://github.com/BenitoPedro13/flora",
       },
     ],
   },
