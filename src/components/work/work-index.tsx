@@ -31,7 +31,7 @@ export function WorkIndex() {
         className="max-w-2xl font-sans text-3xl font-semibold tracking-[-0.025em] text-foreground sm:text-4xl"
         style={morphDrift({ y: 44, order: 1 })}
       >
-        Four systems, still running.
+        Seven systems, still running.
       </h2>
 
       {/* Untransformed: holds the departing token. */}

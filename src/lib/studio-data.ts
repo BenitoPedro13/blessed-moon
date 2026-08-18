@@ -4,7 +4,8 @@ export type ProjectVisualVariant =
   | "commerce"
   | "realestate"
   | "portfolio"
-  | "geospatial";
+  | "geospatial"
+  | "eyewear";
 
 type ProjectStep = {
   phase: string;
@@ -56,6 +57,150 @@ export type StudioProject = {
 };
 
 export const STUDIO_PROJECTS: readonly StudioProject[] = [
+  {
+    slug: "trision",
+    title: "Trísion",
+    tagline: "One catalogue, a showcase for every reseller — no cart, ever",
+    index: "07",
+    year: "2026",
+    role: "Full-stack product engineering",
+    timeline: "Ongoing — Fase 0 of a phased build",
+    team: "Solo delivery",
+    description:
+      "A brand site and multi-tenant reseller platform for a Brazilian eyewear label, where every independent optical shop that resells the brand gets its own storefront sharing one catalogue — never a themed copy of the brand's own site.",
+    problem:
+      "The client's entire web presence was a Linklist page and a one-screen Canva site, and her resellers — independent optical shops across Brazil — had nothing of their own to show a customer. The brand already existed: a name, a mark, a specific gold sampled from her own material, '24 years' as the one asset nobody else in the category has. The job was building the platform to carry that identity without letting every reseller flatten into an identical sub-brand.",
+    approach:
+      "A reseller is an endorsement, not a sub-brand, enforced in the data model itself — no colour field, no logo field, no font field, ever. Every path, brand site or reseller storefront, resolves through one WhatsApp deep-link builder. The catalogue and tenancy layers are built as typed seams over local mock data now, so the CMS arriving in the next phase is a new implementation behind an existing interface, not a rewrite. And where a rule says a number must be a real measurement or a photo must be real, the honest failure state ships instead of a placeholder that would quietly lie to an optician.",
+    outcome:
+      "A working Fase 0: the homepage, collections, catalogue, product pages, and a path-routed storefront stand-in all render end-to-end against typed mock data, dark-only, with the brand's own gold as the single accent — and every product photo gallery without a real shot renders an honest 'no photo' state rather than an invented one.",
+    tags: ["Multi-tenant SaaS", "Brand Identity", "Design System"],
+    stack: ["Next.js", "TypeScript", "Tailwind CSS v4", "Zustand"],
+    visual: "eyewear",
+    cover: {
+      src: "/projects/trision/catalogo.png",
+      alt: "Trísion catalogue with format/material/colour filters and real numeração on every card",
+      width: 1440,
+      height: 757,
+    },
+    screenshots: [
+      {
+        src: "/projects/trision/home.png",
+        alt: "Trísion homepage: the thesis line and the starfield ground",
+        width: 1440,
+        height: 757,
+      },
+      {
+        src: "/projects/trision/catalogo.png",
+        alt: "Trísion catalogue with format/material/colour filters and real numeração on every card",
+        width: 1440,
+        height: 757,
+      },
+      {
+        src: "/projects/trision/colecoes.png",
+        alt: "Trísion collections index",
+        width: 1440,
+        height: 757,
+      },
+      {
+        src: "/projects/trision/produto.png",
+        alt: "Trísion product page showing the honest 'sem foto' empty state instead of a stock photo",
+        width: 1440,
+        height: 757,
+      },
+      {
+        src: "/projects/trision/revendedores.png",
+        alt: "Trísion reseller directory, filterable by state and city",
+        width: 1440,
+        height: 757,
+      },
+      {
+        src: "/projects/trision/loja.png",
+        alt: "A reseller's own storefront at /loja/[rev] — the Fase 0 stand-in for a subdomain",
+        width: 1440,
+        height: 757,
+      },
+    ],
+    process: [
+      {
+        phase: "01",
+        title: "Scaffold and the pitch deck",
+        body: "Design tokens sampled from the client's own material, including the specific gold rather than a generic stock tone. The first deliverable was a slide presentation built to extract the open questions — domain ownership, pricing model, WhatsApp routing — that block later phases, shown to the client on her phone.",
+      },
+      {
+        phase: "02",
+        title: "The brand components",
+        body: "Hand-written corner brackets that frame something real, the millimetre numeração component with an inline-SVG square glyph, a wordmark drawn from one shared path source across header/favicon/share image, and a starfield canvas that degrades to a complete static page under reduced motion or no WebGL.",
+      },
+      {
+        phase: "03",
+        title: "Catalogue and tenancy, against typed mock data",
+        body: "The full frontend — home, collections, a filterable catalogue, product pages, and a storefront stand-in — built behind one catalogue seam and one tenancy seam, so Payload can implement both later without the pages above them changing.",
+      },
+      {
+        phase: "04",
+        title: "Fase 1 — not started",
+        body: "Payload CMS and Postgres, mounted once the client's apex domain is confirmed — the wildcard-subdomain storefront routing the whole multi-tenant model depends on can't ship without it.",
+      },
+    ],
+    architecture: [
+      {
+        layer: "Client",
+        label: "Next.js App Router",
+        detail: "Brand routes and the Fase 0 storefront stand-in sharing one app, dark theme hardcoded, no light-mode toggle.",
+      },
+      {
+        layer: "Catalogue seam",
+        label: "One typed source function",
+        detail: "Local mock data today; a CMS implementation later sits behind the same interface, not a rewrite.",
+      },
+      {
+        layer: "Tenancy seam",
+        label: "One scope function",
+        detail: "Every tenant-scoped read — reseller, showcase — goes through this one place.",
+      },
+      {
+        layer: "Conversion",
+        label: "One wa.me builder",
+        detail: "Every CTA on every route resolves through the same WhatsApp deep-link function.",
+      },
+    ],
+    features: [
+      {
+        title: "Endorsement-only reseller storefronts",
+        body: "A reseller gets a name, city, contact, and one photo — never a colour, logo, or font — enforced by the data model, not editorial discipline.",
+      },
+      {
+        title: "Honest 'no photo' empty states",
+        body: "Every product gallery without a real photograph says so plainly instead of substituting a stock image that isn't actually this brand's product.",
+      },
+      {
+        title: "Real numeração or none at all",
+        body: "The millimetre frame measurement renders only from real data, with its square glyph as inline SVG — never a placeholder value.",
+      },
+    ],
+    challenges: [
+      {
+        title: "Building the CMS seam before the CMS",
+        body: "Fase 0 has no database by design, but every future collection already has a typed consumer waiting for it — getting that boundary right without the real implementation to test against is the highest-risk part of the phasing.",
+      },
+      {
+        title: "Never inventing a fact about the client's business",
+        body: "No price, measurement, city, or reseller name gets invented — an unresolved fact is written down explicitly as a question to verify instead of a plausible-looking placeholder.",
+      },
+      {
+        title: "A brand asset that's still an approximation",
+        body: "The wordmark is currently an approximate redraw pending the original vector — every surface that renders it reads from one shared source so the real file, once it arrives, updates everywhere at once.",
+      },
+    ],
+    links: [
+      { label: "Visit live site", href: "https://trision.vercel.app" },
+      {
+        label: "View source",
+        href: "https://github.com/BenitoPedro13/trision",
+      },
+    ],
+  },
   {
     slug: "flora",
     title: "Flora",

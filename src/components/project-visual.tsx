@@ -1,6 +1,13 @@
 interface ProjectVisualProps {
   title: string;
-  variant: "calendar" | "analytics" | "commerce" | "realestate" | "portfolio" | "geospatial";
+  variant:
+    | "calendar"
+    | "analytics"
+    | "commerce"
+    | "realestate"
+    | "portfolio"
+    | "geospatial"
+    | "eyewear";
 }
 
 const QUALIFICATION_STEPS = ["Renda", "Entrada", "Restrições", "Faixa MCMV", "Localidade", "Score"];
@@ -24,6 +31,14 @@ const SPECTRAL_LAYERS = [
 
 const CALENDAR_DAYS = ["M", "T", "W", "T", "F"];
 const BAR_HEIGHTS = [32, 48, 40, 70, 58, 82, 64, 90];
+
+const TENANCY_SEAM = [
+  ["catálogo", true],
+  ["numeração", true],
+  ["wa.me link", true],
+  ["tenancy seam", true],
+  ["payload cms", false],
+] as const;
 
 export function ProjectVisual({ title, variant }: ProjectVisualProps) {
   return (
@@ -248,6 +263,44 @@ export function ProjectVisual({ title, variant }: ProjectVisualProps) {
             </div>
             <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">
               10 indices / 1 process call
+            </div>
+          </div>
+        </div>
+      )}
+      {variant === "eyewear" && (
+        <div className="grid h-[250px] grid-cols-[0.85fr_1.15fr] gap-3 pt-3 sm:h-[282px]">
+          <div className="border border-border/60 p-3">
+            <p className="text-[8px] text-primary uppercase">armação / tri-ex-14</p>
+            <p className="mt-3 font-sans text-lg font-semibold tracking-[-0.03em] text-foreground">
+              52 □ 18-145
+            </p>
+            <p className="mt-1 text-[7px] text-muted-foreground">aviador · titânio · bronze</p>
+            <div className="mt-5 border-t border-border/60 pt-3">
+              <p className="text-[7px] text-muted-foreground uppercase">foto</p>
+              <p className="mt-1 text-[9px] text-primary">sem foto — honesto</p>
+            </div>
+            <div className="mt-4 flex items-center gap-1.5 text-[7px] text-muted-foreground">
+              <span className="text-primary">●</span>
+              nenhum valor inventado
+            </div>
+          </div>
+          <div className="border border-primary/40 p-3">
+            <p className="text-[8px] text-primary uppercase">revendedores / 8</p>
+            <div className="mt-3 space-y-1.5">
+              {TENANCY_SEAM.map(([label, available]) => (
+                <div
+                  key={label}
+                  className="flex items-center justify-between border-b border-border/50 pb-1 text-[7px] text-muted-foreground"
+                >
+                  <span>{label}</span>
+                  <span className={available ? "text-primary" : "text-muted-foreground"}>
+                    {available ? "[x]" : "[ ]"}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">
+              one catalogue, many storefronts
             </div>
           </div>
         </div>
