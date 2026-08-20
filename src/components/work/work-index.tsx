@@ -31,15 +31,20 @@ export function WorkIndex() {
         className="max-w-2xl font-sans text-3xl font-semibold tracking-[-0.025em] text-foreground sm:text-4xl"
         style={morphDrift({ y: 44, order: 1 })}
       >
-        Seven systems, still running.
+        Nine systems, still running.
       </h2>
 
-      {/* Untransformed: holds the departing token. */}
-      <ul className="mt-10 border-t border-border/60">
+      {/* Untransformed: holds the departing token. Row padding trimmed from
+          py-5 to py-3.5 when the roster grew from seven to nine projects —
+          nine rows at the original spacing pushed the list past the window's
+          86dvh clamp (scroll-morph-stage.tsx no longer offers an internal
+          scroll fallback, see TASK-homepage-short-viewport-scroll-trap.md),
+          so the list itself has to fit rather than rely on one. */}
+      <ul className="mt-8 border-t border-border/60">
         {STUDIO_PROJECTS.map((project, i) => (
           <li
             key={project.slug}
-            className="grid grid-cols-[auto_1fr] items-baseline gap-x-5 border-b border-border/60 py-5 sm:grid-cols-[auto_1fr_auto]"
+            className="grid grid-cols-[auto_1fr] items-baseline gap-x-5 border-b border-border/60 py-3.5 sm:grid-cols-[auto_1fr_auto]"
           >
             <span className="font-mono text-[10.5px] tracking-[0.5px] text-muted-foreground">
               {project.index}
@@ -70,7 +75,7 @@ export function WorkIndex() {
       </ul>
 
       <p
-        className="mt-6 font-mono text-[10.5px] tracking-[0.5px] text-muted-foreground"
+        className="mt-4 font-mono text-[10.5px] tracking-[0.5px] text-muted-foreground"
         style={morphDrift({ y: 30, order: 2 })}
       >
         Each one below, in full.

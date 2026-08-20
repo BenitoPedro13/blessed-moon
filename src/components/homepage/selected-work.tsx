@@ -11,11 +11,11 @@ import { useSound } from "@/components/sound-provider";
 
 const PROJECTS = [
   {
-    name: "Prumo",
-    slug: "prumo",
-    image: "/projects/prumo/home.png",
-    imageAlt: "Prumo homepage stating the credit-before-apartment order",
-    description: "Credit pre-qualification before apartment browsing, for MCMV buyers.",
+    name: "Flora",
+    slug: "flora",
+    image: "/projects/flora/stress-ndmi.png",
+    imageAlt: "Flora Crop Stress screen reading NDMI over a real field boundary",
+    description: "Farm operations console reading a real satellite pipeline.",
   },
   {
     name: "ART'hur",
@@ -25,11 +25,11 @@ const PROJECTS = [
     description: "Motion-led archive for a visual director, one scene at a time.",
   },
   {
-    name: "Flora",
-    slug: "flora",
-    image: "/projects/flora/stress-ndmi.png",
-    imageAlt: "Flora Crop Stress screen reading NDMI over a real field boundary",
-    description: "Farm operations console reading a real satellite pipeline.",
+    name: "Oishi",
+    slug: "oishi",
+    image: "/projects/oishi/home.png",
+    imageAlt: "Oishi Cozinha Japonesa hero with the 味 kanji set inside the hinomaru disc",
+    description: "A real anti-waste discount, built as a rodízio site's whole thesis.",
   },
 ] as const;
 
@@ -72,7 +72,7 @@ export function SelectedWork() {
         </div>
 
         <div
-          className="mt-8 flex flex-col gap-5 sm:gap-6 lg:mt-0"
+          className="mt-8 short:mt-5 flex flex-col gap-5 short:gap-3 sm:gap-6 lg:mt-0"
           style={morphDrift({ y: 52, order: 1 })}
         >
           {PROJECTS.map((project, i) => (
@@ -85,7 +85,7 @@ export function SelectedWork() {
                 }`}
                 aria-label={`View ${project.name} case study`}
               >
-                <div className="relative h-24 w-36 flex-none overflow-hidden border border-border/60 bg-muted/20 transition-colors group-focus-visible:border-primary group-hover:border-primary/60 sm:h-32 sm:w-48">
+                <div className="relative h-24 w-36 short:h-16 short:w-24 flex-none overflow-hidden border border-border/60 bg-muted/20 transition-colors group-focus-visible:border-primary group-hover:border-primary/60 sm:h-32 sm:w-48 short:sm:h-20 short:sm:w-32">
                   <Image
                     src={project.image}
                     alt={project.imageAlt}

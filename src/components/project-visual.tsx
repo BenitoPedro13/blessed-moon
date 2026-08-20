@@ -7,7 +7,9 @@ interface ProjectVisualProps {
     | "realestate"
     | "portfolio"
     | "geospatial"
-    | "eyewear";
+    | "eyewear"
+    | "furniture"
+    | "rodizio";
 }
 
 const QUALIFICATION_STEPS = ["Renda", "Entrada", "Restrições", "Faixa MCMV", "Localidade", "Score"];
@@ -38,6 +40,22 @@ const TENANCY_SEAM = [
   ["wa.me link", true],
   ["tenancy seam", true],
   ["payload cms", false],
+] as const;
+
+const CATALOGO_RULES = [
+  ["medida em cm", true],
+  ["preço confirmado", true],
+  ["wa.me único", true],
+  ["shopify fora do seam", true],
+  ["cms", false],
+] as const;
+
+const TRES_SAIDAS = [
+  ["delivery", true],
+  ["reserva", true],
+  ["whatsapp", true],
+  ["cardápio registrado", true],
+  ["hora confirmada", false],
 ] as const;
 
 export function ProjectVisual({ title, variant }: ProjectVisualProps) {
@@ -301,6 +319,83 @@ export function ProjectVisual({ title, variant }: ProjectVisualProps) {
             </div>
             <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">
               one catalogue, many storefronts
+            </div>
+          </div>
+        </div>
+      )}
+      {variant === "furniture" && (
+        <div className="grid h-[250px] grid-cols-[0.85fr_1.15fr] gap-3 pt-3 sm:h-[282px]">
+          <div className="border border-border/60 p-3">
+            <p className="text-[8px] text-primary uppercase">roupeiro mônaco plus</p>
+            <p className="mt-3 font-sans text-lg font-semibold tracking-[-0.03em] text-foreground">
+              240 × 230 × 55
+            </p>
+            <p className="mt-1 text-[7px] text-muted-foreground">l × a × p, em cm reais</p>
+            <div className="mt-5 border-t border-border/60 pt-3">
+              <p className="text-[7px] text-muted-foreground uppercase">preço</p>
+              <p className="mt-1 text-[9px] text-primary">R$ 3.073 à vista</p>
+            </div>
+            <div className="mt-4 flex items-center gap-1.5 text-[7px] text-muted-foreground">
+              <span className="text-primary">●</span>
+              10 de 13 com preço confirmado
+            </div>
+          </div>
+          <div className="border border-primary/40 p-3">
+            <p className="text-[8px] text-primary uppercase">catálogo / 13</p>
+            <div className="mt-3 space-y-1.5">
+              {CATALOGO_RULES.map(([label, available]) => (
+                <div
+                  key={label}
+                  className="flex items-center justify-between border-b border-border/50 pb-1 text-[7px] text-muted-foreground"
+                >
+                  <span>{label}</span>
+                  <span className={available ? "text-primary" : "text-muted-foreground"}>
+                    {available ? "[x]" : "[ ]"}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">
+              da fábrica para a sua casa
+            </div>
+          </div>
+        </div>
+      )}
+      {variant === "rodizio" && (
+        <div className="grid h-[250px] grid-cols-[0.85fr_1.15fr] gap-3 pt-3 sm:h-[282px]">
+          <div className="border border-border/60 p-3">
+            <p className="text-[8px] text-primary uppercase">rodízio chisai</p>
+            <p className="mt-3 font-sans text-lg font-semibold tracking-[-0.03em] text-foreground">
+              <span className="text-muted-foreground line-through">R$ 74,90</span>{" "}
+              <span className="text-primary">R$ 54,90</span>
+            </p>
+            <p className="mt-1 text-[7px] text-muted-foreground">sem desperdício — mesa toda</p>
+            <div className="mt-5 border-t border-border/60 pt-3">
+              <p className="text-[7px] text-muted-foreground uppercase">fotos usáveis</p>
+              <p className="mt-1 text-[9px] text-primary">15 de 44, medidas</p>
+            </div>
+            <div className="mt-4 flex items-center gap-1.5 text-[7px] text-muted-foreground">
+              <span className="text-primary">●</span>
+              nenhum preço sem a condição
+            </div>
+          </div>
+          <div className="border border-primary/40 p-3">
+            <p className="text-[8px] text-primary uppercase">saídas / 3</p>
+            <div className="mt-3 space-y-1.5">
+              {TRES_SAIDAS.map(([label, available]) => (
+                <div
+                  key={label}
+                  className="flex items-center justify-between border-b border-border/50 pb-1 text-[7px] text-muted-foreground"
+                >
+                  <span>{label}</span>
+                  <span className={available ? "text-primary" : "text-muted-foreground"}>
+                    {available ? "[x]" : "[ ]"}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">
+              coma tudo, pague menos
             </div>
           </div>
         </div>
