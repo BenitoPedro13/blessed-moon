@@ -60,129 +60,6 @@ export type StudioProject = {
 
 export const STUDIO_PROJECTS: readonly StudioProject[] = [
   {
-    slug: "fa-moveis",
-    title: "F&A Móveis",
-    tagline: "A furniture catalogue where every measurement on the page is the real one",
-    index: "09",
-    year: "2026",
-    role: "Full-stack product engineering",
-    timeline: "Ongoing",
-    team: "Solo",
-    description:
-      "A catalogue site for a Rio de Janeiro furniture shop that sold entirely over WhatsApp from a dormant Facebook page. No cart, no checkout — every product page ends in a pre-filled WhatsApp message to the owner, and every centimetre shown on it is a real, sourced measurement.",
-    problem:
-      "Fátima has run a neighbourhood furniture business for years with no website — just a Facebook page gone dormant since February 2022. She resells factory furniture, delivers it, and assembles it, and every sale already happened over WhatsApp. This was a paid client project on a tight budget where the demo had to come before the money: a working site built on her real brand and real stock, shown to her on her phone, was what won the job.",
-    approach:
-      "The build is deliberately backend-less: a typed TypeScript catalogue in content/, no CMS, no database, no monthly bill. Every measurement is stored as a number in centimetres and formatted at the edge, never hand-typed as a string, and every wa.me link is built by one function reading her real phone number from a single content module. Nothing outside lib/catalog/source.*.ts is allowed to import a Shopify type, which is what makes a later Shopify upsell a one-module swap instead of a rewrite. Where a price wasn't confirmed, the page says so — 'Consulte o preço' — instead of shipping a plausible number.",
-    outcome:
-      "Live at fa-moveis.vercel.app with 13 real products — no illustrative filler left on the site — 3 from her own D'Doro line and 10 from a second Novo Horizonte supplier, priced against real supplier sheets and her own WhatsApp confirmations. 10 of the 13 carry a confirmed price; the remaining 3 show an honest 'Consulte o preço' rather than a guess. A production build measured Lighthouse 93 performance and 100 accessibility on /produtos, CLS 0, every product image under 32 KB against a 180 KB budget.",
-    tags: ["Local Business", "Catalogue", "No-CMS"],
-    stack: ["Next.js", "TypeScript", "Tailwind CSS", "Radix UI", "Vercel"],
-    visual: "furniture",
-    cover: {
-      src: "/projects/fa-moveis/home.png",
-      alt: "F&A Móveis homepage hero with the Roupeiro Mônaco Plus and its real 2,30 × 2,40 m dimension lines",
-      width: 1456,
-      height: 840,
-    },
-    screenshots: [
-      {
-        src: "/projects/fa-moveis/home.png",
-        alt: "F&A Móveis homepage hero with the Roupeiro Mônaco Plus and its real 2,30 × 2,40 m dimension lines",
-        width: 1456,
-        height: 840,
-      },
-      {
-        src: "/projects/fa-moveis/produtos.png",
-        alt: "F&A Móveis /produtos catalogue with category filters and real measurements on every card",
-        width: 1456,
-        height: 840,
-      },
-      {
-        src: "/projects/fa-moveis/produto.png",
-        alt: "F&A Móveis product page for the Roupeiro Mônaco Plus, showing L × A × P measurements and the WhatsApp CTA",
-        width: 1456,
-        height: 840,
-      },
-    ],
-    process: [
-      {
-        phase: "01",
-        title: "Scaffold on her real brand",
-        body: "Name, mark, the rose accent (#A87C7C), and a Didone serif were already hers, evidenced in her own Facebook video — the job was bringing an existing identity onto the web with better craft, never redesigning it from zero.",
-      },
-      {
-        phase: "02",
-        title: "A typed catalogue, no CMS",
-        body: "content/produtos.ts, categorias.ts, ambientes.ts, and loja.ts became the single source of truth; components read only the domain Produto type, never a raw content import.",
-      },
-      {
-        phase: "03",
-        title: "Real stock, real prices",
-        body: "The 27-product illustrative catalogue used to demo the concept was removed once real supplier stock replaced it — 3 D'Doro pieces from Fátima's own catalogue QR codes, 10 Novo Horizonte pieces priced from a supplier sheet with the same freight-and-tax markup used on an earlier sibling project.",
-      },
-      {
-        phase: "04",
-        title: "The real-device checklist",
-        body: "A pass against the live deployment, not localhost, caught two defects invisible from a dev server: every WhatsApp message was shipping a literal localhost URL, and /produtos had no Open Graph card.",
-      },
-    ],
-    architecture: [
-      {
-        layer: "Client",
-        label: "Next.js App Router",
-        detail: "Server-rendered catalogue, product, and home routes — zero client components in the shipped build.",
-      },
-      {
-        layer: "Catalogue",
-        label: "content/*.ts",
-        detail: "Typed product, category, and store data — the only source any page or component is allowed to read.",
-      },
-      {
-        layer: "Conversion",
-        label: "lib/whatsapp.ts",
-        detail: "The one wa.me builder used by every product CTA, reading the phone number from content/loja.ts.",
-      },
-      {
-        layer: "Hosting",
-        label: "Vercel",
-        detail: "Fully static, no database, no auth — a production build fails on purpose if SITE_URL would resolve to localhost.",
-      },
-    ],
-    features: [
-      {
-        title: "Real measurements, formatted at the edge",
-        body: "Every dimension is stored as a number in centimetres and rendered as 'L × A × P' — never typed as a display string, never rounded by hand.",
-      },
-      {
-        title: "Honest pricing",
-        body: "10 of 13 products show a confirmed price; the other 3 say 'Consulte o preço' instead of a plausible guess.",
-      },
-      {
-        title: "One WhatsApp builder",
-        body: "Every product page, from any category, resolves through the same pre-filled wa.me link — no second place composes that URL.",
-      },
-    ],
-    challenges: [
-      {
-        title: "A localhost URL that shipped to production",
-        body: "An unset SITE_URL fell back silently to localhost, so the deployed site's own WhatsApp messages carried a dead link — caught by a real-device pass against the live URL, not the dev server, and fixed by failing the build outright on that exact misconfiguration.",
-      },
-      {
-        title: "Sourcing prices for stock that wasn't hers to guess",
-        body: "Novo Horizonte's 10 pieces needed real supplier-sheet numbers and the same freight-plus-tax markup logic already used on a sibling project — 3 items still show 'Consulte o preço' because that number wasn't confirmed yet, not because it was estimated.",
-      },
-      {
-        title: "Retiring the demo catalogue without losing the pitch",
-        body: "The original 27-item illustrative catalogue existed to win the job before real stock was ready; removing it once 13 real products existed meant the site never quietly kept selling furniture that wasn't actually in stock.",
-      },
-    ],
-    links: [
-      { label: "Visit live site", href: "https://fa-moveis.vercel.app" },
-      { label: "View source", href: "https://github.com/BenitoPedro13/fa-moveis" },
-    ],
-  },
-  {
     slug: "oishi",
     title: "Oishi Cozinha Japonesa",
     tagline: "A rodízio's anti-waste pricing, built as the whole site's thesis",
@@ -315,6 +192,129 @@ export const STUDIO_PROJECTS: readonly StudioProject[] = [
     links: [
       { label: "Visit live site", href: "https://oishicozinha.vercel.app" },
       { label: "View source", href: "https://github.com/BenitoPedro13/oishi" },
+    ],
+  },
+  {
+    slug: "fa-moveis",
+    title: "F&A Móveis",
+    tagline: "A furniture catalogue where every measurement on the page is the real one",
+    index: "09",
+    year: "2026",
+    role: "Full-stack product engineering",
+    timeline: "Ongoing",
+    team: "Solo",
+    description:
+      "A catalogue site for a Rio de Janeiro furniture shop that sold entirely over WhatsApp from a dormant Facebook page. No cart, no checkout — every product page ends in a pre-filled WhatsApp message to the owner, and every centimetre shown on it is a real, sourced measurement.",
+    problem:
+      "Fátima has run a neighbourhood furniture business for years with no website — just a Facebook page gone dormant since February 2022. She resells factory furniture, delivers it, and assembles it, and every sale already happened over WhatsApp. This was a paid client project on a tight budget where the demo had to come before the money: a working site built on her real brand and real stock, shown to her on her phone, was what won the job.",
+    approach:
+      "The build is deliberately backend-less: a typed TypeScript catalogue in content/, no CMS, no database, no monthly bill. Every measurement is stored as a number in centimetres and formatted at the edge, never hand-typed as a string, and every wa.me link is built by one function reading her real phone number from a single content module. Nothing outside lib/catalog/source.*.ts is allowed to import a Shopify type, which is what makes a later Shopify upsell a one-module swap instead of a rewrite. Where a price wasn't confirmed, the page says so — 'Consulte o preço' — instead of shipping a plausible number.",
+    outcome:
+      "Live at fa-moveis.vercel.app with 13 real products — no illustrative filler left on the site — 3 from her own D'Doro line and 10 from a second Novo Horizonte supplier, priced against real supplier sheets and her own WhatsApp confirmations. 10 of the 13 carry a confirmed price; the remaining 3 show an honest 'Consulte o preço' rather than a guess. A production build measured Lighthouse 93 performance and 100 accessibility on /produtos, CLS 0, every product image under 32 KB against a 180 KB budget.",
+    tags: ["Local Business", "Catalogue", "No-CMS"],
+    stack: ["Next.js", "TypeScript", "Tailwind CSS", "Radix UI", "Vercel"],
+    visual: "furniture",
+    cover: {
+      src: "/projects/fa-moveis/home.png",
+      alt: "F&A Móveis homepage hero with the Roupeiro Mônaco Plus and its real 2,30 × 2,40 m dimension lines",
+      width: 1456,
+      height: 840,
+    },
+    screenshots: [
+      {
+        src: "/projects/fa-moveis/home.png",
+        alt: "F&A Móveis homepage hero with the Roupeiro Mônaco Plus and its real 2,30 × 2,40 m dimension lines",
+        width: 1456,
+        height: 840,
+      },
+      {
+        src: "/projects/fa-moveis/produtos.png",
+        alt: "F&A Móveis /produtos catalogue with category filters and real measurements on every card",
+        width: 1456,
+        height: 840,
+      },
+      {
+        src: "/projects/fa-moveis/produto.png",
+        alt: "F&A Móveis product page for the Roupeiro Mônaco Plus, showing L × A × P measurements and the WhatsApp CTA",
+        width: 1456,
+        height: 840,
+      },
+    ],
+    process: [
+      {
+        phase: "01",
+        title: "Scaffold on her real brand",
+        body: "Name, mark, the rose accent (#A87C7C), and a Didone serif were already hers, evidenced in her own Facebook video — the job was bringing an existing identity onto the web with better craft, never redesigning it from zero.",
+      },
+      {
+        phase: "02",
+        title: "A typed catalogue, no CMS",
+        body: "content/produtos.ts, categorias.ts, ambientes.ts, and loja.ts became the single source of truth; components read only the domain Produto type, never a raw content import.",
+      },
+      {
+        phase: "03",
+        title: "Real stock, real prices",
+        body: "The 27-product illustrative catalogue used to demo the concept was removed once real supplier stock replaced it — 3 D'Doro pieces from Fátima's own catalogue QR codes, 10 Novo Horizonte pieces priced from a supplier sheet with the same freight-and-tax markup used on an earlier sibling project.",
+      },
+      {
+        phase: "04",
+        title: "The real-device checklist",
+        body: "A pass against the live deployment, not localhost, caught two defects invisible from a dev server: every WhatsApp message was shipping a literal localhost URL, and /produtos had no Open Graph card.",
+      },
+    ],
+    architecture: [
+      {
+        layer: "Client",
+        label: "Next.js App Router",
+        detail: "Server-rendered catalogue, product, and home routes — zero client components in the shipped build.",
+      },
+      {
+        layer: "Catalogue",
+        label: "content/*.ts",
+        detail: "Typed product, category, and store data — the only source any page or component is allowed to read.",
+      },
+      {
+        layer: "Conversion",
+        label: "lib/whatsapp.ts",
+        detail: "The one wa.me builder used by every product CTA, reading the phone number from content/loja.ts.",
+      },
+      {
+        layer: "Hosting",
+        label: "Vercel",
+        detail: "Fully static, no database, no auth — a production build fails on purpose if SITE_URL would resolve to localhost.",
+      },
+    ],
+    features: [
+      {
+        title: "Real measurements, formatted at the edge",
+        body: "Every dimension is stored as a number in centimetres and rendered as 'L × A × P' — never typed as a display string, never rounded by hand.",
+      },
+      {
+        title: "Honest pricing",
+        body: "10 of 13 products show a confirmed price; the other 3 say 'Consulte o preço' instead of a plausible guess.",
+      },
+      {
+        title: "One WhatsApp builder",
+        body: "Every product page, from any category, resolves through the same pre-filled wa.me link — no second place composes that URL.",
+      },
+    ],
+    challenges: [
+      {
+        title: "A localhost URL that shipped to production",
+        body: "An unset SITE_URL fell back silently to localhost, so the deployed site's own WhatsApp messages carried a dead link — caught by a real-device pass against the live URL, not the dev server, and fixed by failing the build outright on that exact misconfiguration.",
+      },
+      {
+        title: "Sourcing prices for stock that wasn't hers to guess",
+        body: "Novo Horizonte's 10 pieces needed real supplier-sheet numbers and the same freight-plus-tax markup logic already used on a sibling project — 3 items still show 'Consulte o preço' because that number wasn't confirmed yet, not because it was estimated.",
+      },
+      {
+        title: "Retiring the demo catalogue without losing the pitch",
+        body: "The original 27-item illustrative catalogue existed to win the job before real stock was ready; removing it once 13 real products existed meant the site never quietly kept selling furniture that wasn't actually in stock.",
+      },
+    ],
+    links: [
+      { label: "Visit live site", href: "https://fa-moveis.vercel.app" },
+      { label: "View source", href: "https://github.com/BenitoPedro13/fa-moveis" },
     ],
   },
   {
