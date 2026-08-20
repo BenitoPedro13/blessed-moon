@@ -3,6 +3,13 @@
 @import "shadcn/tailwind.css";
 
 @custom-variant dark (&:is(.dark *));
+/* Short-height breakpoint — devtools-style short responsive viewports and
+   short laptop/browser windows, where a pinned ScrollMorphStage layer's
+   natural content height can exceed its 86dvh clamp. Not dvh-relative: CSS
+   media features only take absolute units, and 700px comfortably separates
+   "short window" from ordinary phone-portrait/desktop heights. See
+   TASK-homepage-short-viewport-scroll-trap.md. */
+@custom-variant short (@media (max-height: 700px));
 
 @theme inline {
   --color-background: var(--background);

@@ -103,13 +103,13 @@ export function ServicesFocus() {
             overflow-y-auto safety net (a second scroll inside the pin, the
             exact bug this whole redesign exists to keep out). */}
         <div
-          className="mt-9 grid grid-cols-2 gap-px border border-border/60 bg-border/60 sm:grid-cols-4 lg:mt-0"
+          className="mt-9 short:mt-5 grid grid-cols-2 gap-px border border-border/60 bg-border/60 sm:grid-cols-4 lg:mt-0"
           style={morphDrift({ y: 56, order: 1 })}
         >
           {SERVICES.map((service) => (
             <motion.div
               key={service.index}
-              className="relative bg-background/55 px-3.5 py-4 backdrop-blur-sm sm:px-6 sm:py-7"
+              className="relative bg-background/55 px-3.5 py-4 short:py-3 backdrop-blur-sm sm:px-6 sm:py-7 short:sm:py-5"
               initial={false}
               whileHover="hover"
               onHoverStart={playHover}

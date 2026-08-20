@@ -18,7 +18,7 @@ export const WINDOW_FRAME =
   "relative border border-panel-edge bg-panel backdrop-blur-md";
 export const WINDOW_TITLEBAR =
   "flex items-center gap-3 border-b border-panel-edge px-5 py-2.5 sm:px-7";
-export const WINDOW_BODY = "px-5 py-8 sm:px-7 sm:py-10";
+export const WINDOW_BODY = "px-5 py-8 short:py-5 sm:px-7 sm:py-10 short:sm:py-6";
 
 /** The title bar's trailing rule. It measures the window and gives the label
  * an edge to sit against — one device, rather than the corner ticks and status

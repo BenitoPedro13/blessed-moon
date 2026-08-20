@@ -391,11 +391,20 @@ export function ScrollMorphStage({
             </div>
 
             {/* Height is driven in the rAF loop, so the window grows and
-                shrinks with the content it's showing. overflow-x-hidden +
-                overflow-y-auto rather than hidden: content taller than the
-                clamped window stays reachable instead of being cut off, and
-                overflow-x must be explicit — per spec, overflow-y:auto with
-                overflow-x left `visible` promotes overflow-x to auto too. */}
+                shrinks with the content it's showing. overflow-hidden, not
+                auto: an independently wheel-scrollable body here fights the
+                page's own scroll-driven layer system rather than serving it —
+                Lenis (lenis-provider.tsx) automatically defers wheel input to
+                any nested element with scroll room, so an auto-scrolling body
+                silently ate the primary page-scroll gesture whenever content
+                (esp. on short viewports) was taller than the clamp, and even
+                then it didn't reveal more content correctly: this component's
+                layer positions are driven by page-scroll progress, which an
+                inner scroll doesn't move, so it just panned across a frozen,
+                partially-crossfaded frame. Content taller than the clamp is
+                now the `short:` breakpoint's job (see the homepage layer
+                components) rather than a scrollable fallback — see
+                TASK-homepage-short-viewport-scroll-trap.md. */}
             {/* The explicit initial height is the server-rendered state: every
                 layer inside is absolutely positioned, so without it the window
                 is 0px tall until the first measured frame. The rAF loop only
@@ -403,7 +412,7 @@ export function ScrollMorphStage({
             <div
               ref={bodyRef}
               style={{ height: 460 }}
-              className="relative overflow-x-hidden overflow-y-auto"
+              className="relative overflow-hidden"
             >
               {layers.map((layer, i) => (
                 <div

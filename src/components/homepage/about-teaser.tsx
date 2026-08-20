@@ -23,11 +23,14 @@ export function AboutTeaser() {
   const { playHover, playClick } = useSound();
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-8 short:gap-5">
       {/* Sized well under Hero's headline (Hero tops out at 4.5rem) —
-          deliberately: the second-place statement on the page, not a rival. */}
+          deliberately: the second-place statement on the page, not a rival.
+          short: trims it further — on a short/narrow viewport this headline
+          alone can wrap to enough lines to push the layer past the window's
+          86dvh clamp. */}
       <div className="flex items-center" style={morphDrift({ y: 46, order: 1 })}>
-        <h2 className="max-w-3xl font-sans text-4xl font-semibold tracking-[-0.02em] text-foreground sm:text-5xl md:text-[3.5rem]">
+        <h2 className="max-w-3xl font-sans text-4xl font-semibold tracking-[-0.02em] text-foreground short:text-3xl sm:text-5xl short:sm:text-4xl md:text-[3.5rem]">
           Built to last longer than the brief.
         </h2>
       </div>

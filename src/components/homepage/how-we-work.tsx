@@ -68,7 +68,7 @@ export function HowWeWork() {
       </p>
 
       <div
-        className="mt-10 grid grid-cols-2 gap-x-6 gap-y-10 sm:mt-12 lg:grid-cols-4 lg:gap-x-8"
+        className="mt-10 short:mt-6 grid grid-cols-2 gap-x-6 gap-y-10 short:gap-y-5 sm:mt-12 short:sm:mt-7 lg:grid-cols-4 lg:gap-x-8"
         style={morphDrift({ y: 52, order: 1 })}
       >
         {STEPS.map((step, i) => (
@@ -85,7 +85,7 @@ export function HowWeWork() {
       </div>
 
       {/* Untransformed: holds the outgoing token. */}
-      <p className="mt-10 max-w-md text-[14px] leading-[2.1] text-muted-foreground sm:mt-12">
+      <p className="mt-10 short:mt-6 max-w-md text-[14px] leading-[2.1] text-muted-foreground sm:mt-12 short:sm:mt-7">
         We&apos;ve run it enough times that{" "}
         <MorphToken id="count-3" side="from" className={COUNT_INLINE}>
           3

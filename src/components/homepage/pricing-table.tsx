@@ -46,7 +46,7 @@ export function PricingTable() {
       </p>
 
       <div
-        className="mt-10 flex flex-col text-left sm:mt-12"
+        className="mt-10 short:mt-6 flex flex-col text-left sm:mt-12 short:sm:mt-8"
         style={morphDrift({ y: 52, order: 2 })}
       >
         {TIERS.map((tier, i) => (
