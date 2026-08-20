@@ -72,6 +72,24 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Script id="disable-scroll-restoration" strategy="beforeInteractive">
           {`if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }`}
         </Script>
+        {process.env.NODE_ENV === "production" &&
+          process.env.NEXT_PUBLIC_UMAMI_SRC &&
+          process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID && (
+            <Script
+              src={process.env.NEXT_PUBLIC_UMAMI_SRC}
+              data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID}
+              strategy="afterInteractive"
+            />
+          )}
+        {process.env.NODE_ENV === "production" &&
+          process.env.NEXT_PUBLIC_UMAMI_RECORDER_SRC &&
+          process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID && (
+            <Script
+              src={process.env.NEXT_PUBLIC_UMAMI_RECORDER_SRC}
+              data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID}
+              strategy="afterInteractive"
+            />
+          )}
         <LenisProvider>
           <StarsBackground
             className="fixed inset-0 -z-10 bg-transparent"
