@@ -1344,7 +1344,7 @@ export const STUDIO_PILLARS: readonly StudioPillar[] = [
   {
     id: "A",
     title: "Client Consultation, Strategy & Brand Identity",
-    lead: "Myelle de Raat",
+    lead: "Saskia Xavier",
     titleLine: "Co-Founder (CEO) · Chief Creative Officer (CCO)",
     roles: [
       "Marketing Strategist",
