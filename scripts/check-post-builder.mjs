@@ -44,7 +44,7 @@ try {
   await page.waitForURL(/post-builder\?story=website-details&channel=instagram/);
   await page.locator("#slide-title").waitFor();
   await page.getByLabel("Slide title", { exact: true }).fill("Clareza antes da conversa");
-  await page.getByLabel("Slide body · one point per line for a checklist").fill("Preço, condição e próximo passo.\nInformação que merece estar junto.");
+  await page.getByLabel("Slide body · rows and comparisons: one per line, as label | detail | value").fill("Preço, condição e próximo passo.\nInformação que merece estar junto.");
   await page.getByLabel("Post caption", { exact: true }).fill("Caption used for the export round-trip test.");
   assert.match(await page.locator("[data-post-builder]").getAttribute("class"), /rr-block/);
   const preview = page.getByRole("region", { name: "Live slide preview" });
@@ -73,7 +73,7 @@ try {
   assert.equal(draft.slides[0].title, "Clareza antes da conversa");
   assert.ok(draft.slides.every(slide => slide.body.trim()), "Every developed slide carries useful explanatory copy");
   assert.ok(draft.slides.some(slide => slide.template === "compare"));
-  assert.ok(draft.slides.some(slide => slide.template === "workflow"));
+  assert.ok(draft.slides.some(slide => slide.template === "rows"));
   assert.ok(draft.slides[4].image.startsWith("data:image/"), "Project screenshot is embedded into portable JSON");
   const proof = files["05.png"];
   assert.ok(proof.length > 20000, "Proof slide includes actual screenshot pixels");
@@ -101,7 +101,7 @@ try {
   const pictured = await download("Download selected PNG", "with-screenshot.png");
   assert.deepEqual(pngSize(pictured.bytes), [1080, 1350]);
   await page.getByRole("button", { name: "Remove screenshot", exact: true }).click();
-  await choose("#slide-template", "Statement");
+  await choose("#slide-template", "Point");
   for (const [format, size, filename] of [["Square · 1080 × 1080", [1080, 1080], "square.png"], ["Landscape · 1200 × 627", [1200, 627], "landscape.png"], ["Story · 1080 × 1920", [1080, 1920], "story.png"]]) {
     await choose("#post-format", format);
     assert.deepEqual(pngSize((await download("Download selected PNG", filename)).bytes), size);
@@ -113,18 +113,24 @@ try {
   await page.getByRole("status").filter({ hasText: "Screenshots must be local" }).waitFor();
   await page.getByLabel("Restore editable JSON").setInputFiles({ name: "invalid-channel.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify({ ...draft, channel: ["linkedin"] })) });
   await page.getByRole("status").filter({ hasText: "unsupported format" }).waitFor();
+  await page.getByLabel("Restore editable JSON").setInputFiles({ name: "invalid-marks.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify({ ...draft, slides: [{ ...draft.slides[0], template: "annotate", marks: [[200, 5]] }] })) });
+  await page.getByRole("status").filter({ hasText: "Marker positions" }).waitFor();
+  await page.getByLabel("Restore editable JSON").setInputFiles({ name: "invalid-ascii.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify({ ...draft, slides: [{ ...draft.slides[0], template: "ascii", ascii: "<svg onload=alert(1)>" }] })) });
+  await page.getByRole("status").filter({ hasText: "ASCII render" }).waitFor();
+  await page.getByLabel("Restore editable JSON").setInputFiles({ name: "legacy.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify({ ...draft, slides: [{ ...draft.slides[0], template: "statement" }, { ...draft.slides[1], template: "workflow" }] })) });
+  await page.getByRole("status").filter({ hasText: "Editable draft restored." }).waitFor();
 
   await page.goto(`${origin}/post-builder?story=oishi-condition&channel=linkedin`, { waitUntil: "load" });
   assert.equal(await page.getByLabel("Slide title", { exact: true }).inputValue(), "The condition belongs beside the price.");
   await page.getByLabel("Post caption", { exact: true }).fill("Local draft"); // Wait for the editor's actual hydration.
   await page.getByLabel("Slide title", { exact: true }).fill("A very long title with Portuguese accents: informação, decisão and a business question that needs space across the entire frame without leaving it.");
-  await page.getByLabel("Slide body · one point per line for a checklist").fill("One confirmed fact. ".repeat(25));
+  await page.getByLabel("Slide body · rows and comparisons: one per line, as label | detail | value").fill("One confirmed fact. ".repeat(25));
   await page.getByLabel("Footer / destination", { exact: true }).fill("i".repeat(90));
   for (const format of ["Landscape · 1200 × 627", "Portrait · 1080 × 1350", "Square · 1080 × 1080", "Story · 1080 × 1920"]) {
     await choose("#post-format", format);
-    for (const template of ["Statement", "Comparison", "Checklist", "Workflow", "Project screenshot", "Closing action"]) {
+    for (const template of ["Cover", "Point", "Rows / checklist", "Comparison", "Screenshot in window", "Screenshot as ASCII", "Annotated screenshot", "Closing action"]) {
       await choose("#slide-template", template);
-      const clipped = await preview.locator("svg").first().evaluate((svg) => [...svg.querySelectorAll("text")].filter((text) => { const box = text.getBBox(); const frame = svg.viewBox.baseVal; return box.x < 28 || box.x + box.width > frame.width - 27 || box.y < 0 || box.y + box.height > frame.height - 27; }).map((text) => text.textContent));
+      const clipped = await preview.locator("svg").first().evaluate((svg) => [...svg.querySelectorAll("text")].filter((text) => text.parentElement.getAttribute("xml:space") !== "preserve").filter((text) => { const box = text.getBBox(); const frame = svg.viewBox.baseVal; return box.x < 28 || box.x + box.width > frame.width - 27 || box.y < 0 || box.y + box.height > frame.height - 27; }).map((text) => text.textContent));
       assert.deepEqual(clipped, [], `Text fits ${format} / ${template}`);
     }
   }

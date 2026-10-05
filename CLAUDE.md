@@ -394,8 +394,13 @@ The channel plans include branded cover studies and navigable post previews.
 `/post-builder` is another unlinked noindex workspace: browser-only template editing,
 local screenshots and PNG/ZIP/PDF/JSON exports. `social-art.ts` is the single SVG
 source for preview and raster exports; escape imported text and allow only local
-raster data URIs or the exact portfolio preset paths in social-creative.ts. Embed
-those presets in downloads so JSON remains portable. Preserve its validation and size caps. The eight-week worksheet
+raster data URIs or the exact portfolio preset paths in `social-art-images.json`. Embed
+those presets (and their ASCII grids) in downloads so JSON remains portable. The art is
+set in the site's faces, embedded as data URIs on export; text is measured with the
+generated `social-font-metrics.ts`, never an estimate. Type sits on the surface; the
+only frame is the terminal window around a screenshot (no traffic-light dots, as on
+the site). The crescent may be cropped by the bottom edge only: cropping a side cuts
+its horns off. See `TASK-social-art-foundations.md` / `TASK-social-art-signatures.md`. Preserve its validation and size caps. The eight-week worksheet
 on `/analytics-plan` uses manually entered observations, never sample/live metrics;
 unknown weeks and measured zeroes must remain distinct. Both editable components
 use `rr-block` to exclude draft content from the optional session recorder. Do not
@@ -428,7 +433,7 @@ competitor media stay gitignored/out of the public site. New archive hashes
 invalidate review status. Do not infer conversions from cover appearance.
 
 `social-creative.ts` supplies developed original explanations, comparisons,
-workflows and project evidence. Six art templates and three artwork surfaces
+workflows and project evidence. Eight art templates and three artwork surfaces
 share preview/export rendering; the site retains its dark theme. Every closing
 action should match its actual destination. Do not invent resources, automated
 DM delivery, testimonials or portfolio results. The 356-cover study is not an

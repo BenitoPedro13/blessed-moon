@@ -30,12 +30,17 @@ strategy; it does not change the proposed service scope or public custom pricing
 1. Open a draft from its channel brief, or choose a starting point in the builder.
 2. Choose portrait (1080×1350), square (1080×1080), landscape (1200×627) or Story
    (1080×1920). Story reserves space for platform controls and a link sticker.
-3. Edit each slide's title, body, eyebrow and footer. Choose Statement, Comparison, Checklist
-   (one point per line), Workflow, Project screenshot or Closing action. Select
-   dark, warm paper or amber artwork and edit the closing action. Add, duplicate, remove or reorder up
-   to ten slides. The right-hand artwork is the export's artwork.
+3. Edit each slide's eyebrow, title, amber accent line, body and footer (default
+   `@blessedmoon.studio`). Choose Cover, Point, Rows, Comparison, Screenshot in window, Screenshot as ASCII, Annotated screenshot or Closing action. Rows and comparisons take one line each as `label | detail | value`.
+   Covers and closing actions take a crescent or ASCII-moon art; screenshot templates
+   take a window label (`~/work/oishi`); a Point can lead with a step numeral (only
+   for a real sequence); an annotated screenshot takes marker positions, one
+   `x, y` per line in percent of the window. Select dark, warm paper or amber
+   artwork. Add, duplicate, remove or reorder up to ten slides. The right-hand
+   artwork is the export's artwork.
 4. Add an approved local PNG, JPEG or WebP screenshot if useful. Files are limited
-   to 8 MB, reduced to a maximum 1600-pixel edge and fitted inside the screenshot frame.
+   to 8 MB, reduced to a maximum 1600-pixel edge and cropped from the top into the
+   terminal window. Its ASCII version is computed in the tab for the ASCII template.
    You can also select an existing portfolio screenshot preset; exports embed it.
    Describe any screenshot in alt text; titles and screenshot descriptions are
    required for image exports. Review the crop and legibility.
@@ -57,12 +62,23 @@ Research facts, project permissions and final wording still need Benito's review
 
 ## Implementation and privacy
 
-`social-creative.ts` develops the original sequences; `social-art.ts` defines presets, validation and one SVG renderer. `SlideArt` uses it
+`social-creative.ts` develops the original sequences; `social-art.ts` defines presets, validation and one SVG renderer
+(`TASK-social-art-foundations.md`, `TASK-social-art-signatures.md`). `SlideArt` uses it
 on the page; `social-export.ts` rasterizes that same SVG with a local canvas. SVG
-strings escape text, imported pictures must be local raster data URIs or one of six exact portfolio asset paths, and draft
+strings escape text, imported pictures must be local raster data URIs or an exact portfolio asset path from
+`src/lib/social-art-images.json`, ASCII grids may only hold ramp characters, markers are
+up to six 0–100 pairs, and draft
 fields, slide count and embedded image sizes are capped. JSON import has a 12 MB
 file limit; combined screenshot strings are limited to 10 million characters.
-Fonts use local Arial/Courier fallbacks so downloads require no remote font fetch.
+The art is set in the site's Space Grotesk and JetBrains Mono. `pnpm social:fonts`
+vendors their OFL woff2 files (from `@fontsource/*`) into `public/fonts/social/` and
+generates the advance widths the text wrapper measures with
+(`src/lib/social-font-metrics.ts`). The preview loads them by same-origin URL; an
+export fetches them once and embeds them as data URIs, because an SVG drawn
+through an image cannot fetch fonts (checked in Chromium and WebKit). Neither
+packaged subset has `→`, so arrows are drawn. `pnpm social:ascii` regenerates the
+portfolio screenshots' ASCII grids (`src/lib/social-ascii-data.ts`, sharp) after the
+image list changes.
 
 The only new dependency is fflate 0.8.3, dynamically imported for ZIP downloads.
 The browser-safe JPEG-to-PDF helper was reused from Unimeet. No files in Unimeet

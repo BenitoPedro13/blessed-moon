@@ -140,17 +140,17 @@ export function creativeSlides(story: Story, channel: Channel): Partial<ArtSlide
   if (channel === "linkedin") return [{
     title: story.title, body: story.linkedin.split(/(?<=[.!?])\s+/).slice(0, 2).join(" ").slice(0, 500),
     kicker: proof ? "PROJECT / " + proof.label : "BUYER QUESTION / STUDIO NOTES",
-    template: proof ? "case" : "statement", surface: story.week % 2 ? "dark" : "paper",
+    template: proof ? "window" : "cover", surface: story.week % 2 ? "dark" : "paper", label: proof ? "~/work/" + proof.label.toLowerCase().replace(/[^a-z0-9]+/g, "-") : "",
     image: proof?.image || "", imageAlt: proof ? "Project screenshot: " + proof.alt : "",
     action: "Read the decision behind the build →",
   }];
   const details = DETAILS[story.id];
   if (story.format === "Screen recording") return [{
     title: story.slides[0].replace(/^\d+\s*[–-]\s*\d+s:\s*/, ""), body: details?.[0] || story.caption,
-    kicker: proof ? "PROJETO / " + proof.label : "GRAVAÇÃO / CAPA", template: proof ? "case" : "statement",
+    kicker: proof ? "PROJETO / " + proof.label : "GRAVAÇÃO / CAPA", template: proof ? "window" : "cover",
     surface: "paper", image: proof?.image || "", imageAlt: proof?.alt || "", action: "Veja o projeto no perfil →",
   }];
-  const templates = ["statement", "compare", "steps", "workflow", proof ? "case" : "statement", "action"] as const;
+  const templates = ["cover", "compare", "rows", "rows", proof ? "window" : "point", "action"] as const;
   const kickers = ["PERGUNTA DO COMPRADOR", "DUAS FORMAS DE PENSAR", "EXEMPLO APLICADO", "O CAMINHO DA DECISÃO", proof ? "PROJETO / " + proof.label : "NA PRÁTICA", "PRÓXIMO PASSO"];
   return story.slides.map((title, index) => ({
     title, body: details?.[index] || story.caption, kicker: kickers[index], template: templates[index],

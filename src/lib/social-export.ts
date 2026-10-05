@@ -1,4 +1,5 @@
-import { ART_FORMATS, approvedArtImage, readArtPost, renderSlideSvg, slideAlt, type ArtFormat, type ArtPost, type ArtSlide } from "@/lib/social-art";
+import { ART_FORMATS, SOCIAL_FONT_FILES, approvedArtImage, presetAscii, readArtPost, renderSlideSvg, slideAlt, type ArtFormat, type ArtPost, type ArtSlide, type FontSources } from "@/lib/social-art";
+import { SCREENSHOT_COLS, SCREENSHOT_MAX_ROWS, asciiFromLuminance } from "@/lib/social-ascii";
 import { jpegsToPdf } from "@/lib/social-pdf";
 
 export function saveArtifact(blob: Blob, filename: string) {
@@ -13,6 +14,8 @@ const filename = (post: ArtPost) => `blessed-moon-${post.channel}-${post.id.repl
 const imageCache = new Map<string, Promise<string>>();
 async function portableSlide(slide: ArtSlide): Promise<ArtSlide> {
   if (!approvedArtImage(slide.image)) return slide;
+  // The preset's ASCII grid is keyed by its path, which is about to become a data URI.
+  slide = { ...slide, ascii: slide.ascii || presetAscii(slide.image) };
   let pending = imageCache.get(slide.image);
   if (!pending) {
     pending = (async () => {
@@ -28,13 +31,29 @@ async function portableSlide(slide: ArtSlide): Promise<ArtSlide> {
   return { ...slide, image: await pending };
 }
 
+// An SVG drawn through <img> can't fetch its fonts, so they travel inside it.
+let fontData: Promise<FontSources> | null = null;
+function embeddedFonts() {
+  fontData ??= Promise.all(Object.entries(SOCIAL_FONT_FILES).map(async ([face, url]) => {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error("The brand fonts could not be loaded for export.");
+    const bytes = new Uint8Array(await response.arrayBuffer());
+    let binary = "";
+    for (let i = 0; i < bytes.length; i += 0x8000) binary += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+    return [face, `data:font/woff2;base64,${btoa(binary)}`] as const;
+  })).then(Object.fromEntries);
+  void fontData.catch(() => { fontData = null; });
+  return fontData;
+}
+
 export async function rasterizeSlide(slide: ArtSlide, format: ArtFormat, index: number, total: number, type = "image/png"): Promise<Blob> {
   slide = await portableSlide(slide);
   const size = ART_FORMATS[format];
-  const url = URL.createObjectURL(new Blob([renderSlideSvg(slide, format, index, total)], { type: "image/svg+xml;charset=utf-8" }));
+  const url = URL.createObjectURL(new Blob([renderSlideSvg(slide, format, index, total, await embeddedFonts())], { type: "image/svg+xml;charset=utf-8" }));
   try {
     const image = new Image();
     await new Promise<void>((resolve, reject) => { image.onload = () => resolve(); image.onerror = () => reject(new Error("The slide could not be rendered. Try removing the screenshot.")); image.src = url; });
+    await image.decode();
     const canvas = document.createElement("canvas"); canvas.width = size.width; canvas.height = size.height;
     const ctx = canvas.getContext("2d");
     if (!ctx) throw new Error("Image export is unavailable in this browser.");
@@ -63,6 +82,21 @@ export async function exportPost(post: ArtPost, kind: "png" | "zip" | "pdf" | "j
   files["editable-draft.json"] = strToU8(JSON.stringify(post, null, 2));
   const archive = zipSync(files, { level: 0 });
   saveArtifact(new Blob([archive as Uint8Array<ArrayBuffer>], { type: "application/zip" }), `${base}.zip`);
+}
+
+/** The upload's ASCII grid, from the same canvas `localScreenshot` draws. */
+export async function asciiFromScreenshot(dataUrl: string): Promise<string> {
+  const image = new Image();
+  image.src = dataUrl;
+  await image.decode();
+  const width = Math.min(560, image.width), height = Math.round((image.height * width) / image.width);
+  const canvas = document.createElement("canvas"); canvas.width = width; canvas.height = height;
+  const ctx = canvas.getContext("2d"); if (!ctx) throw new Error("Image loading is unavailable.");
+  ctx.drawImage(image, 0, 0, width, height);
+  const pixels = ctx.getImageData(0, 0, width, height).data;
+  const luma = new Float32Array(width * height);
+  for (let i = 0; i < luma.length; i++) luma[i] = (0.2126 * pixels[i * 4] + 0.7152 * pixels[i * 4 + 1] + 0.0722 * pixels[i * 4 + 2]) / 255;
+  return asciiFromLuminance(luma, width, height, SCREENSHOT_COLS, SCREENSHOT_MAX_ROWS);
 }
 
 export async function localScreenshot(file: File): Promise<string> {

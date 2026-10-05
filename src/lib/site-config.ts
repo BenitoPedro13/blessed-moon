@@ -5,3 +5,6 @@
  * target: open question" still applies to anything beyond this.
  */
 export const SITE_URL = "https://blessed-moon.vercel.app";
+
+/** The studio's social handle, printed on every social post (Benito, 5 Oct 2026). */
+export const SOCIAL_HANDLE = "@blessedmoon.studio";

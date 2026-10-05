@@ -18,7 +18,7 @@ the repository. See the task document for the check details.
 - `/analytics-plan`: existing tooling, metric definitions, event dictionary,
   UTM convention, baseline checklist and 30/60/90-day reviews. An empty eight-week
   worksheet now plots real manual observations, with JSON save/restore and SVG export.
-- `/post-builder`: editable researched presets or blank drafts; six templates, three artwork surfaces,
+- `/post-builder`: editable researched presets or blank drafts; eight templates, three artwork surfaces,
   four formats, local screenshots, slide operations and PNG/ZIP/PDF/JSON downloads.
   See the [workspace guide](09-production-workspace.md) for the full workflow.
 - `/about`: Benito's solo studio; A/B are strategy and engineering disciplines.

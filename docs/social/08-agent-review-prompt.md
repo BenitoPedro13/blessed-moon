@@ -45,7 +45,7 @@ research pattern from actual Blessed Moon project evidence.
 
 Previews, nine-cover studies and /post-builder already exist. The browser editor
 uses shared SVG artwork for live previews and PNG/ZIP/PDF exports, edits existing
-research drafts or blank posts, uses six templates and dark/paper/amber artwork, with comparisons, workflows,
+research drafts or blank posts, uses eight templates and dark/paper/amber artwork, with comparisons, workflows,
 checklists, project evidence and a closing action. It handles local screenshots and
 six allowlisted portfolio presets; exports embed those presets as data URIs. It saves/imports
 editable JSON. Keep drafts local and rr-block on editable roots for the existing
