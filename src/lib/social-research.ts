@@ -17,7 +17,7 @@ export const CONTENT_ACCOUNTS = [
       { label: "Marqeta interface case", href: "https://www.linkedin.com/posts/clayglobal_webdesign-webdesigner-website-activity-7242185850082541568-RUSo", observation: "A named client project is introduced through interface, design-system and user needs; the CTA opens a full case study." },
       { label: "Website simplicity education", href: "https://www.linkedin.com/posts/clayglobal_webdesign-webdesigner-website-activity-7290760789416681472-hRk7", observation: "An educational explanation of simplicity and cognitive load links to a longer article. Treat factual assertions as claims needing separate verification." },
     ],
-    stories: ["markado-slot", "flora-satellite", "fa-honest-price", "prumo-credit", "bee-dash-metrics", "headless-shopify", "screenshot-context", "oishi-condition", "furniture-dimensions", "confirmed-information"],
+    stories: ["markado-slot", "unimeet-quote", "renewable-pulse", "outubro-destravar", "flora-satellite", "prumo-credit", "bee-dash-metrics", "headless-shopify", "screenshot-context", "oishi-condition", "furniture-dimensions", "confirmed-information"],
   },
   {
     name: "Netguru", kind: "Product engineering comparator", audience: "Founders and product teams commissioning software; scale and staffing differ substantially from Blessed Moon.",

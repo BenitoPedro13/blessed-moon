@@ -10,6 +10,11 @@ type Authored = Partial<ArtSlide>;
 const shot = (image: string, label: string, rest: Authored): Authored => ({ template: "window", image, label, imageAlt: "", ...rest });
 
 const ALT = {
+  unimeetTour: "UniMeet's EBEUF 2027 fair page in the proposed v2 design: four countries, the dates, a Reserve spot button and a stand price on each city card.",
+  unimeetPlan: "UniMeet's Instagram plan page: the strategy and the first posts, delivered as a page.",
+  pulseDashboard: "Renewable Pulse dashboard: Brazil's renewable share at 87% with its generation mix over time and by region.",
+  pulseHealth: "Renewable Pulse country comparison and pipeline health: an empty dead-letter queue and the last successful poll for each source.",
+  outubroHome: "Outubro Idiomas home (preview build): 'Bora destravar sua língua e seu futuro?' beside a WhatsApp-style card.",
   faProduct: "F&A Móveis product page: a wardrobe with its dimensions in centimetres, its price and a WhatsApp button.",
   faConsulte: "F&A Móveis catalogue row: three products with a price, and a headboard showing 'Consulte o preço' instead.",
   faCatalogue: "F&A Móveis catalogue grid of real products with their prices.",
@@ -28,8 +33,8 @@ export const AUTHORED_SLIDES: Record<string, Authored[]> = {
   "one-action": [
     { template: "cover", art: "crescent", kicker: "Before you brief a studio", title: "Your brief lists features.", accent: "It should name one action.", body: "Five answers that turn a wishlist into a scope you can price." },
     { template: "rows", numbered: true, surface: "paper", kicker: "The one-action brief", title: "Answer these before the first call", body: "Who lands on the page | One real person, not a market\nWhat they need to know first | The question they arrive with\nWhat could stop them | Price, fit, trust or timing\nThe one action | Book, ask, buy or compare | One\nWhat happens after | Who replies, and how" },
-    { template: "compare", kicker: "Same project, two briefs", title: "Which one can be scoped?", body: "Wishlist | Modern design, a blog, a chatbot, animations.\nOne action | A buyer checks a product's real size and price, then asks about it on WhatsApp." },
-    { template: "annotate", image: "/projects/fa-moveis/produto.png", imageAlt: ALT.faProduct, label: "~/work/fa-moveis", kicker: "The brief, built", title: "F&A Móveis: one action per page.", marks: [[55.5, 54, 32, 6.5], [55.5, 42.5, 19, 7.5], [56.5, 92.5, 15, 6.5]], body: "Real measurements | Stored in centimetres, never typed by hand\nA confirmed price, or 'ask' | 10 of 13 products are priced\nOne action | A WhatsApp message about this product" },
+    { template: "compare", kicker: "Same project, two briefs", title: "Which one can be scoped?", body: "Wishlist | Modern design, a blog, a chatbot, animations.\nOne action | A university checks the fair's cities, dates and stand price, then registers." },
+    { template: "annotate", image: "/projects/unimeet/fair-tour.png", imageAlt: ALT.unimeetTour, label: "~/work/unimeet · v2 proposal", kicker: "The brief, built", title: "UniMeet: every fair page ends in one form.", marks: [[8.5, 15, 39, 8], [8.5, 75.5, 83, 7], [8.5, 42.5, 9.8, 5.8]], body: "Where and when | Four cities, 16–20 March 2027\nWhat it costs | A stand price on every city\nThe one action | Reserve a spot: the registration form" },
     { template: "action", surface: "amber", art: "crescent", title: "Write the action first. Then hire.", body: "Save this for your next brief. The contact link is in the bio.", action: "Send your one-action brief" },
   ],
   "markado-slot": [
@@ -61,13 +66,6 @@ export const AUTHORED_SLIDES: Record<string, Authored[]> = {
     { template: "point", step: "04", kicker: "Question 4", title: "Every WhatsApp message carried a localhost link.", body: "On F&A Móveis, an unset site URL fell back to localhost. It looked fine on a laptop. A pass on a real phone against the live site caught it, and the build now fails on that mistake." },
     { template: "action", surface: "amber", art: "crescent", title: "Ask us the seven.", body: "Contact link in the bio. Save this for your shortlist.", action: "Start a conversation" },
   ],
-  "fa-honest-price": [
-    shot("/projects/fa-moveis/consulte-preco.png", "~/work/fa-moveis", { imageAlt: ALT.faConsulte, kicker: "Case · F&A Móveis", title: "13 products. 10 prices.", accent: "Three say 'ask', on purpose.", body: "" }),
-    { template: "point", kicker: "The rule", title: "A plausible number is a false price.", body: "Ten prices come from supplier sheets and the owner's own confirmations. The other three weren't confirmed, so the page says 'Consulte o preço' instead of a guess." },
-    { template: "rows", surface: "paper", kicker: "Measured on the live build", title: "What shipped", body: "Real products | Two suppliers, no filler | 13\nConfirmed prices | The rest say 'ask' | 10\nLighthouse on /produtos | Performance and accessibility | 93 / 100\nLayout shift | CLS | 0\nProduct images | Budget 180 KB each | < 32 KB" },
-    { template: "point", kicker: "The harder call", title: "The demo catalogue had to go.", body: "27 illustrative products won the job. Once 13 real ones existed, the demo items were removed, so the site never kept selling furniture that wasn't in stock." },
-    { template: "action", art: "crescent", title: "Prices you can stand behind.", body: "The full case is linked in the bio.", action: "Read the F&A case" },
-  ],
   "prumo-credit": [
     shot("/projects/prumo/simulador.png", "~/work/prumo", { imageAlt: ALT.prumo, kicker: "Case · Prumo", title: "Listings ask 'which apartment?'", accent: "Buyers ask 'will I get credit?'", body: "" }),
     { template: "compare", kicker: "Order of questions", title: "Answer the worry first.", body: "Usual listing | Browse apartments, then call to find out whether you qualify.\nPrumo | A credit check in about a minute, before any apartment." },
@@ -86,6 +84,7 @@ export const AUTHORED_SLIDES: Record<string, Authored[]> = {
     { template: "cover", art: "moon", kicker: "Social strategy", title: "What a content plan should hand you.", accent: "Briefs, not topics.", body: "" },
     { template: "compare", kicker: "One calendar row", title: "Which one can someone produce?", body: "Topic | Monday: post about the brand.\nBrief | Explain one price condition with the real Oishi page, then link the case." },
     { template: "rows", surface: "paper", kicker: "What you receive", title: "Four parts, all usable", body: "Research | Buyer questions, competitors, channels\nDirection | Positioning and content pillars\nBriefs | Question, evidence, format, destination\nMeasurement | Tagged visits and qualified enquiries" },
+    shot("/projects/unimeet/instagram-plan.png", "~/work/unimeet", { imageAlt: ALT.unimeetPlan, kicker: "Delivered", title: "A plan we delivered: UniMeet.", body: "Research, the strategy, a first month of posts and a builder that renders them from the CMS." }),
     { template: "point", kicker: "Scope", title: "Strategy isn't production.", body: "The plan decides what to publish and why. Making the assets, publishing and community management are separate scopes, quoted separately." },
     { template: "action", surface: "amber", art: "crescent", title: "Need the plan, not more posts?", body: "Link in the bio.", action: "See the strategy service" },
   ],
@@ -108,6 +107,29 @@ export const AUTHORED_SLIDES: Record<string, Authored[]> = {
     { template: "rows", numbered: true, surface: "paper", kicker: "In this order", title: "Did the post reach the right buyer?", body: "Did the right person see it? | Saves, shares, relevant replies\nDid they visit the page? | A tagged visit to the linked case\nDid they get in touch? | An enquiry carrying the campaign tag\nWas it the right work? | Qualified, then a proposal" },
     { template: "point", kicker: "One rule", title: "Read medians, not one viral post.", body: "Compare similar formats over weeks. One popular post isn't a reason to change positioning. A modest post that brings the right enquiry is a reason to repeat it." },
     { template: "action", surface: "amber", art: "crescent", title: "Measure the conversation, not the applause.", body: "Save the four questions. Link in the bio.", action: "See the strategy service" },
+  ],
+
+  "renewable-pulse": [
+    shot("/projects/renewable-pulse/dashboard.png", "~/work/renewable-pulse", { imageAlt: ALT.pulseDashboard, kicker: "Case · Renewable Pulse", title: "No synthetic data.", accent: "Anywhere.", body: "A live panel of renewable electricity, built only on real grid data." }),
+    { template: "rows", surface: "paper", kicker: "Three grids, one schema", title: "Where every reading comes from", body: "ONS | Brazil, by plant and hour\nENTSO-E | European zones, 15 to 60-minute series\nEIA | The USA, hourly, across seven regional grids" },
+    { template: "point", kicker: "Said plainly", title: "The data is polled, not pushed.", body: "None of the sources stream; Brazil's plant file is republished twice a day. The real-time part is the pipeline: partitioned topics, independent consumers, a dead-letter queue and backpressure." },
+    { template: "point", kicker: "Replays", title: "366,336 readings. Zero duplicates on replay.", body: "Every write is keyed on source, zone, asset, metric and timestamp, so ingesting the same batch twice changes nothing." },
+    { template: "annotate", image: "/projects/renewable-pulse/pipeline-health.png", imageAlt: ALT.pulseHealth, label: "~/work/renewable-pulse", kicker: "On the dashboard, not in the logs", title: "The pipeline shows its own health.", marks: [[15.5, 4, 69, 27], [15.5, 62, 31, 11], [15.5, 75, 69, 20]], body: "Renewable share | Per grid, from each grid's own data\nDead-letter queue | Malformed events, counted in the open\nLast successful poll | One timestamp per source" },
+    { template: "action", art: "crescent", title: "A data product that has to be right?", body: "The full case and the source are linked in the bio.", action: "Read the Renewable Pulse case" },
+  ],
+  "unimeet-quote": [
+    shot("/projects/unimeet/fair-tour.png", "~/work/unimeet · v2 proposal", { imageAlt: ALT.unimeetTour, kicker: "Case · UniMeet", title: "The price on the page", accent: "is the price on the invoice.", body: "" }),
+    { template: "point", kicker: "One function", title: "The preview and the server run the same pricing code.", body: "Stands, extra representatives, services and discounts are priced by one pure function in integer cents. The live preview in the form and the server that records the registration both call it." },
+    { template: "rows", numbered: true, surface: "paper", kicker: "What makes it hold", title: "Three rules", body: "Frozen at submission | Tour prices can change later; the quote can't\nForged prices stripped | A price sent in the request is dropped before pricing runs\nInteger cents | No floating-point rounding on money" },
+    { template: "point", kicker: "Found in testing", title: "Every fair was a day early.", body: "Dates are stored as UTC midnight; formatting them in local time printed them a day early anywhere west of UTC. They're formatted in UTC now, and the tests run in São Paulo time." },
+    { template: "action", surface: "amber", art: "crescent", title: "Does your checkout quote what it charges?", body: "The full case is linked in the bio. The screens shown are the proposed v2 design.", action: "Read the UniMeet case" },
+  ],
+  "outubro-destravar": [
+    shot("/projects/outubro/home.png", "~/work/outubro · preview", { imageAlt: ALT.outubroHome, kicker: "In progress · Outubro Idiomas", title: "A brand's own verb", accent: "became the hero.", body: "" }),
+    { template: "compare", kicker: "Two ways to say 'unlock'", title: "Which one is this brand?", body: "Generic | A padlock icon opening on scroll.\nDestravar | A doodled cord untangles as the headline resolves; 'língua' lands as it straightens." },
+    { template: "rows", surface: "paper", kicker: "Three languages, three real pages", title: "Every locale has its own URL", body: "Português | /metodo\nEnglish | /en/method\nEspañol | /es/metodo" },
+    { template: "point", kicker: "For phones first", title: "WebGL was left out on purpose.", body: "Most visitors are expected to arrive from WhatsApp on a phone. The motion uses GSAP and Lenis, chosen for mobile performance over a heavier 3D effect." },
+    { template: "action", art: "crescent", title: "A brand that outgrew its website?", body: "The project is in progress; the preview is linked in the bio.", action: "See the Outubro case" },
   ],
 
   // ── Português · pequenos negócios no Brasil ─────────────────────────────────

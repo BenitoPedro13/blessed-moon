@@ -13,7 +13,7 @@ the repository. See the task document for the check details.
 - `/instagram-plan`: English grid and 12 briefs first, then the optional Portuguese
   account's grid and 8 briefs: authored slide sequences, captions, visual directions,
   evidence notes and campaign URLs (`ig-en-…` / `ig-pt-…`), with downloads/edit links.
-- `/linkedin-plan`: the 12 English stories as text posts with the same carousel as a
+- `/linkedin-plan`: the 14 English stories as text posts with the same carousel as a
   square PDF document, campaign URLs (`li-en-…`) and a series board.
 - `/analytics-plan`: existing tooling, metric definitions, event dictionary,
   UTM convention, baseline checklist and 30/60/90-day reviews. An empty eight-week

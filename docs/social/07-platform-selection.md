@@ -14,7 +14,7 @@ stories a week, each an Instagram carousel on `@blessedmoon.studio` and the same
 slides as a square PDF document on Benito's LinkedIn profile (the studio page,
 `linkedin.com/company/blessedmoonstudio`, as supporting proof). A Portuguese
 Instagram account for Brazilian small businesses is optional, one carousel a week.
-The library holds 12 English and 8 Portuguese authored carousels
+The library holds 14 English and 8 Portuguese authored carousels
 (`TASK-social-copy-v3.md`). This is a judgement about buyers and workload, not
 proof of channel performance.
 

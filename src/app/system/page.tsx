@@ -14,9 +14,10 @@ import { CellGrid } from "@/components/cell-grid";
 import { ContactForm } from "@/components/contact-form";
 import { PlanNav, PlanSection } from "@/components/social/plan-shell";
 import { PostCard } from "@/components/social/post-card";
+import { ProfileSetup } from "@/components/social/profile-setup";
 import { QuoteEstimate } from "@/components/social/quote-estimate";
 import { StrategyEnquiryLink } from "@/components/social/enquiry-link";
-import { STORIES } from "@/lib/social-plan";
+import { PROFILES, STORIES } from "@/lib/social-plan";
 import { COUNT_DISPLAY, COUNT_INLINE } from "@/components/homepage/morph-count";
 import {
   TOKEN_DISPLAY,
@@ -386,6 +387,7 @@ export default function SystemPage() {
         </PlanSection>
         <ProfilePreview stories={STORIES.slice(0, 1)} channel="instagram" />
         <PostCard story={STORIES[0]} channel="instagram" />
+        <ProfileSetup profile={PROFILES[0]} />
         <QuoteEstimate />
         <p className="text-sm leading-7 text-muted-foreground">One slide per art template, taken from the authored posts. Dark, warm paper and amber surfaces belong to the artwork; the site retains its dark theme.</p>
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">{(Object.keys(ART_TEMPLATES) as ArtTemplate[]).map((template) => { const slide = STORIES.flatMap((story) => storyPost(story, "instagram").slides).find((item) => item.template === template); return slide && <div key={template}><SlideArt slide={slide} format="portrait" /><p className="mt-2 font-mono text-xs text-muted-foreground">{template}</p></div>; })}</div>

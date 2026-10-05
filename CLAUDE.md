@@ -436,7 +436,7 @@ invalidate review status. Do not infer conversions from cover appearance.
 own order and length, project facts only from `studio-data.ts`, evidence limits in the
 story's `evidence` note rather than on a slide. English leads (international founders,
 `@blessedmoon.studio`, same slides as LinkedIn documents); Portuguese is an optional
-second Instagram account. Eight art templates and three artwork surfaces
+second Instagram account. Each account's profile (name, bio, link, pins, highlights; LinkedIn headline, About, Featured, company tagline) is `PROFILES` in `social-plan.ts`, rendered by `ProfileSetup` with character counts against each platform's limit; pins and featured items point only at real posts and pages. Eight art templates and three artwork surfaces
 share preview/export rendering; the site retains its dark theme. Every closing
 action should match its actual destination. Do not invent resources, automated
 DM delivery, testimonials or portfolio results. The 356-cover study is not an

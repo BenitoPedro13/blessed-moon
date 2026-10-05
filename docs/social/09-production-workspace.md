@@ -5,7 +5,8 @@ strategy; it does not change the proposed service scope or public custom pricing
 
 ## Review the pages
 
-- `/instagram-plan`: an English grid study and 12 English briefs, then a Portuguese
+- `/instagram-plan`: the English profile setup (name, bio, link, pins, highlights), grid study and 14 English
+  briefs, then the same for the Portuguese
   grid study and 8 Portuguese briefs. Each brief previews every authored slide,
   downloads PNG/ZIP and opens directly in the builder.
 - `/linkedin-plan`: a nine-cover visual-series board, explicitly not a LinkedIn

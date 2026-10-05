@@ -151,7 +151,7 @@ optional; ongoing production and full account management require separate scope.
 Unlinked, `noindex` planning pages: `/social-plan`, `/instagram-plan`,
 `/linkedin-plan`, `/analytics-plan`. They contain five public offer references,
 356 collected Instagram covers, 59 captured captions and ten supporting LinkedIn samples, platform selection,
-20 authored carousels (12 English, 8 Portuguese) with captions, LinkedIn drafts,
+22 authored carousels (14 English, 8 Portuguese) with captions, LinkedIn drafts,
 campaign links, an internal pricing model and a measurement checklist. English leads
 on Instagram and LinkedIn; a Portuguese Instagram account is optional. Instagram-feed
 coverage and selected deep observations are documented; no competitor performance is inferred. They are URL-accessible, not authenticated. No live

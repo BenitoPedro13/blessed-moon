@@ -1383,7 +1383,7 @@ export const STUDIO_PROJECTS: readonly StudioProject[] = [
     description:
       "A rebuild of a Brazilian online language school's website in Portuguese, English and Spanish, elevating an identity the brand had already redesigned but its website never caught up with.",
     problem:
-      "Outubro Idiomas teaches English, French, Spanish and German to Brazilian working adults in live online classes. It had already redrawn its name, colours and mark; the old site still had the right content but none of the brand. Most visitors arrive on a phone from WhatsApp, so the site has to convert there first, and every page has to stand on its own in search.",
+      "Outubro Idiomas teaches English, French, Spanish and German to Brazilian working adults in live online classes. It had already redrawn its name, colours and mark; the old site still had the right content but none of the brand. Most visitors are expected to arrive on a phone from WhatsApp, so the site has to convert there first, and every page has to stand on its own in search.",
     approach:
       "The brand's own verb, destravar (to unstick), became the signature interaction: a doodled cord untangles as the hero headline resolves, and 'língua' lands as the cord straightens. The brandbook governs palette, Source Sans as the only typeface and the official lockups. Motion uses GSAP and Lenis with WebGL deliberately rejected, to protect mobile performance. Every page exists in three locales with localized URLs, and pricing, FAQ and testimonials read from Payload-shaped stand-ins so the CMS can replace them without touching a page.",
     outcome:
@@ -1420,7 +1420,7 @@ export const STUDIO_PROJECTS: readonly StudioProject[] = [
       { title: "Localized URLs", body: "Each page has its own slug in each language, so every locale is a real page for search, not a query string." },
     ],
     challenges: [
-      { title: "Pretty and fast on a phone", body: "Most visitors arrive from WhatsApp on a phone, so the motion tier was chosen for mobile performance first and WebGL was left out." },
+      { title: "Pretty and fast on a phone", body: "Most visitors are expected to arrive from WhatsApp on a phone, so the motion tier was chosen for mobile performance first and WebGL was left out." },
       { title: "Content not yet chosen", body: "Final copy, testimonials and this year's prices are a pass with the client still open, so the build ships honest placeholders rather than invented ones." },
     ],
     links: [

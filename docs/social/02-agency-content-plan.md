@@ -6,7 +6,7 @@ Draft pilot, 4 October 2026; revised 5 October 2026. This is the agency's market
 
 Help a relevant buyer understand what Blessed Moon builds, how it makes decisions, and how to start a project. Use completed delivery evidence and accurately labelled work in progress. Measure qualified enquiries and accepted proposals alongside attention metrics.
 
-**Revised 5 October 2026** (Benito: the better opportunities are international clients paying in strong currencies). English leads: two stories a week for six weeks, each an Instagram carousel on `@blessedmoon.studio` and the same slides as a square PDF document on Benito's LinkedIn profile. An optional Portuguese Instagram account takes one story a week for eight weeks. Budget 4–6 hours weekly initially and record actual time; reduce volume if it exceeds available capacity.
+**Revised 5 October 2026** (Benito: the better opportunities are international clients paying in strong currencies). English leads: two stories a week for seven weeks, each an Instagram carousel on `@blessedmoon.studio` and the same slides as a square PDF document on Benito's LinkedIn profile. An optional Portuguese Instagram account takes one story a week for eight weeks. Budget 4–6 hours weekly initially and record actual time; reduce volume if it exceeds available capacity.
 
 The [Instagram audit](11-instagram-corpus-audit.md) reviews 356 covers, 59 captured captions and saved inner images across ten selected accounts; its strongest pattern, the work in context on the cover, now leads the series. Ten supporting LinkedIn posts remain separately labelled. Patterns guide structure; competitors' wording, testimonials and results are not copied.
 
@@ -18,14 +18,19 @@ Titles are the covers. Destinations carry `utm_content` `ig-<lang>-wNN-<id>` or 
 
 | Week | English A | English B | Portuguese (optional account) |
 |---|---|---|---|
-| 1 | Your brief lists features. It should name one action. → `/contact` | Two clients. One slot. Only one can book it. → `/work/markado` | Seu Instagram vende. O site tira a dúvida. → `/work/oishi` |
-| 2 | Catalogue, booking or dashboard? Name the job first. → `/contact` | Satellite pixels in. Field tasks out. → `/work/flora` | R$ 54,90. Se a mesa comer tudo. → `/work/oishi` |
-| 3 | 7 questions to ask before you hire a studio. → `/contact` | 13 products. 10 prices. Three say 'ask', on purpose. → `/work/fa-moveis` | Você vende pelo WhatsApp? O site não precisa de carrinho. → `/work/fa-moveis` |
-| 4 | Listings ask 'which apartment?' Buyers ask 'will I get credit?' → `/work/prumo` | A screenshot shows the UI. The decision sells the work. → `/work` | Cabe na minha sala? → `/work/fa-moveis` |
-| 5 | What a content plan should hand you: briefs, not topics. → service | Reach on one platform isn't reach on another. → `/work/bee-dash` | 3 perguntas que valem mais que um orçamento. → `/contact` |
-| 6 | Keep Shopify. Lose the theme. → `/work/sua-mesa-fit` | Likes measure attention. Enquiries measure fit. → service | O que o site precisa responder antes de o cliente ligar. → `/work/oishi` |
-| 7 | | | Preço não confirmado? Escreva 'consulte'. → `/work/fa-moveis` |
+| 1 | Your brief lists features. It should name one action. → `/contact` | No synthetic data. Anywhere. → `/work/renewable-pulse` | Seu Instagram vende. O site tira a dúvida. → `/work/oishi` |
+| 2 | Two clients. One slot. Only one can book it. → `/work/markado` | Catalogue, booking or dashboard? Name the job first. → `/contact` | R$ 54,90. Se a mesa comer tudo. → `/work/oishi` |
+| 3 | The price on the page is the price on the invoice. → `/work/unimeet` | 7 questions to ask before you hire a studio. → `/contact` | Você vende pelo WhatsApp? O site não precisa de carrinho. → `/work/fa-moveis` |
+| 4 | Satellite pixels in. Field tasks out. → `/work/flora` | A screenshot shows the UI. The decision sells the work. → `/work` | Cabe na minha sala? → `/work/fa-moveis` |
+| 5 | Listings ask 'which apartment?' Buyers ask 'will I get credit?' → `/work/prumo` | What a content plan should hand you: briefs, not topics. → service | 3 perguntas que valem mais que um orçamento. → `/contact` |
+| 6 | A brand's own verb became the hero. → `/work/outubro` | Reach on one platform isn't reach on another. → `/work/bee-dash` | O que o site precisa responder antes de o cliente ligar. → `/work/oishi` |
+| 7 | Keep Shopify. Lose the theme. → `/work/sua-mesa-fit` | Likes measure attention. Enquiries measure fit. → service | Preço não confirmado? Escreva 'consulte'. → `/work/fa-moveis` |
 | 8 | | | Estratégia, produção ou gestão? → service |
+
+F&A Móveis leads only in the Portuguese set, where a small-business story fits the audience; in
+English it is one of three systems in `smallest-system` and the localhost story in
+`studio-questions` (Benito, 5 October: most posts showcased "one of my simplest projects").
+`fa-honest-price` moved out of English; its story lives on as `confirmed-information`.
 
 Retired from the earlier library, as studio-introspective rather than useful to the buyer: the sample calendar, tagged link and pilot review posts. Their ideas survive inside `strategy-contents` and `likes-intent`.
 

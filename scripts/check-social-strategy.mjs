@@ -47,7 +47,11 @@ try {
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1), true, `${route}: no overflow at ${width}`);
     }
     if (["/instagram-plan", "/linkedin-plan"].includes(route)) {
-      assert.equal(await page.locator("details[data-post-id]").count(), route.includes("instagram") ? 20 : 12);
+      assert.equal(await page.locator("details[data-post-id]").count(), route.includes("instagram") ? 22 : 14);
+      // TASK-social-profiles-and-rebalance.md: every account gets a profile setup, within platform limits.
+      assert.equal(await page.locator("[data-profile-setup]").count(), route.includes("instagram") ? 2 : 1);
+      assert.equal(await page.locator("[data-profile-setup] .text-destructive").count(), 0, "Profile fields fit their platform limits");
+      for (const pin of await page.locator("[data-profile-setup] a[aria-label^=\"Pinned post\"]").evaluateAll((links) => links.map((link) => link.getAttribute("href")))) assert.equal(await page.locator(`details${pin.replace("#", "#")}`).count(), 1, `Pinned ${pin} exists`);
       const details = page.locator("details[data-post-id]").first();
       await details.locator("summary").scrollIntoViewIfNeeded();
       await details.locator("summary").click();
@@ -66,6 +70,7 @@ try {
         assert.ok(post.cover.trim().split(/\s+/).length <= 12, `${post.id}: cover headline is 12 words or fewer`);
         assert.doesNotMatch(post.text, /não uma medição|not a measurement|uplift|is claimed|é afirmad|invented success/i, `${post.id}: no hedges on slides`);
       }
+      if (route.includes("linkedin")) assert.equal(await page.locator("details[data-post-id] p[lang]").evaluateAll((items) => items.filter((item) => !item.textContent.trim()).length), 0, "Every LinkedIn story has its post text");
     }
     if (route === "/about") {
       assert.equal(await page.getByText(/Saskia|M D R|specialized duo|Two senior people/i).count(), 0);

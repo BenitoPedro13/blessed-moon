@@ -57,7 +57,7 @@ replace these with fabricated live dashboards or expose draft contents in events
 The pilot (revised 5 October 2026) leads in English for international founders and
 product leaders: two stories weekly, each an Instagram carousel and the same slides
 as a LinkedIn document. An optional Portuguese Instagram account takes one story
-weekly. The library is 12 English and 8 Portuguese authored carousels in
+weekly. The library is 14 English and 8 Portuguese authored carousels in
 `src/lib/social-posts.ts`; facts only from `studio-data.ts`. Record actual production time against a
 4–6-hour weekly budget. Use native insights and qualified enquiries to revise it.
 

@@ -61,12 +61,12 @@ export type Story = {
 export const STORIES: readonly Story[] = [
   {
     id: "one-action", week: 1, lang: "en", title: "Your brief lists features. It should name one action.", audience: "Founders preparing a website or product brief", format: "Carousel",
-    caption: "Most website briefs are a list of features. The ones that can be scoped name one action: who arrives, what they need to know first, and the single thing they should do next.\n\nFor F&A Móveis that action was a WhatsApp message about one specific product, so every product page carries real measurements, a confirmed price or an honest 'ask', and one pre-filled message.\n\nSave the five questions for your next brief. When you have the answers, send them over. Link in bio.",
-    linkedin: "Most website briefs I receive are a list of features: a blog, a chatbot, animations. The briefs that can actually be scoped name one action instead.\n\nWho lands on the page? What do they need to know first? What could stop them? What's the one thing they should do? What happens after?\n\nFor F&A Móveis, a furniture shop that already sold over WhatsApp, the action was a message about one specific product. That single decision set the scope: real measurements stored in centimetres, a confirmed price or an honest 'ask', and one pre-filled message per product page. No cart, because the sale already happened in conversation.\n\nWhat's the one action on your next page?",
-    visual: "Five slides: hook, the five-question brief, wishlist vs one action, the annotated F&A product page, closing action. Real F&A screenshot.", destination: "/contact", source: "portfolio", evidence: "F&A Móveis facts from the case study: 13 products, 10 confirmed prices, WhatsApp-only sales. No sales uplift is claimed.",
+    caption: "Most website briefs are a list of features. The ones that can be scoped name one action: who arrives, what they need to know first, and the single thing they should do next.\n\nOn UniMeet, every fair page answers where, when and what a stand costs, then ends in one registration form. That single decision shaped the whole event engine.\n\nSave the five questions for your next brief. When you have the answers, send them over. Link in bio.",
+    linkedin: "Most website briefs I receive are a list of features: a blog, a chatbot, animations. The briefs that can actually be scoped name one action instead.\n\nWho lands on the page? What do they need to know first? What could stop them? What's the one thing they should do? What happens after?\n\nFor UniMeet, which sells stands at university fairs, the action was registering for a fair. So every fair page answers where, when and what a stand costs, and ends in one registration form with a live, server-checked quote. One decision, and the whole event engine followed from it.\n\nWhat's the one action on your next page?",
+    visual: "Five slides: hook, the numbered five-question brief, wishlist vs one action, UniMeet's fair page annotated (v2, labelled a proposal), closing action.", destination: "/contact", source: "portfolio", evidence: "UniMeet facts from its repository; the screen is the proposed v2 design (the client kept v1 live). No sales uplift is claimed.",
   },
   {
-    id: "markado-slot", week: 1, lang: "en", title: "Two clients. One slot. Only one can book it.", audience: "Founders and product leaders scoping booking or payment flows", format: "Carousel",
+    id: "markado-slot", week: 2, lang: "en", title: "Two clients. One slot. Only one can book it.", audience: "Founders and product leaders scoping booking or payment flows", format: "Carousel",
     caption: "Two clients open the same free slot at the same moment. In a demo, both bookings succeed.\n\nIn Markado, availability is checked again inside the final transaction, so one booking wins and the other is told. Slots aren't a stored list: they're computed from the provider's working rules, real Google Calendar events, buffers, notice periods and timezone. And checkout happens before confirmation, so a reserved slot and a paid slot can't drift apart.\n\nThe full case is linked in the bio.",
     linkedin: "A booking demo always works, because only one person is clicking.\n\nIn Markado, two clients can open the same free slot at the same moment. Availability is revalidated inside the final transaction, so one booking wins and the other is told, instead of both being confirmed.\n\nThe rest of the design follows from treating a slot as computed, not listed: working rules set once by the provider, real Google Calendar events, buffers, notice periods, and every moment stored in UTC and converted only on screen. Checkout happens before confirmation, so 'reserved' and 'paid' can't drift apart.\n\nWhich failure does your booking flow assume won't happen?",
     visual: "Markado availability screen in the terminal window on the cover; the race condition, the inputs to a slot, payment-before-confirmation, close.", destination: "/work/markado", source: "portfolio", evidence: "Behaviour from the Markado case study (2025, focused product team). No booking volumes are claimed.",
@@ -78,7 +78,7 @@ export const STORIES: readonly Story[] = [
     visual: "Paper cover; three jobs mapped to three builds; feature list vs job; F&A catalogue window; close.", destination: "/contact", source: "portfolio", evidence: "Each mapping restates the documented scope of F&A Móveis, Markado and Flora.",
   },
   {
-    id: "flora-satellite", week: 2, lang: "en", title: "Satellite pixels in. Field tasks out.", audience: "Product leaders building on external data", format: "Carousel",
+    id: "flora-satellite", week: 4, lang: "en", title: "Satellite pixels in. Field tasks out.", audience: "Product leaders building on external data", format: "Carousel",
     caption: "Flora tells a farmer which corner of which field is stressed, from real Sentinel-2 imagery.\n\nOne rule shaped it: no request ever calls the satellite. A scheduled worker asks Copernicus for imagery, computes ten spectral readings in one call and stores them. The app only reads.\n\nThe worst bugs only appeared against a real account: a missing header that looked like an auth failure, and two indices that painted a rectangle where the field should be. Full case in the bio.",
     linkedin: "Flora shows a farmer which corner of which field is stressed this week, from real Sentinel-2 imagery.\n\nThe rule that shaped the architecture: no request ever calls the satellite provider. A scheduled worker asks Copernicus for imagery, computes ten spectral indices in a single Process API call (measured live at 4.667 Processing Units against a 4.0 baseline: output count is free, input bands set the cost) and writes the results. The API only reads.\n\nThe sharpest bugs never showed up in review. A missing Accept header made Copernicus return a bare TIFF, and the parser's error read exactly like an auth failure. Two of ten indices painted a rectangle where the field polygon should be. Both were found by looking at what actually rendered.",
     visual: "ASCII render of the crop-stress screen as the cover; the no-direct-calls rule; ten readings in one call; the task board; the live-only bugs; close.", destination: "/work/flora", source: "portfolio", evidence: "Figures and bugs from the Flora case study. The product is ongoing; no farm outcomes are claimed.",
@@ -90,13 +90,7 @@ export const STORIES: readonly Story[] = [
     visual: "Hook cover; the seven questions as rows; two worked answers from F&A and Oishi; close.", destination: "/contact", source: "portfolio", evidence: "The localhost defect and '[a confirmar]' convention are documented in the F&A and Oishi case studies.",
   },
   {
-    id: "fa-honest-price", week: 3, lang: "en", title: "13 products. 10 prices. Three say 'ask', on purpose.", audience: "Founders managing product information", format: "Carousel",
-    caption: "F&A Móveis lists 13 real products. Ten have a confirmed price, from supplier sheets and the owner's own confirmations. The other three say 'Consulte o preço', because a plausible number would be a false price.\n\nMeasured on the live build: Lighthouse 93 performance and 100 accessibility on /produtos, CLS 0, every product image under 32 KB.\n\nThe full case is linked in the bio.",
-    linkedin: "F&A Móveis lists 13 real products. Ten show a confirmed price. Three say 'Consulte o preço'.\n\nThat isn't unfinished work. The ten come from supplier sheets and the owner's own WhatsApp confirmations; the other three weren't confirmed, and a plausible number would have been a false price.\n\nThe harder call came earlier: the 27-product demo catalogue that won the job was removed once real stock existed, so the site never kept selling furniture that wasn't in stock.\n\nMeasured on the production build: Lighthouse 93 performance and 100 accessibility on /produtos, CLS 0, every product image under 32 KB against a 180 KB budget.",
-    visual: "Catalogue window cover; the rule; measured results as rows; the demo-catalogue decision; close.", destination: "/work/fa-moveis", source: "portfolio", evidence: "All figures are from the F&A Móveis case study's production measurements. No sales figures are claimed.",
-  },
-  {
-    id: "prumo-credit", week: 4, lang: "en", title: "Listings ask 'which apartment?' Buyers ask 'will I get credit?'", audience: "Founders in regulated or high-anxiety purchases", format: "Carousel",
+    id: "prumo-credit", week: 5, lang: "en", title: "Listings ask 'which apartment?' Buyers ask 'will I get credit?'", audience: "Founders in regulated or high-anxiety purchases", format: "Carousel",
     caption: "In Minha Casa Minha Vida, the real worry is credit approval, not finishes. Most listing sites still answer 'which apartment?' first.\n\nPrumo asks the credit question first: about a minute, five honest outcomes instead of yes or no, no ID number, no bureau lookup, no uploads. 'Not yet' returns every blocker at once.\n\nWhat does your buyer worry about first? The full case is in the bio.",
     linkedin: "Every listing site in the Minha Casa Minha Vida segment answers 'which apartment?' first. Families are asking something else: 'will I get credit?'\n\nPrumo puts that question first. A six-step pre-qualification returns one of five outcomes, never a binary yes or no: approved in band, approved in a different band, above the bands, outside the programme, or 'not yet', which returns every blocker at once. No ID number, no bureau lookup, no document upload.\n\nPolicy numbers live in the admin, flagged until confirmed against Caixa's tables, because the brackets moved by federal decree mid-project.\n\nWhat question does your buyer need answered before they'll browse?",
     visual: "Pre-qualification window cover; listing vs Prumo order; the five outcomes; what it doesn't ask for; close.", destination: "/work/prumo", source: "portfolio", evidence: "Outcomes and constraints from the Prumo case study. Policy numbers remain flagged as illustrative until confirmed; no approval rates are claimed.",
@@ -109,27 +103,46 @@ export const STORIES: readonly Story[] = [
   },
   {
     id: "strategy-contents", week: 5, lang: "en", title: "What a content plan should hand you: briefs, not topics.", audience: "Founders considering content planning", format: "Carousel",
-    caption: "A calendar that says 'Monday: post about the brand' leaves all the real decisions to whoever has to produce it.\n\nA usable plan hands you four things: research (buyer questions, competitors, channels), direction (positioning and pillars), briefs (question, evidence, format, destination) and measurement (tagged visits and qualified enquiries).\n\nStrategy isn't production; those are separate scopes. The service is linked in the bio.",
+    caption: "A calendar that says 'Monday: post about the brand' leaves all the real decisions to whoever has to produce it.\n\nA usable plan hands you four things: research (buyer questions, competitors, channels), direction (positioning and pillars), briefs (question, evidence, format, destination) and measurement (tagged visits and qualified enquiries).\n\nWe delivered exactly this for UniMeet: research, a strategy and a first month of posts, rendered from their CMS. Strategy isn't production; those are separate scopes. The service is linked in the bio.",
     linkedin: "A content calendar row that says 'Monday: post about the brand' isn't a plan. Whoever produces it still has to decide everything.\n\nA row someone can actually produce: 'Explain one price condition with the real Oishi page, then link the case.' A question, the evidence, a format, a destination.\n\nThat's what a strategy should hand over: research, direction, briefs written to that standard, and a measurement plan based on tagged visits and qualified enquiries rather than likes. Production, publishing and community management are separate scopes, quoted separately.",
-    visual: "ASCII-moon cover; topic vs brief; the four deliverables; scope note; close.", destination: "/services/social-media", source: "edelman", evidence: "Describes the proposed service scope. Pricing stays off public posts until approved.",
+    visual: "Moon cover; topic vs brief; the four deliverables; UniMeet's delivered plan; scope note; close.", destination: "/services/social-media", source: "edelman", evidence: "Describes the proposed service scope. Pricing stays off public posts until approved.",
   },
   {
-    id: "bee-dash-metrics", week: 5, lang: "en", title: "Reach on one platform isn't reach on another.", audience: "Marketing and product leads comparing channels", format: "Carousel",
+    id: "bee-dash-metrics", week: 6, lang: "en", title: "Reach on one platform isn't reach on another.", audience: "Marketing and product leads comparing channels", format: "Carousel",
     caption: "Influencer reporting usually means someone copying each creator's numbers into a spreadsheet, and by the time it's done the campaign has moved on.\n\nBee Dash started by agreeing what reach, engagement and performance mean across platforms. Each platform's adapter maps into that one schema, so creators are compared on equivalent numbers.\n\nRate limits, platform changes and growing history each got a deliberate answer. Case in the bio.",
     linkedin: "'Reach' on one platform isn't 'reach' on another, and a spreadsheet hides that.\n\nBee Dash started before any adapter code: the team defined reach, engagement and campaign performance across platforms first. Each platform's adapter then handles its own authentication, pagination and rate limits and maps into that one schema, so creators are compared on equivalent metrics instead of platform-specific vanity numbers.\n\nWhat broke in production, and the answers: rate limits (batched, scheduled, backed off on purpose), platform schema changes (contained in each adapter), growing history (trend queries without full-history scans).",
     visual: "Campaigns window cover; define the metric first; spreadsheet vs live view; production problems; close.", destination: "/work/bee-dash", source: "portfolio", evidence: "From the Bee Dash case study (2024, small delivery team). No campaign results are claimed.",
   },
   {
-    id: "headless-shopify", week: 6, lang: "en", title: "Keep Shopify. Lose the theme.", audience: "E-commerce founders outgrowing a theme", format: "Carousel",
+    id: "headless-shopify", week: 7, lang: "en", title: "Keep Shopify. Lose the theme.", audience: "E-commerce founders outgrowing a theme", format: "Carousel",
     caption: "Shopify themes are quick to launch and hard to make your own.\n\nSua Mesa Fit kept Shopify for what it's good at (inventory, orders, payments, checkout) and built a custom storefront on top: its own design, search queries shaped per route, and a cart that answers instantly while Shopify still decides the totals.\n\nOutgrown your theme? The case is linked in the bio.",
     linkedin: "The choice isn't 'Shopify or custom'. Sua Mesa Fit kept Shopify running the business (inventory, orders, payments, checkout) and replaced only the storefront.\n\nThe customer-facing site is a custom, server-rendered app reading the Storefront API: its own components instead of a theme, search queries shaped per route so the catalogue can grow without inflating every payload, and an optimistic cart that responds immediately while Shopify stays the source of truth for lines, totals and shipping.",
     visual: "Product-page window cover on paper; who does what; theme vs headless; the cart detail; close.", destination: "/work/sua-mesa-fit", source: "portfolio", evidence: "From the Sua Mesa Fit case study (2024). No performance or revenue figures are claimed.",
   },
   {
-    id: "likes-intent", week: 6, lang: "en", title: "Likes measure attention. Enquiries measure fit.", audience: "Founders evaluating content results", format: "Carousel",
+    id: "likes-intent", week: 7, lang: "en", title: "Likes measure attention. Enquiries measure fit.", audience: "Founders evaluating content results", format: "Carousel",
     caption: "Likes tell you a post got attention. They don't tell you whether the right buyer arrived.\n\nAsk four questions in order: did the right person see it, did they visit the page, did they get in touch, and was it the right work?\n\nAnd read medians, not one viral post. Save the four questions.",
     linkedin: "Likes measure attention. Enquiries measure fit. Most content reports stop at the first.\n\nFour questions, in order, for every post:\n1. Did the right person see it? Saves, shares, relevant replies.\n2. Did they visit the page? A tagged visit to the linked case.\n3. Did they get in touch? An enquiry carrying the campaign tag.\n4. Was it the right work? Qualified, then a proposal.\n\nCompare similar formats over weeks. One popular post isn't a reason to change positioning; a modest post that brings the right enquiry is a reason to repeat it.",
     visual: "Hook cover; the four questions; medians rule; close.", destination: "/services/social-media", source: "umami", evidence: "A measurement method, not results. No account metrics are connected.",
+  },
+
+  {
+    id: "renewable-pulse", week: 1, lang: "en", title: "No synthetic data. Anywhere.", audience: "Founders and product leaders building on data", format: "Carousel",
+    caption: "Renewable Pulse is a live panel of how much electricity already comes from renewables, in Brazil, Europe and the USA. Every reading traces back to a real ONS, ENTSO-E or EIA response; a missing source shows as missing.\n\nThe sources are polled, not pushed, and the product says so. The real-time part is the pipeline: 366,336 plant/hour readings ingested with zero duplicates on replay, a dead-letter queue and the health of the pipeline on the dashboard itself.\n\nCase and source in the bio.",
+    linkedin: "Renewable Pulse shows how much electricity already comes from renewables, starting with Brazil's hydro-heavy grid and comparing Europe and the USA. One rule shaped it: every reading traces back to a real ONS, ENTSO-E or EIA response. No synthetic data, anywhere; a missing source is shown as missing.\n\nNone of the sources stream, and the README says so. The streaming standard is in the pipeline instead: a Go ingestion edge, Redpanda, idempotent consumers into TimescaleDB keyed on source, zone, asset, metric and timestamp (366,336 ONS readings, zero duplicates on replay), a dead-letter queue and bounded backpressure. The dashboard shows the pipeline's own health, not just the charts.",
+    visual: "Live dashboard cover; the three sources; polled-not-pushed; replays; the annotated pipeline-health panel; close with the moon.", destination: "/work/renewable-pulse", source: "portfolio", evidence: "Figures from the Renewable Pulse README and case study. The product is Benito's own; no usage numbers are claimed.",
+  },
+  {
+    id: "unimeet-quote", week: 3, lang: "en", title: "The price on the page is the price on the invoice.", audience: "Founders with pricing or checkout logic", format: "Carousel",
+    caption: "UniMeet sells stands at university fairs. The price a university sees while filling in the form is computed by the same function the server uses to record the registration, in integer cents, and frozen at submission. Tour prices can change later; the quote can't. A price sent in a forged request is dropped before pricing runs.\n\nThe screens are our proposed v2 design; the client kept v1 live. Case in the bio.",
+    linkedin: "For a business that invoices after a form, the most expensive bug is a quote that disagrees with the invoice.\n\nOn UniMeet, one pure pricing function in integer cents runs in two places: the live preview inside the registration form, and the server hook that records the registration and freezes a quote snapshot. Tour prices can change later; what the university was quoted can't. A price sent in a raw request is stripped before the hook runs.\n\nOne bug testing caught: dates stored as UTC midnight printed a day early anywhere west of UTC. They're formatted in UTC now, and the tests run in São Paulo time.",
+    visual: "Fair-page cover (v2, labelled a proposal); one function; three rules; the date bug; close.", destination: "/work/unimeet", source: "portfolio", evidence: "From the UniMeet repository's task docs. v2 screens are a proposal; the client kept v1 live. No sales figures are claimed.",
+  },
+  {
+    id: "outubro-destravar", week: 6, lang: "en", title: "A brand's own verb became the hero.", audience: "Founders whose brand outgrew their website", format: "Carousel",
+    caption: "Outubro Idiomas had already redrawn its brand; its website hadn't caught up. The brand's verb, destravar (to unstick), became the hero: a doodled cord untangles as the headline resolves, and 'língua' lands as it straightens.\n\nThree languages with their own URLs, and WebGL left out on purpose so phones stay fast. In progress; the preview is in the bio.",
+    linkedin: "Outubro Idiomas, a Brazilian online language school, had already redesigned its brand. The website hadn't caught up.\n\nInstead of a generic unlock icon, the signature interaction comes from the brand's own verb, destravar (to unstick): a doodled cord untangles as the headline resolves, and 'língua' lands exactly as it straightens.\n\nThe rest is restraint: the brandbook's palette and single typeface, three locales with their own URLs, and GSAP plus Lenis rather than WebGL, because most visitors are expected on a phone from WhatsApp. The build is in progress.",
+    visual: "Home cover (preview); generic vs destravar; three locales; mobile-first motion; close.", destination: "/work/outubro", source: "portfolio", evidence: "From the Outubro repository's specs. In progress: content and CMS pending; no launch or results claimed.",
   },
 
   // Portuguese: secondary account, Brazilian small businesses.
@@ -183,7 +196,8 @@ export const STORIES: readonly Story[] = [
   },
 ];
 
-export const storiesIn = (lang: Language) => STORIES.filter((story) => story.lang === lang);
+/** A language's stories in publishing order. */
+export const storiesIn = (lang: Language) => STORIES.filter((story) => story.lang === lang).sort((a, b) => a.week - b.week);
 /** LinkedIn is English-only. */
 export const LINKEDIN_STORIES = storiesIn("en");
 
@@ -198,3 +212,106 @@ export function campaignUrl(story: Story, channel: Channel) {
   url.searchParams.set("utm_content", postId(story, channel));
   return url.toString();
 }
+
+// ── Profile setup (TASK-social-profiles-and-rebalance.md §2.2) ─────────────────
+// What each account should say before the first post: the profile is the first
+// thing a visitor reads. Pins and featured items point at real posts and pages only.
+
+export type ProfileHighlight = { title: string; detail: string };
+export type ProfileLink = { title: string; href: string; detail: string };
+export type Profile = {
+  id: "instagram-en" | "instagram-pt" | "linkedin";
+  channel: Channel;
+  lang: Language;
+  label: string;
+  handle: string;
+  /** Set when the handle isn't confirmed yet. */
+  handleNote?: string;
+  /** Instagram's name field (30 characters) or LinkedIn's headline (220). */
+  name: string;
+  nameLimit: number;
+  /** Instagram bio (150) or LinkedIn About. */
+  bio: string;
+  bioLimit: number;
+  link: ProfileLink;
+  category?: string;
+  pins: string[];
+  highlights: ProfileHighlight[];
+  featured: ProfileLink[];
+  company?: { url: string; tagline: string; taglineLimit: number; website: string };
+  notes: string[];
+};
+
+const tagged = (path: string, source: Channel, content: string) => {
+  const url = new URL(path, SITE_URL);
+  url.searchParams.set("utm_source", source);
+  url.searchParams.set("utm_medium", "organic_social");
+  url.searchParams.set("utm_campaign", "studio-social-pilot");
+  url.searchParams.set("utm_content", content);
+  return url.toString();
+};
+
+export const PROFILES: readonly Profile[] = [
+  {
+    id: "instagram-en", channel: "instagram", lang: "en", label: "Instagram · English (primary)",
+    handle: "@blessedmoon.studio",
+    name: "Blessed Moon | Web & Software", nameLimit: 30,
+    bio: "Websites and software for founders, designed and built end to end by one person.\nReal case studies, not mockups ↓", bioLimit: 150,
+    link: { title: "blessed-moon.vercel.app/work", href: tagged("/work", "instagram", "ig-en-bio"), detail: "Bio link: the case index, tagged so profile visits are counted apart from post links." },
+    category: "Software Company",
+    pins: ["one-action", "renewable-pulse", "unimeet-quote"],
+    highlights: [
+      { title: "Work", detail: "One case cover per project, newest first: UniMeet, Renewable Pulse, Flora, Markado, Prumo." },
+      { title: "Process", detail: "The question set, the one-action brief and the caption formula, for buyers who want to see how decisions get made." },
+      { title: "Services", detail: "Websites and products, and the social strategy service, each with its page link." },
+      { title: "Start", detail: "The five questions to answer before a first call, ending on the contact link." },
+    ],
+    featured: [],
+    notes: [
+      "Switch to a professional account first (Settings → Account type and tools); insights and contact buttons depend on it.",
+      "Pins: one useful post and two proofs, so a first visit sees both what Benito thinks and what he has shipped.",
+    ],
+  },
+  {
+    id: "instagram-pt", channel: "instagram", lang: "pt", label: "Instagram · Português (optional)",
+    handle: "@blessedmoon.br", handleNote: "Suggested handle; confirm it's free when the account is opened.",
+    name: "Blessed Moon | Sites e apps", nameLimit: 30,
+    bio: "Sites e sistemas para pequenos negócios: cardápio, catálogo, reserva.\nProjetos reais, não modelos ↓", bioLimit: 150,
+    link: { title: "blessed-moon.vercel.app/work", href: tagged("/work", "instagram", "ig-pt-bio"), detail: "The site is in English; the cases it opens on (Oishi, F&A Móveis) are Brazilian businesses." },
+    category: "Web Designer",
+    pins: ["website-details", "catalogue-whatsapp", "brief-questions"],
+    highlights: [
+      { title: "Projetos", detail: "Oishi e F&A Móveis: o que mudou na página e por quê." },
+      { title: "Perguntas", detail: "As 3 perguntas antes de pedir um site e o checklist para restaurantes." },
+      { title: "Serviços", detail: "Site, catálogo e estratégia de conteúdo, cada um com o link da página." },
+      { title: "Contato", detail: "Como começar: as três respostas e o link de contato." },
+    ],
+    featured: [],
+    notes: ["Open only if capacity allows one Portuguese post a week; the English account comes first."],
+  },
+  {
+    id: "linkedin", channel: "linkedin", lang: "en", label: "LinkedIn · Benito's profile and the company page",
+    handle: "Benito Pedro Xavier",
+    name: "I design and build websites and software for founders · Blessed Moon Studio · Product design, Next.js, data pipelines", nameLimit: 220,
+    bio: "I run Blessed Moon Studio on my own: strategy, design and engineering, with no layer between you and the person building.\n\nRecent work: UniMeet, a university-fair platform whose pricing can't disagree with its invoices; Renewable Pulse, a live energy dashboard built only on real grid data; Flora, a farm console on a satellite pipeline.\n\nIf you're scoping a website or product, start with one question: what's the one thing a visitor should do? I'm glad to help you answer it.", bioLimit: 2600,
+    link: { title: "blessed-moon.vercel.app", href: tagged("/", "linkedin", "li-en-profile"), detail: "Profile website link, tagged." },
+    pins: [],
+    highlights: [],
+    featured: [
+      { title: "UniMeet case study", href: tagged("/work/unimeet", "linkedin", "li-en-featured-unimeet"), detail: "The strongest delivered product: event engine, frozen quotes, and the social plan." },
+      { title: "Renewable Pulse case study", href: tagged("/work/renewable-pulse", "linkedin", "li-en-featured-pulse"), detail: "Proof of data engineering: real sources, idempotent pipeline, live dashboard." },
+      { title: "Social Media Strategy service", href: tagged("/services/social-media", "linkedin", "li-en-featured-service"), detail: "The service page, for buyers who need the plan before the posts." },
+    ],
+    company: {
+      url: "https://www.linkedin.com/company/blessedmoonstudio",
+      tagline: "Websites and software for founders, designed and engineered end to end by one person. Clarity is the feature.", taglineLimit: 120,
+      website: "https://blessed-moon.vercel.app",
+    },
+    notes: [
+      "Post from Benito's profile; reshare to the company page. The page is supporting proof, the profile carries the voice.",
+      "Company page website: blessed-moon.vercel.app, with the hyphen.",
+    ],
+  },
+];
+
+export const profileFor = (id: Profile["id"]) => PROFILES.find((profile) => profile.id === id)!;
