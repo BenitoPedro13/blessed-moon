@@ -43,6 +43,7 @@ viewport size, zoom or motion preference.
 | Work page/index | edit | Derive counts from project data |
 | `src/components/project-media.tsx` | edit | Show long screenshots through document scrolling |
 | `src/app/system/page.tsx` | edit | Actual end footer, reflow specimens and bounded decorative glow |
+| `src/components/boot-sequence.tsx` | edit | Expose an inert phase marker for reliable overlay-readiness checks |
 | `scripts/check-page-scroll.mjs` | new | Real wheel/End input across every page and dynamic content |
 | README/CLAUDE/review guide | edit | Record the scroll contract and review workflow |
 
@@ -79,3 +80,12 @@ normal/reduced motion (120 configurations), wheel and End footer reachability,
 horizontal width, no competing main-content scrollers, dynamic 1400px Work growth,
 expanded real post briefs and compact→oversized→compact stage behavior.
 
+
+The intermittent input checks were traced to an incorrect readiness selector:
+`.boot-gate` is only the controls shown during gating, not the full overlay. It
+is absent while booting and exiting, so waiting for that child to disappear could
+start input before boot completed. An inert `data-boot-phase` on the existing
+overlay makes its complete removal observable. No boot behavior was changed.
+The scrolling check uses the existing keyboard entry and waits for the whole
+overlay to close, including reduced motion. Optional `SCROLL_WEBGL=0` exercises
+the graphics fallback; normal runs keep WebGL enabled.

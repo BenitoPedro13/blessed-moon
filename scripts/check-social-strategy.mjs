@@ -138,7 +138,7 @@ try {
     await motionPage.setViewportSize({ width, height: 568 });
     await motionPage.goto(`${origin}/`, { waitUntil: "load" });
     await motionPage.getByRole("button", { name: "begin", exact: true }).click({ timeout: 20000 });
-    await motionPage.locator('.boot-gate').waitFor({ state: 'detached' });
+    await motionPage.locator('[data-boot-phase]').waitFor({ state: 'detached' });
     // The zero-height marker defines the centre of this morph layer. Native
     // scrollIntoView applies the site's navigation scroll-padding and samples
     // the preceding handoff instead, where content is intentionally cropped.

@@ -297,6 +297,7 @@ export function BootSequence() {
 
   return (
     <div
+      data-boot-phase={phase}
       className={`fixed inset-0 z-[100] flex flex-col items-center justify-center short:justify-start gap-10 short:gap-6 overflow-y-auto bg-background px-6 py-10 short:py-8 transition-opacity duration-300 ${
         phase === "exiting" ? "boot-exiting" : ""
       }`}

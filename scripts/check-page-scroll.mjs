@@ -26,11 +26,14 @@ async function ready(page, motion) {
     // Use the real keyboard entry, without waiting for a short-screen button's
     // animated position to settle in Chromium's software renderer. The gate
     // also has an intentional automatic-dismissal path.
-    await page.waitForFunction(() => document.body.style.overflow === 'hidden' || !document.querySelector('.boot-gate'));
-    if (await page.locator('.boot-gate').count()) await page.keyboard.press('End');
+    await page.waitForFunction(() => {
+      const boot = document.querySelector('[data-boot-phase]');
+      return !boot || boot.dataset.bootPhase === 'gating';
+    });
+    if (await page.locator('[data-boot-phase]').count()) await page.keyboard.press('End');
   }
   // Reduced motion also fades the boot overlay after hydration.
-  await page.locator('.boot-gate').waitFor({ state: 'detached' });
+  await page.locator('[data-boot-phase]').waitFor({ state: 'detached' });
   await page.waitForFunction(() => document.body.style.overflow !== 'hidden');
   await page.waitForTimeout(350);
 }
@@ -46,10 +49,15 @@ async function bottom(page, label) {
   }, null, { timeout: 10000 });
   const footer = await page.locator('footer').last().evaluate(element => ({ top: element.getBoundingClientRect().top, bottom: element.getBoundingClientRect().bottom }));
   assert.ok(footer.bottom <= viewport.height + 3 && footer.bottom > 0, `${label}: footer reached with wheel`);
-  await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
-  await page.waitForTimeout(500);
+  // Do not interrupt an almost-complete wheel animation with a scripted jump.
+  await page.waitForFunction(() => !document.documentElement.classList.contains('lenis-smooth'));
+  await page.keyboard.press('Home');
+  await page.waitForFunction(() => scrollY <= 1);
   await page.keyboard.press('End');
-  await page.waitForFunction(() => Math.abs(scrollY - (document.documentElement.scrollHeight - innerHeight)) <= 3, null, { timeout: 10000 });
+  await page.waitForFunction(() => Math.abs(scrollY - (document.documentElement.scrollHeight - innerHeight)) <= 3, null, { timeout: 10000 }).catch(async error => {
+    const state = await page.evaluate(() => ({ y: scrollY, maximum: document.documentElement.scrollHeight - innerHeight, boot: document.querySelector('[data-boot-phase]')?.dataset.bootPhase, overflow: document.body.style.overflow, focus: document.activeElement.tagName }));
+    throw new Error(`${label}: keyboard End ${JSON.stringify(state)}. ${error.message}`);
+  });
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), true, `${label}: no horizontal overflow`);
   const nested = await page.locator('main').evaluate(main => [...main.querySelectorAll('*')].filter(element => {
     const overflow = getComputedStyle(element).overflowY;
