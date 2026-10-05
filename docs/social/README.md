@@ -14,6 +14,8 @@ The [content-account audit](06-content-account-audit.md) reviews 12 actual publi
 The [review guide](05-review-guide.md) lists pages, changes and pending decisions.
 A [prompt for a future website agent](08-agent-review-prompt.md) explains the
 implemented scope and how to continue without duplicating it.
+The [production workspace guide](09-production-workspace.md) explains the new
+visual previews, planning/measurement graphs, post builder and local file workflow.
 
 Provisional decisions: LinkedIn is the recommended primary channel for the existing founder/product-leader positioning; Instagram tests Portuguese buyer education using Oishi and F&A Móveis. Publish two core stories weekly on the primary channel and one secondary adaptation. Reverse priority if Brazilian small businesses become the chosen market. Market and language priorities still need validation. Planning pages are unlinked and noindex by default, like Unimeet's proposal pages. They are accessible by URL, not confidential or authenticated.
 

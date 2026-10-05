@@ -1,3 +1,9 @@
+import { ProfilePreview } from "@/components/social/post-preview";
+import { SlideArt } from "@/components/social/slide-art";
+import { PostBuilder } from "@/components/social/post-builder";
+import { PlanCharts } from "@/components/social/plan-charts";
+import { MeasurementChart } from "@/components/social/measurement-chart";
+import { storyPost } from "@/lib/social-art";
 import type { Metadata } from "next";
 
 import { BootLockup } from "@/components/boot-sequence";
@@ -375,8 +381,13 @@ export default function SystemPage() {
         <PlanSection number="00" title="Planning section specimen">
           <p className="text-sm leading-7 text-foreground/75">Research becomes a decision, a usable brief and a review.</p>
         </PlanSection>
+        <ProfilePreview stories={STORIES.slice(0, 1)} channel="instagram" />
         <PostCard story={STORIES[0]} channel="instagram" />
         <QuoteEstimate />
+        <div className="max-w-xs"><SlideArt slide={storyPost(STORIES[0], "instagram").slides[0]} format="portrait" /></div>
+        <PlanCharts />
+        <MeasurementChart />
+        <details className="border border-border p-5"><summary>Post builder specimen</summary><div className="mt-5"><PostBuilder stories={STORIES} initialPost={storyPost(STORIES[0], "instagram")} /></div></details>
         <StrategyEnquiryLink />
       </section>
 

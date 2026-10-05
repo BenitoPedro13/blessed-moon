@@ -2,6 +2,8 @@ import { PlanShell, PlanSection, PLAN_TEXT, PLAN_LINK, planMetadata } from "@/co
 
 export const metadata = planMetadata("Social measurement plan", "/analytics-plan", "A practical measurement plan for content, campaign visits, enquiry intent and actual sales records, using Blessed Moon's existing Umami setup.");
 
+import { MeasurementChart } from "@/components/social/measurement-chart";
+
 const EVENTS = [
   ["service-enquiry-click", "service: social-media-strategy; location: home | service-page", "Followed the service contact CTA."],
   ["project-enquiry-email-open", "project_type: fixed form option", "Prepared an email draft; it may never be sent."],
@@ -21,6 +23,7 @@ export default function AnalyticsPlanPage() {
       ["Sales", "Confirmed and qualified enquiries, decided proposals, accepted contracts and collected revenue from actual business records."],
       ["Capacity", "Time spent creating content and delivering client work. Can Benito sustain the scope profitably?"],
     ].map(([label, detail]) => <div key={label} className="border-t border-border pt-4"><dt className="text-lg font-medium">{label}</dt><dd className={`mt-2 ${PLAN_TEXT}`}>{detail}</dd></div>)}</dl><p className={`mt-6 ${PLAN_TEXT}`}>A qualified enquiry needs a real business, an in-scope problem and an identifiable decision-maker, with budget and timing compatibility established in conversation. Record that rule consistently. Use matching session cohorts for intent rates and decided-proposal cohorts for win rates; repeated clicks are not unique leads.</p></PlanSection>
-    <PlanSection number="05" title="Baseline checklist."><ul className={`list-disc space-y-3 pl-5 ${PLAN_TEXT}`}><li>Confirm an official studio inbox or booking channel works before scaling campaigns.</li><li>Verify a real production visit reaches the existing Umami website; check preview and staff exclusions.</li><li>Test a campaign link and confirm its source, campaign and content appear in the report.</li><li>Verify email-open, brief-copy and booking clicks reflect the actual action.</li><li>Export native insights and keep a separate register of confirmed enquiry outcomes.</li><li>Record production hours. Review at days 30, 60 and 90 before changing cadence or prices.</li></ul><p className={`mt-6 ${PLAN_TEXT}`}>No baseline is filled in yet. Zero traffic or too few observations should be stated plainly. Session-replay settings are not changed by this plan.</p></PlanSection>
+    <PlanSection number="05" title="Plot your actual weekly observations."><MeasurementChart /></PlanSection>
+    <PlanSection number="06" title="Baseline checklist."><ul className={`list-disc space-y-3 pl-5 ${PLAN_TEXT}`}><li>Confirm an official studio inbox or booking channel works before scaling campaigns.</li><li>Verify a real production visit reaches the existing Umami website; check preview and staff exclusions.</li><li>Test a campaign link and confirm its source, campaign and content appear in the report.</li><li>Verify email-open, brief-copy and booking clicks reflect the actual action.</li><li>Export native insights and keep a separate register of confirmed enquiry outcomes.</li><li>Record production hours. Review at days 30, 60 and 90 before changing cadence or prices.</li></ul><p className={`mt-6 ${PLAN_TEXT}`}>No baseline is filled in yet. Zero traffic or too few observations should be stated plainly. Session-replay settings are not changed by this plan.</p></PlanSection>
   </PlanShell>;
 }

@@ -389,3 +389,16 @@ campaign URLs live in `src/lib/social-plan.ts`; enum-only enquiry events in
 `src/lib/analytics.ts`. Preserve the eight homepage build cards and their existing
 morph handoffs. The new strategy offer is linked alongside them. See
 `docs/tasks/TASK-social-strategy-and-service.md` and `docs/social/`.
+
+The channel plans include branded cover studies and navigable post previews.
+`/post-builder` is another unlinked noindex workspace: browser-only template editing,
+local screenshots and PNG/ZIP/PDF/JSON exports. `social-art.ts` is the single SVG
+source for preview and raster exports; escape imported text and allow only local
+raster data URIs. Preserve its validation and size caps. The eight-week worksheet
+on `/analytics-plan` uses manually entered observations, never sample/live metrics;
+unknown weeks and measured zeroes must remain distinct. Both editable components
+use `rr-block` to exclude draft content from the optional session recorder. Do not
+remove it when changing wrappers. Details: `docs/social/09-production-workspace.md`
+and `docs/tasks/TASK-social-preview-builder.md`. Run the strategy browser check and
+`scripts/check-post-builder.mjs` for changes affecting these flows. Reusable
+components are represented on `/system`.

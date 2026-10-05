@@ -6,6 +6,7 @@ export const PLAN_LINKS = [
   { href: "/instagram-plan", label: "Instagram" },
   { href: "/linkedin-plan", label: "LinkedIn" },
   { href: "/analytics-plan", label: "Measurement" },
+  { href: "/post-builder", label: "Post builder" },
 ] as const;
 
 export const SOURCES = {

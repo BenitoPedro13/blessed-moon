@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { campaignUrl, SOURCES, type Story, type Channel } from "@/lib/social-plan";
 import { CONTENT_ACCOUNTS } from "@/lib/social-research";
+import { PostPreview } from "@/components/social/post-preview";
 import { PLAN_LINK, PLAN_TEXT } from "@/components/social/plan-shell";
 
 export function PostCard({ story, channel }: { story: Story; channel: Channel }) {
@@ -16,6 +17,7 @@ export function PostCard({ story, channel }: { story: Story; channel: Channel })
         <span className="mt-2 block text-xs text-muted-foreground">{story.audience} · Open brief</span>
       </summary>
       <div className="space-y-6 border-t border-border px-5 py-6 sm:px-7">
+        <PostPreview story={story} channel={channel} />
         <p className="break-all font-mono text-xs text-muted-foreground">{id} · {instagram ? "Portuguese draft" : "English draft"}</p>
         {instagram && <div><h4 className="mb-3 font-mono text-xs text-primary">Slides / recording outline</h4><ol className="list-decimal space-y-2 pl-5">{story.slides.map((slide) => <li key={slide} className={PLAN_TEXT}>{slide}</li>)}</ol></div>}
         <div><h4 className="mb-3 font-mono text-xs text-primary">{instagram ? "Caption draft" : "Post draft"}</h4><p lang={instagram ? "pt-BR" : "en"} className={PLAN_TEXT}>{instagram ? story.caption : story.linkedin}</p></div>

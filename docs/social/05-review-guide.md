@@ -11,11 +11,16 @@ the repository. See the task document for the check details.
   content samples across six account families, seven platform decisions, four
   content pillars, eight-week queue and proposed internal pricing.
 - `/instagram-plan`: 16 expandable briefs, Portuguese captions, slide/recording
-  outlines, visual directions, evidence notes and external campaign URLs.
+  outlines, visual directions, evidence notes and external campaign URLs. Now includes
+  a nine-cover study and navigable branded slide previews with downloads/edit links.
 - `/linkedin-plan`: 16 English decision-story drafts adapted from the same core
-  ideas, with visual directions and campaign URLs.
+  ideas, with visual directions and campaign URLs, landscape previews and a series board.
 - `/analytics-plan`: existing tooling, metric definitions, event dictionary,
-  UTM convention, baseline checklist and 30/60/90-day reviews. No live metrics.
+  UTM convention, baseline checklist and 30/60/90-day reviews. An empty eight-week
+  worksheet now plots real manual observations, with JSON save/restore and SVG export.
+- `/post-builder`: editable researched presets or blank drafts; three templates,
+  four formats, local screenshots, slide operations and PNG/ZIP/PDF/JSON downloads.
+  See the [workspace guide](09-production-workspace.md) for the full workflow.
 - `/about`: Benito's solo studio; A/B are strategy and engineering disciplines.
 - `/`: service and pricing links, solo delivery copy and original eight build cards.
 - `/contact?project=Social%20Media%20Strategy#project-enquiry`: preselected project
@@ -63,6 +68,12 @@ the repository. See the task document for the check details.
 
 No deployment or push is included in this work.
 
+The follow-up also added proposed pillar/workload graphs to `/social-plan`, shared
+SVG artwork, browser-only exports and `/system` specimens. Preview and downloads use
+the same art. Editable builder/worksheet content is marked `rr-block` for the existing
+session recorder. Drafts/measurements are retained through downloaded JSON, not a
+server database. No live account metrics, AI generation API or video generator was added.
+
 ## Validation and local preview
 
 The production build and TypeScript passed. Lint has zero errors and two existing
@@ -76,3 +87,11 @@ account dashboard verified by these tests.
 
 The future-agent prompt is [available here](08-agent-review-prompt.md). Implementation
 was completed directly in this repository; another agent is not required to add it.
+
+The preview/builder follow-up also passes production build/TypeScript, lint (the
+same two existing warnings), its new export/editor/worksheet browser checks and
+the complete strategy regression script. The pinned-panel check now samples the
+actual layer centre rather than the navigation-offset handoff. Actual downloaded
+files and artwork captures are in `/private/tmp/blessed-moon-post-review-2026-10-04/`;
+the exported PDF also rendered successfully with macOS sips. The final local review
+build disables the optional trackers at build and start without modifying env files.

@@ -160,3 +160,32 @@ remains visibly pending. These server-only variables are documented in `.env.exa
 
 Targeted browser verification: `node scripts/check-social-strategy.mjs` against a
 running local server (`SOCIAL_CHECK_URL` optionally overrides `http://localhost:3000`).
+
+## Social previews, charts and post builder
+
+The channel plans now include nine-cover studies and navigable slide previews.
+`/post-builder` starts from those researched stories or a blank draft. Edit copy,
+caption, slide order and local screenshots using Statement, Checklist or Project
+screenshot templates. Portrait, square, landscape and Story formats share the same
+SVG artwork between preview and export. Download PNG, a numbered ZIP with caption,
+alt text and editable draft, or an image-based PDF. Save/restore JSON before leaving;
+drafts are held in the tab, with no server storage or automated publishing.
+
+`/social-plan` plots proposed pillar shares and workload. `/analytics-plan` has an
+empty eight-week worksheet for real tagged visits, qualified enquiries and production
+hours. Blank weeks remain gaps; recorded zeroes appear. Save observations as JSON or
+download a chart SVG. It does not connect to social accounts or Umami reports.
+
+The builder remains URL-accessible and noindex, outside the global menu/sitemap.
+Its editable DOM and the worksheet carry rrweb's `rr-block` class to exclude their
+contents from the existing session replay integration. Actual production replay
+configuration/ingestion still needs verification. `/system` includes the new specimens.
+Only fflate was added, loaded dynamically for ZIP creation; the small PDF helper was
+reused from Unimeet. No Unimeet files were changed.
+
+See [production workspace guide](docs/social/09-production-workspace.md) and
+`docs/tasks/TASK-social-preview-builder.md`. Run
+`node scripts/check-post-builder.mjs` against the preview (default port 3194).
+For a review build without the optional trackers, pass empty values for
+`NEXT_PUBLIC_UMAMI_SRC`, `NEXT_PUBLIC_UMAMI_WEBSITE_ID` and
+`NEXT_PUBLIC_UMAMI_RECORDER_SRC` to both build and start; leave env files intact.

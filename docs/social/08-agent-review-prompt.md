@@ -7,6 +7,8 @@ iteration, not to duplicate the routes or discard the research.
 Work in /Users/benito/Documents/personal/blessed-moon. Read AGENTS.md, CLAUDE.md,
 the installed Next.js documentation required by AGENTS.md, the task document
 docs/tasks/TASK-social-strategy-and-service.md, and docs/social/README.md first.
+Also read docs/tasks/TASK-social-preview-builder.md and
+docs/social/09-production-workspace.md for the implemented production tools.
 Inspect git status and preserve existing work.
 
 Blessed Moon Studio is now Benito's solo practice. Current public copy must say
@@ -32,6 +34,15 @@ Instagram-feed coverage is incomplete. Never invent account performance or imply
 competitor results belong to Blessed Moon. Every brief separates its sampled
 research pattern from actual Blessed Moon project evidence.
 
+Previews, nine-cover studies and /post-builder already exist. The browser editor
+uses shared SVG artwork for live previews and PNG/ZIP/PDF exports, edits existing
+research drafts or blank posts, handles approved local screenshots and saves/imports
+editable JSON. Keep drafts local and rr-block on editable roots for the existing
+recorder. It has no AI text/image API, video export, publishing or cloud persistence.
+Planning graphs show proposals; the analytics worksheet plots only manually entered
+real observations. Blank weeks are unknown, distinct from measured zeroes. Do not
+replace these with fabricated live dashboards or expose draft contents in events.
+
 The proposed pilot uses LinkedIn primary for founder/product buyers: two original
 stories weekly and one Portuguese Instagram adaptation. Reverse priority only if
 Brazilian businesses become the chosen target. Two libraries of 16 drafts are
@@ -52,7 +63,9 @@ or a booking URL. Do not add another tracker or fabricated live dashboard.
 
 For any approved iteration, update the task/research docs and /system specimens
 when shared components change. Run pnpm lint, type checks, pnpm build and
-scripts/check-social-strategy.mjs against a running preview. Check reduced-motion
+scripts/check-social-strategy.mjs against a running preview.
+Also run scripts/check-post-builder.mjs for exports, editing and worksheet behavior.
+Check reduced-motion
 hydration and all eight service cards on short 320/390/1440px-wide viewports.
 Give a reviewable change summary with route links and any remaining limitations.
 Follow repository commit conventions. Do not push or deploy without authorization.

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PlanCharts } from "@/components/social/plan-charts";
 import { PlanShell, PlanSection, PLAN_TEXT, PLAN_LINK, planMetadata } from "@/components/social/plan-shell";
 import { QuoteEstimate } from "@/components/social/quote-estimate";
 import { COMPETITORS, PILLARS, SOURCES, STORIES, PLAN_DATE } from "@/lib/social-plan";
@@ -33,6 +34,7 @@ export default function SocialPlanPage() {
       <p className={`mt-6 ${PLAN_TEXT}`}>Keep website search visibility and relevant case pages working alongside social content. Search and Google Business Profile eligibility are separate acquisition questions, not social-platform votes. Review native account insights and ask actual buyers where they found the studio before expanding.</p>
     </PlanSection>
     <PlanSection number="06" title="A sustainable editorial mix.">
+      <div className="mb-7"><PlanCharts /></div>
       <div className="grid gap-6 sm:grid-cols-2">{PILLARS.map((pillar) => <article key={pillar.name} className="border-t border-border pt-5"><p className="font-mono text-sm text-primary">{pillar.share} · guide, not a quota</p><h3 className="mt-3 text-xl font-medium">{pillar.name}</h3><p className={`mt-3 ${PLAN_TEXT}`}>{pillar.detail}</p></article>)}</div>
       <p className={`mt-6 ${PLAN_TEXT}`}>Two original core stories per week on the primary channel; adapt one to the secondary channel. Both draft libraries contain 16 alternatives, not a commitment to publish all 32. Start with a 4–6-hour weekly production budget and record actual time. Benito&apos;s client work and capacity decide the sustainable cadence. Native account insights decide the next tests.</p>
     </PlanSection>

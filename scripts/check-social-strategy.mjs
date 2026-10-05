@@ -8,6 +8,7 @@ import { chromium } from "playwright";
 const origin = process.env.SOCIAL_CHECK_URL || "http://localhost:3000";
 const browser = await chromium.launch({ headless: true });
 const context = await browser.newContext({ reducedMotion: "reduce", viewport: { width: 1440, height: 900 } });
+context.setDefaultTimeout(60000);
 // Assert the actual page behaviour; background prefetch must not block a check.
 const page = await context.newPage();
 page.setDefaultNavigationTimeout(60000);
@@ -45,6 +46,7 @@ try {
     if (["/instagram-plan", "/linkedin-plan"].includes(route)) {
       assert.equal(await page.locator("details[data-post-id]").count(), 16);
       const details = page.locator("details[data-post-id]").first();
+      await details.locator("summary").scrollIntoViewIfNeeded();
       await details.locator("summary").click();
       assert.equal(await details.getAttribute("open"), "");
       assert.equal(await details.locator("[data-content-reference] a").count(), 2, "Brief links its sampled content separately from evidence");
@@ -126,6 +128,7 @@ try {
   }
   // Exercise the actual pinned layout as well as the reduced-motion fallback.
   const animated = await browser.newContext({ reducedMotion: "no-preference" });
+  animated.setDefaultTimeout(60000);
   const motionPage = await animated.newPage();
   motionPage.on("pageerror", (error) => failures.push(`${motionPage.url()}: ${String(error)}`));
   for (const width of [1440, 390, 320]) {
@@ -133,8 +136,24 @@ try {
     await motionPage.goto(`${origin}/`, { waitUntil: "load" });
     await motionPage.getByRole("button", { name: "begin", exact: true }).click({ timeout: 10000 });
     await motionPage.waitForTimeout(1100);
-    await motionPage.evaluate(() => document.querySelector("#services").scrollIntoView());
-    await motionPage.waitForTimeout(1200);
+    // The zero-height marker defines the centre of this morph layer. Native
+    // scrollIntoView applies the site's navigation scroll-padding and samples
+    // the preceding handoff instead, where content is intentionally cropped.
+    await motionPage.evaluate(() => window.scrollTo({
+      top: window.scrollY + document.querySelector("#services").getBoundingClientRect().top,
+      behavior: "instant",
+    }));
+    // Sample the settled service layer, rather than an arbitrary moment during
+    // Lenis/morph interpolation on a busy machine. Keep the clipping assertion below.
+    await motionPage.waitForFunction(() => {
+      let element = document.querySelector("[data-services-grid]");
+      while (element) {
+        const local = element.style?.getPropertyValue("--morph-local");
+        if (local) return Math.abs(Number(local)) < 0.005 && Number(getComputedStyle(element).opacity) > 0.99;
+        element = element.parentElement;
+      }
+      return false;
+    }, null, { timeout: 20000 });
     const serviceLink = motionPage.locator('main a[href="/services/social-media"]').first();
     if (process.env.SOCIAL_SCREENSHOT_DIR) await motionPage.screenshot({ path: join(process.env.SOCIAL_SCREENSHOT_DIR, `services-pinned-${width}.png`) });
     assert.equal(await motionPage.locator('[data-service-card="08"]').evaluate((element) => {
