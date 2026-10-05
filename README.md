@@ -93,6 +93,16 @@ count: `/work` hands the project name from the index listing into each entry, `/
 but no pin — a form should open rather than unfold, and a long case study inside a scroll-driven
 window would nest two scroll contexts. See `docs/tasks/TASK-subpage-morph-expansion.md`.
 
+Scroll stages now observe their content and switch to normal document flow when
+it exceeds the available height, including Work's growing project index. Reduced
+motion also uses flow. Compact content keeps the animated handoffs. The root uses
+a minimum height rather than a fixed viewport height so Lenis can observe document
+growth. Case galleries display complete screenshots in the same document scroll
+path. Run `SCROLL_CHECK_URL=http://localhost:3194 node scripts/check-page-scroll.mjs`
+against a production preview for every route, all case studies, three viewport sizes,
+both motion preferences, expanded briefs and content-growth checks. See
+`docs/tasks/TASK-page-scroll-reachability.md`.
+
 All scroll-driven components share one `requestAnimationFrame` through
 `src/components/frame-loop.ts`, which runs every layout *read* before any style *write* —
 previously seven components each owned a loop and invalidated each other's measurements. Profile
@@ -140,11 +150,11 @@ optional; ongoing production and full account management require separate scope.
 
 Unlinked, `noindex` planning pages: `/social-plan`, `/instagram-plan`,
 `/linkedin-plan`, `/analytics-plan`. They contain five public offer references,
-12 actual LinkedIn content samples across six account families, platform selection,
+356 collected Instagram covers, 59 captured captions and ten supporting LinkedIn samples, platform selection,
 16 original stories with channel drafts, campaign links, an internal pricing model
 and a measurement checklist. LinkedIn is recommended primary with a smaller
 Portuguese Instagram test; both draft libraries offer alternatives. Instagram-feed
-coverage is incomplete and no competitor performance is inferred. They are URL-accessible, not authenticated. No live
+coverage and selected deep observations are documented; no competitor performance is inferred. They are URL-accessible, not authenticated. No live
 social/Umami metrics or private client information are embedded. Research lives in
 `docs/social/`; implementation decisions in
 `docs/tasks/TASK-social-strategy-and-service.md`.
@@ -165,8 +175,8 @@ running local server (`SOCIAL_CHECK_URL` optionally overrides `http://localhost:
 
 The channel plans now include nine-cover studies and navigable slide previews.
 `/post-builder` starts from those researched stories or a blank draft. Edit copy,
-caption, slide order and local screenshots using Statement, Checklist or Project
-screenshot templates. Portrait, square, landscape and Story formats share the same
+caption, slide order and screenshots using Statement, Comparison, Checklist, Workflow,
+Project screenshot or Closing action templates. Choose dark, paper or amber artwork. Portrait, square, landscape and Story formats share the same
 SVG artwork between preview and export. Download PNG, a numbered ZIP with caption,
 alt text and editable draft, or an image-based PDF. Save/restore JSON before leaving;
 drafts are held in the tab, with no server storage or automated publishing.
@@ -189,3 +199,21 @@ See [production workspace guide](docs/social/09-production-workspace.md) and
 For a review build without the optional trackers, pass empty values for
 `NEXT_PUBLIC_UMAMI_SRC`, `NEXT_PUBLIC_UMAMI_WEBSITE_ID` and
 `NEXT_PUBLIC_UMAMI_RECORDER_SRC` to both build and start; leave env files intact.
+
+## Agency research corpus
+
+Benito completed both browser exports. Ten selected profiles supplied **356 distinct
+posts and 356 covers** (Baunfire 32; nine accounts 36 each). There are **59 captured
+full captions, 85 observed inner-media positions and 84 saved slide images**; videos
+were not captured. The cover contact sheets and captured material were reviewed
+on 5 October 2026. See [audit and limitations](docs/social/11-instagram-corpus-audit.md),
+[aggregate coverage](docs/social/corpus/coverage.json) and
+[source index](docs/social/corpus/post-index.csv). Raw media, captions and signed CDN
+URLs stay gitignored and are not published. Collectors/import instructions are in
+[the collection guide](docs/social/10-agency-profile-collection.md).
+
+The stronger drafts use concrete comparisons, workflows, worked examples and
+existing Oishi, F&A Móveis, Markado and Flora screenshots. Preset screenshots are
+embedded when exporting, including editable JSON. Review permissions/current facts
+before publishing. The builder is local and template based; no automatic AI or
+social publishing service was introduced.

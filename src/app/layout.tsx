@@ -60,9 +60,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="en"
       data-scroll-behavior="smooth"
-      className={`dark ${spaceGrotesk.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      className={`dark ${spaceGrotesk.variable} ${jetbrainsMono.variable} min-h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-background text-foreground">
+      <body className="min-h-dvh flex flex-col bg-background text-foreground">
         {/* The scroll-driven sections make the page taller/deeper than a
             typical marketing page, so the browser's default scroll-position
             restore-on-reload (history.scrollRestoration = "auto") now lands

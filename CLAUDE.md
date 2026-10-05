@@ -394,7 +394,8 @@ The channel plans include branded cover studies and navigable post previews.
 `/post-builder` is another unlinked noindex workspace: browser-only template editing,
 local screenshots and PNG/ZIP/PDF/JSON exports. `social-art.ts` is the single SVG
 source for preview and raster exports; escape imported text and allow only local
-raster data URIs. Preserve its validation and size caps. The eight-week worksheet
+raster data URIs or the exact portfolio preset paths in social-creative.ts. Embed
+those presets in downloads so JSON remains portable. Preserve its validation and size caps. The eight-week worksheet
 on `/analytics-plan` uses manually entered observations, never sample/live metrics;
 unknown weeks and measured zeroes must remain distinct. Both editable components
 use `rr-block` to exclude draft content from the optional session recorder. Do not
@@ -402,3 +403,34 @@ remove it when changing wrappers. Details: `docs/social/09-production-workspace.
 and `docs/tasks/TASK-social-preview-builder.md`. Run the strategy browser check and
 `scripts/check-post-builder.mjs` for changes affecting these flows. Reusable
 components are represented on `/system`.
+
+### Scroll reachability (4 October 2026)
+
+`ScrollStage` and `ScrollMorphStage` observe content/viewport dimensions and use
+normal document flow when their content cannot fit. The morph stage switches as a
+whole, preserving layer IDs, keyframes and static motifs. Compact content retains
+the existing pinning; reduced motion also uses flow. Never clip new projects or add
+an independent nested page scroll path to make a stage fit. Standalone progress
+must reset to zero on fallback. Root html/body use minimum heights: a fixed html
+height prevented Lenis's default ResizeObserver from seeing document growth.
+Case galleries show full screenshots in document flow. Work counts come from
+`STUDIO_PROJECTS`. See `TASK-page-scroll-reachability.md` and run
+`scripts/check-page-scroll.mjs` for changes to this contract.
+
+### Agency research and developed creative (5 October 2026)
+
+The current audit is `docs/social/11-instagram-corpus-audit.md`: 356 post records and
+covers, 59 captured captions, 85 observed positions and 84 saved inner images from
+ten selected profiles. LayerUp and Sebrae profiles are excluded. Separate agency,
+adjacent-service, buyer-educator and peer reference roles. Aggregate coverage, review
+manifest and source index can be committed; raw captions, signed CDN links and
+competitor media stay gitignored/out of the public site. New archive hashes
+invalidate review status. Do not infer conversions from cover appearance.
+
+`social-creative.ts` supplies developed original explanations, comparisons,
+workflows and project evidence. Six art templates and three artwork surfaces
+share preview/export rendering; the site retains its dark theme. Every closing
+action should match its actual destination. Do not invent resources, automated
+DM delivery, testimonials or portfolio results. The 356-cover study is not an
+automatic deliverable in the standard client service package. Collection checks:
+`scripts/social-research/check-collectors.mjs`, `check-import.py`.

@@ -29,15 +29,6 @@ export const CONTENT_ACCOUNTS = [
     stories: ["smallest-system"],
   },
   {
-    name: "Layer Up", kind: "Brazilian marketing agency comparator", audience: "Brazilian marketing decision-makers; adjacent competition for strategy work, with a larger delivery team.",
-    lesson: "Start with a decision-maker's problem and offer a relevant next step. Our measurement stories explain definitions instead of promising ROI.",
-    samples: [
-      { label: "Marketing decision-maker pain points", href: "https://pt.linkedin.com/posts/layer-up_se-voc%C3%AA-%C3%A9-decisor-de-marketing-isso-j%C3%A1-aconteceu-activity-7446157254103425025-ErxB", observation: "ROI visibility and fragmented data introduce a strategy offer; the CTA invites a specialist conversation." },
-      { label: "2026 case-results offer", href: "https://pt.linkedin.com/posts/layer-up_a-layer-up-j%C3%A1-construiu-cases-de-sucesso-activity-7430717889097285632-RGfw", observation: "Reported campaign numbers support a commercial pitch and a WhatsApp CTA. Those results are advertiser claims, not independently audited evidence." },
-    ],
-    stories: ["likes-intent", "tagged-link", "pilot-review"],
-  },
-  {
     name: "Superside", kind: "Creative service comparator", audience: "In-house marketing and creative leaders; useful packaging reference, not a local-business price benchmark.",
     lesson: "Explain the service through an actual operational problem. A solo studio should show Benito and a clear scope rather than imitate enterprise production volume.",
     samples: [
@@ -59,7 +50,7 @@ export const CONTENT_ACCOUNTS = [
 
 export const PLATFORM_DECISIONS = [
   { name: "LinkedIn", priority: "Primary recommendation", fit: "Founders, product leaders and premium project buyers. Publish through Benito's profile; use the studio page as supporting proof.", test: "Two decision stories weekly, mostly one annotated screenshot or concise text. Start in English for the existing positioning; use Portuguese when pursuing Brazilian decision-makers.", signal: "Relevant profile/post viewers where available, case visits, qualified conversations and proposals. Review at day 30 and day 60." },
-  { name: "Instagram", priority: "Secondary, bounded test", fit: "Brazilian small-business owners, especially the restaurant and retail examples already in the portfolio.", test: "One Portuguese adaptation weekly from the same stories. Start with readable carousels; test a short screen recording against actual account insights. Increase to two only if capacity and relevant conversations justify it.", signal: "Saves/shares, relevant DMs, tagged profile/Story visits and qualified enquiries. The current audit has no verified Instagram-feed sample." },
+  { name: "Instagram", priority: "Secondary, bounded test", fit: "Brazilian small-business owners, especially the restaurant and retail examples already in the portfolio.", test: "One Portuguese adaptation weekly from the same stories. Start with readable carousels; test a short screen recording against actual account insights. Increase to two only if capacity and relevant conversations justify it.", signal: "Saves/shares, relevant DMs, tagged profile/Story visits and qualified enquiries. The Instagram audit informs creative structure, not performance. Record this account’s actual buyer conversations and insights." },
   { name: "WhatsApp Business", priority: "Conversion channel, conditional", fit: "Useful for Brazilian buyer conversations after discovery, if Benito chooses to provide an official business number.", test: "Agree response hours and an enquiry process before adding it. Use the current website contact path until configured.", signal: "Real conversations and fit recorded manually; link clicks alone do not establish leads." },
   { name: "YouTube", priority: "Later", fit: "Deeper case explanations and searchable buyer education, once a repeatable story series proves useful.", test: "Only start when a monthly case walkthrough fits the recorded production budget. No launch commitment in this pilot.", signal: "Watch quality and relevant website conversations, reviewed against production time." },
   { name: "TikTok", priority: "Defer", fit: "A possible discovery experiment, but the current research does not establish Blessed Moon's target-buyer demand there.", test: "Reconsider if buyer interviews or inbound conversations support it and short video is already sustainable.", signal: "Qualified buyer interest per production hour; do not choose it on broad popularity alone." },

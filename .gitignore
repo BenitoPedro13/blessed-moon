@@ -43,3 +43,8 @@ next-env.d.ts
 
 # local screen recordings used for design/debugging review — not repo assets
 /VIDEOS/
+
+# Competitor media/text snapshots and dedicated research browser state are local.
+/docs/social/corpus/raw/
+/.research-browser/
+__pycache__/

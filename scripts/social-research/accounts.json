@@ -1,0 +1,99 @@
+{
+  "verified_at": "2026-10-04",
+  "target_per_account": 36,
+  "target_total": 360,
+  "status": "collection-pending",
+  "selection_note": "Handles checked against links published by each organisation. Agency references overlap in services, but these are not proven direct competitors in Benito’s market. Sample is deliberately exploratory, not representative. Separate peer content from buyer-facing evidence; validate local solo-studio competitors during analysis. Benito excluded LayerUp and Sebrae as unrelated to the studio on 5 October. The selected collection is ten accounts; do not refill it just to inflate the sample.",
+  "accounts": [
+    {
+      "handle": "refokusagency",
+      "name": "Refokus",
+      "group": "agency-reference",
+      "profile_url": "https://www.instagram.com/refokusagency/",
+      "verification_url": "https://www.refokus.com",
+      "fit_note": "Websites and brand presentation; larger international studio."
+    },
+    {
+      "handle": "clayglobal",
+      "name": "Clay",
+      "group": "agency-reference",
+      "profile_url": "https://www.instagram.com/clayglobal/",
+      "verification_url": "https://clay.global",
+      "fit_note": "Product design and websites for founders; larger international agency."
+    },
+    {
+      "handle": "wearetonik",
+      "name": "Tonik",
+      "group": "agency-reference",
+      "profile_url": "https://www.instagram.com/wearetonik/",
+      "verification_url": "https://www.tonik.com",
+      "fit_note": "Product design for startups; startup-facing reference."
+    },
+    {
+      "handle": "ramotion",
+      "name": "Ramotion",
+      "group": "agency-reference",
+      "profile_url": "https://www.instagram.com/ramotion/",
+      "verification_url": "https://www.ramotion.com",
+      "fit_note": "Brand, website and product-design evidence; larger international agency."
+    },
+    {
+      "handle": "baunfire",
+      "name": "Baunfire",
+      "group": "agency-reference",
+      "profile_url": "https://www.instagram.com/baunfire/",
+      "verification_url": "https://www.baunfire.com",
+      "fit_note": "Websites for business and marketing buyers; larger international agency."
+    },
+    {
+      "handle": "cadastra",
+      "name": "Cadastra",
+      "group": "adjacent-agency",
+      "profile_url": "https://www.instagram.com/cadastra/",
+      "verification_url": "https://cadastra.com",
+      "fit_note": "Brazilian marketing and digital services; enterprise-scale reference."
+    },
+    {
+      "handle": "supersidehq",
+      "name": "Superside",
+      "group": "adjacent-agency",
+      "profile_url": "https://www.instagram.com/supersidehq/",
+      "verification_url": "https://www.superside.com",
+      "fit_note": "Creative production and service packaging for marketing teams."
+    },
+    {
+      "handle": "rdstation",
+      "name": "RD Station",
+      "group": "buyer-educator",
+      "profile_url": "https://www.instagram.com/rdstation/",
+      "verification_url": "https://www.rdstation.com",
+      "fit_note": "Brazilian marketing and sales buyers; software vendor rather than studio competitor."
+    },
+    {
+      "handle": "hubspot",
+      "name": "HubSpot",
+      "group": "buyer-educator",
+      "profile_url": "https://www.instagram.com/hubspot/",
+      "verification_url": "https://www.hubspot.com",
+      "fit_note": "Marketing and sales buyers; international software vendor."
+    },
+    {
+      "handle": "thefuturishere",
+      "name": "The Futur",
+      "group": "peer-education",
+      "profile_url": "https://www.instagram.com/thefuturishere/",
+      "verification_url": "https://thefutur.com",
+      "fit_note": "Design-business education; peer reference, not evidence of buyer demand."
+    }
+  ],
+  "excluded_accounts": [
+    {
+      "handle": "layerup",
+      "reason": "Benito considers this profile unrelated to the studio."
+    },
+    {
+      "handle": "sebrae",
+      "reason": "Benito considers this profile unrelated to the studio."
+    }
+  ]
+}

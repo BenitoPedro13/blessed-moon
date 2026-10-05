@@ -6,15 +6,16 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SlideArt } from "@/components/social/slide-art";
-import { ART_FORMATS, ART_TEMPLATES, MAX_ART_SLIDES, blankPost, emptySlide, readArtPost, slideAlt, storyPost, type ArtPost, type ArtSlide, type ArtFormat, type ArtTemplate } from "@/lib/social-art";
+import { ART_FORMATS, ART_TEMPLATES, ART_SURFACES, MAX_ART_SLIDES, blankPost, emptySlide, readArtPost, slideAlt, storyPost, type ArtPost, type ArtSlide, type ArtFormat, type ArtSurface, type ArtTemplate } from "@/lib/social-art";
+import { PROJECT_ART_IMAGES } from "@/lib/social-creative";
 import { exportPost, localScreenshot } from "@/lib/social-export";
 import { campaignUrl, type Channel, type Story } from "@/lib/social-plan";
 
 function Field({ label, id, children }: { label: string; id: string; children: ReactNode }) {
-  return <div className="space-y-2"><label htmlFor={id} className="block text-sm text-foreground/85">{label}</label>{children}</div>;
+  return <div className="min-w-0 space-y-2"><label htmlFor={id} className="block text-sm text-foreground/85">{label}</label>{children}</div>;
 }
 function Choice({ label, id, value, items, onChange }: { label: string; id: string; value: string; items: [string, string][]; onChange: (value: string) => void }) {
-  return <Field label={label} id={id}><Select value={value} onValueChange={(next) => { if (next) onChange(next); }}><SelectTrigger id={id} className="w-full rounded-none"><SelectValue /></SelectTrigger><SelectContent>{items.map(([key, title]) => <SelectItem key={key} value={key}>{title}</SelectItem>)}</SelectContent></Select></Field>;
+  return <Field label={label} id={id}><Select value={value} onValueChange={(next) => { if (next) onChange(next); }}><SelectTrigger id={id} className="w-full min-w-0 rounded-none"><SelectValue className="min-w-0 truncate">{items.find(([key]) => key === value)?.[1] || value}</SelectValue></SelectTrigger><SelectContent>{items.map(([key, title]) => <SelectItem key={key} value={key}>{title}</SelectItem>)}</SelectContent></Select></Field>;
 }
 
 export function PostBuilder({ stories, initialPost }: { stories: readonly Story[]; initialPost: ArtPost }) {
@@ -55,6 +56,8 @@ export function PostBuilder({ stories, initialPost }: { stories: readonly Story[
     <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)]">
       <fieldset disabled={busy} className="min-w-0 space-y-5">
         <div className="grid gap-5 sm:grid-cols-2"><Choice label="Post format" id="post-format" value={post.format} items={Object.entries(ART_FORMATS).map(([key, item]) => [key, item.label])} onChange={(format) => setPost({ ...post, format: format as ArtFormat })} /><Choice label="Slide template" id="slide-template" value={slide.template} items={Object.entries(ART_TEMPLATES)} onChange={(template) => updateSlide({ template: template as ArtTemplate })} /></div>
+        <div className="grid gap-5 sm:grid-cols-2"><Choice label="Slide surface" id="slide-surface" value={slide.surface || "dark"} items={Object.entries(ART_SURFACES)} onChange={(surface) => updateSlide({ surface: surface as ArtSurface })} /><Choice label="Portfolio screenshot" id="slide-project-image" value={Object.hasOwn(PROJECT_ART_IMAGES, slide.image) ? slide.image : "none"} items={[["none", "No portfolio preset"], ...Object.entries(PROJECT_ART_IMAGES)]} onChange={(image) => { if (image === "none") { updateSlide({ image: "", imageAlt: "" }); return; } updateSlide({ image, imageAlt: "Project screenshot: " + PROJECT_ART_IMAGES[image as keyof typeof PROJECT_ART_IMAGES], template: "case" }); }} /></div>
+        <Field label="Closing action" id="slide-action"><Input id="slide-action" className="rounded-none" maxLength={90} value={slide.action || ""} onChange={(event) => updateSlide({ action: event.target.value })} /></Field>
         <Field label="Eyebrow" id="slide-kicker"><Input id="slide-kicker" className="rounded-none" maxLength={64} value={slide.kicker} onChange={(event) => updateSlide({ kicker: event.target.value })} /></Field>
         <Field label="Slide title" id="slide-title"><Textarea id="slide-title" className="rounded-none" maxLength={180} value={slide.title} onChange={(event) => updateSlide({ title: event.target.value })} /></Field>
         <Field label="Slide body · one point per line for a checklist" id="slide-body"><Textarea id="slide-body" className="min-h-28 rounded-none" maxLength={500} value={slide.body} onChange={(event) => updateSlide({ body: event.target.value })} /></Field>

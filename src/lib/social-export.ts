@@ -1,4 +1,4 @@
-import { ART_FORMATS, renderSlideSvg, slideAlt, type ArtFormat, type ArtPost, type ArtSlide } from "@/lib/social-art";
+import { ART_FORMATS, approvedArtImage, readArtPost, renderSlideSvg, slideAlt, type ArtFormat, type ArtPost, type ArtSlide } from "@/lib/social-art";
 import { jpegsToPdf } from "@/lib/social-pdf";
 
 export function saveArtifact(blob: Blob, filename: string) {
@@ -10,7 +10,26 @@ export function saveArtifact(blob: Blob, filename: string) {
 const bytes = async (blob: Blob) => new Uint8Array(await blob.arrayBuffer());
 const filename = (post: ArtPost) => `blessed-moon-${post.channel}-${post.id.replace(/[^a-z0-9-]/gi, "-").slice(0, 80) || "draft"}`;
 
+const imageCache = new Map<string, Promise<string>>();
+async function portableSlide(slide: ArtSlide): Promise<ArtSlide> {
+  if (!approvedArtImage(slide.image)) return slide;
+  let pending = imageCache.get(slide.image);
+  if (!pending) {
+    pending = (async () => {
+      const response = await fetch(slide.image, { redirect: "error" });
+      if (!response.ok) throw new Error("The project screenshot could not be loaded.");
+      const blob = await response.blob();
+      if (blob.size > 8_000_000 || !["image/png", "image/jpeg", "image/webp"].includes(blob.type)) throw new Error("The project screenshot has an unsupported size or format.");
+      return localScreenshot(new File([blob], "project-screenshot", { type: blob.type }));
+    })();
+    imageCache.set(slide.image, pending);
+    void pending.catch(() => imageCache.delete(slide.image));
+  }
+  return { ...slide, image: await pending };
+}
+
 export async function rasterizeSlide(slide: ArtSlide, format: ArtFormat, index: number, total: number, type = "image/png"): Promise<Blob> {
+  slide = await portableSlide(slide);
   const size = ART_FORMATS[format];
   const url = URL.createObjectURL(new Blob([renderSlideSvg(slide, format, index, total)], { type: "image/svg+xml;charset=utf-8" }));
   try {
@@ -26,6 +45,9 @@ export async function rasterizeSlide(slide: ArtSlide, format: ArtFormat, index: 
 
 export async function exportPost(post: ArtPost, kind: "png" | "zip" | "pdf" | "json", selected = 0) {
   const base = filename(post);
+  // Embed the exact allowlisted project assets so every download, including
+  // editable JSON, remains portable without fetching remote images on import.
+  post = readArtPost({ ...post, slides: await Promise.all(post.slides.map(portableSlide)) });
   if (kind === "json") { saveArtifact(new Blob([JSON.stringify(post, null, 2)], { type: "application/json" }), `${base}.json`); return; }
   if (kind === "png") { saveArtifact(await rasterizeSlide(post.slides[selected], post.format, selected, post.slides.length), `${base}-${String(selected + 1).padStart(2, "0")}.png`); return; }
   if (kind === "pdf") {

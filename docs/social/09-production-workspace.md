@@ -1,6 +1,6 @@
 # Visual planning and post production
 
-Implemented 4 October 2026 in Blessed Moon. This extends the existing researched
+Updated 5 October 2026 in Blessed Moon. This extends the existing researched
 strategy; it does not change the proposed service scope or public custom pricing.
 
 ## Review the pages
@@ -30,11 +30,13 @@ strategy; it does not change the proposed service scope or public custom pricing
 1. Open a draft from its channel brief, or choose a starting point in the builder.
 2. Choose portrait (1080×1350), square (1080×1080), landscape (1200×627) or Story
    (1080×1920). Story reserves space for platform controls and a link sticker.
-3. Edit each slide's title, body, eyebrow and footer. Choose Statement, Checklist
-   (one point per line) or Project screenshot. Add, duplicate, remove or reorder up
+3. Edit each slide's title, body, eyebrow and footer. Choose Statement, Comparison, Checklist
+   (one point per line), Workflow, Project screenshot or Closing action. Select
+   dark, warm paper or amber artwork and edit the closing action. Add, duplicate, remove or reorder up
    to ten slides. The right-hand artwork is the export's artwork.
 4. Add an approved local PNG, JPEG or WebP screenshot if useful. Files are limited
-   to 8 MB, reduced to a maximum 1600-pixel edge and centre-cropped in the template.
+   to 8 MB, reduced to a maximum 1600-pixel edge and fitted inside the screenshot frame.
+   You can also select an existing portfolio screenshot preset; exports embed it.
    Describe any screenshot in alt text; titles and screenshot descriptions are
    required for image exports. Review the crop and legibility.
 5. Edit/copy the caption. The researched campaign destination remains beside it
@@ -55,9 +57,9 @@ Research facts, project permissions and final wording still need Benito's review
 
 ## Implementation and privacy
 
-`social-art.ts` defines presets, validation and one SVG renderer. `SlideArt` uses it
+`social-creative.ts` develops the original sequences; `social-art.ts` defines presets, validation and one SVG renderer. `SlideArt` uses it
 on the page; `social-export.ts` rasterizes that same SVG with a local canvas. SVG
-strings escape text, imported pictures must be local raster data URIs, and draft
+strings escape text, imported pictures must be local raster data URIs or one of six exact portfolio asset paths, and draft
 fields, slide count and embedded image sizes are capped. JSON import has a 12 MB
 file limit; combined screenshot strings are limited to 10 million characters.
 Fonts use local Arial/Courier fallbacks so downloads require no remote font fetch.
@@ -97,3 +99,8 @@ artwork, editor/measurement screenshots and actual PNG/ZIP/PDF/JSON/SVG download
 The review server is `http://localhost:3194`. Optional analytics is disabled through
 empty process values at build and start, without changing environment files. This
 work includes a local commit only, with no push, deployment or social publication.
+
+The [Instagram audit](11-instagram-corpus-audit.md) now grounds the suggestions in
+356 covers and 59 full captions, with selected carousel observations. Raw competitor
+media is local research; previews show original Blessed Moon artwork and its own
+portfolio screenshots. Research coverage bars count records, not performance.

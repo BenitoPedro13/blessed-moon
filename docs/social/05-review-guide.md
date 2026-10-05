@@ -1,14 +1,14 @@
 # Review guide: Blessed Moon strategy service
 
-Prepared 4 October 2026. Implementation applied and verified in
+Updated 5 October 2026. Implementation applied and verified in
 the repository. See the task document for the check details.
 
 ## Pages to review
 
 - `/services/social-media`: public strategy service, fixed deliverables, direct
   work with Benito, custom quote, enquiry CTA and portfolio examples.
-- `/social-plan`: audience hypotheses, five public offer references, 12 actual
-  content samples across six account families, seven platform decisions, four
+- `/social-plan`: audience hypotheses, five public offer references, 356 Instagram covers, 59 captured captions, ten selected account audits and ten
+  supporting LinkedIn samples across five families, seven platform decisions, four
   content pillars, eight-week queue and proposed internal pricing.
 - `/instagram-plan`: 16 expandable briefs, Portuguese captions, slide/recording
   outlines, visual directions, evidence notes and external campaign URLs. Now includes
@@ -18,7 +18,7 @@ the repository. See the task document for the check details.
 - `/analytics-plan`: existing tooling, metric definitions, event dictionary,
   UTM convention, baseline checklist and 30/60/90-day reviews. An empty eight-week
   worksheet now plots real manual observations, with JSON save/restore and SVG export.
-- `/post-builder`: editable researched presets or blank drafts; three templates,
+- `/post-builder`: editable researched presets or blank drafts; six templates, three artwork surfaces,
   four formats, local screenshots, slide operations and PNG/ZIP/PDF/JSON downloads.
   See the [workspace guide](09-production-workspace.md) for the full workflow.
 - `/about`: Benito's solo studio; A/B are strategy and engineering disciplines.
@@ -50,7 +50,7 @@ the repository. See the task document for the check details.
 - Each post brief links sampled content patterns separately from Blessed Moon's
   project evidence. LinkedIn is recommended primary; Instagram is a smaller
   Portuguese test. Both 16-draft libraries are alternatives, not a commitment to
-  publish 32 posts. Instagram-feed access was incomplete; no Instagram competitor
+  publish 32 posts. Instagram covers/captured material were reviewed; no Instagram competitor
   performance, account cadence or sales benchmarks are claimed.
 
 ## Decisions still to review
@@ -95,3 +95,28 @@ actual layer centre rather than the navigation-offset handoff. Actual downloaded
 files and artwork captures are in `/private/tmp/blessed-moon-post-review-2026-10-04/`;
 the exported PDF also rendered successfully with macOS sips. The final local review
 build disables the optional trackers at build and start without modifying env files.
+
+## Latest research, creative and scrolling update
+
+Read [the corpus audit](11-instagram-corpus-audit.md) for the real 356-post
+archive, deep-review limits and how the findings changed the drafts. LayerUp and
+Sebrae profiles are excluded. There are 20 linked Instagram examples, per-account
+coverage, a coverage graph and source references in the briefs. Supporting LinkedIn
+material remains separately labelled. There are no fabricated engagement figures.
+
+Every carousel now has developed explanations, comparison/checklist/workflow
+layouts, a worked example or real screenshot, and a closing action matching its
+destination. The examples now also use Markado and Flora. The six art templates
+and three surfaces are editable in the builder and share preview/export rendering.
+Approved portfolio presets export as embedded images, including portable JSON.
+
+The root document can grow so Lenis receives fresh dimensions. Shared stages
+observe content, use ordinary flow when it exceeds the available viewport and
+restore pinning when it fits. Long case galleries use document scrolling. Work
+counts come from actual project data. System has a real page footer and contains
+the full creative sequence/coverage specimens; its decorative glow cannot widen
+the mobile page. Builder selections truncate within the available width.
+
+The [scroll task](../tasks/TASK-page-scroll-reachability.md) and
+[research/creative task](../tasks/TASK-social-research-and-creative-v2.md) record
+verification. Local changes have not been pushed or deployed.

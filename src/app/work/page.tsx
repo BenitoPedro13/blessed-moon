@@ -26,7 +26,7 @@ export default function WorkPage() {
         <PageHero
           eyebrow="— Selected work"
           title="Selected Work"
-          description="Built to last longer than the brief. Nine systems where product clarity, interface craft, and reliable engineering had to arrive together."
+          description={`Built to last longer than the brief. ${STUDIO_PROJECTS.length} systems where product clarity, interface craft, and reliable engineering had to arrive together.`}
           code="WORK"
         />
 

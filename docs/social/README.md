@@ -1,6 +1,6 @@
 # Blessed Moon Studio: social strategy and new service
 
-Prepared 4 October 2026. Research supporting the website implementation; see docs/tasks/TASK-social-strategy-and-service.md for status.
+Updated 5 October 2026. Research supporting the website implementation; see docs/tasks/TASK-social-strategy-and-service.md for status.
 
 Two related deliverables:
 
@@ -9,7 +9,14 @@ Two related deliverables:
 
 Read [research](01-research.md), [agency content plan](02-agency-content-plan.md), [service and pricing](03-service-and-pricing.md), and [measurement](04-measurement.md). The implementation follows this packet and the task document.
 
-The [content-account audit](06-content-account-audit.md) reviews 12 actual public LinkedIn posts across six account families, distinguishing agency comparators from a same-audience educator. The [platform selection](07-platform-selection.md) explains the recommendation and review criteria. Each website brief links its research pattern separately from its own project evidence. Instagram feed coverage is incomplete and no Instagram performance findings are claimed.
+The [Instagram corpus audit](11-instagram-corpus-audit.md) covers 356 distinct
+records and saved covers from ten selected accounts, 59 captured full captions and
+84 saved inner-slide images. Each account's role and limits are explicit. The
+[earlier LinkedIn audit](06-content-account-audit.md) records the initial sample;
+the live plan now retains ten posts across five families after Benito excluded
+LayerUp and Sebrae profiles. The [platform selection](07-platform-selection.md)
+explains the provisional channel recommendation. Each brief separates observed
+patterns, original project evidence and proposed format tests.
 
 The [review guide](05-review-guide.md) lists pages, changes and pending decisions.
 A [prompt for a future website agent](08-agent-review-prompt.md) explains the

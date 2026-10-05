@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { subscribeFrame } from "@/components/frame-loop";
+import { usePageReducedMotion } from "@/lib/use-page-reduced-motion";
 import { ScrollParticles, StageProgressContext } from "@/components/scroll-particles";
 
 /**
@@ -54,6 +55,9 @@ export function ScrollStage({
 }) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
+  const reduceMotion = usePageReducedMotion();
+  const [contentOverflow, setContentOverflow] = useState(false);
+  const flow = reduceMotion || contentOverflow;
   // Ref rather than a dependency on the callback itself — an inline arrow
   // function passed by the caller would otherwise be a new reference every
   // render, tearing down and restarting the rAF loop each time for no reason.
@@ -70,9 +74,32 @@ export function ScrollStage({
   }, [onProgress]);
 
   useEffect(() => {
+    if (reduceMotion) return;
+    const inner = innerRef.current;
+    if (!inner) return;
+    function measure() {
+      setContentOverflow(inner!.scrollHeight > window.innerHeight + 1);
+    }
+    const observer = new ResizeObserver(measure);
+    observer.observe(inner);
+    Array.from(inner.children).forEach((child) => observer.observe(child));
+    measure();
+    window.addEventListener("resize", measure);
+    return () => { observer.disconnect(); window.removeEventListener("resize", measure); };
+  }, [reduceMotion, contentOverflow]);
+
+  useEffect(() => {
     const wrapper = wrapperRef.current;
     const inner = innerRef.current;
     if (!wrapper || !inner) return;
+    if (flow) {
+      // React does not restore a style value changed by the frame loop when
+      // its JSX value is unchanged. Reset it explicitly on the flow fallback.
+      progressRef.current = 0;
+      inner.style.setProperty("--stage-progress", "0");
+      onProgressRef.current?.(0);
+      return;
+    }
 
     return subscribeFrame({
       read() {
@@ -87,25 +114,16 @@ export function ScrollStage({
         onProgressRef.current?.(progress);
       },
     });
-  }, []);
+  }, [flow]);
 
   return (
-    <div ref={wrapperRef} style={{ height: `${heightMultiplier * 100}dvh` }} className={`relative ${className}`}>
-      {/* overflow-y-auto, not overflow-hidden: content taller than one
-          viewport (a dense grid on a short/mobile viewport) would otherwise
-          be silently clipped instead of reachable. Modern browsers already
-          clamp justify-center to top-aligned when content overflows its
-          container, so this only ever kicks in as a rare safety net, not
-          the primary interaction model. overflow-x-hidden has to be
-          explicit alongside it — per spec, overflow-y: auto with
-          overflow-x left at its default `visible` silently promotes
-          overflow-x to `auto` too, so any section using a negative-margin
-          trick (pricing-table.tsx's `-mx-3` rows) turned into a real
-          horizontal scrollbar on the whole pinned panel. */}
+    <div ref={wrapperRef} data-scroll-stage={flow ? "flow" : "pinned"} style={flow ? undefined : { height: `${heightMultiplier * 100}dvh` }} className={`relative ${className}`}>
+      {/* Oversized content uses document flow. A nested scrollable pin can
+          consume the same gesture needed to advance or leave the stage. */}
       <div
         ref={innerRef}
         style={{ "--stage-progress": 0 } as React.CSSProperties}
-        className="sticky top-0 flex h-dvh flex-col items-center justify-center overflow-x-hidden overflow-y-auto"
+        className={flow ? "relative flex min-h-dvh flex-col items-center justify-center" : "sticky top-0 flex h-dvh flex-col items-center justify-center overflow-hidden"}
       >
         {/* A ref object, so the value is stable and providing it costs no
             re-render — the number inside it changes every frame. */}

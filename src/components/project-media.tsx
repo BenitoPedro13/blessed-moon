@@ -58,12 +58,7 @@ export function ProjectGallery({
               {String(index + 1).padStart(2, "0")} / {String(images.length).padStart(2, "0")}
             </span>
           </figcaption>
-          <div
-            role="region"
-            tabIndex={0}
-            aria-label={`${title} screenshot: ${image.alt}. Scroll inside the frame to inspect the full page.`}
-            className="max-h-[42rem] overflow-y-auto bg-[#f3f2ef] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-primary"
-          >
+          <div aria-label={`${title} screenshot`} className="bg-[#f3f2ef]">
             <Image
               src={image.src}
               alt={image.alt}

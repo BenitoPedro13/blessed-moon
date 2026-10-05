@@ -1,3 +1,8 @@
+> Updated evidence note, 5 October 2026: the [Instagram audit](11-instagram-corpus-audit.md)
+> now reviews 356 covers, 59 full captions and captured inner images across ten
+> selected accounts. It informs creative structure; it does not rank channel
+> performance. The fit/capacity recommendation below remains provisional.
+
 # Platform selection for Benito's solo studio
 
 Prepared 4 October 2026. Recommendation, not measured channel performance.
@@ -44,7 +49,7 @@ Brazilian small-business owners, especially the restaurant and retail examples a
 
 One Portuguese adaptation weekly from the same stories. Start with readable carousels; test a short screen recording against actual account insights. Increase to two only if capacity and relevant conversations justify it.
 
-Review signal: Saves/shares, relevant DMs, tagged profile/Story visits and qualified enquiries. The current audit has no verified Instagram-feed sample.
+Review signal: Saves/shares, relevant DMs, tagged profile/Story visits and qualified enquiries. The current Instagram audit informs creative structure, not measured channel performance.
 
 ### WhatsApp Business — Conversion channel, conditional
 

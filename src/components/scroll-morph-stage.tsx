@@ -1,10 +1,11 @@
 "use client";
 
-import { createContext, useContext, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { LayoutGroup, motion } from "motion/react";
 
 import { CellGrid } from "@/components/cell-grid";
 import { subscribeFrame } from "@/components/frame-loop";
+import { usePageReducedMotion } from "@/lib/use-page-reduced-motion";
 import { ScrollParticles } from "@/components/scroll-particles";
 import { SectionHeading } from "@/components/section-heading";
 import {
@@ -129,17 +130,6 @@ export interface MorphLayerSpec {
   content: React.ReactNode;
 }
 
-// The first hydration render must match the server's animated structure.
-// useSyncExternalStore then switches to the browser's reduced-motion layout,
-// and subscribes to later preference changes without a hydration mismatch.
-function subscribeReducedMotion(notify: () => void) {
-  const query = window.matchMedia("(prefers-reduced-motion: reduce)");
-  query.addEventListener("change", notify);
-  return () => query.removeEventListener("change", notify);
-}
-const reducedMotionSnapshot = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-const serverMotionSnapshot = () => false;
-
 export function ScrollMorphStage({
   layers,
   heightPerLayer = 1.6,
@@ -161,12 +151,15 @@ export function ScrollMorphStage({
   const layerRefs = useRef<(HTMLDivElement | null)[]>([]);
   const contentRefs = useRef<(HTMLDivElement | null)[]>([]);
   const titleRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const titlebarRef = useRef<HTMLDivElement>(null);
   /** Each layer's natural content height, kept fresh by a ResizeObserver
    * rather than measured in the rAF loop — reading offsetHeight every frame
    * for every layer would force a layout flush 60 times a second. */
   const heightsRef = useRef<number[]>([]);
   const [active, setActive] = useState(0);
-  const reduceMotion = useSyncExternalStore(subscribeReducedMotion, reducedMotionSnapshot, serverMotionSnapshot);
+  const reduceMotion = usePageReducedMotion();
+  const [contentOverflow, setContentOverflow] = useState(false);
+  const flow = reduceMotion || contentOverflow;
 
   /**
    * Horizontal room for the window, remeasured only on viewport resize — never
@@ -210,17 +203,25 @@ export function ScrollMorphStage({
 
   useEffect(() => {
     if (reduceMotion) return;
-    const observer = new ResizeObserver(() => {
+    function measure() {
       contentRefs.current.forEach((el, i) => {
         if (el) heightsRef.current[i] = el.offsetHeight;
       });
-    });
+      const content = contentRefs.current.find(Boolean);
+      const titleHeight = titlebarRef.current?.offsetHeight ??
+        content?.parentElement?.previousElementSibling?.getBoundingClientRect().height ?? 34;
+      const availableHeight = window.innerHeight * 0.86 - titleHeight - 2;
+      setContentOverflow(heightsRef.current.slice(0, count).some((height) => height > availableHeight));
+    }
+    const observer = new ResizeObserver(measure);
     contentRefs.current.forEach((el) => el && observer.observe(el));
-    return () => observer.disconnect();
-  }, [count, reduceMotion]);
+    measure();
+    window.addEventListener("resize", measure);
+    return () => { observer.disconnect(); window.removeEventListener("resize", measure); };
+  }, [count, reduceMotion, contentOverflow]);
 
   useEffect(() => {
-    if (reduceMotion) return;
+    if (flow) return;
     const wrapper = wrapperRef.current;
     const inner = innerRef.current;
     if (!wrapper || !inner || count === 0) return;
@@ -298,15 +299,15 @@ export function ScrollMorphStage({
     // every render from page.tsx, so including it tore down and restarted the
     // rAF loop constantly. Everything the loop needs from it comes through
     // widthsRef/heightsRef instead.
-  }, [count, span, reduceMotion]);
+  }, [count, span, flow]);
 
   // Stacked, unpinned, every section legible and reachable in its own static
   // window, nothing crossfading or flying. Deliberately not "the same thing,
   // faster" — the mechanism here is motion, so under reduce-motion it should
   // be absent rather than compressed.
-  if (reduceMotion) {
+  if (flow) {
     return (
-      <div className={`space-y-16 px-5 py-16 ${className}`}>
+      <div data-morph-mode="flow" data-flow-reason={reduceMotion ? "reduced-motion" : "content-overflow"} className={`space-y-16 px-4 py-16 ${className}`}>
         {layers.map((layer, i) => (
           <MorphLayerContext.Provider
             key={layer.label}
@@ -317,8 +318,11 @@ export function ScrollMorphStage({
                 number={layer.number}
                 label={layer.label}
                 style={{ maxWidth: layer.width }}
+                padded={false}
               >
-                {layer.content}
+                <div ref={(el) => { contentRefs.current[i] = el; }} data-morph-content className={WINDOW_BODY}>
+                  {layer.content}
+                </div>
               </TerminalPanel>
             </section>
           </MorphLayerContext.Provider>
@@ -330,6 +334,7 @@ export function ScrollMorphStage({
   return (
     <div
       ref={wrapperRef}
+      data-morph-mode="pinned"
       style={{ height: `${count * heightPerLayer * 100}dvh` }}
       className={`relative ${className}`}
     >
@@ -376,7 +381,7 @@ export function ScrollMorphStage({
                 place. The eyebrow lives here rather than floating above a
                 headline: in a window it's the title, which is the one honest
                 job for a number that isn't a sequence. */}
-            <div className={WINDOW_TITLEBAR}>
+            <div ref={titlebarRef} className={WINDOW_TITLEBAR}>
               {/* div, not span: SectionHeading renders a <p>, and phrasing
                   content can't hold flow content — the span version was
                   invalid nesting and a hydration hazard. */}
@@ -413,9 +418,10 @@ export function ScrollMorphStage({
                 layer positions are driven by page-scroll progress, which an
                 inner scroll doesn't move, so it just panned across a frozen,
                 partially-crossfaded frame. Content taller than the clamp is
-                now the `short:` breakpoint's job (see the homepage layer
-                components) rather than a scrollable fallback — see
-                TASK-homepage-short-viewport-scroll-trap.md. */}
+                handled by the observed normal-flow fallback. The short:
+                styles still keep compact homepage layers animated when they
+                fit, but a growing project roster never depends on squeezing
+                itself into this clamp. */}
             {/* The explicit initial height is the server-rendered state: every
                 layer inside is absolutely positioned, so without it the window
                 is 0px tall until the first measured frame. The rAF loop only
@@ -449,6 +455,7 @@ export function ScrollMorphStage({
                       `avail` note above. This is what stops the text
                       re-wrapping while the window resizes. */}
                   <div
+                    data-morph-content
                     ref={(el) => {
                       contentRefs.current[i] = el;
                     }}

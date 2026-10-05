@@ -28,8 +28,11 @@ try {
       assert.equal(await page.getByText(/R\$3,900/).count(), 0, "Internal rates stay off the service page");
     }
     if (route === "/social-plan") {
-      assert.equal(await page.locator("[data-account-audit]").count(), 6);
-      assert.equal(await page.locator("[data-audit-sample]").count(), 12);
+      assert.equal(await page.locator("[data-account-audit]").count(), 5);
+      assert.equal(await page.locator("[data-audit-sample]").count(), 10);
+      assert.equal(await page.locator("[data-instagram-audit]").count(), 10);
+      assert.equal(await page.locator("[data-instagram-sample]").count(), 20);
+      assert.match(await page.locator("[data-research-coverage]").textContent(), /356 distinct posts/);
       assert.equal(await page.locator("[data-platform-decision]").count(), 7);
     }
     if (process.env.SOCIAL_SCREENSHOT_DIR && route === "/services/social-media") {
@@ -134,8 +137,8 @@ try {
   for (const width of [1440, 390, 320]) {
     await motionPage.setViewportSize({ width, height: 568 });
     await motionPage.goto(`${origin}/`, { waitUntil: "load" });
-    await motionPage.getByRole("button", { name: "begin", exact: true }).click({ timeout: 10000 });
-    await motionPage.waitForTimeout(1100);
+    await motionPage.getByRole("button", { name: "begin", exact: true }).click({ timeout: 20000 });
+    await motionPage.locator('.boot-gate').waitFor({ state: 'detached' });
     // The zero-height marker defines the centre of this morph layer. Native
     // scrollIntoView applies the site's navigation scroll-padding and samples
     // the preceding handoff instead, where content is intentionally cropped.
@@ -143,17 +146,21 @@ try {
       top: window.scrollY + document.querySelector("#services").getBoundingClientRect().top,
       behavior: "instant",
     }));
-    // Sample the settled service layer, rather than an arbitrary moment during
-    // Lenis/morph interpolation on a busy machine. Keep the clipping assertion below.
-    await motionPage.waitForFunction(() => {
-      let element = document.querySelector("[data-services-grid]");
-      while (element) {
-        const local = element.style?.getPropertyValue("--morph-local");
-        if (local) return Math.abs(Number(local)) < 0.005 && Number(getComputedStyle(element).opacity) > 0.99;
-        element = element.parentElement;
-      }
-      return false;
-    }, null, { timeout: 20000 });
+    const flow = await motionPage.locator('[data-morph-mode]').getAttribute('data-morph-mode') === 'flow';
+    if (flow) {
+      await motionPage.locator('[data-service-card="08"]').scrollIntoViewIfNeeded();
+    } else {
+      // Compact content still uses the animated handoff.
+      await motionPage.waitForFunction(() => {
+        let element = document.querySelector("[data-services-grid]");
+        while (element) {
+          const local = element.style?.getPropertyValue("--morph-local");
+          if (local) return Math.abs(Number(local)) < 0.005 && Number(getComputedStyle(element).opacity) > 0.99;
+          element = element.parentElement;
+        }
+        return false;
+      }, null, { timeout: 20000 });
+    }
     const serviceLink = motionPage.locator('main a[href="/services/social-media"]').first();
     if (process.env.SOCIAL_SCREENSHOT_DIR) await motionPage.screenshot({ path: join(process.env.SOCIAL_SCREENSHOT_DIR, `services-pinned-${width}.png`) });
     assert.equal(await motionPage.locator('[data-service-card="08"]').evaluate((element) => {
@@ -167,7 +174,7 @@ try {
         parent = parent.parentElement;
       }
       return rect.bottom <= innerHeight + 1;
-    }), true, `All eight service cards fit the pinned panel at ${width}`);
+    }), true, `All eight service cards remain reachable at ${width}`);
     await serviceLink.click({ timeout: 8000 });
     await motionPage.waitForURL(/\/services\/social-media/);
     assert.equal(await motionPage.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), true);

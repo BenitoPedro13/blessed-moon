@@ -7,7 +7,10 @@ iteration, not to duplicate the routes or discard the research.
 Work in /Users/benito/Documents/personal/blessed-moon. Read AGENTS.md, CLAUDE.md,
 the installed Next.js documentation required by AGENTS.md, the task document
 docs/tasks/TASK-social-strategy-and-service.md, and docs/social/README.md first.
-Also read docs/tasks/TASK-social-preview-builder.md and
+Also read docs/tasks/TASK-page-scroll-reachability.md,
+docs/tasks/TASK-social-research-and-creative-v2.md,
+docs/social/11-instagram-corpus-audit.md,
+docs/tasks/TASK-social-preview-builder.md and
 docs/social/09-production-workspace.md for the implemented production tools.
 Inspect git status and preserve existing work.
 
@@ -28,15 +31,23 @@ development need separate scope. Do not promise social management by default.
 
 Review /social-plan, /instagram-plan, /linkedin-plan and /analytics-plan. These
 are unlinked, noindex working documents, not authenticated pages. Keep source
-links, research limits and hypotheses visible. The audit contains 12 actual
-LinkedIn posts across six account families plus five advertised offer references;
-Instagram-feed coverage is incomplete. Never invent account performance or imply
+links, research limits and hypotheses visible. The audit now contains 356 distinct Instagram records/covers across ten accounts,
+59 captured full captions, 85 observed inner-media positions and 84 saved images;
+nine carousel sequences reached no next control but completeness is not guaranteed.
+All cover contact sheets, captured captions and saved inner images were reviewed.
+Ten LinkedIn samples across five families and five offer references remain separate.
+LayerUp and Sebrae profiles were excluded by Benito. Keep agency, adjacent-service,
+buyer-educator and peer references distinct. Raw competitor captions/media and signed
+CDN URLs stay gitignored in docs/social/corpus/raw; do not publish those assets.
+Use corpus/coverage.json, audit.json and post-index.csv for provenance. Never invent account performance or imply
 competitor results belong to Blessed Moon. Every brief separates its sampled
 research pattern from actual Blessed Moon project evidence.
 
 Previews, nine-cover studies and /post-builder already exist. The browser editor
 uses shared SVG artwork for live previews and PNG/ZIP/PDF exports, edits existing
-research drafts or blank posts, handles approved local screenshots and saves/imports
+research drafts or blank posts, uses six templates and dark/paper/amber artwork, with comparisons, workflows,
+checklists, project evidence and a closing action. It handles local screenshots and
+six allowlisted portfolio presets; exports embed those presets as data URIs. It saves/imports
 editable JSON. Keep drafts local and rr-block on editable roots for the existing
 recorder. It has no AI text/image API, video export, publishing or cloud persistence.
 Planning graphs show proposals; the analytics worksheet plots only manually entered
@@ -61,10 +72,21 @@ Tracker failure must not block contact actions. Confirm official contact/booking
 configuration and real analytics ingestion separately; do not invent credentials
 or a booking URL. Do not add another tracker or fabricated live dashboard.
 
+Preserve the scrolling fix: html grows with document content so Lenis dimensions
+update; shared stages observe content and switch to normal flow when it is too
+large, then restore pinning when it fits. Case galleries use document scrolling;
+Work counts derive from the project array. Do not restore fixed html height or
+nested main-content scrollers. Preserve compact pinning and reset stage progress
+on flow fallback. Test growing Work content, expanded briefs and footer reachability
+with actual wheel/keyboard input at desktop/mobile widths in both motion modes.
+
 For any approved iteration, update the task/research docs and /system specimens
 when shared components change. Run pnpm lint, type checks, pnpm build and
 scripts/check-social-strategy.mjs against a running preview.
-Also run scripts/check-post-builder.mjs for exports, editing and worksheet behavior.
+Also run scripts/check-post-builder.mjs for exports, editing and worksheet behavior,
+scripts/check-page-scroll.mjs for all 20 routes × six viewport/motion configurations,
+and scripts/social-research/check-collectors.mjs for collector UI fixtures, and
+python3 scripts/social-research/check-import.py for archive merging and validation.
 Check reduced-motion
 hydration and all eight service cards on short 320/390/1440px-wide viewports.
 Give a reviewable change summary with route links and any remaining limitations.

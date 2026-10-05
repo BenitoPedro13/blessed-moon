@@ -1,3 +1,7 @@
+> Historical initial sample, 4 October 2026. LayerUp was excluded by Benito on
+> 5 October; its two samples are no longer used in the live plan. Ten LinkedIn
+> samples remain as supporting research. See [the current Instagram audit](11-instagram-corpus-audit.md).
+
 # Content-account audit
 
 Inspected 4 October 2026. Scope: 12 publicly accessible LinkedIn posts across six

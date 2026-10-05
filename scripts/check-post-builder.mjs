@@ -58,11 +58,11 @@ try {
     const canvas = document.createElement("canvas"); canvas.width = image.width; canvas.height = image.height;
     const ctx = canvas.getContext("2d"); ctx.drawImage(image, 0, 0);
     const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-    let orange = 0, bright = 0;
-    for (let i = 0; i < pixels.length; i += 4) { if (pixels[i] > 220 && pixels[i + 1] > 50 && pixels[i + 1] < 150 && pixels[i + 2] < 80) orange++; if (pixels[i] > 200 && pixels[i + 1] > 200 && pixels[i + 2] > 200) bright++; }
-    return { orange, bright };
+    let orange = 0, bright = 0, ink = 0;
+    for (let i = 0; i < pixels.length; i += 4) { if (pixels[i] > 220 && pixels[i + 1] > 50 && pixels[i + 1] < 150 && pixels[i + 2] < 80) orange++; if (pixels[i] > 200 && pixels[i + 1] > 200 && pixels[i + 2] > 200) bright++; if (pixels[i] < 70 && pixels[i + 1] < 80 && pixels[i + 2] < 90) ink++; }
+    return { orange, bright, ink };
   }, `data:image/png;base64,${png.bytes.toString("base64")}`);
-  assert.ok(pixelCheck.orange > 500 && pixelCheck.bright > 500, "PNG contains the logo/accent and readable artwork, not an empty canvas");
+  assert.ok(pixelCheck.orange > 500 && (pixelCheck.bright > 500 || pixelCheck.ink > 500), "PNG contains the logo/accent and readable artwork, not an empty canvas");
 
   const zip = await download("Download post ZIP", "post.zip");
   const files = unzipSync(zip.bytes);
@@ -71,6 +71,12 @@ try {
   assert.match(strFromU8(files["alt-text.txt"]), /Clareza antes da conversa/);
   const draft = JSON.parse(strFromU8(files["editable-draft.json"]));
   assert.equal(draft.slides[0].title, "Clareza antes da conversa");
+  assert.ok(draft.slides.every(slide => slide.body.trim()), "Every developed slide carries useful explanatory copy");
+  assert.ok(draft.slides.some(slide => slide.template === "compare"));
+  assert.ok(draft.slides.some(slide => slide.template === "workflow"));
+  assert.ok(draft.slides[4].image.startsWith("data:image/"), "Project screenshot is embedded into portable JSON");
+  const proof = files["05.png"];
+  assert.ok(proof.length > 20000, "Proof slide includes actual screenshot pixels");
   const pdf = await download("Download PDF", "post.pdf");
   assert.match(pdf.bytes.toString("latin1", 0, 15), /%PDF-1.4/);
   assert.match(pdf.bytes.toString("latin1"), /\/Count 6 /);
@@ -102,7 +108,7 @@ try {
   }
   await page.getByLabel("Slide title", { exact: true }).fill('<script>alert("unsafe")</script> & <image href="https://example.invalid"/>');
   assert.equal(await preview.locator("script").count(), 0);
-  assert.equal(await preview.locator("svg image").count(), 0);
+  assert.equal(await preview.locator("svg").first().locator("image").count(), 0);
   await page.getByLabel("Restore editable JSON").setInputFiles({ name: "invalid.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify({ ...draft, slides: [{ ...draft.slides[0], image: "https://example.invalid/pic.png" }] })) });
   await page.getByRole("status").filter({ hasText: "Screenshots must be local" }).waitFor();
   await page.getByLabel("Restore editable JSON").setInputFiles({ name: "invalid-channel.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify({ ...draft, channel: ["linkedin"] })) });
@@ -116,8 +122,11 @@ try {
   await page.getByLabel("Footer / destination", { exact: true }).fill("i".repeat(90));
   for (const format of ["Landscape · 1200 × 627", "Portrait · 1080 × 1350", "Square · 1080 × 1080", "Story · 1080 × 1920"]) {
     await choose("#post-format", format);
-    const clipped = await preview.locator("svg").first().evaluate((svg) => [...svg.querySelectorAll("text")].filter((text) => { const box = text.getBBox(); const frame = svg.viewBox.baseVal; return box.x < 28 || box.x + box.width > frame.width - 27 || box.y < 0 || box.y + box.height > frame.height - 27; }).map((text) => text.textContent));
-    assert.deepEqual(clipped, [], `Text fits ${format}`);
+    for (const template of ["Statement", "Comparison", "Checklist", "Workflow", "Project screenshot", "Closing action"]) {
+      await choose("#slide-template", template);
+      const clipped = await preview.locator("svg").first().evaluate((svg) => [...svg.querySelectorAll("text")].filter((text) => { const box = text.getBBox(); const frame = svg.viewBox.baseVal; return box.x < 28 || box.x + box.width > frame.width - 27 || box.y < 0 || box.y + box.height > frame.height - 27; }).map((text) => text.textContent));
+      assert.deepEqual(clipped, [], `Text fits ${format} / ${template}`);
+    }
   }
   await choose("#post-format", "Landscape · 1200 × 627");
   await preview.screenshot({ path: join(directory, "builder-landscape.png") });

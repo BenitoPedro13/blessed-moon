@@ -2,6 +2,7 @@ import { ProfilePreview } from "@/components/social/post-preview";
 import { SlideArt } from "@/components/social/slide-art";
 import { PostBuilder } from "@/components/social/post-builder";
 import { PlanCharts } from "@/components/social/plan-charts";
+import { ResearchCoverage } from "@/components/social/research-coverage";
 import { MeasurementChart } from "@/components/social/measurement-chart";
 import { storyPost } from "@/lib/social-art";
 import type { Metadata } from "next";
@@ -97,7 +98,8 @@ export default function SystemPage() {
   const agencyEmail = process.env.AGENCY_CONTACT_EMAIL?.trim() || null;
 
   return (
-    <div className="mx-auto w-full max-w-5xl space-y-16 px-7 py-20">
+    <>
+    <main className="mx-auto w-full max-w-5xl space-y-16 px-7 py-20">
       <section className="space-y-3">
         <p className="font-mono text-[10.5px] tracking-[0.5px] text-muted-foreground uppercase">
           Internal / hidden
@@ -301,7 +303,8 @@ export default function SystemPage() {
           <code className="font-mono text-[12px] text-foreground/80">particles</code> prop below is the
           ParticleScroll replacement — an ambient dissolve texture, not DOM capture (see
           scroll-particles.tsx); density peaks as the section arrives/leaves, thins out once
-          it&apos;s fully legible.
+          it&apos;s fully legible. Oversized content and reduced-motion preferences use normal
+          document flow, with progress reset to zero so content stays visible.
         </p>
         <div className="border border-border/60">
           <ScrollStage heightMultiplier={1.4} particles>
@@ -310,7 +313,7 @@ export default function SystemPage() {
                 opacity: "calc(1 - var(--stage-progress, 0))",
                 transform: "scale(calc(1 - var(--stage-progress, 0) * 0.2))",
               }}
-              className="text-center font-mono text-4xl text-primary"
+              className="text-center font-mono text-[clamp(1rem,5vw,2.25rem)] text-primary"
             >
               --stage-progress
             </div>
@@ -384,7 +387,9 @@ export default function SystemPage() {
         <ProfilePreview stories={STORIES.slice(0, 1)} channel="instagram" />
         <PostCard story={STORIES[0]} channel="instagram" />
         <QuoteEstimate />
-        <div className="max-w-xs"><SlideArt slide={storyPost(STORIES[0], "instagram").slides[0]} format="portrait" /></div>
+        <p className="text-sm leading-7 text-muted-foreground">Developed sequence: buyer question, comparison, checklist, workflow, project evidence and closing action. Dark, warm paper and amber surfaces belong to the artwork; the site retains its dark theme.</p>
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-3">{storyPost(STORIES[0], "instagram").slides.map((slide, index) => <div key={index}><SlideArt slide={slide} format="portrait" index={index} total={6} /><p className="mt-2 font-mono text-xs text-muted-foreground">{slide.template}</p></div>)}</div>
+        <ResearchCoverage />
         <PlanCharts />
         <MeasurementChart />
         <details className="border border-border p-5"><summary>Post builder specimen</summary><div className="mt-5"><PostBuilder stories={STORIES} initialPost={storyPost(STORIES[0], "instagram")} /></div></details>
@@ -454,7 +459,9 @@ export default function SystemPage() {
           in here (every layer is permanently in the viewport, so{" "}
           <code className="font-mono text-[12px] text-foreground/80">whileInView</code> can&apos;t fire
           per layer); use <code className="font-mono text-[12px] text-foreground/80">morphDrift()</code>{" "}
-          instead.
+          instead. When a layer exceeds the available frame height, the whole stage
+          becomes a stack of readable panels in normal document flow. Content and viewport
+          observers also restore the morph when every layer fits again.
         </p>
         <div className="border border-border/60">
           <ScrollMorphStage
@@ -596,7 +603,7 @@ export default function SystemPage() {
           <span className="block font-mono text-[10px] text-muted-foreground uppercase">
             BorderGlow — unified card-hover candidate (move cursor across each)
           </span>
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-4 overflow-clip p-2 sm:grid-cols-2">
             <BorderGlow>
               <div className="p-6">
                 <span className="mb-2.5 block font-mono text-[9.5px] text-muted-foreground/70">01</span>
@@ -694,6 +701,8 @@ export default function SystemPage() {
           results to learn.
         </p>
       </section>
-    </div>
+    </main>
+    <SiteFooter />
+    </>
   );
 }

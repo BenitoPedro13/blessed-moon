@@ -31,15 +31,11 @@ export function WorkIndex() {
         className="max-w-2xl font-sans text-3xl font-semibold tracking-[-0.025em] text-foreground sm:text-4xl"
         style={morphDrift({ y: 44, order: 1 })}
       >
-        Nine systems, still running.
+        {STUDIO_PROJECTS.length} systems, still running.
       </h2>
 
-      {/* Untransformed: holds the departing token. Row padding trimmed from
-          py-5 to py-3.5 when the roster grew from seven to nine projects —
-          nine rows at the original spacing pushed the list past the window's
-          86dvh clamp (scroll-morph-stage.tsx no longer offers an internal
-          scroll fallback, see TASK-homepage-short-viewport-scroll-trap.md),
-          so the list itself has to fit rather than rely on one. */}
+      {/* Untransformed: holds the departing token. Oversized rosters use the
+          stage's normal-flow fallback rather than clipping rows. */}
       <ul className="mt-8 border-t border-border/60">
         {STUDIO_PROJECTS.map((project, i) => (
           <li
