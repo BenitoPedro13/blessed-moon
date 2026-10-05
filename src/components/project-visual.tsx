@@ -9,7 +9,10 @@ interface ProjectVisualProps {
     | "geospatial"
     | "eyewear"
     | "furniture"
-    | "rodizio";
+    | "rodizio"
+    | "fairs"
+    | "language"
+    | "grid";
 }
 
 const QUALIFICATION_STEPS = ["Renda", "Entrada", "Restrições", "Faixa MCMV", "Localidade", "Score"];
@@ -48,6 +51,30 @@ const CATALOGO_RULES = [
   ["wa.me único", true],
   ["shopify fora do seam", true],
   ["cms", false],
+] as const;
+
+const FAIR_ENGINE = [
+  ["tour record", true],
+  ["fixed sections", true],
+  ["live quote", true],
+  ["quote frozen", true],
+  ["cookie banner", false],
+] as const;
+
+const LOCALES = [
+  ["pt · /metodo", true],
+  ["en · /en/method", true],
+  ["es · /es/metodo", true],
+  ["gsap + lenis", true],
+  ["webgl", false],
+] as const;
+
+const GRID_SOURCES = [
+  ["ons · brazil", true],
+  ["entso-e · europe", true],
+  ["eia · usa", true],
+  ["dead-letter queue", true],
+  ["synthetic data", false],
 ] as const;
 
 const TRES_SAIDAS = [
@@ -396,6 +423,114 @@ export function ProjectVisual({ title, variant }: ProjectVisualProps) {
             </div>
             <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">
               coma tudo, pague menos
+            </div>
+          </div>
+        </div>
+      )}
+      {variant === "fairs" && (
+        <div className="grid h-[250px] grid-cols-[0.85fr_1.15fr] gap-3 pt-3 sm:h-[282px]">
+          <div className="border border-border/60 p-3">
+            <p className="text-[8px] text-primary uppercase">ebeuf 2027 / tour</p>
+            <p className="mt-3 font-sans text-lg font-semibold tracking-[-0.03em] text-foreground">4 cities · 16–20 mar</p>
+            <p className="mt-1 text-[7px] text-muted-foreground">skopje · pristina · podgorica · sarajevo</p>
+            <div className="mt-5 border-t border-border/60 pt-3">
+              <p className="text-[7px] text-muted-foreground uppercase">registration</p>
+              <p className="mt-1 text-[9px] text-primary">persisted + emailed</p>
+            </div>
+            <div className="mt-4 flex items-center gap-1.5 text-[7px] text-muted-foreground">
+              <span className="text-primary">●</span>
+              quote in integer cents
+            </div>
+          </div>
+          <div className="border border-primary/40 p-3">
+            <p className="text-[8px] text-primary uppercase">event engine</p>
+            <div className="mt-3 space-y-1.5">
+              {FAIR_ENGINE.map(([label, available]) => (
+                <div
+                  key={label}
+                  className="flex items-center justify-between border-b border-border/50 pb-1 text-[7px] text-muted-foreground"
+                >
+                  <span>{label}</span>
+                  <span className={available ? "text-primary" : "text-muted-foreground"}>
+                    {available ? "[x]" : "[ ]"}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">
+              one record, one standard page
+            </div>
+          </div>
+        </div>
+      )}
+      {variant === "language" && (
+        <div className="grid h-[250px] grid-cols-[0.85fr_1.15fr] gap-3 pt-3 sm:h-[282px]">
+          <div className="border border-border/60 p-3">
+            <p className="text-[8px] text-primary uppercase">outubro / hero</p>
+            <p className="mt-3 font-sans text-lg font-semibold tracking-[-0.03em] text-foreground">destravar</p>
+            <p className="mt-1 text-[7px] text-muted-foreground">the cord untangles, língua lands</p>
+            <div className="mt-5 border-t border-border/60 pt-3">
+              <p className="text-[7px] text-muted-foreground uppercase">locales</p>
+              <p className="mt-1 text-[9px] text-primary">pt · en · es</p>
+            </div>
+            <div className="mt-4 flex items-center gap-1.5 text-[7px] text-muted-foreground">
+              <span className="text-primary">●</span>
+              one route map, no i18n library
+            </div>
+          </div>
+          <div className="border border-primary/40 p-3">
+            <p className="text-[8px] text-primary uppercase">pages / 3 locales</p>
+            <div className="mt-3 space-y-1.5">
+              {LOCALES.map(([label, available]) => (
+                <div
+                  key={label}
+                  className="flex items-center justify-between border-b border-border/50 pb-1 text-[7px] text-muted-foreground"
+                >
+                  <span>{label}</span>
+                  <span className={available ? "text-primary" : "text-muted-foreground"}>
+                    {available ? "[x]" : "[ ]"}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">
+              bora destravar
+            </div>
+          </div>
+        </div>
+      )}
+      {variant === "grid" && (
+        <div className="grid h-[250px] grid-cols-[0.85fr_1.15fr] gap-3 pt-3 sm:h-[282px]">
+          <div className="border border-border/60 p-3">
+            <p className="text-[8px] text-primary uppercase">ons / plant-hour</p>
+            <p className="mt-3 font-sans text-lg font-semibold tracking-[-0.03em] text-foreground">366,336 readings</p>
+            <p className="mt-1 text-[7px] text-muted-foreground">zero duplicates on replay</p>
+            <div className="mt-5 border-t border-border/60 pt-3">
+              <p className="text-[7px] text-muted-foreground uppercase">idempotency key</p>
+              <p className="mt-1 text-[9px] text-primary">source · zone · asset · metric · time</p>
+            </div>
+            <div className="mt-4 flex items-center gap-1.5 text-[7px] text-muted-foreground">
+              <span className="text-primary">●</span>
+              polled, said plainly
+            </div>
+          </div>
+          <div className="border border-primary/40 p-3">
+            <p className="text-[8px] text-primary uppercase">sources / 3</p>
+            <div className="mt-3 space-y-1.5">
+              {GRID_SOURCES.map(([label, available]) => (
+                <div
+                  key={label}
+                  className="flex items-center justify-between border-b border-border/50 pb-1 text-[7px] text-muted-foreground"
+                >
+                  <span>{label}</span>
+                  <span className={available ? "text-primary" : "text-muted-foreground"}>
+                    {available ? "[x]" : "[ ]"}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">
+              go → redpanda → timescale
             </div>
           </div>
         </div>

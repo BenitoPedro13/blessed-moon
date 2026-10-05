@@ -7,7 +7,10 @@ export type ProjectVisualVariant =
   | "geospatial"
   | "eyewear"
   | "furniture"
-  | "rodizio";
+  | "rodizio"
+  | "fairs"
+  | "language"
+  | "grid";
 
 type ProjectStep = {
   phase: string;
@@ -1308,6 +1311,179 @@ export const STUDIO_PROJECTS: readonly StudioProject[] = [
         label: "View source",
         href: "https://github.com/BenitoPedro13/sua-mesa-fit",
       },
+    ],
+  },
+  {
+    slug: "unimeet",
+    title: "UniMeet",
+    tagline: "University fairs sold through one standardised event page, plus the social plan that fills them",
+    index: "10",
+    year: "2026",
+    role: "Full-stack product engineering · social strategy",
+    timeline: "Delivered October 2026",
+    team: "Solo delivery, with the client's brand designer",
+    description:
+      "A recruitment website for European universities: an admin-driven event engine where one tour record becomes a standardised fair page ending in a priced registration form, plus Instagram and LinkedIn plans and a post builder rendering the brand's own slides.",
+    problem:
+      "UniMeet sells stands at university fairs across the Western Balkans and campus visits in Europe. The commercial path is short and unforgiving: event page, registration form, sales conversation, invoice offline. Every fair needed the same page without the content model giving up, the price shown live had to match the price confirmed later, and the buyers were university staff, many at public bodies with their own accessibility expectations.",
+    approach:
+      "One Payload collection with a kind discriminator drives every fair and campus page in a fixed section order, so a new tour is data entry, not design. Pricing is one pure function in integer cents, run identically in the browser's live preview and in the server hook that freezes a quote snapshot at submission, so a confirmation keeps what was actually quoted. Spam protection uses a honeypot and a hashed-IP rate limit, analytics are self-hosted and cookieless, and the site makes no third-party request from a page, which is why it needs no cookie banner. The social work followed the same rule: research first, then a plan and a builder that renders posts from the CMS.",
+    outcome:
+      "Delivered on the client's v1 identity at unimeet.eu, with registrations persisted and emailed, axe-clean at 390, 768 and 1440 wide, and a sitemap-driven SEO pass with a generated share card per page. The screenshots here are the proposed v2 design system built alongside it; the client chose to keep v1 live.",
+    tags: ["Event Platform", "CMS", "Social Strategy"],
+    stack: ["Next.js", "Payload CMS", "PostgreSQL", "TypeScript", "Tailwind CSS v4", "TanStack Query", "Playwright"],
+    visual: "fairs",
+    cover: {
+      src: "/projects/unimeet/home.png",
+      alt: "UniMeet home in the proposed v2 design: a recruitment hero beside the next fair tour card (proposal; v1 is live)",
+      width: 1440,
+      height: 900,
+    },
+    screenshots: [
+      { src: "/projects/unimeet/home.png", alt: "UniMeet home in the proposed v2 design, next fair tour beside the hero (proposal; v1 is live)", width: 1440, height: 900 },
+      { src: "/projects/unimeet/fair-tour.png", alt: "The EBEUF 2027 fair tour page in the proposed v2 design: four cities, dates and per-city stand prices (proposal)", width: 1440, height: 900 },
+      { src: "/projects/unimeet/university-fairs.png", alt: "University fairs index in the proposed v2 design, filterable by country and season (proposal)", width: 1440, height: 900 },
+      { src: "/projects/unimeet/for-universities.png", alt: "For Universities page in the proposed v2 design (proposal)", width: 1440, height: 900 },
+      { src: "/projects/unimeet/instagram-plan.png", alt: "UniMeet's Instagram plan page: research, strategy and the first posts, rendered from the CMS", width: 1440, height: 900 },
+      { src: "/projects/unimeet/linkedin-plan.png", alt: "UniMeet's LinkedIn plan page: the buyer-side companion to the Instagram plan", width: 1440, height: 900 },
+    ],
+    process: [
+      { phase: "01", title: "The pitch, in three identities", body: "The proposal that won the contract was itself a page, rendered in three candidate identities from one content source, then retired once the client's designer delivered the real brand." },
+      { phase: "02", title: "One content model for every fair", body: "Tours, universities, schools and registrations in Payload; one kind discriminator and a fixed section order keep every event page standardised instead of a free-form page builder." },
+      { phase: "03", title: "Pricing that can't drift", body: "A single pricing function in integer cents, tested under a non-UTC timezone, powers the live preview and freezes a quote at submission; a forged price in a raw request is stripped before the hook runs." },
+      { phase: "04", title: "Social plans and a post builder", body: "Ten competitor accounts read, then Instagram and LinkedIn plans as pages, with a staff-only builder that renders posts from tours and fair cities in the brand's own templates." },
+    ],
+    architecture: [
+      { layer: "App", label: "Next.js + Payload in one app", detail: "The admin ships with the site; pages are static and revalidated from Payload hooks." },
+      { layer: "Data", label: "PostgreSQL on Neon, EU region", detail: "Every schema change goes through a reviewed migration." },
+      { layer: "Money path", label: "lib/pricing.ts", detail: "One pure function for the live preview and the frozen server quote, in integer cents." },
+      { layer: "Social", label: "lib/social on lib/og", detail: "Slides rendered server-side as the file to post, so the preview and the download can't differ." },
+    ],
+    features: [
+      { title: "A standardised event engine", body: "A new fair tour is a record, not a design job: the same sections, in the same order, ending in the same registration form." },
+      { title: "A quote frozen at submission", body: "Tour prices can change later; a confirmation always shows the price the university was actually quoted." },
+      { title: "No cookie banner needed", body: "Self-hosted fonts, cookieless analytics through a same-origin path, and no third-party request from any page." },
+    ],
+    challenges: [
+      { title: "The client kept v1", body: "A richer v2 design system was built page by page as isolated routes, so nothing on the live site changed while it was reviewed; the client chose to stay on v1, and v2 remains a proposal." },
+      { title: "Dates a day early", body: "Payload stores dates as UTC midnight; formatting them in local time printed every fair a day early on any host west of UTC, so every stored date is now formatted in UTC and the tests run in São Paulo time." },
+      { title: "An email that could hang a registration", body: "Nodemailer's default timeouts would have let an unreachable mail server hold a registration open for minutes; explicit timeouts keep the submission fast and record the email as failed instead." },
+    ],
+    links: [{ label: "Visit live site (v1)", href: "https://www.unimeet.eu" }],
+  },
+  {
+    slug: "outubro",
+    title: "Outubro Idiomas",
+    tagline: "A language school's site rebuilt around its own verb: destravar",
+    index: "11",
+    year: "2026",
+    role: "Design and full-stack engineering",
+    timeline: "Ongoing — pages built, CMS and content next",
+    team: "Solo delivery",
+    description:
+      "A rebuild of a Brazilian online language school's website in Portuguese, English and Spanish, elevating an identity the brand had already redesigned but its website never caught up with.",
+    problem:
+      "Outubro Idiomas teaches English, French, Spanish and German to Brazilian working adults in live online classes. It had already redrawn its name, colours and mark; the old site still had the right content but none of the brand. Most visitors arrive on a phone from WhatsApp, so the site has to convert there first, and every page has to stand on its own in search.",
+    approach:
+      "The brand's own verb, destravar (to unstick), became the signature interaction: a doodled cord untangles as the hero headline resolves, and 'língua' lands as the cord straightens. The brandbook governs palette, Source Sans as the only typeface and the official lockups. Motion uses GSAP and Lenis with WebGL deliberately rejected, to protect mobile performance. Every page exists in three locales with localized URLs, and pricing, FAQ and testimonials read from Payload-shaped stand-ins so the CMS can replace them without touching a page.",
+    outcome:
+      "All pages built in PT, EN and ES on a preview deployment: a 13-section home, method, pricing, testimonials, FAQ, contact, careers and privacy. The CMS and the final content pass with the client come next; testimonials stay openly placeholder until real ones arrive.",
+    tags: ["Landing Page", "Motion", "i18n"],
+    stack: ["Next.js", "TypeScript", "Tailwind CSS v4", "shadcn/ui", "GSAP", "Lenis"],
+    visual: "language",
+    cover: {
+      src: "/projects/outubro/home.png",
+      alt: "Outubro Idiomas home: 'Bora destravar sua língua e seu futuro?' beside a WhatsApp-style conversation card",
+      width: 1440,
+      height: 900,
+    },
+    screenshots: [
+      { src: "/projects/outubro/home.png", alt: "Outubro Idiomas home hero with the destravar headline and a WhatsApp-style card", width: 1440, height: 900 },
+      { src: "/projects/outubro/precos.png", alt: "Pricing page: individual and paired classes, monthly price per student", width: 1440, height: 900 },
+      { src: "/projects/outubro/metodo.png", alt: "Method page: a communicative approach for Brazilian working adults", width: 1440, height: 900 },
+    ],
+    process: [
+      { phase: "01", title: "Research the brand that already exists", body: "The old site's content was extracted and the references analysed; the job was to elevate a redesigned identity, not invent a new one." },
+      { phase: "02", title: "Find the signature in the brand's verb", body: "Destravar became the hero interaction: the untangling cord, drawn like a doodle, timed to the headline." },
+      { phase: "03", title: "Three locales, one route map", body: "Portuguese unprefixed, English and Spanish with localized slugs, generated from one explicit route map that keeps /admin safe." },
+      { phase: "04", title: "Pages first, CMS behind seams", body: "Every page rendered from Payload-shaped stand-ins, so plugging in the CMS swaps function bodies, not pages." },
+    ],
+    architecture: [
+      { layer: "App", label: "Next.js App Router, [lang]", detail: "Built-in i18n pattern with dictionaries per locale; no i18n library." },
+      { layer: "Routing", label: "One localized route map", detail: "Exact rewrites and redirects per page, so /metodo, /en/method and /es/metodo are the same page." },
+      { layer: "Motion", label: "GSAP + Lenis, tier 2", detail: "Small client leaves own the animation; WebGL rejected for mobile performance." },
+      { layer: "Content", label: "Payload-shaped stand-ins", detail: "Pricing, FAQ and testimonials behind get* functions the CMS will implement." },
+    ],
+    features: [
+      { title: "A signature interaction from the brand's own word", body: "The cord untangling as the headline resolves is destravar drawn literally, not a generic unlock icon." },
+      { title: "Brandbook first", body: "Palette, Source Sans as the only typeface and the official lockups come from the client's brandbook, overriding design-taste defaults where they conflict." },
+      { title: "Localized URLs", body: "Each page has its own slug in each language, so every locale is a real page for search, not a query string." },
+    ],
+    challenges: [
+      { title: "Pretty and fast on a phone", body: "Most visitors arrive from WhatsApp on a phone, so the motion tier was chosen for mobile performance first and WebGL was left out." },
+      { title: "Content not yet chosen", body: "Final copy, testimonials and this year's prices are a pass with the client still open, so the build ships honest placeholders rather than invented ones." },
+    ],
+    links: [
+      { label: "Visit preview", href: "https://outubroidiomas.vercel.app" },
+      { label: "View source", href: "https://github.com/BenitoPedro13/outubro" },
+    ],
+  },
+  {
+    slug: "renewable-pulse",
+    title: "Renewable Pulse",
+    tagline: "A live instrument panel for renewable electricity, built only on real grid data",
+    index: "12",
+    year: "2026",
+    role: "Data platform and product engineering",
+    timeline: "Ongoing — live",
+    team: "Solo",
+    description:
+      "A live dashboard of how much electricity already comes from renewables, starting with Brazil's hydro-heavy grid and comparing it with Europe and the USA, fed by a failure-resistant streaming pipeline over real public data.",
+    problem:
+      "Grid operators publish generation data, but in different formats, cadences and units: Brazil's ONS by plant and hour, ENTSO-E in 15 to 60-minute series for European zones, the EIA hourly for the USA. Turning that into one comparable, trustworthy picture means a pipeline that survives bursty batches, malformed rows and replays, without ever filling a gap with invented numbers.",
+    approach:
+      "A Go ingestion edge polls each source and normalizes it to one canonical event schema; Redpanda carries the events to idempotent TypeScript consumers that write to TimescaleDB, keyed on source, zone, asset, metric and timestamp, with a dead-letter queue and bounded backpressure. A separate live consumer fans readings out over WebSocket to the Next.js dashboard. The README states plainly that the sources are polled, not pushed: the real-time character comes from the pipeline, not the data.",
+    outcome:
+      "Live, with Brazil, Europe and USA deep-dives, a plant registry map, country comparison and a pipeline-health panel showing the dead-letter queue and the last successful poll per source. The ONS spine ingested 366,336 real plant/hour readings with zero duplicates on replay.",
+    tags: ["Data Pipeline", "Dashboard", "Real-time"],
+    stack: ["Go", "Redpanda", "TimescaleDB", "TypeScript", "Fastify", "Next.js", "Zod"],
+    visual: "grid",
+    cover: {
+      src: "/projects/renewable-pulse/dashboard.png",
+      alt: "Renewable Pulse dashboard: Brazil's renewable share at 87%, generation mix over time and by region",
+      width: 1440,
+      height: 900,
+    },
+    screenshots: [
+      { src: "/projects/renewable-pulse/dashboard.png", alt: "Brazil deep-dive: renewable share, generation mix by time and by region, average by hour of day", width: 1440, height: 900 },
+      { src: "/projects/renewable-pulse/usa.png", alt: "Top real plants and the USA deep-dive across seven regional grid operators", width: 1440, height: 900 },
+      { src: "/projects/renewable-pulse/pipeline-health.png", alt: "Country comparison and the pipeline-health panel: dead-letter queue depth and last successful poll per source", width: 1440, height: 900 },
+    ],
+    process: [
+      { phase: "01", title: "The ONS spine", body: "Go poller, Redpanda, a persist consumer and TimescaleDB, live-verified end to end on real Brazilian plant data." },
+      { phase: "02", title: "Reliability as a feature", body: "Idempotent upserts, a dead-letter queue for malformed events and bounded backpressure, each verified, not assumed." },
+      { phase: "03", title: "Europe and the USA", body: "ENTSO-E pollers across six zones and the EIA for the US48 and seven regional grid operators, normalized to the same schema." },
+      { phase: "04", title: "The live dashboard", body: "Deep-dives per region, a plant map, volatility charts and a pipeline-transparency panel, with data prefetched on the server for real edge caching." },
+    ],
+    architecture: [
+      { layer: "Ingest", label: "Go pollers", detail: "One canonical event schema, hand-mirrored from the Zod contracts the TypeScript side uses." },
+      { layer: "Broker", label: "Redpanda", detail: "Partitioned topics with independent consumer groups for persistence and live fan-out." },
+      { layer: "Storage", label: "TimescaleDB", detail: "Idempotent writes and an hourly continuous aggregate for the charts." },
+      { layer: "Serve", label: "Fastify REST + WebSocket", detail: "The dashboard reads REST through TanStack Query and live readings over a socket." },
+    ],
+    features: [
+      { title: "Only real data", body: "Every reading traces back to an ONS, ENTSO-E or EIA response; a missing source shows as missing, never as a plausible number." },
+      { title: "Replays don't duplicate", body: "Writes are keyed on source, zone, asset, metric and timestamp, so re-ingesting a batch changes nothing." },
+      { title: "The pipeline shows its own health", body: "Dead-letter depth, consumer lag and the last successful poll per source are on the dashboard, not hidden in logs." },
+    ],
+    challenges: [
+      { title: "Being honest about 'real-time'", body: "None of the sources stream; ONS republishes its plant file twice a day. The product says so, and the streaming standard is in the pipeline's engineering instead." },
+      { title: "A backfill that filled the disk", body: "The full-depth ONS backfill outgrew the database volume during live operation; the volume was resized and the incident recorded with recommendations for the next backfill." },
+      { title: "Years in a different file layout", body: "ONS switched to per-month files in 2022, so the backfill broke on earlier years until the year-file case was handled and the pilot chunk ran clean." },
+    ],
+    links: [
+      { label: "Visit live dashboard", href: "https://renewable-pulse.vercel.app" },
+      { label: "View source", href: "https://github.com/BenitoPedro13/renewable-pulse" },
     ],
   },
 ] as const;

@@ -12,7 +12,7 @@ import { STUDIO_PROJECTS } from "@/lib/studio-data";
 export const metadata: Metadata = {
   title: "Work",
   description:
-    "Selected digital products from Blessed Moon Studio: scheduling, marketing analytics, headless commerce, credit-qualification, motion portfolios, geospatial farm operations, multi-tenant brand platforms, restaurant menus, and furniture catalogues built for real operations.",
+    "Selected digital products from Blessed Moon Studio: scheduling, marketing analytics, headless commerce, credit-qualification, motion portfolios, geospatial farm operations, multi-tenant brand platforms, restaurant menus, furniture catalogues, university fair registration, a multilingual language-school site and a real-time energy data pipeline, built for real operations.",
 };
 
 export default function WorkPage() {
