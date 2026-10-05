@@ -1,6 +1,6 @@
 # TASK: every page must scroll to its end
 
-4 October 2026. Status: investigation in progress. Benito reports Work stops
+4 October 2026; verified 5 October. Status: complete. Benito reports Work stops
 mid-page as projects are added and asks to verify every page.
 
 ## 1. Current scenario
@@ -71,14 +71,19 @@ longer intercept page scrolling. Work count derives from the project array.
 ## Verification
 
 Production build and lint passed (zero lint errors; two existing BootSequence
-hook warnings). Full route audit is in progress against the production preview
-on port 3194. Earlier diagnostic runs included an incorrectly selected port 3000;
-those results are not the final production audit. The script records its origin.
+hook warnings). All 120 route/viewport/motion configurations passed against the
+production preview on port 3194 with WebGL enabled: 60 normal-motion checks and
+60 reduced-motion checks, with zero uncaught page errors. The combined report is
+`/tmp/blessed-moon-review/verified-scroll/all-page-scroll.json`. Earlier diagnostic
+runs included an incorrectly selected port 3000 and harness readiness/reset races;
+those results are excluded. The script records its origin and graphics mode.
 
 The final audit checks 20 content routes at 1440×900, 390×844 and 320×568 with
 normal/reduced motion (120 configurations), wheel and End footer reachability,
 horizontal width, no competing main-content scrollers, dynamic 1400px Work growth,
 expanded real post briefs and compact→oversized→compact stage behavior.
+The stage-growth/reset/restore assertions also passed. Final strategy and builder
+regressions passed against the same production build.
 
 
 The intermittent input checks were traced to an incorrect readiness selector:
@@ -89,3 +94,12 @@ overlay makes its complete removal observable. No boot behavior was changed.
 The scrolling check uses the existing keyboard entry and waits for the whole
 overlay to close, including reduced motion. Optional `SCROLL_WEBGL=0` exercises
 the graphics fallback; normal runs keep WebGL enabled.
+
+The harness also waits for native `scrollend` after an animated Home reset:
+Chromium can report y=0 one frame before that animation finishes, allowing it
+to cancel an immediately following End. Chromium's native Home animation can
+also stall on a static reduced-motion page despite CSS scroll-behavior auto;
+that mode uses an explicit instant reset to set up the independent native End
+check. Wheel and keyboard End are tested in both modes. `SCROLL_MOTION` can select
+one mode for a focused run; the default runs both. The strategy and scrolling
+scripts now default to the same review origin, port 3194.

@@ -16,7 +16,7 @@ const configurations = [
   { viewport: { width: 1440, height: 900 }, reducedMotion: 'reduce' },
   { viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' },
   { viewport: { width: 320, height: 568 }, reducedMotion: 'reduce' },
-];
+].filter(config => !process.env.SCROLL_MOTION || config.reducedMotion === process.env.SCROLL_MOTION);
 const webgl = process.env.SCROLL_WEBGL !== '0';
 const browser = await chromium.launch({ headless: true, args: webgl ? [] : ['--disable-webgl'] });
 const results = [];
@@ -51,8 +51,31 @@ async function bottom(page, label) {
   assert.ok(footer.bottom <= viewport.height + 3 && footer.bottom > 0, `${label}: footer reached with wheel`);
   // Do not interrupt an almost-complete wheel animation with a scripted jump.
   await page.waitForFunction(() => !document.documentElement.classList.contains('lenis-smooth'));
-  await page.keyboard.press('Home');
-  await page.waitForFunction(() => scrollY <= 1);
+  if (await page.evaluate(() => matchMedia('(prefers-reduced-motion: reduce)').matches)) {
+    // Set up End independently: Chromium's native Home animation can stall on
+    // a static reduced-motion page. This reset is not the reachability check.
+    await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+    await page.waitForTimeout(250);
+  } else {
+    // Native Home scrolling can reach y=0 a frame before its scrollend. Sending
+    // End during that last frame lets Chromium's previous animation cancel it.
+    // Wait for actual completion, not just the first observation of the target.
+    await page.evaluate(() => {
+      const root = document.documentElement;
+      const immediate = scrollY <= 1 || getComputedStyle(root).scrollBehavior !== 'smooth';
+      root.dataset.scrollHomeSettled = immediate ? 'true' : 'false';
+      if (immediate) return;
+      function settled() {
+        if (scrollY > 1) return;
+        root.dataset.scrollHomeSettled = 'true';
+        window.removeEventListener('scrollend', settled);
+      }
+      window.addEventListener('scrollend', settled);
+    });
+    await page.keyboard.press('Home');
+    await page.waitForFunction(() => scrollY <= 1 && document.documentElement.dataset.scrollHomeSettled === 'true');
+    await page.evaluate(() => { delete document.documentElement.dataset.scrollHomeSettled; });
+  }
   await page.keyboard.press('End');
   await page.waitForFunction(() => Math.abs(scrollY - (document.documentElement.scrollHeight - innerHeight)) <= 3, null, { timeout: 10000 }).catch(async error => {
     const state = await page.evaluate(() => ({ y: scrollY, maximum: document.documentElement.scrollHeight - innerHeight, boot: document.querySelector('[data-boot-phase]')?.dataset.bootPhase, overflow: document.body.style.overflow, focus: document.activeElement.tagName }));

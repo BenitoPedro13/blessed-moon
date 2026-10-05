@@ -1,6 +1,6 @@
 # TASK: deeper content research and stronger social creative
 
-4 October 2026; updated 5 October. Status: implementation complete, final browser verification in progress.
+4 October 2026; verified 5 October. Status: complete.
 
 ## 1. Current scenario
 
@@ -97,6 +97,9 @@ Corpus ledger/source index reconcile to 356 posts, 59 captions and 84 saved imag
 Builder PNG/ZIP/PDF/JSON, editing/import/export, real screenshot embedding, security,
 320/390 mobile width and manual-data worksheet checks passed against the production
 preview; the final extended run also exercises all six templates × four formats.
-Final browser runs and scrolling audit are in progress; results will be recorded
-before the local commit.
-
+Final strategy and builder runs passed against port 3194; their artifacts are in
+`/tmp/blessed-moon-review/final-strategy` and `final-builder`. All 120 scrolling
+configurations passed across 20 routes, three screen sizes and both motion modes,
+including dynamic Work growth, expanded briefs and stage reflow, with WebGL enabled
+and zero uncaught page errors. The original six-slide draft was also visually
+reviewed in `/tmp/blessed-moon-review/clean-creative/six-slides.png`.

@@ -5,7 +5,7 @@ import { mkdir } from "node:fs/promises";
 import { join } from "node:path";
 import { chromium } from "playwright";
 
-const origin = process.env.SOCIAL_CHECK_URL || "http://localhost:3000";
+const origin = process.env.SOCIAL_CHECK_URL || "http://localhost:3194";
 const browser = await chromium.launch({ headless: true });
 const context = await browser.newContext({ reducedMotion: "reduce", viewport: { width: 1440, height: 900 } });
 context.setDefaultTimeout(60000);

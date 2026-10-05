@@ -120,3 +120,15 @@ the mobile page. Builder selections truncate within the available width.
 The [scroll task](../tasks/TASK-page-scroll-reachability.md) and
 [research/creative task](../tasks/TASK-social-research-and-creative-v2.md) record
 verification. Local changes have not been pushed or deployed.
+
+Final verification on 5 October passed against the production preview at port
+3194: strategy regression, builder PNG/ZIP/PDF/JSON and all six templates × four
+formats, collector fixtures, importer validation and all 120 scrolling
+configurations (20 routes × three screen sizes × normal/reduced motion). The
+scroll runs used WebGL and recorded zero uncaught page errors; dynamic Work growth,
+expanded briefs and compact→flow→compact restoration passed. Build/TypeScript
+passed; lint has zero errors and the same two existing boot-hook warnings.
+
+Current browser artifacts are in `/tmp/blessed-moon-review/final-strategy`,
+`final-builder`, and `verified-scroll/all-page-scroll.json`. A clean original
+six-slide example is `/tmp/blessed-moon-review/clean-creative/six-slides.png`.
