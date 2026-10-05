@@ -7,13 +7,16 @@
 
 Prepared 4 October 2026. Recommendation, not measured channel performance.
 
-Start with **LinkedIn primary**, two original decision stories per week, for the
-existing founder/product-leader positioning. Use Benito's profile for the direct
-founder voice and the studio page as supporting proof; this is a judgement about
-voice and workload, not proof that profiles outperform pages. **Instagram secondary**:
-one Portuguese adaptation weekly, grounded in the Brazilian cases. Reverse priority
-if Brazilian small businesses become the chosen market. Both 16-draft libraries
-contain alternatives, not a 32-post commitment.
+**Revised 5 October 2026 (Benito):** "the better opportunities are for foreigners
+that pay me in strong currency, but some Portuguese posts would be good, maybe I
+will have one Instagram for each language." So English leads on both channels: two
+stories a week, each an Instagram carousel on `@blessedmoon.studio` and the same
+slides as a square PDF document on Benito's LinkedIn profile (the studio page,
+`linkedin.com/company/blessedmoonstudio`, as supporting proof). A Portuguese
+Instagram account for Brazilian small businesses is optional, one carousel a week.
+The library holds 12 English and 8 Portuguese authored carousels
+(`TASK-social-copy-v3.md`). This is a judgement about buyers and workload, not
+proof of channel performance.
 
 ## Evidence behind the choice
 
@@ -35,19 +38,19 @@ adding a translated landing page.
 
 ## Decisions by channel
 
-### LinkedIn — Primary recommendation
+### LinkedIn — Primary, with English Instagram
 
-Founders, product leaders and premium project buyers. Publish through Benito's profile; use the studio page as supporting proof.
+Founders, product leaders and premium project buyers, mostly international. Publish through Benito's profile; use the studio page as supporting proof.
 
-Two decision stories weekly, mostly one annotated screenshot or concise text. Start in English for the existing positioning; use Portuguese when pursuing Brazilian decision-makers.
+Two decision stories weekly in English: a text post with the same carousel as the English Instagram account, as a square PDF document.
 
 Review signal: Relevant profile/post viewers where available, case visits, qualified conversations and proposals. Review at day 30 and day 60.
 
-### Instagram — Secondary, bounded test
+### Instagram — Primary in English; Portuguese optional
 
-Brazilian small-business owners, especially the restaurant and retail examples already in the portfolio.
+English account (@blessedmoon.studio) for international founders and product leaders. An optional second account in Portuguese for Brazilian small businesses, using the restaurant and retail cases.
 
-One Portuguese adaptation weekly from the same stories. Start with readable carousels; test a short screen recording against actual account insights. Increase to two only if capacity and relevant conversations justify it.
+Two English carousels weekly, as a professional account so native insights are available. If the Portuguese account opens, one carousel weekly. Test a short screen recording later against actual insights.
 
 Review signal: Saves/shares, relevant DMs, tagged profile/Story visits and qualified enquiries. The current Instagram audit informs creative structure, not measured channel performance.
 

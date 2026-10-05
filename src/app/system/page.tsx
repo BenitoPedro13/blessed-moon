@@ -4,7 +4,7 @@ import { PostBuilder } from "@/components/social/post-builder";
 import { PlanCharts } from "@/components/social/plan-charts";
 import { ResearchCoverage } from "@/components/social/research-coverage";
 import { MeasurementChart } from "@/components/social/measurement-chart";
-import { storyPost } from "@/lib/social-art";
+import { ART_TEMPLATES, storyPost, type ArtTemplate } from "@/lib/social-art";
 import type { Metadata } from "next";
 
 import { BootLockup } from "@/components/boot-sequence";
@@ -387,8 +387,8 @@ export default function SystemPage() {
         <ProfilePreview stories={STORIES.slice(0, 1)} channel="instagram" />
         <PostCard story={STORIES[0]} channel="instagram" />
         <QuoteEstimate />
-        <p className="text-sm leading-7 text-muted-foreground">Developed sequence: buyer question, comparison, checklist, workflow, project evidence and closing action. Dark, warm paper and amber surfaces belong to the artwork; the site retains its dark theme.</p>
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-3">{storyPost(STORIES[0], "instagram").slides.map((slide, index) => <div key={index}><SlideArt slide={slide} format="portrait" index={index} total={6} /><p className="mt-2 font-mono text-xs text-muted-foreground">{slide.template}</p></div>)}</div>
+        <p className="text-sm leading-7 text-muted-foreground">One slide per art template, taken from the authored posts. Dark, warm paper and amber surfaces belong to the artwork; the site retains its dark theme.</p>
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">{(Object.keys(ART_TEMPLATES) as ArtTemplate[]).map((template) => { const slide = STORIES.flatMap((story) => storyPost(story, "instagram").slides).find((item) => item.template === template); return slide && <div key={template}><SlideArt slide={slide} format="portrait" /><p className="mt-2 font-mono text-xs text-muted-foreground">{template}</p></div>; })}</div>
         <ResearchCoverage />
         <PlanCharts />
         <MeasurementChart />

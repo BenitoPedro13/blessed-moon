@@ -47,7 +47,7 @@ try {
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1), true, `${route}: no overflow at ${width}`);
     }
     if (["/instagram-plan", "/linkedin-plan"].includes(route)) {
-      assert.equal(await page.locator("details[data-post-id]").count(), 16);
+      assert.equal(await page.locator("details[data-post-id]").count(), route.includes("instagram") ? 20 : 12);
       const details = page.locator("details[data-post-id]").first();
       await details.locator("summary").scrollIntoViewIfNeeded();
       await details.locator("summary").click();
@@ -58,8 +58,14 @@ try {
       assert.equal(url.searchParams.get("utm_source"), route.includes("instagram") ? "instagram" : "linkedin");
       assert.equal(url.searchParams.get("utm_medium"), "organic_social");
       assert.equal(url.searchParams.get("utm_campaign"), "studio-social-pilot");
-      assert.match(url.searchParams.get("utm_content"), /^(ig|li)-w01-/);
+      assert.match(url.searchParams.get("utm_content"), /^(ig|li)-en-w01-/);
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), true, "Expanded brief fits phone");
+      // TASK-social-copy-v3.md §5: short covers, and no evidence hedges printed on the art.
+      const sequences = await page.locator("details[data-post-id]").evaluateAll((items) => items.map((item) => ({ id: item.dataset.postId, cover: item.querySelector("ol li strong")?.textContent ?? "", text: item.querySelector("ol")?.textContent ?? "" })));
+      for (const post of sequences) {
+        assert.ok(post.cover.trim().split(/\s+/).length <= 12, `${post.id}: cover headline is 12 words or fewer`);
+        assert.doesNotMatch(post.text, /não uma medição|not a measurement|uplift|is claimed|é afirmad|invented success/i, `${post.id}: no hedges on slides`);
+      }
     }
     if (route === "/about") {
       assert.equal(await page.getByText(/Saskia|M D R|specialized duo|Two senior people/i).count(), 0);

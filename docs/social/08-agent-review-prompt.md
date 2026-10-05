@@ -54,10 +54,11 @@ Planning graphs show proposals; the analytics worksheet plots only manually ente
 real observations. Blank weeks are unknown, distinct from measured zeroes. Do not
 replace these with fabricated live dashboards or expose draft contents in events.
 
-The proposed pilot uses LinkedIn primary for founder/product buyers: two original
-stories weekly and one Portuguese Instagram adaptation. Reverse priority only if
-Brazilian businesses become the chosen target. Two libraries of 16 drafts are
-alternatives, not a 32-post commitment. Record actual production time against a
+The pilot (revised 5 October 2026) leads in English for international founders and
+product leaders: two stories weekly, each an Instagram carousel and the same slides
+as a LinkedIn document. An optional Portuguese Instagram account takes one story
+weekly. The library is 12 English and 8 Portuguese authored carousels in
+`src/lib/social-posts.ts`; facts only from `studio-data.ts`. Record actual production time against a
 4–6-hour weekly budget. Use native insights and qualified enquiries to revise it.
 
 Internal recommended fees are R$3,900 once for strategy and R$1,800/month for

@@ -1,4 +1,4 @@
-import { creativeSlides } from "@/lib/social-creative";
+import { AUTHORED_SLIDES } from "@/lib/social-posts";
 import { LOGO_BOUNDS, LOGO_PATH } from "@/lib/logo-mark";
 import { SOCIAL_HANDLE } from "@/lib/site-config";
 import { SOCIAL_FONT_METRICS } from "@/lib/social-font-metrics";
@@ -57,10 +57,13 @@ export const PROJECT_ART_IMAGES: Record<string, string> = PROJECT_IMAGES;
 
 export const emptySlide = (): ArtSlide => ({ template: "cover", surface: "dark", kicker: "Blessed Moon Studio", title: "Clarity is the feature.", accent: "", body: "", footer: SOCIAL_HANDLE, action: "", step: "", art: "crescent", label: "", image: "", imageAlt: "", ascii: "", marks: [] });
 
+/** A story's authored carousel. Instagram is portrait; LinkedIn gets the same
+ * slides square, posted as a PDF document. */
 export function storyPost(story: Story, channel: Channel): ArtPost {
-  const caption = channel === "instagram" ? story.caption : story.linkedin;
-  return { version: 1, id: story.id, channel, format: channel === "instagram" ? "portrait" : "landscape", caption,
-    slides: creativeSlides(story, channel).map((slide) => ({ ...emptySlide(), art: "none", ...slide })) };
+  const slides = AUTHORED_SLIDES[story.id] ?? [{ template: "cover", title: story.title }];
+  return { version: 1, id: story.id, channel, lang: story.lang, format: channel === "instagram" ? "portrait" : "square",
+    caption: channel === "instagram" ? story.caption : story.linkedin,
+    slides: slides.map((slide) => ({ ...emptySlide(), kicker: "", art: "none", ...slide })) };
 }
 
 export function blankPost(): ArtPost { return { version: 1, id: "studio-draft", channel: "instagram", format: "portrait", caption: "", slides: [emptySlide()] }; }
@@ -262,6 +265,8 @@ function crescent(L: Layout, p: Palette) {
   const x = L.w - L.pad - LOGO_BOUNDS.width * cell, y = L.h - LOGO_BOUNDS.height * cell * 0.8;
   return `<g transform="translate(${x} ${y}) scale(${cell})"><path d="${LOGO_PATH}" fill="${p.mark}"/></g>`;
 }
+/** Where the art begins, so a headline can stop above it. */
+const artTop = (slide: ArtSlide, L: Layout) => slide.art === "crescent" ? L.h - LOGO_BOUNDS.height * crescentCell(L) * 0.8 : slide.art === "moon" ? L.h - moonDiameter(L) * 0.9 : L.h;
 /** Width the art takes from the right of the content box. */
 const artWidth = (slide: ArtSlide, L: Layout) => slide.art === "crescent" ? LOGO_BOUNDS.width * crescentCell(L) + 48 : slide.art === "moon" ? moonDiameter(L) * 0.9 + 24 : 0;
 
@@ -338,8 +343,9 @@ function cover(slide: ArtSlide, L: Layout, p: Palette): Drawn {
     const meta = paragraph(slide.body, { ...text, y: head.y + 22, h: text.y + text.h - head.y - 22 }, p.muted, 24, 16);
     return { svg: art(slide, L, p) + head.svg + meta.svg };
   }
-  const box = { ...L.content, y: L.content.y + (L.square ? 10 : 40) };
-  const head = heading(slide, box, p, { max: L.tall ? 140 : L.square ? 108 : 128, min: 60, maxLines: 5, share: hasArt ? (L.square ? 0.6 : 0.64) : 0.9 });
+  const top = L.content.y + (L.square ? 10 : 40);
+  const box = { ...L.content, y: top, h: Math.min(L.content.y + L.content.h, artTop(slide, L) - 48) - top };
+  const head = heading(slide, box, p, { max: L.tall ? 140 : L.square ? 108 : 128, min: 56, maxLines: 6, share: hasArt ? 1 : 0.9 });
   const meta = paragraph(slide.body, { x: box.x, y: head.y + 36, w: box.w - artWidth(slide, L), h: L.content.y + L.content.h - head.y - 36 }, p.muted, 34, 24);
   return { svg: art(slide, L, p) + head.svg + meta.svg };
 }
@@ -405,7 +411,7 @@ function rows(slide: ArtSlide, L: Layout, p: Palette): Drawn {
   }
   const head = heading(slide, L.content, p, { max: L.square ? 70 : 78, min: 44, maxLines: 3, share: 0.34 });
   const y = head.y + 48;
-  return { svg: head.svg + rowList(bodyRows(slide.body), { ...L.content, y, h: L.content.y + L.content.h - y }, p, 1) };
+  return { svg: head.svg + rowList(bodyRows(slide.body), { ...L.content, y, h: L.content.y + L.content.h - y }, p, L.square ? 1 : 1.18) };
 }
 
 function compare(slide: ArtSlide, L: Layout, p: Palette): Drawn {
@@ -471,7 +477,7 @@ function annotate(slide: ArtSlide, L: Layout, p: Palette): Drawn {
     return { svg: windowFrame(slide, { ...left, y: left.y - 10, h: left.h + 10 }, p, L, true) + head.svg + rowList(legend, { ...right, y: head.y + 20, h: right.y + right.h - head.y - 20 }, p, 0.6, true) };
   }
   const head = heading(slide, L.content, p, { max: L.square ? 56 : 64, min: 36, maxLines: 2, share: 0.22 });
-  const frame = { x: L.content.x, y: head.y + 36, w: L.content.w, h: L.content.h * (L.square ? 0.44 : 0.48) };
+  const frame = { x: L.content.x, y: head.y + 36, w: L.content.w, h: L.content.h * (L.square ? 0.5 : L.tall ? 0.46 : 0.58) };
   const y = frame.y + frame.h + 28;
   return { svg: head.svg + windowFrame(slide, frame, p, L, true) + rowList(legend, { ...L.content, y, h: L.content.y + L.content.h - y }, p, 0.8, true) };
 }
@@ -479,7 +485,9 @@ function annotate(slide: ArtSlide, L: Layout, p: Palette): Drawn {
 function action(slide: ArtSlide, L: Layout, p: Palette): Drawn {
   const hasArt = (slide.art ?? "none") !== "none";
   const [box] = L.wide ? columns(L.content, hasArt ? 0.62 : 1) : [L.content];
-  const head = heading(slide, { ...box, y: box.y + (L.wide ? 0 : 40) }, p, { max: L.wide ? 60 : L.square ? 92 : 110, min: 40, maxLines: 4, share: L.wide ? 0.6 : 0.56 });
+  const headTop = box.y + (L.wide ? 0 : 40);
+  const headH = L.wide ? box.h * 0.6 : Math.max(box.h * 0.3, Math.min(box.h * 0.56, artTop(slide, L) - 260 - headTop));
+  const head = heading(slide, { ...box, y: headTop, h: headH }, p, { max: L.wide ? 60 : L.square ? 92 : 110, min: 40, maxLines: 4, share: 1 });
   let svg = art(slide, L, p) + head.svg;
   let y = head.y + (L.wide ? 28 : 56);
   const room = L.wide ? box.w : box.w - artWidth(slide, L);

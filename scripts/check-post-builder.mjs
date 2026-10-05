@@ -34,14 +34,14 @@ try {
   }
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto(`${origin}/instagram-plan`, { waitUntil: "load" });
-  await page.locator("[data-profile-preview] a").last().click();
+  await page.locator("[data-profile-preview]").first().locator("a").last().click();
   const brief = page.locator("details[data-post-id]").first();
   assert.equal(await brief.getAttribute("open"), "");
-  assert.match(await brief.locator("[data-post-preview] svg").getAttribute("aria-label"), /Slide 1 of 6/);
+  assert.match(await brief.locator("[data-post-preview] svg").getAttribute("aria-label"), /Slide 1 of 5/);
   await brief.getByRole("button", { name: "Next preview slide" }).click();
-  assert.match(await brief.locator("[data-post-preview] svg").getAttribute("aria-label"), /Slide 2 of 6/);
+  assert.match(await brief.locator("[data-post-preview] svg").getAttribute("aria-label"), /Slide 2 of 5/);
   await brief.getByRole("link", { name: "Edit this post →" }).click();
-  await page.waitForURL(/post-builder\?story=website-details&channel=instagram/);
+  await page.waitForURL(/post-builder\?story=one-action&channel=instagram/);
   await page.locator("#slide-title").waitFor();
   await page.getByLabel("Slide title", { exact: true }).fill("Clareza antes da conversa");
   await page.getByLabel("Slide body · rows and comparisons: one per line, as label | detail | value").fill("Preço, condição e próximo passo.\nInformação que merece estar junto.");
@@ -66,7 +66,7 @@ try {
 
   const zip = await download("Download post ZIP", "post.zip");
   const files = unzipSync(zip.bytes);
-  assert.deepEqual(Object.keys(files).filter((name) => name.endsWith(".png")), ["01.png", "02.png", "03.png", "04.png", "05.png", "06.png"]);
+  assert.deepEqual(Object.keys(files).filter((name) => name.endsWith(".png")), ["01.png", "02.png", "03.png", "04.png", "05.png"]);
   assert.equal(strFromU8(files["caption.txt"]), "Caption used for the export round-trip test.");
   assert.match(strFromU8(files["alt-text.txt"]), /Clareza antes da conversa/);
   const draft = JSON.parse(strFromU8(files["editable-draft.json"]));
@@ -74,12 +74,12 @@ try {
   assert.ok(draft.slides.every(slide => slide.body.trim()), "Every developed slide carries useful explanatory copy");
   assert.ok(draft.slides.some(slide => slide.template === "compare"));
   assert.ok(draft.slides.some(slide => slide.template === "rows"));
-  assert.ok(draft.slides[4].image.startsWith("data:image/"), "Project screenshot is embedded into portable JSON");
-  const proof = files["05.png"];
+  assert.ok(draft.slides.find(slide => slide.template === "annotate").image.startsWith("data:image/"), "Project screenshot is embedded into portable JSON");
+  const proof = files["04.png"];
   assert.ok(proof.length > 20000, "Proof slide includes actual screenshot pixels");
   const pdf = await download("Download PDF", "post.pdf");
   assert.match(pdf.bytes.toString("latin1", 0, 15), /%PDF-1.4/);
-  assert.match(pdf.bytes.toString("latin1"), /\/Count 6 /);
+  assert.match(pdf.bytes.toString("latin1"), /\/Count 5 /);
   const json = await download("Save editable JSON", "editable.json");
   await page.getByLabel("Slide title", { exact: true }).fill("Changed temporarily");
   await page.getByLabel("Restore editable JSON").setInputFiles(json.path);
@@ -120,8 +120,8 @@ try {
   await page.getByLabel("Restore editable JSON").setInputFiles({ name: "legacy.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify({ ...draft, slides: [{ ...draft.slides[0], template: "statement" }, { ...draft.slides[1], template: "workflow" }] })) });
   await page.getByRole("status").filter({ hasText: "Editable draft restored." }).waitFor();
 
-  await page.goto(`${origin}/post-builder?story=oishi-condition&channel=linkedin`, { waitUntil: "load" });
-  assert.equal(await page.getByLabel("Slide title", { exact: true }).inputValue(), "The condition belongs beside the price.");
+  await page.goto(`${origin}/post-builder?story=markado-slot&channel=linkedin`, { waitUntil: "load" });
+  assert.equal(await page.getByLabel("Slide title", { exact: true }).inputValue(), "Two clients. One slot.");
   await page.getByLabel("Post caption", { exact: true }).fill("Local draft"); // Wait for the editor's actual hydration.
   await page.getByLabel("Slide title", { exact: true }).fill("A very long title with Portuguese accents: informação, decisão and a business question that needs space across the entire frame without leaving it.");
   await page.getByLabel("Slide body · rows and comparisons: one per line, as label | detail | value").fill("One confirmed fact. ".repeat(25));

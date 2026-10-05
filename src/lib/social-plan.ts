@@ -1,6 +1,6 @@
 import { SITE_URL } from "@/lib/site-config";
 
-export const PLAN_DATE = "4 October 2026";
+export const PLAN_DATE = "5 October 2026";
 export const PLAN_LINKS = [
   { href: "/social-plan", label: "Strategy" },
   { href: "/instagram-plan", label: "Instagram" },
@@ -33,14 +33,22 @@ export const PILLARS = [
 ] as const;
 
 export type Channel = "instagram" | "linkedin";
+export type Language = "en" | "pt";
+export const LANGUAGES: Record<Language, { label: string; audience: string; htmlLang: string }> = {
+  en: { label: "English", audience: "International founders and product leaders", htmlLang: "en" },
+  pt: { label: "Português", audience: "Brazilian business owners", htmlLang: "pt-BR" },
+};
 export type Story = {
   id: string;
   week: number;
+  /** English is the primary account; Portuguese is the secondary one (Benito, 5 Oct 2026). */
+  lang: Language;
   title: string;
   audience: string;
-  format: "Carousel" | "Screen recording";
-  slides: readonly string[];
+  format: "Carousel";
+  /** The Instagram caption, in the post's language. */
   caption: string;
+  /** The LinkedIn post. English stories only; empty for Portuguese ones. */
   linkedin: string;
   visual: string;
   destination: string;
@@ -48,126 +56,145 @@ export type Story = {
   evidence: string;
 };
 
+// Slides live in social-posts.ts; facts come only from studio-data.ts. Each
+// story's evidence note holds the limits that used to be printed on the art.
 export const STORIES: readonly Story[] = [
   {
-    id: "website-details", week: 1, title: "Your Instagram starts the conversation. Where are the details?", audience: "Brazilian business owners", format: "Carousel",
-    slides: ["Seu Instagram desperta interesse. Onde estão os detalhes?", "Horários, preços e condições precisam estar fáceis de achar.", "Posts antigos nem sempre são fáceis de encontrar.", "Uma página pode reunir as respostas antes da conversa.", "No Oishi, o preço aparece junto da condição do desconto.", "Veja como organizamos esse caminho no caso Oishi."],
-    caption: "Seu perfil pode ser o começo da conversa. O site reúne o que o cliente precisa entender antes de chamar: oferta, condições e próximo passo. No projeto Oishi, a regra do desconto aparece junto do preço. Veja o caso no link do perfil.",
-    linkedin: "A social profile can introduce a business. It is harder to use a feed as a permanent reference for prices, conditions and next steps. In the Oishi website project, the menu and offer have a place someone can revisit. The useful question was not which animation to add. It was which information a customer needed before making contact. Where does that information live in your business?",
-    visual: "Six legible slides. Use an actual Oishi price component on slide five; avoid private business messages.", destination: "/work/oishi", source: "portfolio", evidence: "The Oishi case documents the offer presentation. No measured reservation uplift is claimed.",
+    id: "one-action", week: 1, lang: "en", title: "Your brief lists features. It should name one action.", audience: "Founders preparing a website or product brief", format: "Carousel",
+    caption: "Most website briefs are a list of features. The ones that can be scoped name one action: who arrives, what they need to know first, and the single thing they should do next.\n\nFor F&A Móveis that action was a WhatsApp message about one specific product, so every product page carries real measurements, a confirmed price or an honest 'ask', and one pre-filled message.\n\nSave the five questions for your next brief. When you have the answers, send them over. Link in bio.",
+    linkedin: "Most website briefs I receive are a list of features: a blog, a chatbot, animations. The briefs that can actually be scoped name one action instead.\n\nWho lands on the page? What do they need to know first? What could stop them? What's the one thing they should do? What happens after?\n\nFor F&A Móveis, a furniture shop that already sold over WhatsApp, the action was a message about one specific product. That single decision set the scope: real measurements stored in centimetres, a confirmed price or an honest 'ask', and one pre-filled message per product page. No cart, because the sale already happened in conversation.\n\nWhat's the one action on your next page?",
+    visual: "Five slides: hook, the five-question brief, wishlist vs one action, the annotated F&A product page, closing action. Real F&A screenshot.", destination: "/contact", source: "portfolio", evidence: "F&A Móveis facts from the case study: 13 products, 10 confirmed prices, WhatsApp-only sales. No sales uplift is claimed.",
   },
   {
-    id: "oishi-condition", week: 1, title: "The condition belongs beside the price.", audience: "Owners and product decision-makers", format: "Screen recording",
-    slides: ["0–4s: Um desconto precisa da sua condição.", "4–12s: Show Oishi's regular and discounted prices together.", "12–22s: Highlight the requirement to finish the table's order.", "22–30s: Veja o caso completo."],
-    caption: "No Oishi, o desconto depende de a mesa consumir tudo o que pediu. Por isso, preço e condição fazem parte do mesmo componente. É uma decisão de clareza, não uma promessa de mais vendas. Veja o caso no link do perfil.",
-    linkedin: "A lower price needs its condition beside it. In the Oishi project, the discount depends on the table finishing what it orders. That changed the component: regular price, discounted price and condition travel together. A useful interface helps someone understand what they are agreeing to. Which condition does your product need to make clearer?",
-    visual: "20–30s crop of the actual price component, with subtitles. Verify displayed prices against the current case before export.", destination: "/work/oishi", source: "portfolio", evidence: "Describe the implemented two-price component, not sales results.",
+    id: "markado-slot", week: 1, lang: "en", title: "Two clients. One slot. Only one can book it.", audience: "Founders and product leaders scoping booking or payment flows", format: "Carousel",
+    caption: "Two clients open the same free slot at the same moment. In a demo, both bookings succeed.\n\nIn Markado, availability is checked again inside the final transaction, so one booking wins and the other is told. Slots aren't a stored list: they're computed from the provider's working rules, real Google Calendar events, buffers, notice periods and timezone. And checkout happens before confirmation, so a reserved slot and a paid slot can't drift apart.\n\nThe full case is linked in the bio.",
+    linkedin: "A booking demo always works, because only one person is clicking.\n\nIn Markado, two clients can open the same free slot at the same moment. Availability is revalidated inside the final transaction, so one booking wins and the other is told, instead of both being confirmed.\n\nThe rest of the design follows from treating a slot as computed, not listed: working rules set once by the provider, real Google Calendar events, buffers, notice periods, and every moment stored in UTC and converted only on screen. Checkout happens before confirmation, so 'reserved' and 'paid' can't drift apart.\n\nWhich failure does your booking flow assume won't happen?",
+    visual: "Markado availability screen in the terminal window on the cover; the race condition, the inputs to a slot, payment-before-confirmation, close.", destination: "/work/markado", source: "portfolio", evidence: "Behaviour from the Markado case study (2025, focused product team). No booking volumes are claimed.",
   },
   {
-    id: "catalogue-whatsapp", week: 2, title: "A catalogue does not always need a checkout.", audience: "Local retailers already selling through WhatsApp", format: "Carousel",
-    slides: ["Catálogo ou loja completa? Comece pelo jeito que você vende.", "Se a venda já acontece por conversa, isso importa no projeto.", "O catálogo organiza produtos e informações.", "O cliente escolhe o produto antes de chamar.", "Na F&A Móveis, o próximo passo continua no WhatsApp.", "Veja o caso e o caminho escolhido."],
-    caption: "Uma loja com checkout não é a única opção. Na F&A Móveis, o catálogo apoia uma venda que já acontece por WhatsApp. Produto, medidas e próximo passo ficam claros. Veja o caso no link do perfil.",
-    linkedin: "A checkout would have added a second sales workflow to F&A Móveis. The existing workflow was a WhatsApp conversation. The website therefore organises the catalogue and leads into that conversation. Scope is a product decision: which system supports the business today, and which complexity can wait?",
-    visual: "Compare two simple flows, then show the real catalogue. Do not imply every retailer should avoid checkout.", destination: "/work/fa-moveis", source: "portfolio", evidence: "The case documents a catalogue connected to the owner's existing sales workflow.",
+    id: "smallest-system", week: 2, lang: "en", title: "Catalogue, booking or dashboard? Name the job first.", audience: "Founders choosing a software scope", format: "Carousel",
+    caption: "Before choosing software, name the job the person needs to finish.\n\nAsk about a product, then message: F&A Móveis is a catalogue with no cart. Pick a time and pay: Markado computes availability and takes payment before confirming. Act on a field reading: Flora is a map, stress zones and a task board.\n\nThree jobs, three different smallest systems. Save this for your next scoping call, and send us the job, not the feature list. Link in bio.",
+    linkedin: "'We need payments, accounts, scheduling and a dashboard' is a feature list. 'A client picks a service, sees the free times and pays before the slot is confirmed' is a job, and it can be built.\n\nThree projects, three jobs, three different smallest systems:\n· F&A Móveis: ask about a product, then message the owner. A catalogue with no cart.\n· Markado: pick a time and pay. Availability, calendar and checkout.\n· Flora: act on a field reading. A map, stress zones and a task board.\n\nStart from the job and the system gets smaller.",
+    visual: "Paper cover; three jobs mapped to three builds; feature list vs job; F&A catalogue window; close.", destination: "/contact", source: "portfolio", evidence: "Each mapping restates the documented scope of F&A Móveis, Markado and Flora.",
   },
   {
-    id: "furniture-dimensions", week: 2, title: "Will it fit? Answer the buyer's first question.", audience: "Furniture retailers and local service businesses", format: "Screen recording",
-    slides: ["0–4s: Cabe na minha sala?", "4–12s: Show a real product and its dimensions.", "12–22s: Follow the product-specific enquiry action.", "22–30s: Uma pergunta melhor começa com informação clara."],
-    caption: "Antes de perguntar pelo produto, o cliente pode precisar saber se ele cabe no espaço. O catálogo da F&A Móveis mostra medidas reais e abre o caminho para a conversa. Sem inventar informação ou preço. Caso completo no link do perfil.",
-    linkedin: "The first useful piece of furniture content is often a measurement. In F&A Móveis, dimensions are stored as numbers and formatted consistently. That is a small implementation detail with a clear buyer purpose: understand the product before asking about it. What is the equivalent first question in your business?",
-    visual: "Record a currently verified product. Crop any phone details; do not show private enquiry messages.", destination: "/work/fa-moveis", source: "portfolio", evidence: "Dimensions and catalogue behaviour are documented. Enquiry quality improvement remains a hypothesis.",
+    id: "flora-satellite", week: 2, lang: "en", title: "Satellite pixels in. Field tasks out.", audience: "Product leaders building on external data", format: "Carousel",
+    caption: "Flora tells a farmer which corner of which field is stressed, from real Sentinel-2 imagery.\n\nOne rule shaped it: no request ever calls the satellite. A scheduled worker asks Copernicus for imagery, computes ten spectral readings in one call and stores them. The app only reads.\n\nThe worst bugs only appeared against a real account: a missing header that looked like an auth failure, and two indices that painted a rectangle where the field should be. Full case in the bio.",
+    linkedin: "Flora shows a farmer which corner of which field is stressed this week, from real Sentinel-2 imagery.\n\nThe rule that shaped the architecture: no request ever calls the satellite provider. A scheduled worker asks Copernicus for imagery, computes ten spectral indices in a single Process API call (measured live at 4.667 Processing Units against a 4.0 baseline: output count is free, input bands set the cost) and writes the results. The API only reads.\n\nThe sharpest bugs never showed up in review. A missing Accept header made Copernicus return a bare TIFF, and the parser's error read exactly like an auth failure. Two of ten indices painted a rectangle where the field polygon should be. Both were found by looking at what actually rendered.",
+    visual: "ASCII render of the crop-stress screen as the cover; the no-direct-calls rule; ten readings in one call; the task board; the live-only bugs; close.", destination: "/work/flora", source: "portfolio", evidence: "Figures and bugs from the Flora case study. The product is ongoing; no farm outcomes are claimed.",
   },
   {
-    id: "one-action", week: 3, title: "A website brief starts with one useful action.", audience: "Founders preparing a website", format: "Carousel",
-    slides: ["O que a pessoa precisa fazer no seu site?", "Consultar um produto? Entender um serviço? Pedir uma proposta?", "A ação muda a informação necessária.", "A informação muda a estrutura da página.", "O visual deve ajudar esse caminho.", "Comece o briefing com o próximo passo."],
-    caption: "Antes de escolher referências visuais, escolha a ação que o site precisa facilitar. Depois, liste as perguntas que a pessoa precisa responder para chegar até ela. Quer organizar esse briefing? Conheça o Blessed Moon Studio.",
-    linkedin: "Before choosing a website reference, choose the action. A catalogue enquiry needs different information from a product signup. The brief becomes clearer when it names the intended visitor, the question they need answered and the next step. That does not settle every design choice. It gives the choices a purpose.",
-    visual: "A three-step diagram: visitor question → required information → action. Label it as a planning method, not a conversion benchmark.", destination: "/contact", source: "portfolio", evidence: "Recommended briefing method illustrated by existing cases; no universal conversion claim.",
+    id: "studio-questions", week: 3, lang: "en", title: "7 questions to ask before you hire a studio.", audience: "Founders shortlisting a studio", format: "Carousel",
+    caption: "Seven questions to ask any studio before you sign, including us:\n\nWho builds it? What ships first? What happens when a fact is unknown? How is it checked? What does it cost to run? What will need a developer later? Who owns the accounts?\n\nQuestion four matters: on F&A Móveis, every WhatsApp message carried a localhost link until a pass on a real phone caught it. Save this for your shortlist.",
+    linkedin: "Seven questions worth asking any studio before you sign, including mine:\n\n1. Who builds it? Names, not a team page.\n2. What ships first?\n3. What happens when a fact is unknown: a placeholder, or a visible gap?\n4. How is it checked? On a real phone, on the live URL.\n5. What does it cost to run each month?\n6. What will need a developer later?\n7. Who owns the domain, hosting and code?\n\nWhy 4: on F&A Móveis an unset site URL fell back to localhost, so every WhatsApp message the live site sent carried a dead link. It looked fine on a laptop. A real-device pass caught it, and the build now fails on that misconfiguration.",
+    visual: "Hook cover; the seven questions as rows; two worked answers from F&A and Oishi; close.", destination: "/contact", source: "portfolio", evidence: "The localhost defect and '[a confirmar]' convention are documented in the F&A and Oishi case studies.",
   },
   {
-    id: "brief-questions", week: 3, title: "Three questions before commissioning a website.", audience: "Business owners choosing a website scope", format: "Carousel",
-    slides: ["Três perguntas antes de pedir um site.", "Quem precisa usar essa página?", "O que essa pessoa precisa entender?", "Qual é o próximo passo?", "Anote uma resposta concreta para cada pergunta.", "Leve isso para a conversa de projeto."],
-    caption: "Quem visita, o que precisa entender e o que faz depois. Essas três respostas ajudam a começar um briefing com mais clareza. O resto pode ser definido na conversa. Prepare seu projeto com o Blessed Moon Studio.",
-    linkedin: "A useful early brief can fit in three questions: who is the page for, what do they need to understand, and what should they do next? Each answer exposes assumptions that would otherwise become design revisions later. Bring a concrete example of your buyer and offer. We can build the scope from there.",
-    visual: "Three question cards with a blank answer example. No invented client testimony.", destination: "/contact", source: "portfolio", evidence: "Editorial advice from the studio's proposed discovery workflow.",
+    id: "fa-honest-price", week: 3, lang: "en", title: "13 products. 10 prices. Three say 'ask', on purpose.", audience: "Founders managing product information", format: "Carousel",
+    caption: "F&A Móveis lists 13 real products. Ten have a confirmed price, from supplier sheets and the owner's own confirmations. The other three say 'Consulte o preço', because a plausible number would be a false price.\n\nMeasured on the live build: Lighthouse 93 performance and 100 accessibility on /produtos, CLS 0, every product image under 32 KB.\n\nThe full case is linked in the bio.",
+    linkedin: "F&A Móveis lists 13 real products. Ten show a confirmed price. Three say 'Consulte o preço'.\n\nThat isn't unfinished work. The ten come from supplier sheets and the owner's own WhatsApp confirmations; the other three weren't confirmed, and a plausible number would have been a false price.\n\nThe harder call came earlier: the 27-product demo catalogue that won the job was removed once real stock existed, so the site never kept selling furniture that wasn't in stock.\n\nMeasured on the production build: Lighthouse 93 performance and 100 accessibility on /produtos, CLS 0, every product image under 32 KB against a 180 KB budget.",
+    visual: "Catalogue window cover; the rule; measured results as rows; the demo-catalogue decision; close.", destination: "/work/fa-moveis", source: "portfolio", evidence: "All figures are from the F&A Móveis case study's production measurements. No sales figures are claimed.",
   },
   {
-    id: "strategy-contents", week: 4, title: "What you receive in a social media strategy.", audience: "Owners considering content planning", format: "Carousel",
-    slides: ["Uma estratégia de conteúdo precisa ser utilizável.", "Pesquisa: público, dúvidas e referências relevantes.", "Direção: posicionamento, canais e pilares.", "Plano: calendário e briefs para produzir.", "Medição: o que observar e o que mudar.", "Conheça o serviço de estratégia do Blessed Moon Studio."],
-    caption: "Estratégia não termina numa lista de ideias. Ela conecta pesquisa, direção, conteúdo e um jeito de revisar os resultados. Agora o Blessed Moon Studio oferece estratégia e planejamento de conteúdo para redes sociais. Conheça o escopo no link do perfil.",
-    linkedin: "A social strategy should leave the business with decisions it can use: who to address, what questions to answer, which channels to prioritise, and how to review the work. Our strategy service turns that into an editorial calendar, example briefs and a website measurement plan. The scope is agreed before work begins.",
-    visual: "Research → decisions → calendar → review. Clearly present the service as strategy and planning.", destination: "/services/social-media", source: "umami", evidence: "The website measurement method is documented; the service itself is a newly offered scope.",
+    id: "prumo-credit", week: 4, lang: "en", title: "Listings ask 'which apartment?' Buyers ask 'will I get credit?'", audience: "Founders in regulated or high-anxiety purchases", format: "Carousel",
+    caption: "In Minha Casa Minha Vida, the real worry is credit approval, not finishes. Most listing sites still answer 'which apartment?' first.\n\nPrumo asks the credit question first: about a minute, five honest outcomes instead of yes or no, no ID number, no bureau lookup, no uploads. 'Not yet' returns every blocker at once.\n\nWhat does your buyer worry about first? The full case is in the bio.",
+    linkedin: "Every listing site in the Minha Casa Minha Vida segment answers 'which apartment?' first. Families are asking something else: 'will I get credit?'\n\nPrumo puts that question first. A six-step pre-qualification returns one of five outcomes, never a binary yes or no: approved in band, approved in a different band, above the bands, outside the programme, or 'not yet', which returns every blocker at once. No ID number, no bureau lookup, no document upload.\n\nPolicy numbers live in the admin, flagged until confirmed against Caixa's tables, because the brackets moved by federal decree mid-project.\n\nWhat question does your buyer need answered before they'll browse?",
+    visual: "Pre-qualification window cover; listing vs Prumo order; the five outcomes; what it doesn't ask for; close.", destination: "/work/prumo", source: "portfolio", evidence: "Outcomes and constraints from the Prumo case study. Policy numbers remain flagged as illustrative until confirmed; no approval rates are claimed.",
   },
   {
-    id: "sample-calendar", week: 4, title: "A content calendar needs more than a date.", audience: "Businesses creating content themselves", format: "Carousel",
-    slides: ["Um calendário precisa de mais do que datas.", "Qual pergunta este post responde?", "Qual evidência vamos mostrar?", "Que formato explica melhor a ideia?", "Para onde a pessoa pode ir depois?", "Uma ideia vira um brief quando essas respostas existem."],
-    caption: "Tema, evidência, formato e próximo passo. Um calendário fica mais fácil de executar quando explica por que cada publicação existe. No nosso serviço, o plano vem com briefs de exemplo para orientar a produção.",
-    linkedin: "A calendar row labelled 'Monday: brand post' leaves the hard decisions unresolved. A useful row identifies the buyer question, evidence, format and destination. That is the difference between occupying a date and preparing something someone can produce. The example is a planning method, not a promise about reach.",
-    visual: "Show a sanitised sample row based on the Oishi case. Do not publish another client's private calendar.", destination: "/services/social-media", source: "portfolio", evidence: "Use an agency-owned sample built from public case information.",
+    id: "screenshot-context", week: 4, lang: "en", title: "A screenshot shows the UI. The decision sells the work.", audience: "Product leaders sharing launches", format: "Carousel",
+    caption: "'Our new dashboard is live' tells nobody why to look.\n\nTry four lines instead: who uses it, the task they came to do, the decision that makes it possible, and what it doesn't do yet. Then point at the decision on the screen.\n\nFlora's crop-stress map, annotated, is the example. Save the formula for your next launch post.",
+    linkedin: "'Our new dashboard is live' is the most common launch caption, and it gives nobody a reason to look.\n\nA four-line formula that works better:\nWho: the person using it.\nTask: what they came to do.\nDecision: the choice that makes it possible.\nLimit: what it doesn't do yet.\n\nFor Flora's crop-stress screen: a farmer, finding which corner of which field is stressed this week, because the stressed zone is clipped to the field's real boundary and each detection can become a task. Some spectral indices show as disabled because the pipeline can't produce them yet.",
+    visual: "Hook cover; vague vs useful caption; the annotated Flora stress map; the four-line formula; close.", destination: "/work", source: "portfolio", evidence: "Flora details from the case study. The formula is an editorial recommendation, not a measured result.",
   },
   {
-    id: "likes-intent", week: 5, title: "Attention and enquiry are different signals.", audience: "Owners evaluating social performance", format: "Carousel",
-    slides: ["Curtidas ajudam a entender atenção. E depois?", "O post alcançou pessoas relevantes?", "Alguém visitou a página certa?", "Alguém iniciou uma conversa real?", "A conversa virou uma oportunidade adequada?", "Observe cada etapa sem confundir uma com a outra."],
-    caption: "Alcance, visitas e conversas respondem perguntas diferentes. O relatório precisa distinguir atenção de uma oportunidade real. É assim que planejamos a medição junto com o conteúdo.",
-    linkedin: "Reach tells us something about distribution. A website visit tells us someone took another step. Opening a mail draft is an intention, not a submitted lead. We keep those signals separate and use actual enquiries and proposals to understand business results. A smaller post can still bring a more relevant conversation.",
-    visual: "A labelled funnel with metric definitions and no sample numbers. Use arrows rather than a fabricated chart.", destination: "/services/social-media", source: "umami", evidence: "Measurement design; no current social or website figures are connected.",
+    id: "strategy-contents", week: 5, lang: "en", title: "What a content plan should hand you: briefs, not topics.", audience: "Founders considering content planning", format: "Carousel",
+    caption: "A calendar that says 'Monday: post about the brand' leaves all the real decisions to whoever has to produce it.\n\nA usable plan hands you four things: research (buyer questions, competitors, channels), direction (positioning and pillars), briefs (question, evidence, format, destination) and measurement (tagged visits and qualified enquiries).\n\nStrategy isn't production; those are separate scopes. The service is linked in the bio.",
+    linkedin: "A content calendar row that says 'Monday: post about the brand' isn't a plan. Whoever produces it still has to decide everything.\n\nA row someone can actually produce: 'Explain one price condition with the real Oishi page, then link the case.' A question, the evidence, a format, a destination.\n\nThat's what a strategy should hand over: research, direction, briefs written to that standard, and a measurement plan based on tagged visits and qualified enquiries rather than likes. Production, publishing and community management are separate scopes, quoted separately.",
+    visual: "ASCII-moon cover; topic vs brief; the four deliverables; scope note; close.", destination: "/services/social-media", source: "edelman", evidence: "Describes the proposed service scope. Pricing stays off public posts until approved.",
   },
   {
-    id: "tagged-link", week: 5, title: "One tagged link. One clearer next decision.", audience: "Founders reviewing content traffic", format: "Screen recording",
-    slides: ["0–5s: Qual publicação trouxe a visita?", "5–15s: Show a labelled campaign link builder, not private analytics.", "15–24s: Explain source, campaign and content ID.", "24–30s: Revise o conteúdo com informação, não com adivinhação."],
-    caption: "Um link de campanha identifica a origem da visita quando a pessoa usa aquele link. Isso ajuda a comparar caminhos, mas não captura toda conversa por mensagem ou visita em outro dispositivo. Medição útil também mostra seus limites.",
-    linkedin: "A campaign link gives the visit context: channel, campaign and content. That can help us decide which story to repeat. It does not explain every copied link, private message or cross-device visit. A useful report states the limits of attribution rather than hiding them.",
-    visual: "Demonstrate the public UTM format using the agency origin. No dashboard tokens, session replay or customer records.", destination: "/services/social-media", source: "umami", evidence: "Umami's campaign documentation supports the URL convention; attribution is incomplete.",
+    id: "bee-dash-metrics", week: 5, lang: "en", title: "Reach on one platform isn't reach on another.", audience: "Marketing and product leads comparing channels", format: "Carousel",
+    caption: "Influencer reporting usually means someone copying each creator's numbers into a spreadsheet, and by the time it's done the campaign has moved on.\n\nBee Dash started by agreeing what reach, engagement and performance mean across platforms. Each platform's adapter maps into that one schema, so creators are compared on equivalent numbers.\n\nRate limits, platform changes and growing history each got a deliberate answer. Case in the bio.",
+    linkedin: "'Reach' on one platform isn't 'reach' on another, and a spreadsheet hides that.\n\nBee Dash started before any adapter code: the team defined reach, engagement and campaign performance across platforms first. Each platform's adapter then handles its own authentication, pagination and rate limits and maps into that one schema, so creators are compared on equivalent metrics instead of platform-specific vanity numbers.\n\nWhat broke in production, and the answers: rate limits (batched, scheduled, backed off on purpose), platform schema changes (contained in each adapter), growing history (trend queries without full-history scans).",
+    visual: "Campaigns window cover; define the metric first; spreadsheet vs live view; production problems; close.", destination: "/work/bee-dash", source: "portfolio", evidence: "From the Bee Dash case study (2024, small delivery team). No campaign results are claimed.",
   },
   {
-    id: "restaurant-answers", week: 6, title: "What should a restaurant page answer before a call?", audience: "Restaurant owners", format: "Carousel",
-    slides: ["Antes de ligar, o cliente quer entender a oferta.", "O que está incluído?", "Qual é o preço e sua condição?", "Como consultar ou reservar?", "No Oishi, a regra do desconto fica junto da oferta.", "Veja um exemplo de informação organizada."],
-    caption: "Uma página de restaurante precisa explicar a oferta com informações confirmadas. No Oishi, mostrar a condição do desconto faz parte dessa clareza. Não usamos um valor isolado para contar outra história. Veja o caso no link do perfil.",
-    linkedin: "Restaurant website content starts with the real offer. What is included, what conditions apply, and where does a customer go next? Oishi's discount gave the design a concrete fact to organise around. We used that fact instead of manufacturing a new selling point.",
-    visual: "Use approved case screenshots and current offer text. Do not supply unconfirmed hours or reservation policies.", destination: "/work/oishi", source: "portfolio", evidence: "Only the documented offer presentation is treated as a delivered outcome.",
+    id: "headless-shopify", week: 6, lang: "en", title: "Keep Shopify. Lose the theme.", audience: "E-commerce founders outgrowing a theme", format: "Carousel",
+    caption: "Shopify themes are quick to launch and hard to make your own.\n\nSua Mesa Fit kept Shopify for what it's good at (inventory, orders, payments, checkout) and built a custom storefront on top: its own design, search queries shaped per route, and a cart that answers instantly while Shopify still decides the totals.\n\nOutgrown your theme? The case is linked in the bio.",
+    linkedin: "The choice isn't 'Shopify or custom'. Sua Mesa Fit kept Shopify running the business (inventory, orders, payments, checkout) and replaced only the storefront.\n\nThe customer-facing site is a custom, server-rendered app reading the Storefront API: its own components instead of a theme, search queries shaped per route so the catalogue can grow without inflating every payload, and an optimistic cart that responds immediately while Shopify stays the source of truth for lines, totals and shipping.",
+    visual: "Product-page window cover on paper; who does what; theme vs headless; the cart detail; close.", destination: "/work/sua-mesa-fit", source: "portfolio", evidence: "From the Sua Mesa Fit case study (2024). No performance or revenue figures are claimed.",
   },
   {
-    id: "smallest-system", week: 6, title: "Catalogue, booking or dashboard? Start with the workflow.", audience: "Owners choosing software scope", format: "Carousel",
-    slides: ["Que sistema o seu negócio precisa agora?", "Comece pelo processo, não pela lista de recursos.", "Catálogo, agenda e painel resolvem trabalhos diferentes.", "A informação deve levar à tarefa da pessoa.", "No Markado, serviço e disponibilidade orientam o agendamento.", "Descreva um processo que você precisa organizar."],
-    caption: "Consultar um produto, marcar um serviço e acompanhar tarefas são trabalhos diferentes. F&A Móveis, Markado e Flora mostram três escopos de sistema. Antes de pedir todas as funcionalidades, descreva o processo que precisa acontecer. No contato do perfil, conte o trabalho e como ele funciona hoje.",
-    linkedin: "A catalogue, booking page and operations dashboard serve different workflows. F&A Móveis supports a product enquiry. Markado connects service selection with availability. Flora lets a user turn field observations into tasks. Start by describing the work and the information it needs; a feature list can follow. Bring one process to the project conversation.",
-    visual: "Three workflows and the Markado booking screenshot. Explain a scoped decision without claiming measured revenue or time savings.", destination: "/contact", source: "portfolio", evidence: "Existing F&A, Markado and Flora project records; examples of implemented workflows, not evidence of commercial uplift."
+    id: "likes-intent", week: 6, lang: "en", title: "Likes measure attention. Enquiries measure fit.", audience: "Founders evaluating content results", format: "Carousel",
+    caption: "Likes tell you a post got attention. They don't tell you whether the right buyer arrived.\n\nAsk four questions in order: did the right person see it, did they visit the page, did they get in touch, and was it the right work?\n\nAnd read medians, not one viral post. Save the four questions.",
+    linkedin: "Likes measure attention. Enquiries measure fit. Most content reports stop at the first.\n\nFour questions, in order, for every post:\n1. Did the right person see it? Saves, shares, relevant replies.\n2. Did they visit the page? A tagged visit to the linked case.\n3. Did they get in touch? An enquiry carrying the campaign tag.\n4. Was it the right work? Qualified, then a proposal.\n\nCompare similar formats over weeks. One popular post isn't a reason to change positioning; a modest post that brings the right enquiry is a reason to repeat it.",
+    visual: "Hook cover; the four questions; medians rule; close.", destination: "/services/social-media", source: "umami", evidence: "A measurement method, not results. No account metrics are connected.",
+  },
+
+  // Portuguese: secondary account, Brazilian small businesses.
+  {
+    id: "website-details", week: 1, lang: "pt", title: "Seu Instagram vende. O site tira a dúvida.", audience: "Donos de pequenos negócios no Brasil", format: "Carousel",
+    caption: "Seu perfil desperta interesse. Mas antes de chamar, o cliente quer saber o que está incluído, quanto custa, em que condição e como reservar.\n\nNo Oishi, os dois preços, a condição 'sem desperdício' e o caminho para o WhatsApp ficam na mesma tela.\n\nSalve a lista para revisar o seu site. O caso está no link da bio.",
+    linkedin: "",
+    visual: "Capa com a pergunta; a lista de dúvidas; página de rodízio do Oishi anotada; a regra do desconto; fechamento.", destination: "/work/oishi", source: "portfolio", evidence: "Fatos do estudo de caso do Oishi. Nenhum aumento de reservas é afirmado.",
   },
   {
-    id: "screenshot-context", week: 7, title: "A product screenshot needs a decision story.", audience: "Founders and product leaders", format: "Carousel",
-    slides: ["Uma tela precisa de uma história de decisão.", "Qual tarefa a pessoa precisa realizar?", "Mostre o que torna essa tarefa possível.", "Informação, decisão e ação precisam se conectar.", "No Flora, uma observação do campo pode virar tarefa.", "Leia o contexto por trás da interface."],
-    caption: "Uma captura mostra a tela. A história explica a tarefa, a decisão e seu limite. No Flora, a operação liga a observação de um campo a uma tarefa no painel. É um fluxo implementado no projeto, não uma medição de produtividade. Veja o contexto completo no portfólio pelo link do perfil.",
-    linkedin: "A screenshot shows an interface; a decision story explains the work. In Flora, a user can act on a field observation by creating a task. The task screen belongs to that operations workflow. Show what the interface enables and explain its limits. An implemented flow is evidence of the build, not proof of higher farm productivity. Read the full project context in the portfolio.",
-    visual: "Use the Flora task screenshot and connect the field observation to the next action. Do not infer farm productivity or anonymised customer results.", destination: "/work/flora", source: "portfolio", evidence: "Flora's documented observation-to-task workflow and public project capture; no measured operational uplift."
+    id: "oishi-condition", week: 2, lang: "pt", title: "R$ 54,90. Se a mesa comer tudo.", audience: "Restaurantes e negócios com ofertas condicionais", format: "Carousel",
+    caption: "No Oishi, o rodízio sai R$ 20 mais barato por pessoa se a mesa comer tudo o que pediu.\n\nPor isso o preço com desconto nunca aparece sozinho: R$ 74,90 riscado, R$ 54,90 e 'sem desperdício' logo abaixo, no mesmo componente.\n\nSua oferta tem uma condição? Veja o caso no link da bio.",
+    linkedin: "",
+    visual: "Janela com o cardápio do Oishi; só desconto vs preço honesto; por que importa; fechamento.", destination: "/work/oishi", source: "portfolio", evidence: "Preços do Rodízio Chisai e regra do desconto conforme o estudo de caso do Oishi.",
   },
   {
-    id: "confirmed-information", week: 7, title: "If the price is unconfirmed, the page should say so.", audience: "Founders managing product information", format: "Carousel",
-    slides: ["Uma informação desconhecida não vira um número plausível.", "Confirme a fonte antes de publicar.", "Se o preço não foi confirmado, diga isso.", "Na F&A Móveis, isso aparece como consulta de preço.", "Um estado honesto também faz parte do produto.", "Veja como o catálogo organiza os dados reais."],
-    caption: "A interface também precisa saber lidar com o que ainda não foi confirmado. No catálogo F&A Móveis, não usamos preços inventados para completar a página. Essa decisão vale para dados, conteúdo e relatórios.",
-    linkedin: "An unknown price is a data state. Replacing it with a plausible number would make the screen look complete while making the product less trustworthy. The F&A Móveis catalogue uses an explicit price enquiry where a price was not confirmed. Good product work includes those unresolved states.",
-    visual: "Show the documented price-enquiry state, after verifying the current product data. No unsupported before/after metrics.", destination: "/work/fa-moveis", source: "portfolio", evidence: "The case records explicitly unconfirmed price states; current stock can change.",
+    id: "catalogue-whatsapp", week: 3, lang: "pt", title: "Você vende pelo WhatsApp? O site não precisa de carrinho.", audience: "Lojas que já vendem por conversa", format: "Carousel",
+    caption: "Se a venda já acontece no WhatsApp, o site pode preparar essa conversa em vez de duplicá-la com um checkout.\n\nNa F&A Móveis, cada produto termina numa mensagem pronta para a dona, com o produto já identificado. Sem banco de dados, sem mensalidade, e 'Consulte o preço' quando o valor não foi confirmado.\n\nCaso completo no link da bio.",
+    linkedin: "",
+    visual: "Capa com a pergunta; checkout vs conversa; produto da F&A na janela; o que o catálogo não tem; fechamento.", destination: "/work/fa-moveis", source: "portfolio", evidence: "Arquitetura e regras de preço do estudo de caso da F&A Móveis.",
   },
   {
-    id: "which-service", week: 8, title: "Strategy, production or management?", audience: "Owners choosing social support", format: "Carousel",
-    slides: ["Que apoio você precisa para o conteúdo?", "Estratégia: decidir público, mensagem, canais e plano.", "Produção: transformar briefs em textos e peças.", "Gestão: publicar e acompanhar tarefas combinadas.", "Cada etapa precisa de escopo e responsabilidade claros.", "Conheça nosso serviço de estratégia e planejamento."],
-    caption: "Planejar, produzir e gerir são trabalhos diferentes. O Blessed Moon Studio oferece pesquisa, estratégia, calendário e um plano de medição. Outros serviços precisam de um escopo próprio. Veja a proposta no link do perfil.",
-    linkedin: "Strategy decides what the work should achieve. Production turns the brief into assets. Management handles agreed ongoing operations. Buying one does not automatically include the others. Our new offer starts with research, editorial decisions, a usable calendar and measurement. Additional work is scoped explicitly.",
-    visual: "Three columns with a highlight on the strategy scope. Do not advertise ongoing community management as included.", destination: "/services/social-media", source: "meta", evidence: "Service boundaries are the studio's proposed scope; platform guidance informs later testing.",
+    id: "furniture-dimensions", week: 4, lang: "pt", title: "Cabe na minha sala? Responda antes da mensagem.", audience: "Lojas de móveis e varejo local", format: "Carousel",
+    caption: "A primeira pergunta de quem compra móvel é se cabe.\n\nNa F&A Móveis, cada página mostra largura, altura e profundidade reais, guardadas como número em centímetros, o preço confirmado ou 'Consulte o preço', e o WhatsApp já com o produto.\n\nSeu cliente pergunta a medida toda vez? Link na bio.",
+    linkedin: "",
+    visual: "Capa com a pergunta; página de produto anotada; o detalhe das medidas; fechamento.", destination: "/work/fa-moveis", source: "portfolio", evidence: "Medidas e regras do estudo de caso da F&A Móveis.",
   },
   {
-    id: "pilot-review", week: 8, title: "The pilot ends with a decision, not a victory claim.", audience: "Business owners assessing content investment", format: "Carousel",
-    slides: ["O que revisar depois de um piloto de conteúdo?", "Quais perguntas geraram conversas relevantes?", "Que caminhos trouxeram visitas para o site?", "Quais conversas viraram oportunidades reais?", "Quanto tempo o conteúdo exigiu?", "Com os dados disponíveis, decida o que repetir e ajustar."],
-    caption: "Um piloto serve para aprender o que vale continuar. Relevância das conversas, caminhos de visita e tempo de produção fazem parte da revisão. Quando houver dados, publicaremos apenas observações verificadas. Até lá, este é o método.",
-    linkedin: "An eight-week pilot should leave us with a decision: which buyer questions to keep answering, which destinations to improve, and what the work costs in time. Without connected results, a growth claim would be invented. We can explain the review method now and publish observations once there is evidence.",
-    visual: "A blank review template labelled 'method'. Replace with measured findings only after an actual pilot and approval.", destination: "/services/social-media", source: "umami", evidence: "No pilot results are connected. This draft describes the review process only.",
+    id: "brief-questions", week: 5, lang: "pt", title: "3 perguntas que valem mais que um orçamento.", audience: "Donos de negócios escolhendo o escopo de um site", format: "Carousel",
+    caption: "Antes de pedir um orçamento de site, responda três perguntas: quem visita, o que essa pessoa precisa saber e o que ela deve fazer.\n\n'Quero um site moderno com blog' não dá para orçar. 'O cliente vê a medida e o preço do móvel e chama no WhatsApp sobre ele' dá.\n\nTem as três respostas, mesmo que sejam hipóteses? Fale com o Benito pelo link da bio.",
+    linkedin: "",
+    visual: "Capa em papel; as três perguntas; vago vs concreto; fechamento.", destination: "/contact", source: "portfolio", evidence: "Exemplo baseado no escopo documentado da F&A Móveis.",
+  },
+  {
+    id: "restaurant-answers", week: 6, lang: "pt", title: "O que o site precisa responder antes de o cliente ligar.", audience: "Donos de restaurantes", format: "Carousel",
+    caption: "Checklist para o site do seu restaurante: cardápio em texto, preços e condições juntos, horários confirmados, um caminho só para a reserva, endereço e como chegar.\n\nNo Oishi, o cardápio e as faixas de preço viviam só em imagens JPEG. Hoje são texto real, e a reserva termina numa mensagem pronta no WhatsApp.\n\nSalve e confira o seu. Link na bio.",
+    linkedin: "",
+    visual: "Capa; checklist; página inicial do Oishi na janela; fechamento.", destination: "/work/oishi", source: "portfolio", evidence: "Situação anterior e entrega conforme o estudo de caso do Oishi.",
+  },
+  {
+    id: "confirmed-information", week: 7, lang: "pt", title: "Preço não confirmado? Escreva 'consulte'.", audience: "Negócios que publicam catálogo e preços", format: "Carousel",
+    caption: "Um número plausível é um preço falso.\n\nNa F&A Móveis, 10 dos 13 produtos têm preço confirmado por tabela do fornecedor ou pela própria dona. Os outros 3 dizem 'Consulte o preço', em vez de um chute.\n\nSeu site mostra algo que você ainda não confirmou? Link na bio.",
+    linkedin: "",
+    visual: "Capa em papel; a regra; catálogo na janela; fechamento.", destination: "/work/fa-moveis", source: "portfolio", evidence: "Números do estudo de caso da F&A Móveis.",
+  },
+  {
+    id: "which-service", week: 8, lang: "pt", title: "Estratégia, produção ou gestão?", audience: "Donos de negócios escolhendo apoio em redes sociais", format: "Carousel",
+    caption: "Antes de contratar ajuda com redes sociais, saiba qual parte você precisa delegar.\n\nEstratégia decide público, mensagem, canais e briefs. Produção transforma os briefs em textos, fotos e peças. Gestão publica, responde e acompanha. São escopos diferentes.\n\nPrecisa do plano antes dos posts? Conheça o serviço pelo link da bio.",
+    linkedin: "",
+    visual: "Capa com a lua ASCII; os três escopos; ideias soltas vs plano; fechamento.", destination: "/services/social-media", source: "portfolio", evidence: "Descreve o escopo proposto do serviço. Preços não aparecem nos posts.",
   },
 ];
+
+export const storiesIn = (lang: Language) => STORIES.filter((story) => story.lang === lang);
+/** LinkedIn is English-only. */
+export const LINKEDIN_STORIES = storiesIn("en");
+
+/** The post's stable id, also its `utm_content`: ig-en-w01-one-action. */
+export const postId = (story: Story, channel: Channel) => `${channel === "instagram" ? "ig" : "li"}-${story.lang}-w${String(story.week).padStart(2, "0")}-${story.id}`;
 
 export function campaignUrl(story: Story, channel: Channel) {
   const url = new URL(story.destination, SITE_URL);
   url.searchParams.set("utm_source", channel);
   url.searchParams.set("utm_medium", "organic_social");
   url.searchParams.set("utm_campaign", "studio-social-pilot");
-  url.searchParams.set("utm_content", `${channel === "instagram" ? "ig" : "li"}-w${String(story.week).padStart(2, "0")}-${story.id}`);
+  url.searchParams.set("utm_content", postId(story, channel));
   return url.toString();
 }

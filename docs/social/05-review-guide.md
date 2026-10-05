@@ -10,11 +10,11 @@ the repository. See the task document for the check details.
 - `/social-plan`: audience hypotheses, five public offer references, 356 Instagram covers, 59 captured captions, ten selected account audits and ten
   supporting LinkedIn samples across five families, seven platform decisions, four
   content pillars, eight-week queue and proposed internal pricing.
-- `/instagram-plan`: 16 expandable briefs, Portuguese captions, slide/recording
-  outlines, visual directions, evidence notes and external campaign URLs. Now includes
-  a nine-cover study and navigable branded slide previews with downloads/edit links.
-- `/linkedin-plan`: 16 English decision-story drafts adapted from the same core
-  ideas, with visual directions and campaign URLs, landscape previews and a series board.
+- `/instagram-plan`: English grid and 12 briefs first, then the optional Portuguese
+  account's grid and 8 briefs: authored slide sequences, captions, visual directions,
+  evidence notes and campaign URLs (`ig-en-…` / `ig-pt-…`), with downloads/edit links.
+- `/linkedin-plan`: the 12 English stories as text posts with the same carousel as a
+  square PDF document, campaign URLs (`li-en-…`) and a series board.
 - `/analytics-plan`: existing tooling, metric definitions, event dictionary,
   UTM convention, baseline checklist and 30/60/90-day reviews. An empty eight-week
   worksheet now plots real manual observations, with JSON save/restore and SVG export.
@@ -48,9 +48,8 @@ the repository. See the task document for the check details.
   and booking variables were added to the example environment template.
 - Research, task decisions and reproducible browser checks live in the repository.
 - Each post brief links sampled content patterns separately from Blessed Moon's
-  project evidence. LinkedIn is recommended primary; Instagram is a smaller
-  Portuguese test. Both 16-draft libraries are alternatives, not a commitment to
-  publish 32 posts. Instagram covers/captured material were reviewed; no Instagram competitor
+  project evidence. English leads on Instagram and LinkedIn; a Portuguese Instagram
+  account is optional (Benito, 5 October 2026). Instagram covers/captured material were reviewed; no Instagram competitor
   performance, account cadence or sales benchmarks are claimed.
 
 ## Decisions still to review

@@ -151,9 +151,9 @@ optional; ongoing production and full account management require separate scope.
 Unlinked, `noindex` planning pages: `/social-plan`, `/instagram-plan`,
 `/linkedin-plan`, `/analytics-plan`. They contain five public offer references,
 356 collected Instagram covers, 59 captured captions and ten supporting LinkedIn samples, platform selection,
-16 original stories with channel drafts, campaign links, an internal pricing model
-and a measurement checklist. LinkedIn is recommended primary with a smaller
-Portuguese Instagram test; both draft libraries offer alternatives. Instagram-feed
+20 authored carousels (12 English, 8 Portuguese) with captions, LinkedIn drafts,
+campaign links, an internal pricing model and a measurement checklist. English leads
+on Instagram and LinkedIn; a Portuguese Instagram account is optional. Instagram-feed
 coverage and selected deep observations are documented; no competitor performance is inferred. They are URL-accessible, not authenticated. No live
 social/Umami metrics or private client information are embedded. Research lives in
 `docs/social/`; implementation decisions in
@@ -212,8 +212,9 @@ on 5 October 2026. See [audit and limitations](docs/social/11-instagram-corpus-a
 URLs stay gitignored and are not published. Collectors/import instructions are in
 [the collection guide](docs/social/10-agency-profile-collection.md).
 
-The stronger drafts use concrete comparisons, workflows, worked examples and
-existing Oishi, F&A Móveis, Markado and Flora screenshots. Preset screenshots are
+The posts (`src/lib/social-posts.ts`, `TASK-social-copy-v3.md`) lead with a project
+screenshot or a concrete buyer question and use Oishi, F&A Móveis, Markado, Flora,
+Prumo, Bee Dash and Sua Mesa Fit screenshots. Preset screenshots are
 embedded when exporting, including editable JSON. Review permissions/current facts
 before publishing. The builder is local and template based; no automatic AI or
 social publishing service was introduced.

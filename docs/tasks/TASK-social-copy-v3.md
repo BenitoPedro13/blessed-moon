@@ -1,6 +1,6 @@
 # TASK: social copy v3 — English first, real hooks, proof on the cover
 
-5 October 2026. Status: planned. Third of three; depends on
+5 October 2026. Status: complete. Third of three; depends on
 `TASK-social-art-foundations.md` and `TASK-social-art-signatures.md`.
 
 ## 1. Current scenario
@@ -112,3 +112,48 @@ Brazilian SMB set.
 ## 6. Out of scope
 
 Publishing, opening the second account, paid promotion, video/Reels production.
+
+## Implemented result
+
+- **20 authored carousels** in `src/lib/social-posts.ts`: 12 English (weeks 1–6, two a
+  week) and 8 Portuguese (weeks 1–8). Each has its own order and length (4–6 slides).
+  `social-creative.ts` is removed. `Story` gained `lang`. Captions are in the post's
+  language, and `linkedin` is filled for English stories only. `postId()` gives
+  `ig-en-w01-one-action` and is also the `utm_content`.
+- **LinkedIn** uses the same English carousel, as square pages exported as a PDF
+  document. That replaces the single landscape image, because a document carries the
+  whole argument; landscape stays available in the builder.
+- **New English stories** backed by case facts: `markado-slot`, `flora-satellite`,
+  `studio-questions`, `fa-honest-price`, `prumo-credit`, `bee-dash-metrics`,
+  `headless-shopify`. **Retired:** `sample-calendar`, `tagged-link`, `pilot-review`
+  (about the studio rather than for the reader) and the two screen-recording briefs
+  (`oishi-condition` and `furniture-dimensions` are now carousels). Research references
+  in `instagram-research.ts`/`social-research.ts` are re-keyed to the new ids.
+- **Criterion amended:** "proof by slide 2" holds for the case posts (the screenshot
+  is the cover). Education posts (checklists, question sets) instead end on a worked
+  example from a real case, as UniMeet's checklist posts do; forcing a screenshot
+  onto slide 2 there would cut the usable artefact the post exists for.
+- **Fact pass**, each against `studio-data.ts`:
+  - Markado: revalidated in the final transaction; working rules, Calendar, buffers,
+    notice periods, UTC; checkout before confirmation.
+  - Flora: no request calls the provider; ten indices in one Process API call at
+    4.667 vs 4.0 PU; Accept-header and masking bugs.
+  - F&A: 13 products, 10 priced, 3 'Consulte o preço'; Lighthouse 93/100; CLS 0;
+    images < 32 KB against a 180 KB budget; the 27-item demo catalogue removed; the
+    localhost defect; centimetres stored as numbers.
+  - Oishi: R$ 74,90 / R$ 54,90 and 'sem desperdício'; R$ 20 off; menu once only in
+    JPEGs; '[a confirmar]'.
+  - Prumo: five outcomes; no CPF, bureau or uploads; policy numbers flagged; brackets
+    moved by decree.
+  - Bee Dash: canonical metrics first; adapters; rate limits, schema drift, history.
+  - Sua Mesa Fit: Shopify keeps inventory, orders, payments and checkout; per-route
+    queries; optimistic cart with Shopify authoritative.
+- **Account details** (Benito, 5 October): Instagram `@blessedmoon.studio`, opened
+  as a personal account, so switch it to professional before publishing. LinkedIn
+  page `linkedin.com/company/blessedmoonstudio`.
+- Verification: `pnpm lint` (0 errors), `pnpm build`, `check-post-builder.mjs` and
+  `check-social-strategy.mjs` against `pnpm start -p 3194`. The strategy check now also
+  asserts every cover headline is ≤ 12 words and that no slide carries the hedge
+  phrases. Contact sheets of all 20 posts were reviewed against UniMeet's. That review
+  caused headlines to be bounded above the crescent/moon, the rows to be enlarged and
+  the annotation markers to be repositioned.

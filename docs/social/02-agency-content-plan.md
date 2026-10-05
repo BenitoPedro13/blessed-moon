@@ -1,60 +1,42 @@
 # Blessed Moon's own content plan
 
-Draft pilot, 4 October 2026. This is the agency's marketing plan, not a client's package scope.
+Draft pilot, 4 October 2026; revised 5 October 2026. This is the agency's marketing plan, not a client's package scope.
 
 ## Objective and rhythm
 
 Help a relevant buyer understand what Blessed Moon builds, how it makes decisions, and how to start a project. Use completed delivery evidence and accurately labelled work in progress. Measure qualified enquiries and accepted proposals alongside attention metrics.
 
-Start with two core stories per week for eight weeks on the primary channel, and one secondary adaptation. Recommended default: LinkedIn primary, with one Portuguese Instagram adaptation weekly. Reverse priority if Brazilian businesses become the chosen target. The two 16-draft libraries are alternatives, not a 32-post publishing commitment. Use a practical decision post and case/image post on LinkedIn; test readable carousels and short recordings on Instagram. Optional Stories reuse the same work. Budget 4–6 hours weekly initially and record actual time; reduce volume if it exceeds available capacity.
+**Revised 5 October 2026** (Benito: the better opportunities are international clients paying in strong currencies). English leads: two stories a week for six weeks, each an Instagram carousel on `@blessedmoon.studio` and the same slides as a square PDF document on Benito's LinkedIn profile. An optional Portuguese Instagram account takes one story a week for eight weeks. Budget 4–6 hours weekly initially and record actual time; reduce volume if it exceeds available capacity.
 
-The [Instagram audit](11-instagram-corpus-audit.md) reviews 356 covers, 59 captured captions and saved inner images across ten selected accounts. Ten supporting LinkedIn posts from Refokus, Clay, Netguru / its co-founder, Superside and RD Station remain separately labelled; LayerUp and Sebrae profiles were excluded by Benito. Every website brief links its account-pattern references separately from Blessed Moon's own evidence. These patterns guide original buyer questions and case explanations; competitors' wording, testimonials and results are not copied. The observed Instagram structures inform original compositions; format effectiveness remains a pilot question.
+The [Instagram audit](11-instagram-corpus-audit.md) reviews 356 covers, 59 captured captions and saved inner images across ten selected accounts; its strongest pattern, the work in context on the cover, now leads the series. Ten supporting LinkedIn posts remain separately labelled. Patterns guide structure; competitors' wording, testimonials and results are not copied.
 
-Suggested pillars: buyer education (35%), project evidence (35%), process/decisions (20%), service explanation (10%). Percentages guide a mix, not a publishing quota. Use project-specific screenshots, legible diagrams and plain language. The brand's amber and dark palette can carry the assets; large text and clear contrast matter more than reproducing the animated website.
+Pillars: buyer education (35%), project evidence (35%), process/decisions (20%), service explanation (10%), a mix guide, not a quota. Every carousel is authored in `src/lib/social-posts.ts` with its own order and length; the art system is in `TASK-social-art-foundations.md` and `TASK-social-art-signatures.md`.
 
-## Eight-week queue
+## Queue
 
-Each week has two original ideas. Titles are draft hooks, not verified performance promises. Instagram captions lean Portuguese for the Brazilian pilot; LinkedIn adaptations can be English when the target buyer is international.
+Titles are the covers. Destinations carry `utm_content` `ig-<lang>-wNN-<id>` or `li-en-wNN-<id>`.
 
-| Week | Story A | Story B | Destination / measurement |
+| Week | English A | English B | Portuguese (optional account) |
 |---|---|---|---|
-| 1 | Your Instagram answers some questions. Your website should answer the rest. | Oishi: show the price and the condition together | `/work/oishi`; tagged case visits |
-| 2 | A catalogue can end in WhatsApp instead of a checkout | F&A Móveis: measurements and available information before the enquiry | `/work/fa-moveis`; case-to-contact paths |
-| 3 | A website brief starts with one action the visitor needs to take | Three questions to answer before commissioning a website | `/contact`; enquiry intents |
-| 4 | What a social media strategy actually contains | A sample month: buyer question, evidence, post, destination | `/services/social-media`; service-to-contact paths |
-| 5 | Likes do not tell you whether the right buyer arrived | One tagged link, one useful report, one next decision | `/services/social-media`; campaign visits and enquiry intents |
-| 6 | What a restaurant menu must say before a customer calls | Catalogue, shop or dashboard? Choose the smallest system that solves the problem | Appropriate verified case; relevant conversations |
-| 7 | When a product screenshot needs a story | A real product tradeoff: problem, options, choice and limitation | Verified product case; founder/product-leader enquiries |
-| 8 | Strategy, production and management: which one do you need? | What we learned in the pilot: publish only measured observations | Service page; compare relevant enquiries and work hours |
+| 1 | Your brief lists features. It should name one action. → `/contact` | Two clients. One slot. Only one can book it. → `/work/markado` | Seu Instagram vende. O site tira a dúvida. → `/work/oishi` |
+| 2 | Catalogue, booking or dashboard? Name the job first. → `/contact` | Satellite pixels in. Field tasks out. → `/work/flora` | R$ 54,90. Se a mesa comer tudo. → `/work/oishi` |
+| 3 | 7 questions to ask before you hire a studio. → `/contact` | 13 products. 10 prices. Three say 'ask', on purpose. → `/work/fa-moveis` | Você vende pelo WhatsApp? O site não precisa de carrinho. → `/work/fa-moveis` |
+| 4 | Listings ask 'which apartment?' Buyers ask 'will I get credit?' → `/work/prumo` | A screenshot shows the UI. The decision sells the work. → `/work` | Cabe na minha sala? → `/work/fa-moveis` |
+| 5 | What a content plan should hand you: briefs, not topics. → service | Reach on one platform isn't reach on another. → `/work/bee-dash` | 3 perguntas que valem mais que um orçamento. → `/contact` |
+| 6 | Keep Shopify. Lose the theme. → `/work/sua-mesa-fit` | Likes measure attention. Enquiries measure fit. → service | O que o site precisa responder antes de o cliente ligar. → `/work/oishi` |
+| 7 | | | Preço não confirmado? Escreva 'consulte'. → `/work/fa-moveis` |
+| 8 | | | Estratégia, produção ou gestão? → service |
+
+Retired from the earlier library, as studio-introspective rather than useful to the buyer: the sample calendar, tagged link and pilot review posts. Their ideas survive inside `strategy-contents` and `likes-intent`.
 
 Choose dates after confirming launch readiness. Do not backdate posts or tie the calendar to research dates. Posting windows begin as a test and are refined from account insights; no unsupported 'best time' claims.
 
-## Three ready-to-develop briefs
+## How a post is built
 
-### Instagram carousel: a site alongside Instagram
-
-Draft language: Portuguese. Six slides:
-
-1. Seu Instagram desperta interesse. Onde o cliente encontra os detalhes?
-2. Horários, preços e condições precisam estar fáceis de achar.
-3. Uma página pode reunir as respostas que se perdem entre posts.
-4. Um cardápio ou catálogo ajuda o cliente a chegar com uma pergunta melhor.
-5. No caso Oishi, mostramos o preço com a condição do desconto. Use a real screenshot and identify the case; do not claim increased reservations.
-6. Quer organizar esse caminho no seu negócio? Conheça o trabalho do Blessed Moon Studio.
-
-Caption draft: "Seu perfil pode ser o começo da conversa. O site reúne o que o cliente precisa entender antes de chamar: oferta, condições e próximo passo. No projeto Oishi, a regra do desconto aparece junto do preço. Veja o caso no link do perfil."
-
-Destination: a tagged link to `/work/oishi` in the profile or a Story link. A caption URL is not assumed clickable. Track saves/shares as learning signals and website visits as the next step, not sales.
-
-### Instagram screen recording: a catalogue enquiry
-
-20–30 seconds using the real F&A Móveis site. Start with the buyer question: "Cabe na minha sala?" Show dimensions, confirmed product information and the WhatsApp enquiry path. Narration explains why the catalogue supports the existing sales workflow. End on "Veja o caso completo." Use confirmed live behaviour and avoid exposing personal messages or phone details unnecessarily.
-
-### LinkedIn decision post: the condition belongs to the price
-
-Draft: "A lower price needs its condition beside it. In the Oishi website project, the discount depends on the table finishing what it orders. That changed the component: regular price, discounted price and condition travel together. The design decision was to make those facts hard to separate. A useful website does more than attract attention. It helps someone understand what they are agreeing to."
-
-Attach a screenshot with permission. Link to the case using an external campaign tag. Ask a relevant question, such as "Which condition does your product need to make clearer?" Do not imply a sales uplift or invent client approval.
+- **Cover:** one dominant element (the work in the terminal window, the work as ASCII, or a concrete question beside the crescent) and a headline of twelve words or fewer, with the hook in the amber accent line.
+- **Case posts** put the screenshot on the cover. **Education posts** give the reader something to keep (a checklist, a question set, a formula) and end on a worked example from a real case.
+- **No hedges on the art.** What the evidence doesn't show lives in the story's `evidence` note and the brief's "Before publishing" section. A slide says only what `studio-data.ts` records.
+- **One action** on the last slide, matching the destination, plus a reason to save the post.
 
 ## Operation and review
 

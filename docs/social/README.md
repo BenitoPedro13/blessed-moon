@@ -24,7 +24,7 @@ implemented scope and how to continue without duplicating it.
 The [production workspace guide](09-production-workspace.md) explains the new
 visual previews, planning/measurement graphs, post builder and local file workflow.
 
-Provisional decisions: LinkedIn is the recommended primary channel for the existing founder/product-leader positioning; Instagram tests Portuguese buyer education using Oishi and F&A Móveis. Publish two core stories weekly on the primary channel and one secondary adaptation. Reverse priority if Brazilian small businesses become the chosen market. Market and language priorities still need validation. Planning pages are unlinked and noindex by default, like Unimeet's proposal pages. They are accessible by URL, not confidential or authenticated.
+Provisional decisions (revised 5 October 2026): English leads for international founders and product leaders, as `@blessedmoon.studio` Instagram carousels and the same slides as LinkedIn documents on Benito's profile, two a week. An optional Portuguese Instagram account carries the Oishi and F&A Móveis stories for Brazilian businesses, one a week. See [platform selection](07-platform-selection.md) and `docs/tasks/TASK-social-copy-v3.md`.
 
 No social account insights, current enquiry counts, client budgets, production capacity, or live Umami dashboard data were supplied. Recommendations are hypotheses, not measured Blessed Moon performance. Pricing is proposed internally, not approved for publication. Existing tracker code was inspected; production ingestion was not verified.
 

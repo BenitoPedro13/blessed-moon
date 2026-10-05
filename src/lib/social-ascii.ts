@@ -45,7 +45,7 @@ export function asciiFromLuminance(luma: ArrayLike<number>, width: number, heigh
     values.push(n ? 0.7 * (sum / n) + 0.9 * Math.min(1, edge / n) : 0);
   }
   const sorted = [...values].sort((a, b) => a - b);
-  const lo = sorted[Math.floor(sorted.length * 0.4)], hi = sorted[Math.floor(sorted.length * 0.985)] || 1;
+  const lo = sorted[Math.floor(sorted.length * 0.3)], hi = sorted[Math.floor(sorted.length * 0.985)] || 1;
   const span = Math.max(0.05, hi - lo);
   const lines: string[] = [];
   for (let r = 0; r < rows; r++) {

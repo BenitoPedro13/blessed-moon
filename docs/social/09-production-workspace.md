@@ -5,13 +5,12 @@ strategy; it does not change the proposed service scope or public custom pricing
 
 ## Review the pages
 
-- `/instagram-plan`: nine proposed covers and 16 expandable briefs. Carousel drafts
-  preview all their Portuguese slides. Recording briefs preview a cover concept;
-  the actual footage still needs production. Each draft downloads PNG/ZIP and opens
-  directly in the builder.
+- `/instagram-plan`: an English grid study and 12 English briefs, then a Portuguese
+  grid study and 8 Portuguese briefs. Each brief previews every authored slide,
+  downloads PNG/ZIP and opens directly in the builder.
 - `/linkedin-plan`: a nine-cover visual-series board, explicitly not a LinkedIn
-  profile layout. Each English story previews its landscape graphic and offers
-  PNG/ZIP/PDF and the same edit link.
+  profile layout. Each English story previews the same carousel as square pages
+  and offers PNG/ZIP/PDF (post the PDF as a document) and the same edit link.
 - `/social-plan`: proposed pillar mix and weekly publishing workload charts. These
   are planning assumptions, not observed account performance.
 - `/analytics-plan`: eight blank weeks for tagged visits, qualified enquiries and
@@ -19,8 +18,8 @@ strategy; it does not change the proposed service scope or public custom pricing
   observed none. Lines join adjacent recorded weeks only. Export SVG and save or
   restore observations JSON. Week numbers are relative to your actual launch.
 - `/post-builder`: edit the existing research draft or load a blank starting point.
-  `/post-builder?story=oishi-condition&channel=linkedin` opens that English preset;
-  Instagram uses Portuguese presets. Changing channel preserves your words; loading
+  `/post-builder?story=markado-slot&channel=linkedin` opens that story as a square
+  LinkedIn document; starting points are labelled EN or PT. Changing channel preserves your words; loading
   a starting point replaces the draft, so save its JSON first.
 - `/system`: specimens for covers, post cards/previews, shared artwork, the builder,
   planning charts and the measurement worksheet.
@@ -62,7 +61,7 @@ Research facts, project permissions and final wording still need Benito's review
 
 ## Implementation and privacy
 
-`social-creative.ts` develops the original sequences; `social-art.ts` defines presets, validation and one SVG renderer
+`social-posts.ts` holds each story's authored slides; `social-art.ts` defines presets, validation and one SVG renderer
 (`TASK-social-art-foundations.md`, `TASK-social-art-signatures.md`). `SlideArt` uses it
 on the page; `social-export.ts` rasterizes that same SVG with a local canvas. SVG
 strings escape text, imported pictures must be local raster data URIs or an exact portfolio asset path from
