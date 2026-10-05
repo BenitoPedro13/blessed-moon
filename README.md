@@ -175,8 +175,8 @@ running local server (`SOCIAL_CHECK_URL` optionally overrides `http://localhost:
 
 The channel plans now include nine-cover studies and navigable slide previews.
 `/post-builder` starts from those researched stories or a blank draft. Edit copy,
-caption, slide order and screenshots using Cover, Point, Rows, Comparison, Screenshot in window, Screenshot as ASCII, Annotated screenshot or Closing action templates, set in the
-site's own faces with the crescent, ASCII and terminal-window devices. Choose dark, paper or amber artwork. Portrait, square, landscape and Story formats share the same
+caption, slide order and screenshots using Cover, Point, Rows, Comparison, Screenshot in window, Annotated screenshot or Closing action templates, set in the
+site's own faces with the crescent, the site's captured moon and the terminal window. Choose dark, paper or amber artwork. Portrait, square, landscape and Story formats share the same
 SVG artwork between preview and export. Download PNG, a numbered ZIP with caption,
 alt text and editable draft, or an image-based PDF. Save/restore JSON before leaving;
 drafts are held in the tab, with no server storage or automated publishing.

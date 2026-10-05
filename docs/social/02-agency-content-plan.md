@@ -33,7 +33,7 @@ Choose dates after confirming launch readiness. Do not backdate posts or tie the
 
 ## How a post is built
 
-- **Cover:** one dominant element (the work in the terminal window, the work as ASCII, or a concrete question beside the crescent) and a headline of twelve words or fewer, with the hook in the amber accent line.
+- **Cover:** one dominant element (the work in the terminal window, or a concrete question beside the crescent or the moon) and a headline of twelve words or fewer, with the hook in the amber accent line.
 - **Case posts** put the screenshot on the cover. **Education posts** give the reader something to keep (a checklist, a question set, a formula) and end on a worked example from a real case.
 - **No hedges on the art.** What the evidence doesn't show lives in the story's `evidence` note and the brief's "Before publishing" section. A slide says only what `studio-data.ts` records.
 - **One action** on the last slide, matching the destination, plus a reason to save the post.

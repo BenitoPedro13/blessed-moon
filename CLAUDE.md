@@ -395,7 +395,7 @@ The channel plans include branded cover studies and navigable post previews.
 local screenshots and PNG/ZIP/PDF/JSON exports. `social-art.ts` is the single SVG
 source for preview and raster exports; escape imported text and allow only local
 raster data URIs or the exact portfolio preset paths in `social-art-images.json`. Embed
-those presets (and their ASCII grids) in downloads so JSON remains portable. The art is
+those presets (and the moon capture) in downloads so JSON remains portable. Screenshots are never turned into glyphs: Benito rejected the hand-made ASCII renders on 5 October; the moon on posts is a capture of the site's real AsciiObject (`pnpm social:moon`). A window is never taller than a desktop screenshot (it would crop the sides off). The art is
 set in the site's faces, embedded as data URIs on export; text is measured with the
 generated `social-font-metrics.ts`, never an estimate. Type sits on the surface; the
 only frame is the terminal window around a screenshot (no traffic-light dots, as on

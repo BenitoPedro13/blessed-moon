@@ -9,7 +9,7 @@
     "lint": "eslint",
     "profile": "node scripts/profile-scroll.mjs",
     "social:fonts": "node scripts/social-fonts.mjs",
-    "social:ascii": "node scripts/social-ascii.mjs"
+    "social:moon": "node scripts/social-moon.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

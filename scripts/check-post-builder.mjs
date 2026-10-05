@@ -115,9 +115,7 @@ try {
   await page.getByRole("status").filter({ hasText: "unsupported format" }).waitFor();
   await page.getByLabel("Restore editable JSON").setInputFiles({ name: "invalid-marks.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify({ ...draft, slides: [{ ...draft.slides[0], template: "annotate", marks: [[200, 5]] }] })) });
   await page.getByRole("status").filter({ hasText: "Marker positions" }).waitFor();
-  await page.getByLabel("Restore editable JSON").setInputFiles({ name: "invalid-ascii.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify({ ...draft, slides: [{ ...draft.slides[0], template: "ascii", ascii: "<svg onload=alert(1)>" }] })) });
-  await page.getByRole("status").filter({ hasText: "ASCII render" }).waitFor();
-  await page.getByLabel("Restore editable JSON").setInputFiles({ name: "legacy.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify({ ...draft, slides: [{ ...draft.slides[0], template: "statement" }, { ...draft.slides[1], template: "workflow" }] })) });
+  await page.getByLabel("Restore editable JSON").setInputFiles({ name: "legacy.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify({ ...draft, slides: [{ ...draft.slides[0], template: "statement" }, { ...draft.slides[1], template: "workflow" }, { ...draft.slides[2], template: "ascii", reveal: 46, ascii: "@@##" }] })) });
   await page.getByRole("status").filter({ hasText: "Editable draft restored." }).waitFor();
 
   await page.goto(`${origin}/post-builder?story=markado-slot&channel=linkedin`, { waitUntil: "load" });
@@ -128,7 +126,7 @@ try {
   await page.getByLabel("Footer / destination", { exact: true }).fill("i".repeat(90));
   for (const format of ["Landscape · 1200 × 627", "Portrait · 1080 × 1350", "Square · 1080 × 1080", "Story · 1080 × 1920"]) {
     await choose("#post-format", format);
-    for (const template of ["Cover", "Point", "Rows / checklist", "Comparison", "Screenshot in window", "Screenshot as ASCII", "Annotated screenshot", "Closing action"]) {
+    for (const template of ["Cover", "Point", "Rows / checklist", "Comparison", "Screenshot in window", "Annotated screenshot", "Closing action"]) {
       await choose("#slide-template", template);
       const clipped = await preview.locator("svg").first().evaluate((svg) => [...svg.querySelectorAll("text")].filter((text) => text.parentElement.getAttribute("xml:space") !== "preserve").filter((text) => { const box = text.getBBox(); const frame = svg.viewBox.baseVal; return box.x < 28 || box.x + box.width > frame.width - 27 || box.y < 0 || box.y + box.height > frame.height - 27; }).map((text) => text.textContent));
       assert.deepEqual(clipped, [], `Text fits ${format} / ${template}`);

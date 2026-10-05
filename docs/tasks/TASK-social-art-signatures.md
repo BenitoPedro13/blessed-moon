@@ -111,3 +111,7 @@ Copy, languages, which post uses which cover (copy doc). Animated/video covers.
   accordingly.
 - Annotated screenshots use fixed amber markers with a dark halo, so they read on
   any screenshot. The legend rows reuse the same numbered badges.
+
+**Superseded in part (5 October, `TASK-social-art-reveal-and-callouts.md`):** Benito found the
+hand-made ASCII renders "horrible". The procedural moon and the ASCII-screenshot template are
+removed; the moon on posts is now a capture of the site's own AsciiObject.
