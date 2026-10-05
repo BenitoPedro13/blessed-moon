@@ -1,7 +1,7 @@
 "use client";
 
-import { createContext, useContext, useEffect, useRef, useState } from "react";
-import { LayoutGroup, motion, useReducedMotion } from "motion/react";
+import { createContext, useContext, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { LayoutGroup, motion } from "motion/react";
 
 import { CellGrid } from "@/components/cell-grid";
 import { subscribeFrame } from "@/components/frame-loop";
@@ -129,6 +129,17 @@ export interface MorphLayerSpec {
   content: React.ReactNode;
 }
 
+// The first hydration render must match the server's animated structure.
+// useSyncExternalStore then switches to the browser's reduced-motion layout,
+// and subscribes to later preference changes without a hydration mismatch.
+function subscribeReducedMotion(notify: () => void) {
+  const query = window.matchMedia("(prefers-reduced-motion: reduce)");
+  query.addEventListener("change", notify);
+  return () => query.removeEventListener("change", notify);
+}
+const reducedMotionSnapshot = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const serverMotionSnapshot = () => false;
+
 export function ScrollMorphStage({
   layers,
   heightPerLayer = 1.6,
@@ -155,7 +166,7 @@ export function ScrollMorphStage({
    * for every layer would force a layout flush 60 times a second. */
   const heightsRef = useRef<number[]>([]);
   const [active, setActive] = useState(0);
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useSyncExternalStore(subscribeReducedMotion, reducedMotionSnapshot, serverMotionSnapshot);
 
   /**
    * Horizontal room for the window, remeasured only on viewport resize — never

@@ -44,8 +44,8 @@ export function AboutTeaser() {
             and 55% grey for everything else — which is a flat page however
             good the words are. */}
         <p className="text-[15.5px] leading-[1.65] text-foreground/75">
-          Two senior people on the work, end to end. No account layer, no
-          handoff, no one learning your product on your time.
+          Work directly with Benito, from the first conversation to the
+          finished build. One person responsible for the decisions and delivery.
         </p>
         {/* leading-[2.1] wherever a token sits in a sentence: the inline
             numeral is 1.5em, and at normal body leading it overflows its own

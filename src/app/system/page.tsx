@@ -5,6 +5,11 @@ import { AsciiObject } from "@/components/canvasui/AsciiObject";
 import { ParticleObject } from "@/components/canvasui/ParticleObject";
 import { CellGrid } from "@/components/cell-grid";
 import { ContactForm } from "@/components/contact-form";
+import { PlanNav, PlanSection } from "@/components/social/plan-shell";
+import { PostCard } from "@/components/social/post-card";
+import { QuoteEstimate } from "@/components/social/quote-estimate";
+import { StrategyEnquiryLink } from "@/components/social/enquiry-link";
+import { STORIES } from "@/lib/social-plan";
 import { COUNT_DISPLAY, COUNT_INLINE } from "@/components/homepage/morph-count";
 import {
   TOKEN_DISPLAY,
@@ -363,6 +368,18 @@ export default function SystemPage() {
         </div>
       </section>
 
+      <section className="space-y-6">
+        <h2 className="text-xl font-semibold">Social planning components</h2>
+        <p className="text-sm leading-7 text-muted-foreground">Ordinary document flow, the shared terminal surface and native expandable briefs. No additional pinned scroller.</p>
+        <PlanNav active="/social-plan" />
+        <PlanSection number="00" title="Planning section specimen">
+          <p className="text-sm leading-7 text-foreground/75">Research becomes a decision, a usable brief and a review.</p>
+        </PlanSection>
+        <PostCard story={STORIES[0]} channel="instagram" />
+        <QuoteEstimate />
+        <StrategyEnquiryLink />
+      </section>
+
       <section className="space-y-4">
         <h2 className="font-sans text-xl font-semibold tracking-[-0.01em] text-foreground">
           Morph token type scale
@@ -377,7 +394,7 @@ export default function SystemPage() {
           <code className="font-mono text-[12px] text-foreground/80">/work</code> travels the
           project name (the row you pick becomes the page), and{" "}
           <code className="font-mono text-[12px] text-foreground/80">/about</code> travels{" "}
-          A → B → 0 (two pillars, zero layers between). Copying the count onto all three would
+          A → B → 0 (two disciplines, one founder, zero layers between). Copying the count onto all three would
           have been the same trick with meaning only the first time. Amber&apos;s other job —
           small, on a control, meaning <em>interactive</em> — must never land on the same glyph.
         </p>

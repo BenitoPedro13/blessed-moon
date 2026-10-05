@@ -3,6 +3,8 @@ import { ArrowUpRight, CalendarClock, CalendarDays, Mail } from "lucide-react";
 
 import { CellGrid } from "@/components/cell-grid";
 import { ContactForm } from "@/components/contact-form";
+import { BookingLink } from "@/components/social/enquiry-link";
+import { isProjectType, PROJECT_TYPES } from "@/lib/project-types";
 import { PageHero } from "@/components/page-hero";
 import { Reveal } from "@/components/reveal";
 import { SiteFooter } from "@/components/site-footer";
@@ -23,7 +25,9 @@ export const metadata: Metadata = {
  * scroll journey would make the single thing this page exists to make easy the
  * hardest thing on the site. A form should open, not unfold.
  */
-export default function ContactPage() {
+export default async function ContactPage({ searchParams }: { searchParams: Promise<{ project?: string | string[] }> }) {
+  const { project } = await searchParams;
+  const initialProjectType = isProjectType(project) ? project : PROJECT_TYPES[0];
   const agencyEmail = process.env.AGENCY_CONTACT_EMAIL?.trim() || null;
   const bookingUrl = process.env.AGENCY_BOOKING_URL?.trim() || null;
 
@@ -39,9 +43,10 @@ export default function ContactPage() {
         />
 
         <section
+          id="project-enquiry"
           data-ascii-keyframe="2"
           data-frame-label="PROJECT ENQUIRY"
-          className="relative px-7 py-16 sm:py-24"
+          className="relative scroll-mt-24 px-7 py-16 sm:py-24"
         >
           <CellGrid />
           <div className="relative mx-auto grid max-w-6xl gap-6 lg:grid-cols-[1.08fr_0.92fr] lg:gap-8">
@@ -51,7 +56,7 @@ export default function ContactPage() {
                 label="PROJECT ENQUIRY"
                 status={agencyEmail ? "email ready" : "local draft"}
               >
-                <ContactForm agencyEmail={agencyEmail} />
+                <ContactForm key={initialProjectType} agencyEmail={agencyEmail} initialProjectType={initialProjectType} />
               </TerminalPanel>
             </Reveal>
 
@@ -78,15 +83,7 @@ export default function ContactPage() {
                       : "We are not substituting a personal calendar for a studio channel. Use the brief builder while the official calendar is being prepared."}
                   </p>
                   {bookingUrl ? (
-                    <a
-                      href={bookingUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="mt-7 inline-flex w-fit items-center gap-2 border border-primary bg-primary px-4 py-3 font-mono text-[10.5px] tracking-[0.5px] text-primary-foreground uppercase transition-colors hover:bg-transparent hover:text-primary"
-                    >
-                      Open booking calendar
-                      <ArrowUpRight className="size-3" aria-hidden="true" />
-                    </a>
+                    <BookingLink href={bookingUrl} />
                   ) : (
                     <span className="mt-7 inline-flex w-fit items-center gap-2 border border-border/80 px-4 py-3 font-mono text-[10.5px] tracking-[0.5px] text-muted-foreground uppercase">
                       Calendar not live yet

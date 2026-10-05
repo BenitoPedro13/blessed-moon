@@ -1340,39 +1340,30 @@ export type StudioPillar = {
 
 /** Moved out of `src/app/about/page.tsx` when the page became a morph stage —
  * two components read it now, so a route file is no longer its right home. */
+// Two disciplines of Benito's solo studio; these are not separate people.
 export const STUDIO_PILLARS: readonly StudioPillar[] = [
   {
     id: "A",
-    title: "Client Consultation, Strategy & Brand Identity",
-    lead: "Saskia Xavier",
-    titleLine: "Co-Founder (CEO) · Chief Creative Officer (CCO)",
-    roles: [
-      "Marketing Strategist",
-      "Brand Identity & Visual Designer",
-      "Backend Web Developer",
-      "Web Designer",
-    ],
+    title: "Strategy, Content & Brand Identity",
+    lead: "Benito Pedro Xavier",
+    titleLine: "Founder · Strategy & Design",
+    roles: ["Client Consultation", "Content Strategy", "Brand Identity", "Web Design"],
     paragraphs: [
-      "Serving as your primary partner for high-level consultations, ideation, and project-scoping sessions.",
-      "This pillar directs the commercial growth strategy, market positioning, and corporate visual architecture.",
-      "Every interface is engineered around conversion-focused UI/UX layouts, ensuring your product resonates deeply with international audiences while maintaining a hardened, secure infrastructure from the front-end up.",
+      "Work directly with Benito to define the audience, offer and scope before production begins.",
+      "Research and clear positioning guide the brand, website and content plan. Each deliverable has a purpose and an agreed place in the project.",
+      "Social media strategy connects buyer questions to a practical calendar and a measurement plan. Ongoing production and publishing are scoped separately.",
     ],
   },
   {
     id: "B",
-    title: "Enterprise Architecture & Full-Stack Development",
+    title: "Architecture & Full-Stack Development",
     lead: "Benito Pedro Xavier",
-    titleLine: "Founder (CEO) · Chief Technology Officer (CTO)",
-    roles: [
-      "Lead Software Developer / Engineer",
-      "API Architect",
-      "Full-Stack Web Developer",
-      "Web Designer",
-    ],
+    titleLine: "Founder · Engineering & Delivery",
+    roles: ["Software Engineering", "API Architecture", "Full-Stack Development", "Web Design"],
     paragraphs: [
-      "Directing the heavy programmatic mechanics, server-side infrastructure, and database ecosystems.",
-      "This pillar constructs enterprise-grade software frameworks capable of cross-border scaling.",
-      "By developing custom API architectures and deep multi-language software logic, this engine ensures that the invisible foundations of your web application are lightning-fast, ultra-secure, and endlessly adaptable to future business requirements.",
+      "The same person who helps define the project designs and builds the system.",
+      "Benito handles interfaces, APIs and data architecture with the project's actual workflow and constraints in view.",
+      "A clear scope, considered implementation and honest handover keep the work understandable from the first conversation through delivery.",
     ],
   },
 ] as const;

@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
+import Link from "next/link";
 
 import { COUNT_DISPLAY, COUNT_INLINE } from "@/components/homepage/morph-count";
 import { MorphToken, morphDrift } from "@/components/scroll-morph-stage";
@@ -76,24 +77,28 @@ export function ServicesFocus() {
         {/* Untransformed: holds both tokens. */}
         <div>
           <p className="flex items-baseline gap-3">
-            <MorphToken id="count-8" side="to" className={COUNT_DISPLAY}>
+            <MorphToken id="count-8" side="to" className={`${COUNT_DISPLAY} short:text-[3.5rem] short:sm:text-[4rem] short:lg:text-[6rem]`}>
               8
             </MorphToken>
             <span className="font-sans text-xl font-semibold tracking-[-0.02em] text-foreground sm:text-2xl">
               kinds of systems.
             </span>
           </p>
-          <p className="mt-5 max-w-sm text-[14px] leading-[1.6] text-muted-foreground">
-            Different shape, same standard. The same two people build all of
-            them — not a bench of specialists handed your project in turn.
+          <p className="mt-5 max-w-sm text-[14px] leading-[1.6] text-muted-foreground short:hidden lg:short:block">
+            Different shape, same standard. Benito handles the design and
+            engineering directly, with a clear scope for each project.
           </p>
-          <p className="mt-4 max-w-sm text-[14px] leading-[2.1] text-muted-foreground">
-            Whichever one you need, the build runs the same{" "}
+          <p className="mt-4 short:mt-2 max-w-sm text-[14px] leading-[2.1] text-muted-foreground">
+            Each build follows{" "}
             <MorphToken id="count-4" side="from" className={COUNT_INLINE}>
               4
             </MorphToken>{" "}
             steps.
           </p>
+          <Link href="/services/social-media" onMouseEnter={playHover}
+            className="mt-4 short:mt-2 inline-block text-[13px] leading-6 text-primary underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-primary">
+            Also available: Social Media Strategy &amp; Content Planning →
+          </Link>
         </div>
 
         {/* Card padding and description visibility are deliberately smaller at
@@ -103,13 +108,15 @@ export function ServicesFocus() {
             overflow-y-auto safety net (a second scroll inside the pin, the
             exact bug this whole redesign exists to keep out). */}
         <div
-          className="mt-9 short:mt-5 grid grid-cols-2 gap-px border border-border/60 bg-border/60 sm:grid-cols-4 lg:mt-0"
+          data-services-grid
+          className="mt-9 short:mt-3 grid grid-cols-2 gap-px border border-border/60 bg-border/60 sm:grid-cols-4 lg:mt-0"
           style={morphDrift({ y: 56, order: 1 })}
         >
           {SERVICES.map((service) => (
             <motion.div
               key={service.index}
-              className="relative bg-background/55 px-3.5 py-4 short:py-3 backdrop-blur-sm sm:px-6 sm:py-7 short:sm:py-5"
+              data-service-card={service.index}
+              className="relative bg-background/55 px-3.5 py-4 short:py-2.5 backdrop-blur-sm sm:px-6 sm:py-7 short:sm:py-5"
               initial={false}
               whileHover="hover"
               onHoverStart={playHover}

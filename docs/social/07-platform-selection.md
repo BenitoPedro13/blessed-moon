@@ -1,0 +1,104 @@
+# Platform selection for Benito's solo studio
+
+Prepared 4 October 2026. Recommendation, not measured channel performance.
+
+Start with **LinkedIn primary**, two original decision stories per week, for the
+existing founder/product-leader positioning. Use Benito's profile for the direct
+founder voice and the studio page as supporting proof; this is a judgement about
+voice and workload, not proof that profiles outperform pages. **Instagram secondary**:
+one Portuguese adaptation weekly, grounded in the Brazilian cases. Reverse priority
+if Brazilian small businesses become the chosen market. Both 16-draft libraries
+contain alternatives, not a 32-post commitment.
+
+## Evidence behind the choice
+
+- [Edelman–LinkedIn 2025 report](https://www.edelman.com/expertise/Business-Marketing/2025-b2b-thought-leadership-report)
+  supports testing useful B2B decision content; it does not forecast this studio's leads.
+- [Sebrae business-channel research](https://agenciasebrae.com.br/cultura-empreendedora/celular-e-fonte-de-renda-para-pequenos-negocios-sebrae-tem-guia-e-cursos-para-orientar-sobre-uso-das-redes/)
+  supports a Brazilian Instagram/WhatsApp hypothesis; channel adoption is not buyer budget.
+- [The actual account samples](06-content-account-audit.md) show relevant businesses
+  publishing project context and buyer problems on LinkedIn. They do not establish
+  comparative performance against Instagram or any other channel.
+- [Meta's professional dashboard guidance](https://about.fb.com/news/2024/10/best-practices-education-hub-creators-instagram/)
+  supports using account-specific insights to refine formats and cadence.
+
+The priority uses four considerations: overlap with intended buyers, fit with existing
+case evidence, a credible website enquiry path, and one person's production capacity.
+No numerical platform score is presented as market research. The English website /
+Portuguese social mismatch must be assessed through real buyer conversations before
+adding a translated landing page.
+
+## Decisions by channel
+
+### LinkedIn — Primary recommendation
+
+Founders, product leaders and premium project buyers. Publish through Benito's profile; use the studio page as supporting proof.
+
+Two decision stories weekly, mostly one annotated screenshot or concise text. Start in English for the existing positioning; use Portuguese when pursuing Brazilian decision-makers.
+
+Review signal: Relevant profile/post viewers where available, case visits, qualified conversations and proposals. Review at day 30 and day 60.
+
+### Instagram — Secondary, bounded test
+
+Brazilian small-business owners, especially the restaurant and retail examples already in the portfolio.
+
+One Portuguese adaptation weekly from the same stories. Start with readable carousels; test a short screen recording against actual account insights. Increase to two only if capacity and relevant conversations justify it.
+
+Review signal: Saves/shares, relevant DMs, tagged profile/Story visits and qualified enquiries. The current audit has no verified Instagram-feed sample.
+
+### WhatsApp Business — Conversion channel, conditional
+
+Useful for Brazilian buyer conversations after discovery, if Benito chooses to provide an official business number.
+
+Agree response hours and an enquiry process before adding it. Use the current website contact path until configured.
+
+Review signal: Real conversations and fit recorded manually; link clicks alone do not establish leads.
+
+### YouTube — Later
+
+Deeper case explanations and searchable buyer education, once a repeatable story series proves useful.
+
+Only start when a monthly case walkthrough fits the recorded production budget. No launch commitment in this pilot.
+
+Review signal: Watch quality and relevant website conversations, reviewed against production time.
+
+### TikTok — Defer
+
+A possible discovery experiment, but the current research does not establish Blessed Moon's target-buyer demand there.
+
+Reconsider if buyer interviews or inbound conversations support it and short video is already sustainable.
+
+Review signal: Qualified buyer interest per production hour; do not choose it on broad popularity alone.
+
+### Facebook — Optional reuse
+
+May support local relationships; no separate editorial workload is justified by the current evidence.
+
+Reuse approved Instagram material only if existing page/community conversations are relevant. Check each group's rules before participating.
+
+Review signal: Relevant local conversations and case visits; avoid measuring duplicated posts as new original ideas.
+
+### Behance / Dribbble / X — Supporting or deferred
+
+Portfolio discovery and peer visibility may help, but designer attention does not automatically mean buyer demand.
+
+Reuse a case when useful; no weekly content commitment. Reconsider X only with evidence that intended buyers are active there.
+
+Review signal: Qualified referrals and project enquiries, rather than applause from peers.
+
+## Review before expanding
+
+Budget 4–6 hours weekly, record actual creation/reply/reporting time, and reduce
+volume if client delivery suffers. The budget includes adapting a core story rather
+than producing a new series for every channel. Account setup and launch assets may
+require extra time. Confirm official account URLs and project permissions first.
+
+At day 30: establish native insights, tagged case visits, relevant conversations and
+production hours. At day 60: retain topics that attract the intended buyer and review
+channel/language fit. At day 90: review confirmed enquiries, proposals, accepted work
+and time before changing scope. Few or no leads are inconclusive with a small sample;
+use buyer conversations to investigate before declaring a platform unsuitable.
+
+Website search visibility supports demand capture separately from social publishing.
+Google Business Profile eligibility requires its own assessment. No new social
+account, WhatsApp number, API connection or paid campaign is provisioned by this work.

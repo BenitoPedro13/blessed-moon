@@ -29,9 +29,9 @@ The included `.dc.html` file and screenshots are **design references**, not prod
 List of the 3 projects, each with larger visual placeholder, full description, tag chips, and "View case study →" link. Ends in a "Book a call" CTA band.
 
 ### 3. About (`screenshots/about-1e.png`)
-Mission statement + values chips (Clarity, Craft, Integrity, Quiet confidence, Long-term thinking, Respect for attention and time). Below: two-pillar structure —
-- **Pillar A** — Client Consultation, Strategy & Brand Identity, Executive Lead M D R, mandate paragraph.
-- **Pillar B** — Enterprise Architecture & Full-Stack Development, Executive Lead Benito Pedro Xavier, mandate paragraph.
+Mission statement + values chips (Clarity, Craft, Integrity, Quiet confidence, Long-term thinking, Respect for attention and time). Below: two disciplines within Benito's solo studio —
+- **Discipline A** — Strategy, Content & Brand Identity, led by Benito Pedro Xavier (solo studio; updated 4 October 2026).
+- **Discipline B** — Architecture & Full-Stack Development, also led by Benito Pedro Xavier.
 - **Why Choose Our Dynamic** section below both pillars (see exact copy in the HTML file).
 Ends in "Book a call" CTA band.
 
@@ -73,3 +73,19 @@ These are the sources the direction was built from — go back to them when impl
 - **Scroll-driven morph** — [offscreencanvas.com/issues/webgl-scrolling-animations#particle-morph-on-scroll](https://offscreencanvas.com/issues/webgl-scrolling-animations#particle-morph-on-scroll): the technique for morphing the ASCII/particle field as the user scrolls between sections (see Interactions above).
 - **Component system & layout density** — [canvasui.dev](https://canvasui.dev) and the Agno marketing site: reference for building the content-heavy sections (Services grid, How We Work, Pricing) out of restyled shadcn primitives rather than bespoke markup.
 - **Numbered-section / ASCII-hero structural precedent** — the Dragonfly site: the `01 / ABOUT`, `04 / PORTFOLIO`-style section numbering with a large ASCII hero glyph is the direct precedent for this site's section labels and hero treatment.
+
+
+## Approved scope extension: solo studio and content strategy (4 October 2026)
+
+User correction: Blessed Moon now consists of Benito alone; MDR is no longer part
+of the studio. The original wireframe's two-person structure is superseded by two
+disciplines, strategy/design and engineering/delivery, both led by Benito. The About
+A→B→0 motion remains, explaining those disciplines and direct responsibility.
+
+The homepage keeps its eight build disciplines and section order. An adjacent
+service link and a custom-quote pricing row introduce Social Media Strategy &
+Content Planning. A public service page explains research, calendar, sample briefs
+and measurement/handover. Long planning documents use ordinary scrolling and the
+same terminal surfaces, amber and typography; no second visual system or nested pin.
+Suggested rates appear only in unlinked noindex working pages pending a public
+pricing decision. Full management and production are separately scoped.

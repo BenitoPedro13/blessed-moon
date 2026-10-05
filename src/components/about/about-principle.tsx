@@ -41,7 +41,7 @@ export function AboutPrinciple() {
           token sits in a sentence — the inline glyph is 1.5em and at normal
           body leading it overflows its line box into the line above. */}
       <p className="mt-10 max-w-lg text-[13.5px] leading-[2.1] text-muted-foreground">
-        It holds because the studio is two pillars and nothing between them.
+        Two disciplines, handled by one founder: Benito.
         Start with{" "}
         <MorphToken id="about-a" side="from" className={TOKEN_INLINE}>
           A

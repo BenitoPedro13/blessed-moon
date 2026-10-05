@@ -16,6 +16,7 @@ export interface BootFact {
 
 export const BOOT_FACTS: readonly BootFact[] = [
   { key: "studio", value: "Blessed Moon Studio" },
+  { key: "founder", value: "Benito Pedro Xavier · Solo studio" },
   { key: "discipline", value: "Strategy · Design · Engineering" },
   { key: "stack", value: "Next.js · Tailwind · WebGL" },
   { key: "scene", value: "ASCII moon · 5 keyframes" },

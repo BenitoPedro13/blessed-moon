@@ -36,6 +36,7 @@ aesthetic).
   craftsmanship and clear thinking over hype or lowest price.
 - **Values:** Clarity, Craft, Integrity, Quiet confidence, Long-term thinking, Respect for
   attention and time — these are the About page's values chips; do not rephrase them.
+- **Studio identity:** Benito Pedro Xavier alone handles strategy, design and engineering. MDR is no longer part of the studio. The About A/B sections represent disciplines, not separate people. Historical case-study team facts are not current staffing claims.
 - **Personality:** calm, precise, modern, slightly enigmatic, quietly premium (dark
   sophistication + warm orange light + technical soul).
 - **Voice:** measured, clear, confident without volume; technical when needed, always
@@ -102,7 +103,7 @@ dependency.
   morph-tokens.ts`); what travels is chosen per page, because a motif copied across three
   pages is the same trick with meaning only the first time. `/` counts down (breadth →
   one commitment), `/work` travels the project name (the row you pick becomes the page,
-  chained through each entry's `next →` line), `/about` travels `A → B → 0` (two pillars,
+  chained through each entry's `next →` line), `/about` travels `A → B → 0` (two disciplines handled by Benito alone,
   zero layers between — the pillar letters are already in the data). Adding a stage to a
   new page means choosing what that page has to say, not reusing one of these. Amber's
   other job — small, on a control, meaning *interactive* — must never land on the same
@@ -376,3 +377,15 @@ unrelated prior projects.
 broken:** sharp corners / no border-radius, dark-only theme, graceful WebGL fallback,
 section numbering driving the moon's morph, wireframe copy treated as a starting point (not
 locked — confirmed by the user) with changes flagged in the relevant task doc.
+
+
+### Social strategy extension (4 October 2026)
+
+`/services/social-media` is the public strategy and planning offer, with custom
+quotes. `/social-plan`, `/instagram-plan`, `/linkedin-plan`, `/analytics-plan` are
+unlinked noindex working documents, not confidential dashboards. They use ordinary
+flow and shared terminal panels, not another pinned sequence. Typed content and
+campaign URLs live in `src/lib/social-plan.ts`; enum-only enquiry events in
+`src/lib/analytics.ts`. Preserve the eight homepage build cards and their existing
+morph handoffs. The new strategy offer is linked alongside them. See
+`docs/tasks/TASK-social-strategy-and-service.md` and `docs/social/`.

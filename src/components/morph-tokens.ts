@@ -9,7 +9,7 @@
  *
  * - `/`        `8 → 4 → 3 → 1`  — breadth narrowing to one commitment
  * - `/work`    the project name — the row you pick becomes the page
- * - `/about`   `A → B → 0`      — two pillars, zero layers between
+ * - `/about`   `A → B → 0`      — two disciplines, one founder, zero layers between
  *
  * Copying the homepage's descending count onto the other two would have been
  * the same trick three times with meaning only the first time.

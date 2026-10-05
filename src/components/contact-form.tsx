@@ -15,7 +15,8 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 
-const PROJECT_TYPES = ["Web App", "Mobile App", "Website", "Other"] as const;
+import { PROJECT_TYPES, isProjectType, type ProjectType } from "@/lib/project-types";
+import { trackEnquiry } from "@/lib/analytics";
 
 /** Panel tokens, and no `backdrop-blur`: these sit inside a `TerminalPanel`
  * that already blurs what's behind it, so a per-field backdrop pass would be a
@@ -25,8 +26,8 @@ const FIELD_CLASS =
 
 type FormStatus = "idle" | "working" | "copied" | "failed";
 
-export function ContactForm({ agencyEmail }: { agencyEmail: string | null }) {
-  const [projectType, setProjectType] = useState<string>(PROJECT_TYPES[0]);
+export function ContactForm({ agencyEmail, initialProjectType = PROJECT_TYPES[0] }: { agencyEmail: string | null; initialProjectType?: ProjectType }) {
+  const [projectType, setProjectType] = useState<ProjectType>(initialProjectType);
   const [status, setStatus] = useState<FormStatus>("idle");
   const { playHover, playClick } = useSound();
 
@@ -53,6 +54,7 @@ export function ContactForm({ agencyEmail }: { agencyEmail: string | null }) {
 
     if (agencyEmail) {
       window.location.href = `mailto:${agencyEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      trackEnquiry({ name: "project-enquiry-email-open", data: { project_type: projectType } });
       window.setTimeout(() => setStatus("idle"), 900);
       return;
     }
@@ -60,6 +62,7 @@ export function ContactForm({ agencyEmail }: { agencyEmail: string | null }) {
     try {
       await copyToClipboard(`${subject}\n\n${body}`);
       setStatus("copied");
+      trackEnquiry({ name: "project-enquiry-brief-copy", data: { project_type: projectType } });
       window.setTimeout(() => setStatus("idle"), 3200);
     } catch {
       setStatus("failed");
@@ -105,7 +108,7 @@ export function ContactForm({ agencyEmail }: { agencyEmail: string | null }) {
       <Field label="Project type" htmlFor="project-type">
         <Select
           value={projectType}
-          onValueChange={(value) => value && setProjectType(value)}
+          onValueChange={(value) => isProjectType(value) && setProjectType(value)}
         >
           <SelectTrigger
             id="project-type"

@@ -11,11 +11,11 @@ import type { StudioPillar } from "@/lib/studio-data";
  * data, so the token is the studio's own structure rather than a count
  * borrowed from the homepage: **A** arrives here from the principle layer and
  * hands off **B**; **B** arrives in the next layer and hands off the **0**
- * that closes the page — *zero layers between you and the people building it*,
+ * that closes the page — *zero layers between you and the person building it*,
  * which is the claim this page has been making all along, made into the object
  * the reader has been following.
  *
- * Two letters resolving into a number, rather than a number counting down:
+ * Two disciplines handled by one person, resolving into a number, rather than a number counting down:
  * same grammar as the homepage, saying something only this page can say.
  */
 
@@ -33,7 +33,7 @@ const HANDOFF: Record<string, { id: string; glyph: string; before: string; after
     id: "about-0",
     glyph: "0",
     before: "That is the whole studio, which leaves",
-    after: " layers between you and the people building your system.",
+    after: " layers between you and Benito, who builds your system.",
   },
 };
 

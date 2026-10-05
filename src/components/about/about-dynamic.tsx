@@ -5,7 +5,7 @@ import { MorphToken, morphDrift } from "@/components/scroll-morph-stage";
 
 /**
  * Layer 3 of `/about`, and where the motif lands: the **0** arrives from
- * Pillar B and becomes the page's closing claim. Two named pillars, nothing
+ * Pillar B and becomes the page's closing claim. Two disciplines, one founder, nothing
  * in between — which is what every preceding layer has been building toward,
  * now stated as a quantity rather than as an adjective.
  *
@@ -30,11 +30,10 @@ export function AboutDynamic() {
         className="mt-8 max-w-xl text-[14px] leading-[1.75] text-muted-foreground"
         style={morphDrift({ y: 44, order: 1 })}
       >
-        By structuring our agency as a specialized duo, we eliminate layers of
-        corporate bureaucracy. You consult directly with the executives
-        executing your vision, ensuring rapid deployment, seamless
-        communication, and a digital product that is both commercially dominant
-        and technically unshakeable.
+        Blessed Moon Studio is Benito&apos;s solo practice. You speak directly with
+        the person researching, designing and building your project. A clear
+        scope and one point of responsibility keep decisions and delivery
+        connected from the first conversation to the handover.
       </p>
     </div>
   );

@@ -10,6 +10,7 @@ const FOOTER_LINKS = [
   { label: "Pricing", href: "/#pricing" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
+  { label: "Social Strategy", href: "/services/social-media" },
 ] as const;
 
 export function SiteFooter() {

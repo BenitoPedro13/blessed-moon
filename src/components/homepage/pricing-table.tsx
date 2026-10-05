@@ -1,15 +1,17 @@
 "use client";
 
 import { motion } from "motion/react";
+import Link from "next/link";
 
 import { COUNT_DISPLAY } from "@/components/homepage/morph-count";
 import { MorphToken, morphDrift } from "@/components/scroll-morph-stage";
 import { useSound } from "@/components/sound-provider";
 
 const TIERS = [
-  { name: "Landing Page / Website" },
-  { name: "Web App / Dashboard" },
-  { name: "Full product build" },
+  { name: "Landing Page / Website", href: null },
+  { name: "Web App / Dashboard", href: null },
+  { name: "Full product build", href: null },
+  { name: "Social Media Strategy", href: "/services/social-media" },
 ] as const;
 
 /**
@@ -52,7 +54,7 @@ export function PricingTable() {
         {TIERS.map((tier, i) => (
           <motion.div
             key={tier.name}
-            className={`-mx-4 flex items-baseline justify-between gap-4 px-4 py-5 text-[13px] ${
+            className={`-mx-4 flex items-baseline justify-between gap-4 px-4 py-4 short:py-2.5 text-[13px] ${
               i < TIERS.length - 1 ? "border-b border-border/60" : ""
             }`}
             initial={false}
@@ -60,7 +62,7 @@ export function PricingTable() {
             onHoverStart={playHover}
             transition={{ type: "spring", stiffness: 300, damping: 24 }}
           >
-            <span className="font-sans text-base text-foreground">{tier.name}</span>
+            <span className="font-sans text-base text-foreground">{tier.href ? <Link href={tier.href} className="text-primary underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-primary">{tier.name} →</Link> : tier.name}</span>
             <span className="text-right text-muted-foreground">
               range confirmed on call
             </span>

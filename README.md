@@ -81,7 +81,7 @@ footer inside the scroll-reactive ASCII/particle system. Work presents Markado, 
 Flora, and Trísion using verified portfolio data and project-specific terminal schematics — Prumo's
 is a real-estate credit-qualification schematic (`docs/tasks/TASK-add-prumo-case-study.md`) and
 Trísion's is a numeração/tenancy schematic (`docs/tasks/TASK-add-trision-case-study.md`). About includes the final
-mission, values, two-pillar structure, and direct-partnership statement. Contact includes a real
+mission, values, two disciplines handled by Benito alone, and direct delivery statement. Contact includes a real
 project form, booking link, email, LinkedIn, and GitHub; until an email provider is configured,
 the form transparently opens a prefilled email draft instead of pretending to submit to a
 backend.
@@ -126,3 +126,37 @@ Third-party assets used on the homepage, all confirmed free-to-use:
   "UI Audio" / "Interface Sounds" packs, CC0.
 - **Ambient loop** (`public/sounds/ambient.mp3`) — "Scifi City - Ambient Loop" by TinyWorlds,
   [opengameart.org](https://opengameart.org/content/scifi-city-ambient-loop), CC0.
+
+## Social strategy and solo studio
+
+Blessed Moon is Benito Pedro Xavier's solo studio. About's A/B views represent
+strategy and engineering disciplines handled by the same founder; historical
+case-study team fields remain project-specific.
+
+The public `/services/social-media` page offers **Social Media Strategy & Content
+Planning**, linked from the homepage services/pricing and footer. It uses custom
+quotes and a defined research/calendar/handover scope. Monthly strategy review is
+optional; ongoing production and full account management require separate scope.
+
+Unlinked, `noindex` planning pages: `/social-plan`, `/instagram-plan`,
+`/linkedin-plan`, `/analytics-plan`. They contain five public offer references,
+12 actual LinkedIn content samples across six account families, platform selection,
+16 original stories with channel drafts, campaign links, an internal pricing model
+and a measurement checklist. LinkedIn is recommended primary with a smaller
+Portuguese Instagram test; both draft libraries offer alternatives. Instagram-feed
+coverage is incomplete and no competitor performance is inferred. They are URL-accessible, not authenticated. No live
+social/Umami metrics or private client information are embedded. Research lives in
+`docs/social/`; implementation decisions in
+`docs/tasks/TASK-social-strategy-and-service.md`.
+
+Strategy CTAs preselect the contact project type. Umami custom events distinguish
+CTA clicks, opening a mail draft, successful brief copying and booking-link clicks.
+Those events contain fixed enums only; none establishes a submitted lead or booking.
+The existing optional tracker/recorder configuration is retained.
+
+`AGENCY_CONTACT_EMAIL` and `AGENCY_BOOKING_URL` provision the existing official
+studio contact channels. Without them, the form copies a local brief and scheduling
+remains visibly pending. These server-only variables are documented in `.env.example`.
+
+Targeted browser verification: `node scripts/check-social-strategy.mjs` against a
+running local server (`SOCIAL_CHECK_URL` optionally overrides `http://localhost:3000`).

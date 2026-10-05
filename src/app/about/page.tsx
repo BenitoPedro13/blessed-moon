@@ -13,7 +13,7 @@ import { STUDIO_PILLARS } from "@/lib/studio-data";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Blessed Moon Studio combines strategy, brand identity, enterprise architecture, and full-stack development in one direct senior partnership.",
+    "Blessed Moon Studio is Benito Pedro Xavier's solo studio for strategy, content planning, design and full-stack development.",
 };
 
 export default function AboutPage() {
@@ -24,7 +24,7 @@ export default function AboutPage() {
         <PageHero
           eyebrow="— About"
           title="About Blessed Moon Studio"
-          description="We develop, design and execute advanced software programs. With our innovative technology we resolve cases and help clients world-wide."
+          description="A solo studio led by Benito Pedro Xavier. Strategy, design and engineering stay connected, from the first conversation to the finished work."
           code="ABOUT"
         />
 
