@@ -1,6 +1,6 @@
 # TASK: Launch teaser Story (still + animated)
 
-6 October 2026. Status: complete. Follows `TASK-pt-launch-posts.md`.
+6 October 2026. Status: complete (with addendum 6.1). Follows `TASK-pt-launch-posts.md`.
 
 ## 1. Current scenario
 
@@ -59,3 +59,17 @@ Benito wants to compare a still with motion before choosing.
 
 - `pnpm lint`, `pnpm build`, `scripts/check-post-builder.mjs`, `check-social-strategy.mjs`.
 - Look at the still and sample frames from the video. Leave room for the countdown sticker.
+
+## 6.1 Addendum: Stories on `/instagram-plan`
+
+Benito expected the teaser on the Instagram plan. It stays out of the grid, but the plan gains
+a **Stories** section after the Portuguese briefs (the closing section renumbers 06 → 07):
+
+- `src/lib/social-plan.ts`: `STORY_SCHEDULE`, the launch's Story sequence in order. The teaser
+  on the day before (countdown sticker), then on launch day the three carousels published in
+  reverse grid order (`o-que-eu-faco`, `unimeet-feiras`, `apresentacao` last, so it lands
+  top-left), each shared to Stories once it's live. Steps point at a `STORY_FRAMES` id (has
+  art) or a `STORIES` id (shared from the feed, so no art is authored for it).
+- `src/app/instagram-plan/page.tsx`: the section renders the steps, with the teaser's
+  preview, an "Open in builder" link and the video command.
+- `scripts/check-social-strategy.mjs`: asserts the section renders the teaser preview.

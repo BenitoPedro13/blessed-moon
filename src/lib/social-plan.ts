@@ -223,6 +223,18 @@ export const STORY_FRAMES: StoryFrame[] = [
   { id: "teaser-lancamento", lang: "pt", title: "Amanhã, três posts.", note: "Posted the day before the launch trio, with a countdown sticker set to the publishing time." },
 ];
 
+/** The launch's Stories, in order. A step points at a `STORY_FRAMES` id (authored art) or a
+ * `STORIES` id (a feed post shared to Stories once it's live, so it needs no art of its own).
+ * The trio goes up in reverse grid order: the newest sits top-left, and that is the intro. */
+export type StoryStep = { when: string; what: string; frame?: string; share?: string };
+export const STORY_SCHEDULE: StoryStep[] = [
+  { when: "Day before", frame: "teaser-lancamento", what: "Post the teaser, still or video, with a countdown sticker set to the publishing time, placed in the empty lower left. Followers who tap \"remind me\" are notified when it ends." },
+  { when: "Launch · 1st", share: "o-que-eu-faco", what: "Publish the services carousel first. It ends up on the right of the top row." },
+  { when: "Launch · 2nd", share: "unimeet-feiras", what: "Publish the UniMeet case. It ends up in the middle." },
+  { when: "Launch · 3rd", share: "apresentacao", what: "Publish the intro last, so it sits top-left, where a new visitor starts." },
+  { when: "Launch · after", what: "Share each post to Stories with a short \"no ar\" line, one Story per post. A new account's feed posts reach few people; the Story is what brings friends to the carousels." },
+];
+
 /** A language's stories in publishing order. */
 export const storiesIn = (lang: Language) => STORIES.filter((story) => story.lang === lang).sort((a, b) => a.week - b.week);
 /** LinkedIn is English-only. */

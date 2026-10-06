@@ -50,6 +50,8 @@ try {
       assert.equal(await page.locator("details[data-post-id]").count(), route.includes("instagram") ? 25 : 14);
       // TASK-social-profiles-and-rebalance.md: every account gets a profile setup, within platform limits.
       assert.equal(await page.locator("[data-profile-setup]").count(), route.includes("instagram") ? 2 : 1);
+      // TASK-launch-teaser-story.md §6.1: launch Stories are listed apart from the grid.
+      if (route.includes("instagram")) { assert.equal(await page.locator("[data-story-step]").count(), 5); assert.equal(await page.locator("[data-story-frame] svg").count(), 1, "Teaser preview renders"); }
       assert.equal(await page.locator("[data-profile-setup] .text-destructive").count(), 0, "Profile fields fit their platform limits");
       for (const pin of await page.locator("[data-profile-setup] a[aria-label^=\"Pinned post\"]").evaluateAll((links) => links.map((link) => link.getAttribute("href")))) assert.equal(await page.locator(`details${pin.replace("#", "#")}`).count(), 1, `Pinned ${pin} exists`);
       const details = page.locator("details[data-post-id]").first();
