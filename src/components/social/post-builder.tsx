@@ -6,9 +6,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SlideArt } from "@/components/social/slide-art";
-import { ART_FORMATS, ART_MARKS, ART_TEMPLATES, ART_SURFACES, MAX_ART_SLIDES, MAX_MARKS, PROJECT_ART_IMAGES, blankPost, emptySlide, readArtPost, slideAlt, storyPost, type ArtMark, type ArtPost, type ArtRegion, type ArtSlide, type ArtFormat, type ArtSurface, type ArtTemplate } from "@/lib/social-art";
+import { ART_FORMATS, ART_MARKS, ART_TEMPLATES, ART_SURFACES, MAX_ART_SLIDES, MAX_MARKS, PROJECT_ART_IMAGES, blankPost, emptySlide, framePost, readArtPost, slideAlt, storyPost, type ArtMark, type ArtPost, type ArtRegion, type ArtSlide, type ArtFormat, type ArtSurface, type ArtTemplate } from "@/lib/social-art";
 import { exportPost, localScreenshot } from "@/lib/social-export";
-import { campaignUrl, type Channel, type Story } from "@/lib/social-plan";
+import { campaignUrl, type Channel, type Story, type StoryFrame } from "@/lib/social-plan";
 
 function Field({ label, id, children }: { label: string; id: string; children: ReactNode }) {
   return <div className="min-w-0 space-y-2"><label htmlFor={id} className="block text-sm text-foreground/85">{label}</label>{children}</div>;
@@ -29,7 +29,7 @@ function MarksField({ marks, onChange }: { marks: ArtRegion[]; onChange: (marks:
   }} /></Field>;
 }
 
-export function PostBuilder({ stories, initialPost }: { stories: readonly Story[]; initialPost: ArtPost }) {
+export function PostBuilder({ stories, frames = [], initialPost }: { stories: readonly Story[]; frames?: readonly StoryFrame[]; initialPost: ArtPost }) {
   const [post, setPost] = useState(initialPost);
   const [preset, setPreset] = useState(initialPost.id);
   const [selected, setSelected] = useState(0);
@@ -39,7 +39,7 @@ export function PostBuilder({ stories, initialPost }: { stories: readonly Story[
   const sourceStory = stories.find((story) => story.id === post.id);
   const ready = post.slides.every((item) => item.title.trim() && (!item.image || item.imageAlt.trim()));
   function updateSlide(patch: Partial<ArtSlide>) { setPost((current) => ({ ...current, slides: current.slides.map((item, i) => i === selected ? { ...item, ...patch } : item) })); setStatus(""); }
-  function loadPreset() { const story = stories.find((item) => item.id === preset); setPost(story ? storyPost(story, post.channel) : { ...blankPost(), channel: post.channel, format: post.channel === "linkedin" ? "landscape" : "portrait" }); setSelected(0); setStatus("Starting point loaded."); }
+  function loadPreset() { const story = stories.find((item) => item.id === preset), frame = frames.find((item) => item.id === preset); setPost(story ? storyPost(story, post.channel) : frame ? framePost(frame) : { ...blankPost(), channel: post.channel, format: post.channel === "linkedin" ? "landscape" : "portrait" }); setSelected(0); setStatus("Starting point loaded."); }
   function move(direction: number) { const next = selected + direction; const slides = [...post.slides]; [slides[selected], slides[next]] = [slides[next], slides[selected]]; setPost({ ...post, slides }); setSelected(next); }
   async function download(kind: "png" | "zip" | "pdf" | "json") {
     setBusy(true); setStatus("");
@@ -62,7 +62,7 @@ export function PostBuilder({ stories, initialPost }: { stories: readonly Story[
     finally { setBusy(false); }
   }
   return <div data-post-builder className="rr-block space-y-8">
-    <fieldset disabled={busy} className="grid gap-4 border border-border bg-background/75 p-5 md:grid-cols-2"><Choice label="Starting point" id="post-preset" value={stories.some((item) => item.id === preset) ? preset : "blank"} items={[["blank", "Start from scratch"], ...stories.map((story): [string, string] => [story.id, `${story.lang.toUpperCase()} · W${story.week} · ${story.title}`])]} onChange={setPreset} /><Choice label="Channel" id="post-channel" value={post.channel} items={[["instagram", "Instagram · portrait carousel"], ["linkedin", "LinkedIn · square PDF document"]]} onChange={(channel) => setPost({ ...post, channel: channel as Channel })} /><div className="md:col-span-2"><Button className="rounded-none" onClick={loadPreset}>Load starting point</Button><p className="mt-3 text-xs leading-6 text-muted-foreground">Loading replaces this working draft. Save its JSON first if you want to return to your edits. Channel changes preserve your words; load a starting point to use its channel&apos;s format and caption. Portuguese starting points have no LinkedIn caption.</p></div></fieldset>
+    <fieldset disabled={busy} className="grid gap-4 border border-border bg-background/75 p-5 md:grid-cols-2"><Choice label="Starting point" id="post-preset" value={[...stories, ...frames].some((item) => item.id === preset) ? preset : "blank"} items={[["blank", "Start from scratch"], ...stories.map((story): [string, string] => [story.id, `${story.lang.toUpperCase()} · W${story.week} · ${story.title}`]), ...frames.map((frame): [string, string] => [frame.id, `${frame.lang.toUpperCase()} · Story · ${frame.title}`])]} onChange={setPreset} /><Choice label="Channel" id="post-channel" value={post.channel} items={[["instagram", "Instagram · portrait carousel"], ["linkedin", "LinkedIn · square PDF document"]]} onChange={(channel) => setPost({ ...post, channel: channel as Channel })} /><div className="md:col-span-2"><Button className="rounded-none" onClick={loadPreset}>Load starting point</Button><p className="mt-3 text-xs leading-6 text-muted-foreground">Loading replaces this working draft. Save its JSON first if you want to return to your edits. Channel changes preserve your words; load a starting point to use its channel&apos;s format and caption. Portuguese starting points have no LinkedIn caption.</p></div></fieldset>
 
     <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)]">
       <fieldset disabled={busy} className="min-w-0 space-y-5">

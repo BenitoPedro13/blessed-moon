@@ -3,7 +3,7 @@ import { LOGO_BOUNDS, LOGO_PATH } from "@/lib/logo-mark";
 import { SOCIAL_HANDLE } from "@/lib/site-config";
 import { SOCIAL_FONT_METRICS } from "@/lib/social-font-metrics";
 import PROJECT_IMAGES from "@/lib/social-art-images.json";
-import type { Channel, Story } from "@/lib/social-plan";
+import type { Channel, Story, StoryFrame } from "@/lib/social-plan";
 
 // One art source for the on-page SVG and every locally rasterised export
 // (TASK-social-art-foundations.md, TASK-social-art-signatures.md). Type sits
@@ -61,6 +61,13 @@ export function storyPost(story: Story, channel: Channel): ArtPost {
   const slides = AUTHORED_SLIDES[story.id] ?? [{ template: "cover", title: story.title }];
   return { version: 1, id: story.id, channel, lang: story.lang, format: channel === "instagram" ? "portrait" : "square",
     caption: channel === "instagram" ? story.caption : story.linkedin,
+    slides: slides.map((slide) => ({ ...emptySlide(), kicker: "", art: "none", ...slide })) };
+}
+
+/** An Instagram Story frame: one or more full-screen slides, no caption. */
+export function framePost(frame: StoryFrame): ArtPost {
+  const slides = AUTHORED_SLIDES[frame.id] ?? [{ template: "cover", title: frame.title }];
+  return { version: 1, id: frame.id, channel: "instagram", lang: frame.lang, format: "story", caption: "",
     slides: slides.map((slide) => ({ ...emptySlide(), kicker: "", art: "none", ...slide })) };
 }
 
@@ -345,7 +352,9 @@ function cover(slide: ArtSlide, L: Layout, p: Palette, sources: ArtSources): Dra
   const top = L.content.y + (L.square ? 10 : 40);
   const box = { ...L.content, y: top, h: Math.min(L.content.y + L.content.h, artTop(slide, L) - 48) - top };
   const head = heading(slide, box, p, { max: L.tall ? 140 : L.square ? 108 : 128, min: 56, maxLines: 6, share: hasArt ? 1 : 0.9 });
-  const meta = paragraph(slide.body, { x: box.x, y: head.y + 36, w: box.w - artWidth(slide, L), h: L.content.y + L.content.h - head.y - 36 }, p.muted, 34, 24);
+  // Beside the art by default. A Story has room above it: full width when the whole paragraph ends there.
+  const clear = L.tall && slide.body.trim() && head.y + 36 + fit(slide.body, "sans400", 34, 34, box.w, 1e4, 1.32).height <= artTop(slide, L) - 24;
+  const meta = paragraph(slide.body, { x: box.x, y: head.y + 36, w: box.w - (clear ? 0 : artWidth(slide, L)), h: L.content.y + L.content.h - head.y - 36 }, p.muted, 34, 24);
   return { svg: art(slide, L, p, sources) + head.svg + meta.svg };
 }
 

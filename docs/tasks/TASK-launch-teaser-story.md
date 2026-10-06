@@ -1,0 +1,61 @@
+# TASK: Launch teaser Story (still + animated)
+
+6 October 2026. Status: complete. Follows `TASK-pt-launch-posts.md`.
+
+## 1. Current scenario
+
+The Portuguese launch trio (`apresentacao`, `unimeet-feiras`, `o-que-eu-faco`) is ready for
+tomorrow. Friends already follow the account. Benito wants an Instagram Story today saying
+that the three posts go up tomorrow, and wants to compare a still Story with an animated one.
+
+The post builder can already render a Story (1080×1920), but its starting points are only
+the feed carousels in `STORIES`. There is no way to make video.
+
+## 2. Planned changes
+
+- `src/lib/social-plan.ts`: a separate `STORY_FRAMES` list (Instagram Stories, not feed
+  posts) with one entry, `teaser-lancamento`. Kept out of `STORIES` on purpose: the grid
+  previews, plan week list, profile pins and the check script's post counts all read
+  `STORIES`, and a Story is not a grid post.
+- `src/lib/social-posts.ts`: the teaser's one authored slide: a cover on the dark surface
+  with the site's moon. "Amanhã, três posts." / "Blessed Moon no ar." and the three subjects.
+  No time in the art: the countdown sticker carries it, and Benito hasn't chosen one.
+- `src/lib/social-art.ts`: `framePost()` builds an Instagram post in the `story` format from
+  a frame.
+- `src/components/social/post-builder.tsx`, `src/app/post-builder/page.tsx`: frames appear
+  in the starting-point list (`PT · Story · …`) and open by `?story=teaser-lancamento`.
+- `scripts/social-story-video.mjs` (new): opens the builder on a running server, takes the
+  Story's SVG, which `renderSlideSvg` already draws, and animates it frame by frame: the
+  logo, the eyebrow typed in mono with a block cursor, the headline lines typed in, the moon
+  rising. Each frame is set deterministically from time `t` and screenshotted, then encoded
+  with ffmpeg to H.264 MP4 (1080×1920, 30fps, yuv420p, about 9s). It writes the last frame as
+  a PNG too. Output goes to `out/social/` (gitignored). The video animates the
+  same art rather than redrawing it, so `social-art.ts` stays the single source.
+
+Rejected: animating the real 3D moon (capturing the WebGL engine in real time under
+swiftshader gives uneven frames). Could come later if the video works.
+
+## 3. Why
+
+A Story with a countdown sticker gives friends a reminder they chose, for tomorrow's launch.
+Benito wants to compare a still with motion before choosing.
+
+## 4. Affected files
+
+| File | Change type | Notes |
+|---|---|---|
+| `src/lib/social-plan.ts` | edit | `StoryFrame` type, `STORY_FRAMES` |
+| `src/lib/social-posts.ts` | edit | Teaser slide |
+| `src/lib/social-art.ts` | edit | `framePost()` |
+| `src/components/social/post-builder.tsx` | edit | Frames as starting points |
+| `src/app/post-builder/page.tsx` | edit | `?story=` resolves frames |
+| `scripts/social-story-video.mjs` | new | Animated MP4 + still PNG |
+| `src/lib/social-art.ts` (cover) | edit | On a Story, the body runs full width when it ends above the art (it wrapped into a 212px column beside the moon). Feed covers unchanged |
+| `CLAUDE.md` | edit | Story frames rule |
+| `package.json` | edit | `social:story-video` script |
+| `docs/social/09-production-workspace.md` | edit | Story frames and video export |
+
+## 5. Verification
+
+- `pnpm lint`, `pnpm build`, `scripts/check-post-builder.mjs`, `check-social-strategy.mjs`.
+- Look at the still and sample frames from the video. Leave room for the countdown sticker.

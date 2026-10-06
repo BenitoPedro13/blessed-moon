@@ -216,6 +216,13 @@ export const STORIES: readonly Story[] = [
   },
 ];
 
+/** Instagram Stories (1080×1920, 24 hours), kept apart from `STORIES`: those are grid
+ * posts, and the grid previews, week list and pins all read them (TASK-launch-teaser-story.md). */
+export type StoryFrame = { id: string; lang: Language; title: string; note: string };
+export const STORY_FRAMES: StoryFrame[] = [
+  { id: "teaser-lancamento", lang: "pt", title: "Amanhã, três posts.", note: "Posted the day before the launch trio, with a countdown sticker set to the publishing time." },
+];
+
 /** A language's stories in publishing order. */
 export const storiesIn = (lang: Language) => STORIES.filter((story) => story.lang === lang).sort((a, b) => a.week - b.week);
 /** LinkedIn is English-only. */

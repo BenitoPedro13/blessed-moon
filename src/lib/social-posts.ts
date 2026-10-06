@@ -201,6 +201,11 @@ export const AUTHORED_SLIDES: Record<string, Authored[]> = {
     { template: "point", kicker: "Achado nos testes", title: "Toda feira aparecia um dia antes.", body: "As datas são guardadas à meia-noite UTC. No horário do Brasil, viravam o dia anterior. Hoje são formatadas em UTC, e os testes rodam no horário de São Paulo." },
     { template: "action", surface: "amber", art: "crescent", title: "Seu orçamento bate com o que você cobra?", body: "As telas são a proposta de design v2. O caso completo está no link da bio.", action: "Veja o caso UniMeet" },
   ],
+  // ── Português · Story de véspera (TASK-launch-teaser-story.md) ────────────────
+  // No time on the art: the countdown sticker carries it.
+  "teaser-lancamento": [
+    { template: "cover", art: "moon", kicker: "Lançamento", title: "Amanhã, três posts.", accent: "Blessed Moon no ar.", body: "Quem constrói, um projeto real e o que dá pra contratar." },
+  ],
   "o-que-eu-faco": [
     { template: "cover", surface: "paper", art: "crescent", kicker: "Serviços", title: "O que você pode contratar.", accent: "Do site ao sistema.", body: "" },
     { template: "rows", kicker: "Quatro escopos", title: "Escolha pelo trabalho que falta", body: "Site | Mostra o que você faz e leva ao contato\nCatálogo | Produto, medida e preço, até o WhatsApp\nSistema | Reserva, pagamento ou painel de dados\nEstratégia de redes | Público, mensagem e briefs dos posts" },

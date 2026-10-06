@@ -25,6 +25,17 @@ strategy; it does not change the proposed service scope or public custom pricing
 - `/system`: specimens for covers, post cards/previews, shared artwork, the builder,
   planning charts and the measurement worksheet.
 
+## Story frames and video
+
+Instagram Stories live in `STORY_FRAMES` (`src/lib/social-plan.ts`), apart from the feed
+posts in `STORIES`. The builder lists them as `PT · Story · …` starting points, at 1080×1920.
+The cover's body runs full width on a Story when it ends above the art. For an animated
+version, run `SOCIAL_URL=http://localhost:3000 pnpm social:story-video teaser-lancamento`
+against a running server. It takes the builder's own SVG, types the copy in with a block
+cursor, raises the moon, and writes `out/social/<id>.mp4` (9s, 30fps, H.264) plus the
+final frame as a PNG. Leave the empty lower left for the countdown sticker. See
+`docs/tasks/TASK-launch-teaser-story.md`.
+
 ## Build a post
 
 1. Open a draft from its channel brief, or choose a starting point in the builder.
