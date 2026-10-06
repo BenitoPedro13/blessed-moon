@@ -9,6 +9,7 @@ const origin = "https://benitos-analytics.vercel.app";
 const store = new Map([["umami.auth", JSON.stringify("fixture-token")]]);
 const website = { id: websiteId, domain: "blessed-moon.vercel.app", replayConfig: { maskLevel: "strict", blockSelector: '.existing-block, [data-sensitive="a,b"]' } };
 const reports = [{ id: "unrelated-report", websiteId, name: "Owner's report", type: "goal" }];
+const boards = [{ id: "portfolio-board", name: "Portfolio overview", type: "website" }];
 const segments = [];
 const cohorts = [];
 const writes = [];
@@ -18,7 +19,7 @@ let count = 0;
 const context = vm.createContext({
   window: { location: { origin } },
   localStorage: { getItem: (key) => store.get(key) ?? null, setItem: (key, value) => store.set(key, value) },
-  AbortSignal, Date, console: { log: (...args) => logs.push(args), table: (...args) => logs.push(args) },
+  AbortSignal, Date, crypto, console: { log: (...args) => logs.push(args), table: (...args) => logs.push(args) },
   fetch: async (path, options) => {
     assert.match(path, /^\/api\//, "Authenticated requests stay on the dashboard origin");
     assert.equal(options.headers.Authorization, "Bearer fixture-token");
@@ -31,21 +32,39 @@ const context = vm.createContext({
       if (body) Object.assign(website, body);
       return response(website);
     }
-    if (path.startsWith("/api/reports?")) {
-      const query = new URL(path, origin).searchParams;
-      assert.equal(query.get("websiteId"), websiteId);
-      return response({ data: reports, count: reports.length, pageSize: 100 });
-    }
-    if (path === "/api/reports") {
-      assert.equal(body.websiteId, websiteId);
-      assert.ok(["goal", "funnel"].includes(body.type));
-      if (body.type === "goal") assert.ok(["path", "event"].includes(body.parameters.type));
-      if (body.type === "funnel") {
-        assert.equal(body.parameters.window, 60);
-        assert.ok(body.parameters.steps.length >= 2);
+    const paged = (list) => response({ data: list, count: list.length, page: 1, pageSize: 100 });
+    for (const type of ["goal", "funnel"]) {
+      const listPath = `/api/websites/${websiteId}/${type}s`;
+      if (path.startsWith(`${listPath}?`)) return paged(reports.filter((item) => item.type === type));
+      if (path === listPath) {
+        assert.equal(body.type, undefined, "3.4 definitions take the type from the endpoint");
+        assert.equal(body.parameters.startDate, undefined, "3.4 definitions carry no dates");
+        if (type === "goal") assert.ok(["path", "event"].includes(body.parameters.type));
+        if (type === "funnel") {
+          assert.equal(body.parameters.window, 60);
+          assert.ok(body.parameters.steps.length >= 2);
+        }
+        const item = { ...body, type, websiteId, id: `report-${++count}` };
+        reports.push(item);
+        return response(item);
       }
-      const item = { ...body, id: `report-${++count}` };
-      reports.push(item);
+    }
+    assert.ok(!path.startsWith("/api/reports"), "Pre-3.4 report CRUD is never called");
+    if (path.startsWith("/api/boards?")) return paged(boards);
+    if (path === "/api/boards") {
+      assert.equal(body.type, "website");
+      assert.equal(body.parameters.websiteId, websiteId);
+      for (const row of body.parameters.rows) for (const column of row.columns) {
+        assert.ok(column.id && column.component?.type, "Every column has an ID and a component");
+        const reportId = column.component.props?.reportId;
+        if (reportId) {
+          const report = reports.find((item) => item.id === reportId);
+          assert.ok(report, "Board report references point at saved definitions");
+          assert.equal(report.type, column.component.type.toLowerCase());
+        }
+      }
+      const item = { ...body, id: `board-${++count}` };
+      boards.push(item);
       return response(item);
     }
     if (path.startsWith(`/api/websites/${websiteId}/segments?`)) {
@@ -64,10 +83,11 @@ const context = vm.createContext({
 });
 
 const first = await vm.runInContext(source, context);
-assert.equal(first.created.length, 19);
+assert.equal(first.created.length, 22);
 assert.equal(reports.length, 10, "Five goals, four funnels and the owner's existing definition");
 assert.equal(segments.length, 9);
 assert.equal(cohorts.length, 1);
+assert.equal(boards.length, 4, "Three BM boards beside the owner's existing board");
 assert.equal(website.replayConfig.maskLevel, "strict", "Existing stricter masking is preserved");
 assert.match(website.replayConfig.blockSelector, /\.existing-block/);
 assert.ok(website.replayConfig.blockSelector.includes('[data-sensitive="a,b"]'), "Existing selector contents stay intact");
@@ -103,4 +123,4 @@ for (const path of ["/system", "/social-plan", "/instagram-plan", "/linkedin-pla
 assert.notEqual(beforeSend("event", { url: "/work/markado" }), false);
 policyContext.window.location.pathname = "/post-builder";
 assert.equal(beforeSend("performance", { url: "/" }), false, "Private route blocks all payload kinds");
-console.log("Umami setup checks passed: scoped APIs, definitions, idempotence, stricter masking, preflight failures, token exclusion and route/query filtering.");
+console.log("Umami setup checks passed: scoped 3.4 APIs, definitions, boards, idempotence, stricter masking, preflight failures, token exclusion and route/query filtering.");

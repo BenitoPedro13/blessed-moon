@@ -157,7 +157,8 @@ Unlinked, `noindex` planning pages: `/social-plan`, `/instagram-plan`,
 campaign links, an internal pricing model and a measurement checklist. English leads
 on Instagram and LinkedIn; a Portuguese Instagram account is optional. Instagram-feed
 coverage and selected deep observations are documented; no competitor performance is inferred. They are URL-accessible, not authenticated. No live
-social/Umami metrics or private client information are embedded. Research lives in
+social/Umami metrics or private client information are embedded in them; live Umami
+readings are only on the password-protected `/analytics-plan/live` (below). Research lives in
 `docs/social/`; implementation decisions in
 `docs/tasks/TASK-social-strategy-and-service.md`.
 
@@ -178,11 +179,23 @@ browser and both emails against a local TLS SMTP server without sending real mai
 
 The [Umami operations guide](docs/social/12-umami-operations.md) connects every
 sidebar screen to the pilot. Paste [the setup script](public/umami-setup.js)
-into your logged-in Umami console to create five goals, four funnels, nine segments
-and one cohort, and configure recording. It checks this website's ID/domain,
+into your logged-in Umami (3.4) console to create five goals, four funnels, nine
+segments, one cohort and three boards (*Is the pilot working?*, *Where do people
+stall?*, *Weekly check*), and configure recording. It checks this website's ID/domain,
 backs up definitions and skips existing names. No account-side writes have been
 made from this workspace. `node scripts/check-umami-setup.mjs` verifies the setup
-workflow and tracking policy against mocked API contracts.
+workflow and tracking policy against mocked Umami 3.4 API contracts.
+
+`/analytics-plan/live` reads Umami server-side as a view-only user and turns it into
+five panels, each ending with a reading of what to check next: where people stop
+(visit → contact → form → accepted), which tagged posts send people who act, which
+case studies lead to contact, mobile Web Vitals, and this period vs the previous one.
+Small samples say "too few to read" instead of drawing a verdict, and an Umami outage
+shows as missing data, never zero. HTTP Basic auth (`src/proxy.ts`) with
+`INSIGHTS_PASSWORD`; without it the route 404s. Server-only `UMAMI_API_URL`,
+`UMAMI_API_USER`, `UMAMI_API_PASSWORD`. `node scripts/check-insights.mjs` tests the
+reading rules and auth; with `BASE_URL` and `INSIGHTS_PASSWORD` it also checks a
+running server's gate. See `docs/tasks/TASK-umami-live-insights.md`.
 
 The tracker now collects Web Vitals, respects Do Not Track, limits collection to
 the production hostname, excludes internal workspace pageviews and strips arbitrary
@@ -205,7 +218,8 @@ drafts are held in the tab, with no server storage or automated publishing.
 `/social-plan` plots proposed pillar shares and workload. `/analytics-plan` has an
 empty eight-week worksheet for real tagged visits, qualified enquiries and production
 hours. Blank weeks remain gaps; recorded zeroes appear. Save observations as JSON or
-download a chart SVG. It does not connect to social accounts or Umami reports.
+download a chart SVG. It does not connect to social accounts or Umami reports; the
+gated `/analytics-plan/live` does the Umami part.
 
 The builder remains URL-accessible and noindex, outside the global menu/sitemap.
 Its editable DOM and the worksheet carry rrweb's `rr-block` class to exclude their

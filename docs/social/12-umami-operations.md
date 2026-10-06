@@ -20,8 +20,12 @@ right people to a conversation, then whether those conversations become paid wor
    and paste the **entire contents** of
    [umami-setup.js](../../public/umami-setup.js). It uses the
    existing login, without asking for or exposing your password/token.
-3. Refresh Umami. The script creates **five goals, four funnels, nine segments
-   and one cohort**, all named `BM · …`. Existing matching names are skipped.
+3. Refresh Umami. The script creates **five goals, four funnels, nine segments,
+   one cohort and three boards**, all named `BM · …`. Existing matching names are skipped.
+   It targets Umami **3.4**, where saved goals/funnels moved from `/api/reports` to
+   `/api/websites/{id}/goals|funnels`. The boards are *Is the pilot working?*,
+   *Where do people stall?* and *Weekly check*. Each opens with a "How to read this" note
+   and references the saved goals/funnels by ID.
    It sets replays to 15%, heatmaps to 100%, maximum recording duration to five
    minutes, blocks forms/internal plan content, and preserves stricter existing
    masking. The public recorder endpoint previously reported 50% replay / 100%
@@ -46,6 +50,40 @@ in multiple tabs. Generic report CRUD remains compatible with the current
 [Umami report API migration](https://github.com/umami-software/umami/blob/master/docs/report-api-migration.md).
 Live account writes have not been executed from this workspace because there is
 no authenticated Umami session here.
+
+## Live insights (`/analytics-plan/live`)
+
+The site reads Umami server-side and shows five panels, each ending with what to check
+next. It needs a dedicated **view-only** Umami login, never your admin account. In
+Umami 3.4 a non-admin user can only read a website that belongs to a **team**, so:
+
+1. **Settings → Teams → Create team**, e.g. `Blessed Moon`. You are its owner.
+2. **Settings → Websites → Blessed Moon → Transfer** to that team. You keep full
+   control as team owner. Goals, funnels, segments, boards and data are unaffected.
+3. **Settings → Users → Create user**, e.g. `bm-insights`, role **View only**, with a
+   long generated password. Don't enable two-factor sign-in for it; the server can't
+   answer a 2FA prompt.
+4. **Settings → Teams → Blessed Moon → Members → Add** `bm-insights` as **View only**.
+5. In Vercel (Production) and `.env.local`, set:
+   `UMAMI_API_URL=https://benitos-analytics.vercel.app`, `UMAMI_API_USER=bm-insights`,
+   `UMAMI_API_PASSWORD=…`, and `INSIGHTS_PASSWORD=…` (your choice; any username works
+   at the browser prompt). Redeploy. Without `INSIGHTS_PASSWORD` the route returns 404.
+6. Open `/analytics-plan/live`. "Not connected yet" means a variable is missing.
+   "Umami sign-in failed" means the user, password or team access is wrong.
+
+How to read it:
+
+| Panel | Counts | Reading |
+|---|---|---|
+| Where do people stop? | distinct sessions: visited → reached `/contact` → started form → accepted | Names the step that keeps the smallest share of the one before. Under 20 visitors: "too few to read" |
+| Which posts send people who act? | per `utm_content`: visits, then sessions (credited to the post they arrived from) that reached contact / were accepted | First-click within the session, because the landing pageview carries the tag. DMs, copied links and later visits are invisible |
+| Which projects persuade? | sessions per case study; how many reached `/contact` within 60 minutes | Ranked only above 20 case sessions |
+| Is the site fast enough on a phone? | mobile LCP / INP / CLS, 75th percentile, per page | Google's thresholds. Under 10 samples, ratings are tentative |
+| Is it moving? | each step, this period vs the previous period of equal length | Absolute counts. One or two enquiries is "a story, not yet a trend" |
+
+Counts under 30 are shown as "2 of 3", not as percentages. If Umami fails, the panel
+says the data is missing; it is never drawn as zero. The page is `no-store`, `noindex`,
+excluded from tracking by the analytics policy, and `rr-block`ed from replays.
 
 ## Every sidebar screen
 

@@ -49,6 +49,6 @@ Native LinkedIn post insights and Search Console complement website analytics; n
 
 ## Dashboard and review boundary
 
-The planning page can show metric definitions, a review template, and a labelled empty state: **No account data connected.** Use manual records/imports first if needed. Do not show fabricated reach, follower counts, enquiries or charts. A live social dashboard needs separately scoped platform access and ingestion; Umami does not collect Instagram or LinkedIn native insights by installing a website script.
+The planning page can show metric definitions, a review template, and a labelled empty state. Live Umami website readings are only on the password-protected `/analytics-plan/live` (see 12-umami-operations.md). Use manual records/imports first if needed. Do not show fabricated reach, follower counts, enquiries or charts. A live social dashboard needs separately scoped platform access and ingestion; Umami does not collect Instagram or LinkedIn native insights by installing a website script.
 
 At 30 days establish a baseline. At 60 days repeat useful topics and revise weak destinations. At 90 days assess confirmed enquiries, client fit and production time. Handle zero traffic or small samples plainly rather than promising percentage growth. Existing recorder settings are outside this task; do not broaden recording while implementing a strategy page.

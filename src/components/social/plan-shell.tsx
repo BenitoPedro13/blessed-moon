@@ -31,7 +31,7 @@ export function PlanNav({ active }: { active: string }) {
   );
 }
 
-export function PlanShell({ title, description, active, children }: { title: string; description: string; active: string; children: ReactNode }) {
+export function PlanShell({ title, description, active, notice = "Proposal for Benito's solo studio. Unlinked and noindex; accessible by URL. No private client information or connected account metrics.", children }: { title: string; description: string; active: string; notice?: string; children: ReactNode }) {
   return (
     <>
       <SiteNav />
@@ -40,7 +40,7 @@ export function PlanShell({ title, description, active, children }: { title: str
           <p className="font-mono text-xs text-primary">Studio working plan · {PLAN_DATE}</p>
           <h1 className="mt-5 max-w-4xl text-4xl font-semibold tracking-[-0.04em] sm:text-6xl">{title}</h1>
           <p className={`mt-5 max-w-3xl ${PLAN_TEXT}`}>{description}</p>
-          <p className="mt-5 max-w-3xl text-xs leading-6 text-muted-foreground">Proposal for Benito&apos;s solo studio. Unlinked and noindex; accessible by URL. No private client information or connected account metrics.</p>
+          <p className="mt-5 max-w-3xl text-xs leading-6 text-muted-foreground">{notice}</p>
           <div className="mt-7"><PlanNav active={active} /></div>
         </header>
         <div className="mt-8 space-y-8">{children}</div>

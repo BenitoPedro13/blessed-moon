@@ -4,6 +4,9 @@ import { PostBuilder } from "@/components/social/post-builder";
 import { PlanCharts } from "@/components/social/plan-charts";
 import { ResearchCoverage } from "@/components/social/research-coverage";
 import { MeasurementChart } from "@/components/social/measurement-chart";
+import { InsightPanel } from "@/components/insights/insight-panel";
+import { FunnelLadder, PostScorecard } from "@/components/insights/insight-views";
+import { readLadder, readPosts } from "@/lib/insight-readings";
 import { ART_TEMPLATES, storyPost, type ArtTemplate } from "@/lib/social-art";
 import type { Metadata } from "next";
 
@@ -394,6 +397,14 @@ export default function SystemPage() {
         <ResearchCoverage />
         <PlanCharts />
         <MeasurementChart />
+        {/* Live-insight panels (/analytics-plan/live) with fixture counts, never real data. */}
+        <InsightPanel number="01" question="Where do people stop? (fixture)" reading={readLadder({ visitors: 64, contact: 18, started: 4, accepted: 2 })}>
+          <FunnelLadder counts={{ visitors: 64, contact: 18, started: 4, accepted: 2 }} />
+        </InsightPanel>
+        <InsightPanel number="02" question="Which posts send people who act? (fixture)" reading={readPosts([{ post: "ig-en-w01-example", visits: 9, contact: 2, accepted: 1 }])}>
+          <PostScorecard rows={[{ post: "ig-en-w01-example", visits: 9, contact: 2, accepted: 1 }, { post: "li-en-w01-example", visits: 4, contact: 0, accepted: 0 }]} />
+        </InsightPanel>
+        <InsightPanel number="03" question="Umami unavailable (fixture)" unavailable="Umami 503 at /stats" />
         <details className="border border-border p-5"><summary>Post builder specimen</summary><div className="mt-5"><PostBuilder stories={STORIES} initialPost={storyPost(STORIES[0], "instagram")} /></div></details>
         <StrategyEnquiryLink />
       </section>

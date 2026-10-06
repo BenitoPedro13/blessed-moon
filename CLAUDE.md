@@ -301,6 +301,7 @@ second package emerges.
   ```
   src/app/                  Next.js App Router routes: /, /work, /work/[slug], /about, /contact — built;
                              /system — hidden, noindex design-system page, unlinked — built;
+                             /analytics-plan/live — password-gated live Umami readings (src/proxy.ts) — built;
                              icon.tsx, apple-icon.tsx, opengraph-image.tsx, twitter-image.tsx,
                              robots.ts, sitemap.ts — generated brand/SEO assets — built
   src/components/ui/        shadcn primitives (button, input, textarea, card, select) — scaffolded
@@ -317,6 +318,8 @@ second package emerges.
                              hand between them); Hero keeps its own pin, and the page closes
                              on the shared PageCta
   src/components/work/      /work morph layers (work-index, work-case) — built
+  src/components/insights/  /analytics-plan/live panels (insight-panel, insight-views) — server
+                             components over src/lib/umami-insights.ts + insight-readings.ts — built
   src/components/about/     /about morph layers (about-principle, about-pillar,
                              about-dynamic) — built
   src/components/           shared composites (site-nav, site-footer, section-heading,
@@ -402,7 +405,15 @@ only frame is the terminal window around a screenshot (no traffic-light dots, as
 the site). The crescent may be cropped by the bottom edge only: cropping a side cuts
 its horns off. See `TASK-social-art-foundations.md` / `TASK-social-art-signatures.md`. Preserve its validation and size caps. The eight-week worksheet
 on `/analytics-plan` uses manually entered observations, never sample/live metrics;
-unknown weeks and measured zeroes must remain distinct. Both editable components
+unknown weeks and measured zeroes must remain distinct. Live Umami data exists only on
+`/analytics-plan/live`: the one password-gated route (`src/proxy.ts`, Basic auth,
+`INSIGHTS_PASSWORD`, 404 when unset), read server-side as a view-only Umami user. The
+token and credentials never reach the browser. Every panel ends with a reading from
+`src/lib/insight-readings.ts`. Below the minimum sample, it says "too few to read"
+rather than giving a verdict, and an Umami failure renders as missing, never as zero
+(`TASK-umami-live-insights.md`, `scripts/check-insights.mjs`). `public/umami-setup.js`
+targets Umami 3.4's per-website goal/funnel endpoints and also creates the three
+`BM ·` boards. Both editable components
 use `rr-block` to exclude draft content from the optional session recorder. Do not
 remove it when changing wrappers. Details: `docs/social/09-production-workspace.md`
 and `docs/tasks/TASK-social-preview-builder.md`. Run the strategy browser check and
