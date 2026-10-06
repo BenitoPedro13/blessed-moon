@@ -136,6 +136,8 @@ Third-party assets used on the homepage, all confirmed free-to-use:
   "UI Audio" / "Interface Sounds" packs, CC0.
 - **Ambient loop** (`public/sounds/ambient.mp3`) — "Scifi City - Ambient Loop" by TinyWorlds,
   [opengameart.org](https://opengameart.org/content/scifi-city-ambient-loop), CC0.
+- **Keypresses** (`scripts/assets/keyboard/`, Story videos only, not served) — "Keyboard
+  Soundpack #1" by unicaegames, [opengameart.org](https://opengameart.org/content/keyboard-soundpack-1-typing-and-single-keystrokes), CC0.
 
 ## Social strategy and solo studio
 

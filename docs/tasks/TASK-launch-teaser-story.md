@@ -54,6 +54,8 @@ Benito wants to compare a still with motion before choosing.
 | `CLAUDE.md` | edit | Story frames rule |
 | `package.json` | edit | `social:story-video` script |
 | `docs/social/09-production-workspace.md` | edit | Story frames and video export |
+| `scripts/assets/keyboard/` | new | CC0 keypresses (6.3) |
+| `README.md` | edit | Keypress credit |
 
 ## 5. Verification
 
@@ -81,3 +83,25 @@ characters each frame adds and mixes the site's own `public/sounds/click.ogg` (K
 already credited in the README) once per character, with seeded ±pitch/level variation, into
 a mono 48kHz track muxed as AAC. Clicks run 1.0–5.6s; the hold after typing is silent, so
 Instagram music can be laid over it. `scripts/social-story-video.mjs` only.
+
+## 6.3 Addendum: human typing, real keys, a moving moon
+
+Benito's feedback on 6.2: the clicks sounded like a machine gun; then: use a real keyboard sound,
+and make the moon move like the site's, at a slow rhythm that doesn't pull focus from the copy.
+
+- Typing follows a seeded human schedule: ~9 keys/s with uneven gaps, a beat after spaces, a
+  pause after punctuation and between lines. Only the headline is typed; the body fades in.
+  The video is 11s so the finished frame still holds.
+- Sound: 32 single keypresses from "Keyboard Soundpack #1" (unicaegames, CC0), mono WAVs in
+  `scripts/assets/keyboard/` (772KB, used only by the script). Each is levelled to one peak;
+  the six fullest are the space bar; no letter key repeats twice in a row.
+- Moon: /system's AsciiObject specimen captured frame by frame on the GPU (ANGLE/Metal; the
+  software renderer `social:moon` uses was far slower). Timing is held by a requestAnimationFrame
+  scheduler injected before load: once switched on, frames advance only on `__step`, one
+  fixed step per video frame (turntable ~3°/s, float and wobble at 0.3×). Playwright's fake
+  clock was tried first and did not hold the engine: the moon ran in real time during slow
+  screenshots and turned whole faces in 11s (Benito: "even faster"). Verified: held still
+  through 1.5s of real time, moves only when stepped; 330 unique frames, even change per
+  frame. Frames are page clips taken after scrolling the grown box fully into view (an
+  earlier clip cut the moon's top). Cached per fps/speed in `out/social/`.
+- Rejected: an ambient music bed, because Instagram's own music would clash with it.
