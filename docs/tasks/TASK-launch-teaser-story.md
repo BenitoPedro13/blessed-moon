@@ -73,3 +73,11 @@ a **Stories** section after the Portuguese briefs (the closing section renumbers
 - `src/app/instagram-plan/page.tsx`: the section renders the steps, with the teaser's
   preview, an "Open in builder" link and the video command.
 - `scripts/check-social-strategy.mjs`: asserts the section renders the teaser preview.
+
+## 6.2 Addendum: typing sound
+
+A friend's suggestion, which Benito took: keystroke sound under the typing. The script records how many
+characters each frame adds and mixes the site's own `public/sounds/click.ogg` (Kenney, CC0,
+already credited in the README) once per character, with seeded ±pitch/level variation, into
+a mono 48kHz track muxed as AAC. Clicks run 1.0–5.6s; the hold after typing is silent, so
+Instagram music can be laid over it. `scripts/social-story-video.mjs` only.

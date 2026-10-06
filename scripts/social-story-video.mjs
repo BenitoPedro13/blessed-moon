@@ -1,9 +1,11 @@
 // Animates a Story frame from the post builder into an MP4 (TASK-launch-teaser-story.md).
 // The art is the builder's own SVG (renderSlideSvg), not a redraw: this script only
 // decides when each part appears. Every frame is set from its time and screenshotted,
-// so the result doesn't depend on how fast the machine is. Needs a running server:
+// so the result doesn't depend on how fast the machine is. Each typed character gets a
+// keystroke: the site's own click (public/sounds/click.ogg, Kenney, CC0), varied a little
+// in pitch and level so it reads as typing rather than a metronome. Needs a running server:
 //   SOCIAL_URL=http://localhost:3000 pnpm social:story-video [story-id]
-import { mkdir, rm } from "node:fs/promises";
+import { mkdir, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { spawnSync } from "node:child_process";
 import { chromium } from "playwright";
@@ -16,6 +18,7 @@ const outDir = join(root, "out/social"), frames = join(outDir, `${id}-frames`);
 await rm(frames, { recursive: true, force: true });
 await mkdir(frames, { recursive: true });
 
+const keys = [];
 const browser = await chromium.launch();
 try {
   const page = await browser.newPage({ viewport: { width: 1080, height: 1920 }, deviceScaleFactor: 1 });
@@ -92,19 +95,43 @@ try {
       art.style.opacity = String(v);
       art.style.transform = `translateY(${(1 - v) * 220 - Math.max(0, t - 2.8) * 6}px)`;
     }
-    return start;
+    return P.lines.reduce((sum, line) => sum + line.span.textContent.length, 0);
   }, t);
 
   const total = FPS * SECONDS;
+  let typed = 0;
   for (let f = 0; f < total; f++) {
-    await render(f / FPS);
+    const now = await render(f / FPS);
+    // Characters that appeared since the last frame, spread across that frame.
+    for (let k = 0; k < now - typed; k++) keys.push((f - 1 + (k + 1) / (now - typed)) / FPS);
+    typed = now;
     await page.screenshot({ path: join(frames, `${String(f).padStart(4, "0")}.png`) });
   }
   await page.screenshot({ path: join(outDir, `${id}.png`) });
 } finally { await browser.close(); }
 
+// The soundtrack: one click per keystroke, mixed into a mono 48kHz buffer.
+const RATE = 48000;
+const decoded = spawnSync("ffmpeg", ["-loglevel", "error", "-i", join(root, "public/sounds/click.ogg"), "-f", "f32le", "-ac", "1", "-ar", String(RATE), "-"], { maxBuffer: 1 << 24 });
+if (decoded.status !== 0) throw new Error("ffmpeg could not decode click.ogg. Is it installed (brew install ffmpeg)?");
+const click = new Float32Array(decoded.stdout.buffer.slice(decoded.stdout.byteOffset, decoded.stdout.byteOffset + decoded.stdout.length));
+const track = new Float32Array(RATE * SECONDS);
+let seed = 7;
+const random = () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646;
+for (const time of keys) {
+  const pitch = 0.88 + random() * 0.3, gain = 0.32 + random() * 0.22, at = Math.round(time * RATE);
+  for (let i = 0; at + i < track.length; i++) {
+    const pos = i * pitch, j = Math.floor(pos);
+    if (j + 1 >= click.length) break;
+    track[at + i] += gain * (click[j] + (click[j + 1] - click[j]) * (pos - j));
+  }
+}
+for (let i = 0; i < track.length; i++) track[i] = Math.max(-1, Math.min(1, track[i]));
+const audio = join(frames, "keys.f32");
+await writeFile(audio, Buffer.from(track.buffer));
+
 const mp4 = join(outDir, `${id}.mp4`);
-const ff = spawnSync("ffmpeg", ["-y", "-loglevel", "error", "-framerate", String(FPS), "-i", join(frames, "%04d.png"), "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "16", "-preset", "slow", "-movflags", "+faststart", mp4], { stdio: "inherit" });
+const ff = spawnSync("ffmpeg", ["-y", "-loglevel", "error", "-framerate", String(FPS), "-i", join(frames, "%04d.png"), "-f", "f32le", "-ar", String(RATE), "-ac", "1", "-i", audio, "-c:a", "aac", "-b:a", "192k", "-shortest", "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "16", "-preset", "slow", "-movflags", "+faststart", mp4], { stdio: "inherit" });
 if (ff.status !== 0) throw new Error("ffmpeg failed. Is it installed (brew install ffmpeg)?");
 await rm(frames, { recursive: true, force: true });
 console.log(`Saved ${mp4}\nSaved ${join(outDir, `${id}.png`)}`);
