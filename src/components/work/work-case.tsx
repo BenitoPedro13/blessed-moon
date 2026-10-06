@@ -71,11 +71,13 @@ export function WorkCase({
           <p className="text-[14px] leading-[1.7] text-foreground/75">
             {project.tagline}.
           </p>
-          <p className="mt-4 text-[13px] leading-[1.75] text-muted-foreground">
+          {/* Phones get the summary only; the full text is one tap away on
+              /work/[slug] (TASK-mobile-scroll-pacing-and-work-order.md). */}
+          <p className="mt-4 hidden text-[13px] leading-[1.75] text-muted-foreground md:block">
             {project.description}
           </p>
 
-          <ul className="mt-6 flex flex-wrap gap-2">
+          <ul className="mt-6 hidden flex-wrap gap-2 md:flex">
             {project.tags.map((tag) => (
               <li
                 key={tag}

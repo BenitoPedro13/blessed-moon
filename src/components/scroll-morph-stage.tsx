@@ -335,7 +335,9 @@ export function ScrollMorphStage({
     <div
       ref={wrapperRef}
       data-morph-mode="pinned"
-      style={{ height: `${count * heightPerLayer * 100}dvh` }}
+      // --stage-pace shortens the pin on phones (globals.css); markers sit at
+      // fractions of this height, so they scale with it.
+      style={{ height: `calc(${count * heightPerLayer} * var(--stage-pace, 1) * 100dvh)` }}
       className={`relative ${className}`}
     >
       {layers.map((layer, i) => {

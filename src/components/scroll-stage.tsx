@@ -117,7 +117,7 @@ export function ScrollStage({
   }, [flow]);
 
   return (
-    <div ref={wrapperRef} data-scroll-stage={flow ? "flow" : "pinned"} style={flow ? undefined : { height: `${heightMultiplier * 100}dvh` }} className={`relative ${className}`}>
+    <div ref={wrapperRef} data-scroll-stage={flow ? "flow" : "pinned"} style={flow ? undefined : { height: `calc(${heightMultiplier} * var(--stage-pace, 1) * 100dvh)` }} className={`relative ${className}`}>
       {/* Oversized content uses document flow. A nested scrollable pin can
           consume the same gesture needed to advance or leave the stage. */}
       <div

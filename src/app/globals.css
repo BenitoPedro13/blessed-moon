@@ -359,3 +359,18 @@
     animation: none;
   }
 }
+
+/* Scroll room a pinned stage reserves, as a multiple of its authored height.
+   A thumb swipe covers far less distance than a wheel flick or trackpad, so on
+   phones and touch screens the same pin took many swipes in which only a
+   crossfade moved. Markers and progress are fractions of the wrapper, so the
+   choreography keeps its order and timing — TASK-mobile-scroll-pacing-and-work-order.md. */
+:root {
+  --stage-pace: 1;
+}
+
+@media (max-width: 767px), (pointer: coarse) {
+  :root {
+    --stage-pace: 0.6;
+  }
+}
