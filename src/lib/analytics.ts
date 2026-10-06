@@ -2,7 +2,7 @@ import type { ProjectType } from "@/lib/project-types";
 
 type EnquiryEvent =
   | { name: "service-enquiry-click"; data: { service: "social-media-strategy"; location: "home" | "service-page" } }
-  | { name: "project-enquiry-email-open" | "project-enquiry-brief-copy"; data: { project_type: ProjectType } }
+  | { name: "project-enquiry-start" | "project-enquiry-submit"; data: { project_type: ProjectType } }
   | { name: "booking-open"; data: { location: "contact" } };
 
 declare global {
@@ -12,7 +12,7 @@ declare global {
 }
 
 // Optional measurement must never prevent the real enquiry action. No form
-// content, mailto URL, storage or client-side attribution cache is sent.
+// content, email addresses, storage or client-side attribution cache is sent.
 export function trackEnquiry(event: EnquiryEvent) {
   if (typeof window === "undefined") return;
   try {

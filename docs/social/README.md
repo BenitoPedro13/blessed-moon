@@ -23,6 +23,8 @@ A [prompt for a future website agent](08-agent-review-prompt.md) explains the
 implemented scope and how to continue without duplicating it.
 The [production workspace guide](09-production-workspace.md) explains the new
 visual previews, planning/measurement graphs, post builder and local file workflow.
+The [Umami operations guide](12-umami-operations.md) covers all sidebar reports,
+the one-paste dashboard setup, SMTP submissions and the weekly marketing review.
 
 Provisional decisions (revised 5 October 2026): English leads for international founders and product leaders, as `@blessedmoon.studio` Instagram carousels and the same slides as LinkedIn documents on Benito's profile, two a week. An optional Portuguese Instagram account carries the Oishi and F&A Móveis stories for Brazilian businesses, one a week. See [platform selection](07-platform-selection.md) and `docs/tasks/TASK-social-copy-v3.md`.
 

@@ -10,11 +10,14 @@ import { Reveal } from "@/components/reveal";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
 import { TerminalPanel } from "@/components/terminal-panel";
+import { getEnquiryMailConfig } from "@/lib/enquiry-mail";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Prepare a project brief for Blessed Moon Studio. Agency email and scheduling channels will be published here when they are provisioned.",
+    "Tell Blessed Moon Studio about your project. Send an enquiry and Benito will follow up personally.",
 };
 
 /**
@@ -29,6 +32,7 @@ export default async function ContactPage({ searchParams }: { searchParams: Prom
   const { project } = await searchParams;
   const initialProjectType = isProjectType(project) ? project : PROJECT_TYPES[0];
   const agencyEmail = process.env.AGENCY_CONTACT_EMAIL?.trim() || null;
+  const deliveryReady = Boolean(getEnquiryMailConfig());
   const bookingUrl = process.env.AGENCY_BOOKING_URL?.trim() || null;
 
   return (
@@ -38,7 +42,7 @@ export default async function ContactPage({ searchParams }: { searchParams: Prom
         <PageHero
           eyebrow="— Contact"
           title="Start a project"
-          description="Clarity is the feature. Shape the brief now; the studio's own inbox and scheduling channel will appear here as soon as they are provisioned."
+          description="Tell me what you're building, who it's for, and what needs to be true when it ships. I'll review your brief and follow up personally."
           code="CONTACT"
         />
 
@@ -54,9 +58,9 @@ export default async function ContactPage({ searchParams }: { searchParams: Prom
               <TerminalPanel
                 number="01"
                 label="PROJECT ENQUIRY"
-                status={agencyEmail ? "email ready" : "local draft"}
+                status={deliveryReady ? "ready" : "email directly"}
               >
-                <ContactForm key={initialProjectType} agencyEmail={agencyEmail} initialProjectType={initialProjectType} />
+                <ContactForm key={initialProjectType} deliveryReady={deliveryReady} agencyEmail={agencyEmail} initialProjectType={initialProjectType} />
               </TerminalPanel>
             </Reveal>
 
@@ -80,7 +84,7 @@ export default async function ContactPage({ searchParams }: { searchParams: Prom
                   <p className="mt-3 max-w-sm text-[12.5px] leading-[1.65] text-muted-foreground">
                     {bookingUrl
                       ? "Choose a time in your timezone. The invite and meeting details are handled automatically."
-                      : "We are not substituting a personal calendar for a studio channel. Use the brief builder while the official calendar is being prepared."}
+                      : "Send a project enquiry and we'll arrange a time to talk by email."}
                   </p>
                   {bookingUrl ? (
                     <BookingLink href={bookingUrl} />
@@ -137,9 +141,7 @@ export default async function ContactPage({ searchParams }: { searchParams: Prom
 
               <Reveal delay={0.24}>
                 <p className="font-mono text-[8.5px] leading-[1.7] text-muted-foreground">
-                  No personal email, calendar, profile, address, or timezone is used as the studio identity.
-                  <br />
-                  Official agency channels will replace this status automatically when configured.
+                  Benito reads every project enquiry and follows up personally.
                 </p>
               </Reveal>
             </div>

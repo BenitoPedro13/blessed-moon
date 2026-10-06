@@ -67,8 +67,9 @@ not market averages or approved public rates. Review docs/social/03-service-and-
 pricing.md and the calculator before changing scope or fees.
 
 Preserve the existing contact flow: validated Social Media Strategy preselection;
-opening an email draft or successfully copying a brief is intent, not a submitted
-lead. Optional Umami payloads use fixed enums and exclude personal form data.
+SMTP-accepted enquiry submissions are website conversions; qualification and
+inbox delivery are verified separately. Send the thank-you only after studio
+notification acceptance and retain acceptance if the receipt fails. Optional Umami payloads use fixed enums and exclude personal form data.
 Tracker failure must not block contact actions. Confirm official contact/booking
 configuration and real analytics ingestion separately; do not invent credentials
 or a booking URL. Do not add another tracker or fabricated live dashboard.

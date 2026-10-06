@@ -82,9 +82,9 @@ Flora, Trísion, Oishi, F&A Móveis, UniMeet (its proposed v2 design, labelled a
 is a real-estate credit-qualification schematic (`docs/tasks/TASK-add-prumo-case-study.md`) and
 Trísion's is a numeração/tenancy schematic (`docs/tasks/TASK-add-trision-case-study.md`). About includes the final
 mission, values, two disciplines handled by Benito alone, and direct delivery statement. Contact includes a real
-project form, booking link, email, LinkedIn, and GitHub; until an email provider is configured,
-the form transparently opens a prefilled email draft instead of pretending to submit to a
-backend.
+project form, booking link, email, LinkedIn, and GitHub; the project form sends enquiries through a server-side SMTP endpoint. After the studio
+notification is accepted, it sends a thank-you email promising a personal follow-up.
+Missing SMTP settings visibly disable sending and leave a direct studio email link.
 
 `/work` and `/about` run the same one-morphing-terminal-window structure as the homepage body
 (`ScrollMorphStage`), each with its own traveling motif rather than a copy of the homepage's
@@ -162,13 +162,32 @@ social/Umami metrics or private client information are embedded. Research lives 
 `docs/tasks/TASK-social-strategy-and-service.md`.
 
 Strategy CTAs preselect the contact project type. Umami custom events distinguish
-CTA clicks, opening a mail draft, successful brief copying and booking-link clicks.
-Those events contain fixed enums only; none establishes a submitted lead or booking.
+CTA clicks, the first form edit, accepted SMTP submissions and booking-link clicks.
+Those events contain fixed enums only. An accepted submission is a website conversion;
+qualification, inbox delivery, meetings and revenue still require actual records.
 The existing optional tracker/recorder configuration is retained.
 
 `AGENCY_CONTACT_EMAIL` and `AGENCY_BOOKING_URL` provision the existing official
-studio contact channels. Without them, the form copies a local brief and scheduling
-remains visibly pending. These server-only variables are documented in `.env.example`.
+studio contact channels. SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD and SMTP_FROM_EMAIL enable form
+delivery; without complete configuration sending is disabled. Scheduling remains
+optional. These server-only variables are documented in `.env.example`.
+
+See [Gmail and SMTP setup](docs/email-setup.md). `pnpm check:enquiry` tests the API,
+browser and both emails against a local TLS SMTP server without sending real mail.
+`pnpm smtp:verify` checks your configured credentials without sending a message.
+
+The [Umami operations guide](docs/social/12-umami-operations.md) connects every
+sidebar screen to the pilot. Paste [the setup script](public/umami-setup.js)
+into your logged-in Umami console to create five goals, four funnels, nine segments
+and one cohort, and configure recording. It checks this website's ID/domain,
+backs up definitions and skips existing names. No account-side writes have been
+made from this workspace. `node scripts/check-umami-setup.mjs` verifies the setup
+workflow and tracking policy against mocked API contracts.
+
+The tracker now collects Web Vitals, respects Do Not Track, limits collection to
+the production hostname, excludes internal workspace pageviews and strips arbitrary
+query parameters/hashes while retaining safe campaign tags. Recording requires
+the base tracker too. Form and planning contents are blocked from replays.
 
 Targeted browser verification: `node scripts/check-social-strategy.mjs` against a
 running local server (`SOCIAL_CHECK_URL` optionally overrides `http://localhost:3000`).

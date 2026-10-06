@@ -41,7 +41,7 @@ export function TerminalPanel({
   number: string;
   label: string;
   /** Optional right-hand end of the title bar — a live state, the way a real
-   * window's title bar carries one (`local draft`, `email ready`). Sits past
+   * window's title bar carries one (`ready`, `email directly`). Sits past
    * the rule, so the rule still measures the window. */
   status?: React.ReactNode;
   /** Set false for a body that owns its own padding, e.g. a list of full-bleed

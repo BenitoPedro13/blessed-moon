@@ -9,6 +9,7 @@ const origin = process.env.SOCIAL_CHECK_URL || "http://localhost:3194";
 const browser = await chromium.launch({ headless: true });
 const context = await browser.newContext({ reducedMotion: "reduce", viewport: { width: 1440, height: 900 } });
 context.setDefaultTimeout(60000);
+await context.route("https://benitos-analytics.vercel.app/**", (route) => route.abort());
 // Assert the actual page behaviour; background prefetch must not block a check.
 const page = await context.newPage();
 page.setDefaultNavigationTimeout(60000);
@@ -101,33 +102,10 @@ try {
   assert.match(await page.locator("#project-type").textContent(), /Social Media Strategy/);
   assert.equal((await page.evaluate(() => window.__socialEvents))[0].name, "service-enquiry-click");
 
-  // A deterministic clipboard stub exercises the outcome without sending data.
-  await page.evaluate(() => {
-    window.__socialEvents = [];
-    window.umami = { track: (name, data) => window.__socialEvents.push({ name, data }) };
-    Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText: async () => {} } });
-  });
-  await page.locator("#name").fill("Test Person");
-  await page.locator("#email").fill("test@example.invalid");
-  await page.locator("#company").fill("Private test company");
-  await page.locator("#message").fill("Private message that must not enter analytics.");
-  const copy = page.getByRole("button", { name: "Copy project brief" });
-  if (await copy.count()) {
-    await copy.click();
-    await page.getByRole("button", { name: "Brief copied" }).waitFor();
-    const events = await page.evaluate(() => window.__socialEvents);
-    assert.deepEqual(events, [{ name: "project-enquiry-brief-copy", data: { project_type: "Social Media Strategy" } }]);
-    await page.waitForTimeout(3300);
-    await page.evaluate(() => { navigator.clipboard.writeText = async () => { throw new Error("blocked"); }; window.__socialEvents = []; });
-    await copy.click();
-    await page.getByRole("button", { name: "Copy blocked" }).waitFor();
-    assert.deepEqual(await page.evaluate(() => window.__socialEvents), [], "Failed copy is not counted");
-    await page.evaluate(() => { window.umami = { track: () => { throw new Error("tracker blocked"); } }; navigator.clipboard.writeText = async () => {}; });
-    await page.getByRole("button", { name: "Copy blocked" }).click();
-    await page.getByRole("button", { name: "Brief copied" }).waitFor();
-  } else {
-    console.log("Configured email path: clipboard checks skipped; no mail draft opened by test.");
-  }
+  // This broad strategy check never sends email. The SMTP/browser harness
+  // exercises submissions against its own local mail server.
+  assert.equal(await page.locator('form.rr-block').count(), 1, "Personal form is excluded from replays");
+  assert.equal(await page.getByRole("button", { name: "Send enquiry", exact: true }).count(), 1);
 
   await page.goto(`${origin}/contact?project=invalid`, { waitUntil: "load" });
   assert.match(await page.locator("#project-type").textContent(), /Web App/);
@@ -144,6 +122,7 @@ try {
   }
   // Exercise the actual pinned layout as well as the reduced-motion fallback.
   const animated = await browser.newContext({ reducedMotion: "no-preference" });
+  await animated.route("https://benitos-analytics.vercel.app/**", (route) => route.abort());
   animated.setDefaultTimeout(60000);
   const motionPage = await animated.newPage();
   motionPage.on("pageerror", (error) => failures.push(`${motionPage.url()}: ${String(error)}`));

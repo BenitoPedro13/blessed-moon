@@ -72,16 +72,25 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Script id="disable-scroll-restoration" strategy="beforeInteractive">
           {`if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }`}
         </Script>
+        {process.env.NODE_ENV === "production" && process.env.NEXT_PUBLIC_UMAMI_SRC && process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID && (
+          <Script src="/analytics-policy.js" strategy="beforeInteractive" />
+        )}
         {process.env.NODE_ENV === "production" &&
           process.env.NEXT_PUBLIC_UMAMI_SRC &&
           process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID && (
             <Script
               src={process.env.NEXT_PUBLIC_UMAMI_SRC}
               data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID}
+              data-domains={new URL(SITE_URL).hostname}
+              data-do-not-track="true"
+              data-exclude-hash="true"
+              data-performance="true"
+              data-before-send="blessedMoonBeforeSend"
               strategy="afterInteractive"
             />
           )}
         {process.env.NODE_ENV === "production" &&
+          process.env.NEXT_PUBLIC_UMAMI_SRC &&
           process.env.NEXT_PUBLIC_UMAMI_RECORDER_SRC &&
           process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID && (
             <Script

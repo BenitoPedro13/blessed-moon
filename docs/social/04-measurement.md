@@ -8,7 +8,7 @@ The inspected `src/app/layout.tsx` already renders a production-gated Umami trac
 
 Production data ingestion, installed Umami version, staff-traffic exclusion and dashboard access have not been verified. Production mode alone also includes preview production builds, so check whether the current configuration excludes unwanted hostnames. Do not expose private environment variables, log secrets or embed a public dashboard token without a deliberate access decision.
 
-The contact form currently opens a mail draft when `AGENCY_CONTACT_EMAIL` exists; otherwise it copies a local brief. Booking is conditional on `AGENCY_BOOKING_URL`. None of these outcomes is a confirmed lead submission. Confirm that a working agency enquiry channel exists before scaling a campaign.
+The contact form posts to `/api/enquiry`. With complete SMTP settings it emails the studio and then sends a plain-text thank-you to the visitor. Without those settings it disables sending and offers the configured studio email. Booking remains conditional on `AGENCY_BOOKING_URL`. An SMTP-accepted submission is a website conversion, not proof of inbox delivery, a qualified lead or a booked meeting. Verify both emails before scaling campaigns. See [SMTP setup](../email-setup.md).
 
 ## Campaign convention
 
@@ -20,16 +20,16 @@ Use clickable profile/Story destinations for Instagram. Do not assume a caption 
 
 ## Minimal event dictionary
 
-Implement with a typed helper around the existing `window.umami.track`. Never send name, email, company, message, phone number or the composed mailto URL.
+Implement with a typed helper around the existing `window.umami.track`. Never send name, email, company, message, phone number or email contents.
 
 | Event | Fixed/allowed properties | Meaning |
 |---|---|---|
 | `service-enquiry-click` | `service: social-media-strategy`, `location: home|service-page` | Person followed the service contact CTA; not a lead |
-| `project-enquiry-email-open` | `project_type` from fixed form options | Validated form prepared a mail draft; email may never be sent |
-| `project-enquiry-brief-copy` | `project_type` from fixed form options | Clipboard write succeeded; brief was not delivered |
+| `project-enquiry-start` | `project_type` from fixed form options at first edit | First form change, once per page view |
+| `project-enquiry-submit` | `project_type` from fixed form options at submission | SMTP accepted the studio notification; receipt failure does not invalidate it |
 | `booking-open` | `location: contact` | Person followed the configured booking link; not a booked meeting |
 
-Use real client-side handler success for copy events. Do not count copy before the clipboard promise resolves. Keep internal links as Next `Link` navigation; do not accidentally turn them into full reloads through an analytics attribute handler. The helper should fail harmlessly if the tracker is absent or blocked and should not delay contact/navigation. Follow the installed tracker version's API. [Umami event documentation](https://docs.umami.is/docs/track-events).
+Count submission only after `/api/enquiry` returns `ok: true`. Failures never trigger submit events. The event is emitted once in the browser, not again by SMTP or the thank-you email. Missing/blocked trackers can undercount actual enquiries. Historical email-open and brief-copy events remain historical intent; do not merge them into submissions. Keep internal links as Next `Link` navigation; do not accidentally turn them into full reloads through an analytics attribute handler. The helper should fail harmlessly if the tracker is absent or blocked and should not delay contact/navigation. Follow the installed tracker version's API. [Umami event documentation](https://docs.umami.is/docs/track-events).
 
 ## What the report should show
 
@@ -37,7 +37,7 @@ Use real client-side handler success for copy events. Do not count copy before t
 |---|---|---|
 | Content | Reach, saves, shares and replies by format and audience | Native platform insights; which topics attract relevant people? |
 | Acquisition | Visits/sessions attributed to tagged external links | Umami; which content brings visitors to the appropriate page? |
-| Website intent | Relevant CTA, email-open or successful brief-copy events, separately | Umami; do visitors take the offered next step? |
+| Website conversion | CTA clicks, first form edits and accepted SMTP submissions, separately | Umami; which step loses visitors? |
 | Sales | Confirmed enquiries, qualified enquiries, sent proposals, accepted contracts, collected revenue | Manual sales register initially; which work leads to actual business? |
 | Efficiency | Creation and client-work hours | Time log; can the system be sustained profitably? |
 

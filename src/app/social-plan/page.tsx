@@ -57,7 +57,7 @@ export default function SocialPlanPage() {
     </PlanSection>
     <PlanSection number="09" title="Review the evidence before expanding.">
       <ol className="space-y-4"><li className={PLAN_TEXT}><strong className="text-primary">Day 30:</strong> establish baseline, verify campaign links and record creation hours.</li><li className={PLAN_TEXT}><strong className="text-primary">Day 60:</strong> repeat buyer questions that bring relevant conversations; improve weak destinations.</li><li className={PLAN_TEXT}><strong className="text-primary">Day 90:</strong> review confirmed enquiries, proposal outcomes and capacity. Set the next scope using actual records.</li></ol>
-      <p className={`mt-6 ${PLAN_TEXT}`}>An email draft, copied brief or booking-link click is intent. Only actual contact and sales records establish a lead, meeting or revenue. <Link href="/analytics-plan" className={PLAN_LINK}>Open the measurement plan →</Link></p>
+      <p className={`mt-6 ${PLAN_TEXT}`}>An accepted enquiry submission is a website conversion. A booking-link click is intent. Use actual conversations and sales records to establish qualified leads, meetings and revenue. <Link href="/analytics-plan" className={PLAN_LINK}>Open the measurement plan →</Link></p>
     </PlanSection>
   </PlanShell>;
 }

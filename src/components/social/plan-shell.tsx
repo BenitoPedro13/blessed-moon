@@ -35,7 +35,7 @@ export function PlanShell({ title, description, active, children }: { title: str
   return (
     <>
       <SiteNav />
-      <main className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-7 sm:py-20">
+      <main data-plan-shell className="rr-block mx-auto w-full max-w-6xl px-4 py-12 sm:px-7 sm:py-20">
         <header className="border border-panel-edge bg-background/90 p-6 sm:p-10">
           <p className="font-mono text-xs text-primary">Studio working plan · {PLAN_DATE}</p>
           <h1 className="mt-5 max-w-4xl text-4xl font-semibold tracking-[-0.04em] sm:text-6xl">{title}</h1>

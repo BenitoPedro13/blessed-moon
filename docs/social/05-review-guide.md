@@ -24,7 +24,7 @@ the repository. See the task document for the check details.
 - `/about`: Benito's solo studio; A/B are strategy and engineering disciplines.
 - `/`: service and pricing links, solo delivery copy and original eight build cards.
 - `/contact?project=Social%20Media%20Strategy#project-enquiry`: preselected project
-  type. Form opens a draft email when configured or copies a local brief otherwise.
+  type. Form submits through SMTP when configured and sends a thank-you after the studio notification is accepted.
 - `/system`: specimens for the shared planning components and pricing model.
 
 ## What changed behind the pages
@@ -36,8 +36,8 @@ the repository. See the task document for the check details.
 - The service page is in the sitemap, homepage services/pricing and footer. Public
   copy uses custom quotes. Suggested R$3,900 strategy / R$1,800 monthly review prices
   stay in the working plan and research documents.
-- Optional typed Umami events distinguish a service CTA, opening a mail draft,
-  successful brief copying and following a booking link. Payloads use fixed enums
+- Optional typed Umami events distinguish a service CTA, first form edits,
+  accepted enquiry submissions and following a booking link. Payloads use fixed enums
   and exclude the form's personal data. Tracker failure does not block the action.
 - Homepage, About data/copy, boot facts and current documentation describe Benito
   alone. Former partner and co-founder claims were removed from current site copy.
@@ -59,8 +59,7 @@ the repository. See the task document for the check details.
 - Approve or revise the proposed fees and workload; fixed public rates are not published.
 - Confirm any ongoing content production/publishing before offering it. Full social
   management, community replies, filming and paid ads need separate scope.
-- Provision `AGENCY_CONTACT_EMAIL` and/or `AGENCY_BOOKING_URL` to receive enquiries.
-  Neither is configured in the local environment files inspected for this task.
+- Configure the SMTP credentials and receiving inbox, and verify notification and thank-you delivery. Booking remains optional. See `docs/email-setup.md`.
 - Verify real Umami ingestion, staff/preview exclusions and native social insights.
   Browser tests stub measurement and verify payloads, not a real analytics account.
 - Approve screenshots and current project facts before publishing social drafts.
@@ -77,7 +76,7 @@ server database. No live account metrics, AI generation API or video generator w
 
 The production build and TypeScript passed. Lint has zero errors and two existing
 boot-animation dependency warnings. Final browser checks passed against the actual
-repository, including enquiry payloads, brief copying failure/success, blocked tracker,
+repository, including enquiry payloads, SMTP failure/success, blocked tracker,
 metadata, content references and all eight pinned service cards at short phone sizes.
 The review preview is `http://localhost:3194`, with optional analytics disabled for
 the review build/process; environment files are unchanged. Screenshots are stored in

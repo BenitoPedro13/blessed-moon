@@ -670,11 +670,10 @@ export default function SystemPage() {
         </h2>
         <p className="max-w-prose text-[13px] leading-[1.6] text-muted-foreground">
           The real <code className="font-mono text-[12px] text-foreground/80">/contact</code> form
-          component, not a mockup — it reflects whichever submit path is currently live
-          (mailto vs. clipboard-copy fallback).
+          component, with delivery disabled here so reviewing specimens cannot send emails.
         </p>
         <div className="max-w-md border border-border/60 bg-background/55 p-6 backdrop-blur-sm">
-          <ContactForm agencyEmail={agencyEmail} />
+          <ContactForm deliveryReady={false} agencyEmail={agencyEmail} />
         </div>
       </section>
 
