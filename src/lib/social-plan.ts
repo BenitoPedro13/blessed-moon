@@ -194,6 +194,26 @@ export const STORIES: readonly Story[] = [
     linkedin: "",
     visual: "Capa com a lua ASCII; os três escopos; ideias soltas vs plano; fechamento.", destination: "/services/social-media", source: "portfolio", evidence: "Descreve o escopo proposto do serviço. Preços não aparecem nos posts.",
   },
+  // Launch trio, posted together on the first day (TASK-pt-launch-posts.md). Week 0 sorts
+  // them before week 1 without renumbering the existing posts.
+  {
+    id: "apresentacao", week: 0, lang: "pt", title: "Sites e sistemas feitos por uma pessoa só.", audience: "Amigos, conhecidos e donos de negócios no Brasil", format: "Carousel",
+    caption: "Prazer, Blessed Moon.\n\nEu sou o Benito. Faço sites, catálogos e sistemas, da estratégia ao código. Quem conversa com você é quem constrói.\n\nTodo projeto começa com uma pergunta: qual é a única coisa que o visitante deve fazer? Por aqui vou mostrar projetos reais, como o Oishi, a F&A Móveis e a UniMeet, com as decisões por trás.\n\nSiga para acompanhar. Os casos estão no link da bio.",
+    linkedin: "",
+    visual: "Capa com a lua; quem faz; o que eu construo; a pergunta inicial; três projetos; fechamento.", destination: "/work", source: "portfolio", evidence: "Identidade do estúdio (Benito sozinho) e projetos conforme studio-data.ts.",
+  },
+  {
+    id: "unimeet-feiras", week: 0, lang: "pt", title: "Cada feira, a mesma página.", audience: "Donos de negócios com evento, inscrição ou orçamento online", format: "Carousel",
+    caption: "A UniMeet vende estandes em feiras universitárias para universidades europeias. O caminho é curto: página do evento, inscrição, conversa de venda e fatura.\n\nCada feira nova é um cadastro no painel, não um projeto de design. E o preço que a universidade vê no formulário é calculado pela mesma função que registra a inscrição, congelado no momento do envio.\n\nAs telas são a proposta de design v2. O caso completo está no link da bio.",
+    linkedin: "",
+    visual: "Página da feira na janela; o cliente; feira nova é cadastro; as três regras do preço; o bug das datas; fechamento.", destination: "/work/unimeet", source: "portfolio", evidence: "Fatos do estudo de caso da UniMeet. As telas são o design v2 proposto; o cliente manteve o v1 no ar.",
+  },
+  {
+    id: "o-que-eu-faco", week: 0, lang: "pt", title: "O que você pode contratar.", audience: "Donos de negócios avaliando um site ou sistema", format: "Carousel",
+    caption: "O que dá para contratar comigo: um site, um catálogo que leva ao WhatsApp, um sistema (reserva, pagamento, painel de dados) ou a estratégia das suas redes.\n\nO processo tem quatro etapas: entender antes de construir, desenhar o sistema e depois a tela, construir em partes que você revisa, publicar e manter.\n\nMe conte o trabalho que falta, não a lista de recursos. Link na bio.",
+    linkedin: "",
+    visual: "Capa em papel; os quatro escopos; as quatro etapas; lista de recursos vs o trabalho; fechamento.", destination: "/contact", source: "portfolio", evidence: "Serviços e etapas conforme a página inicial do site. Preços não aparecem nos posts.",
+  },
 ];
 
 /** A language's stories in publishing order. */

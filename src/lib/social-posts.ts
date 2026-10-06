@@ -183,4 +183,29 @@ export const AUTHORED_SLIDES: Record<string, Authored[]> = {
     { template: "compare", kicker: "A pergunta certa", title: "O que falta no seu conteúdo?", body: "Ideias soltas | Você posta, mas não sabe o que funciona nem por quê.\nUm plano | Cada post responde a uma dúvida do cliente e leva a uma página." },
     { template: "action", surface: "amber", art: "crescent", title: "Precisa do plano antes dos posts?", body: "Link na bio.", action: "Conheça o serviço" },
   ],
+
+  // ── Português · lançamento (TASK-pt-launch-posts.md) ─────────────────────────
+  "apresentacao": [
+    { template: "cover", art: "moon", kicker: "Prazer, Blessed Moon", title: "Sites e sistemas feitos por uma pessoa só.", accent: "Do rascunho ao ar.", body: "" },
+    { template: "point", kicker: "Quem faz", title: "Eu sou o Benito.", body: "Cuido da estratégia, do design e do código. Quem conversa com você é quem constrói: sem gerente de conta, sem repasse." },
+    { template: "rows", surface: "paper", kicker: "O que eu construo", title: "Do cardápio ao sistema", body: "Sites | Rápidos, e respondem à dúvida do cliente\nCatálogos | Produto, preço e WhatsApp, sem mensalidade\nSistemas | Reserva, pagamento, painel de dados\nRedes sociais | O plano antes dos posts" },
+    { template: "compare", kicker: "Como eu começo", title: "Uma pergunta antes de qualquer tela.", body: "O de sempre | Uma lista de recursos: blog, chatbot, animações.\nAqui | Qual é a única coisa que o visitante deve fazer?" },
+    { template: "rows", kicker: "Projetos reais", title: "Alguns trabalhos de 2026", body: "Oishi | Rodízio com o desconto 'sem desperdício' | Restaurante\nF&A Móveis | Catálogo que vende pelo WhatsApp | Loja\nUniMeet | Feiras universitárias na Europa | Plataforma" },
+    { template: "action", surface: "amber", art: "crescent", title: "Vou mostrar o processo por aqui.", body: "Projetos reais, com as decisões por trás. Siga, e os casos estão no link da bio.", action: "Conheça os projetos" },
+  ],
+  "unimeet-feiras": [
+    shot("/projects/unimeet/fair-tour.png", "~/work/unimeet · proposta v2", { imageAlt: "Página da feira EBEUF 2027 no design v2 proposto: quatro países, as datas, o botão de reserva e o preço do estande em cada cidade.", kicker: "Projeto · UniMeet", title: "Cada feira, a mesma página.", accent: "Termina num formulário com preço.", body: "" }),
+    { template: "point", kicker: "O cliente", title: "Universidades europeias compram estandes em feiras.", body: "O caminho é curto: página do evento, formulário de inscrição, conversa de venda e fatura. Tudo no site serve para levar a universidade até o formulário." },
+    { template: "point", kicker: "Uma feira nova", title: "É um cadastro, não um projeto de design.", body: "Cada feira é um registro no painel. As seções aparecem sempre na mesma ordem e terminam no mesmo formulário." },
+    { template: "rows", numbered: true, surface: "paper", kicker: "O preço", title: "O valor da tela é o da fatura", body: "Um cálculo só | A prévia e o servidor usam a mesma função\nCongelado na inscrição | O preço da feira pode mudar; o orçamento não\nPreço forjado | Um valor enviado por fora é descartado" },
+    { template: "point", kicker: "Achado nos testes", title: "Toda feira aparecia um dia antes.", body: "As datas são guardadas à meia-noite UTC. No horário do Brasil, viravam o dia anterior. Hoje são formatadas em UTC, e os testes rodam no horário de São Paulo." },
+    { template: "action", surface: "amber", art: "crescent", title: "Seu orçamento bate com o que você cobra?", body: "As telas são a proposta de design v2. O caso completo está no link da bio.", action: "Veja o caso UniMeet" },
+  ],
+  "o-que-eu-faco": [
+    { template: "cover", surface: "paper", art: "crescent", kicker: "Serviços", title: "O que você pode contratar.", accent: "Do site ao sistema.", body: "" },
+    { template: "rows", kicker: "Quatro escopos", title: "Escolha pelo trabalho que falta", body: "Site | Mostra o que você faz e leva ao contato\nCatálogo | Produto, medida e preço, até o WhatsApp\nSistema | Reserva, pagamento ou painel de dados\nEstratégia de redes | Público, mensagem e briefs dos posts" },
+    { template: "rows", numbered: true, surface: "paper", kicker: "Como funciona", title: "Quatro etapas", body: "Entender antes de construir | O que o cliente precisa fazer\nDesenhar o sistema, depois a tela | O que muda, quem edita\nConstruir em partes | Você revisa cada uma\nPublicar e manter | O site no ar, e funcionando" },
+    { template: "compare", kicker: "Antes do orçamento", title: "Qual pedido vira projeto?", body: "Lista de recursos | Quero um site moderno, com blog e chatbot.\nO trabalho | O cliente escolhe o horário, vê o preço e reserva." },
+    { template: "action", surface: "amber", art: "crescent", title: "Me conte o trabalho, não a lista.", body: "Link na bio.", action: "Fale com o Benito" },
+  ],
 };

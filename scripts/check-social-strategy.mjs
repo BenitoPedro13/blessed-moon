@@ -47,7 +47,7 @@ try {
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1), true, `${route}: no overflow at ${width}`);
     }
     if (["/instagram-plan", "/linkedin-plan"].includes(route)) {
-      assert.equal(await page.locator("details[data-post-id]").count(), route.includes("instagram") ? 22 : 14);
+      assert.equal(await page.locator("details[data-post-id]").count(), route.includes("instagram") ? 25 : 14);
       // TASK-social-profiles-and-rebalance.md: every account gets a profile setup, within platform limits.
       assert.equal(await page.locator("[data-profile-setup]").count(), route.includes("instagram") ? 2 : 1);
       assert.equal(await page.locator("[data-profile-setup] .text-destructive").count(), 0, "Profile fields fit their platform limits");
