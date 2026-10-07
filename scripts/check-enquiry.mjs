@@ -112,7 +112,9 @@ try {
   assert.equal(messages.length, 2, "Studio notification and thank-you accepted");
   assert.equal(messages[0].recipient, "studio@example.invalid");
   assert.match(messages[0].content, /Reply-To:.*visitor@example\.invalid/);
-  assert.match(messages[0].content, /Private project message/);
+  const notification = messages[0].content.replace(/=\r?\n/g, "");
+  assert.match(notification, /Private project message/);
+  assert.match(notification, /Content-Type: text\/html/);
   assert.equal(messages[1].recipient, "visitor@example.invalid");
   const receipt = messages[1].content.replace(/=\r?\n/g, "");
   assert.match(receipt, /follow up with you personally/);

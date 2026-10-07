@@ -1,10 +1,12 @@
 # Blessed Moon enquiry email
 
-The project form sends a notification to `blessedmoon.studio@gmail.com`. The
+The project form sends a notification to `blessedmoon.studio@gmail.com`, in
+the same branded HTML frame (with a plain-text part); every visitor field is
+HTML-escaped. The
 visitor's address is Reply-To, so replying reaches them. After that notification
 is accepted by SMTP, the visitor receives this confirmation, sent as a branded
 HTML message with the same words as its plain-text alternative
-(`src/lib/enquiry-receipt.ts`):
+(`src/lib/enquiry-emails.ts`):
 
 > Thanks for telling me about your project.
 >

@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 import { isEmail, type Enquiry } from "@/lib/enquiry";
-import { RECEIPT_SUBJECT, receiptHtml, receiptText } from "@/lib/enquiry-receipt";
+import { notificationHtml, notificationSubject, notificationText, RECEIPT_SUBJECT, receiptHtml, receiptText } from "@/lib/enquiry-emails";
 
 // Imported exclusively by the server page and Node route handler. These values
 // must never use NEXT_PUBLIC_ prefixes or become client component props.
@@ -34,14 +34,9 @@ export async function sendEnquiry(enquiry: Enquiry, config: NonNullable<ReturnTy
       from: { name: "Blessed Moon Studio", address: config.from },
       to: config.to,
       replyTo: { name: enquiry.name, address: enquiry.email },
-      subject: `[Blessed Moon · ${enquiry.projectType}] Project enquiry`,
-      text: [
-        `Name: ${enquiry.name}`,
-        `Reply email: ${enquiry.email}`,
-        `Company: ${enquiry.company || "Not provided"}`,
-        `Project type: ${enquiry.projectType}`,
-        "", enquiry.message,
-      ].join("\n"),
+      subject: notificationSubject(enquiry),
+      text: notificationText(enquiry),
+      html: notificationHtml(enquiry),
     });
     if (!result.accepted.some((address) => String(address).toLowerCase() === config.to.toLowerCase())) {
       throw new Error("SMTP did not accept the studio recipient");
