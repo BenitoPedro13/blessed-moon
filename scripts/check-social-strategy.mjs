@@ -52,7 +52,7 @@ try {
       // TASK-social-profiles-and-rebalance.md: every account gets a profile setup, within platform limits.
       assert.equal(await page.locator("[data-profile-setup]").count(), route.includes("instagram") ? 2 : 1);
       // TASK-launch-teaser-story.md §6.1: launch Stories are listed apart from the grid.
-      if (route.includes("instagram")) { assert.equal(await page.locator("[data-story-step]").count(), 5); assert.equal(await page.locator("[data-story-frame] svg").count(), 1, "Teaser preview renders"); }
+      if (route.includes("instagram")) { assert.equal(await page.locator("[data-story-step]").count(), 6); assert.equal(await page.locator("[data-story-frame] svg").count(), 2, "Teaser and no-ar previews render"); }
       assert.equal(await page.locator("[data-profile-setup] .text-destructive").count(), 0, "Profile fields fit their platform limits");
       // TASK-linkedin-setup-checklist.md: ordered setup, the intro post and the three images.
       if (route.includes("linkedin")) {

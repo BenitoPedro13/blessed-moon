@@ -206,6 +206,10 @@ export const AUTHORED_SLIDES: Record<string, Authored[]> = {
   "teaser-lancamento": [
     { template: "cover", art: "moon", kicker: "Lançamento", title: "Amanhã, três posts.", accent: "Blessed Moon no ar.", body: "Quem constrói, um projeto real e o que dá pra contratar." },
   ],
+  // ── Português · Story do lançamento (TASK-launch-live-story.md) ───────────────
+  "no-ar": [
+    { template: "cover", art: "moon", kicker: "Lançamento", title: "No ar.", accent: "Três posts no perfil.", body: "Quem constrói, um projeto real e o que dá pra contratar. Toque no perfil para ver." },
+  ],
   "o-que-eu-faco": [
     { template: "cover", surface: "paper", art: "crescent", kicker: "Serviços", title: "O que você pode contratar.", accent: "Do site ao sistema.", body: "" },
     { template: "rows", kicker: "Quatro escopos", title: "Escolha pelo trabalho que falta", body: "Site | Mostra o que você faz e leva ao contato\nCatálogo | Produto, medida e preço, até o WhatsApp\nSistema | Reserva, pagamento ou painel de dados\nEstratégia de redes | Público, mensagem e briefs dos posts" },

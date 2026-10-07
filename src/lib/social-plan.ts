@@ -221,6 +221,7 @@ export const STORIES: readonly Story[] = [
 export type StoryFrame = { id: string; lang: Language; title: string; note: string };
 export const STORY_FRAMES: StoryFrame[] = [
   { id: "teaser-lancamento", lang: "pt", title: "Amanhã, três posts.", note: "Posted the day before the launch trio, with a countdown sticker set to the publishing time." },
+  { id: "no-ar", lang: "pt", title: "No ar.", note: "Posted right after the third post goes live, before the native shares (TASK-launch-live-story.md)." },
 ];
 
 /** The launch's Stories, in order. A step points at a `STORY_FRAMES` id (authored art) or a
@@ -232,6 +233,7 @@ export const STORY_SCHEDULE: StoryStep[] = [
   { when: "Launch · 1st", share: "o-que-eu-faco", what: "Publish the services carousel first. It ends up on the right of the top row." },
   { when: "Launch · 2nd", share: "unimeet-feiras", what: "Publish the UniMeet case. It ends up in the middle." },
   { when: "Launch · 3rd", share: "apresentacao", what: "Publish the intro last, so it sits top-left, where a new visitor starts." },
+  { when: "Launch · after", frame: "no-ar", what: "Post the \"no ar\" video, answering yesterday's teaser. Add a mention sticker for @blessedmoon.studio in the empty lower left, so a tap opens the grid." },
   { when: "Launch · after", what: "Share each post to Stories with a short \"no ar\" line, one Story per post. A new account's feed posts reach few people; the Story is what brings friends to the carousels." },
 ];
 
