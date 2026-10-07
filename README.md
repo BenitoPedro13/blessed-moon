@@ -154,7 +154,9 @@ Unlinked, `noindex` planning pages: `/social-plan`, `/instagram-plan`,
 `/linkedin-plan`, `/analytics-plan`. They contain five public offer references,
 356 collected Instagram covers, 59 captured captions and ten supporting LinkedIn samples, platform selection,
 22 authored carousels (14 English, 8 Portuguese) with captions, LinkedIn drafts,
-campaign links, an internal pricing model and a measurement checklist. English leads
+campaign links, an internal pricing model and a measurement checklist. `/linkedin-plan`
+also holds the ordered profile/company-page setup, an introduction post and generated
+profile images (`/linkedin-plan/banner.png`, `cover.png`, `logo.png`). English leads
 on Instagram and LinkedIn; a Portuguese Instagram account is optional. Instagram-feed
 coverage and selected deep observations are documented; no competitor performance is inferred. They are URL-accessible, not authenticated. No live
 social/Umami metrics or private client information are embedded in them; live Umami

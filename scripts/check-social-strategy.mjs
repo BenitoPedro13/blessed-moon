@@ -54,6 +54,19 @@ try {
       // TASK-launch-teaser-story.md §6.1: launch Stories are listed apart from the grid.
       if (route.includes("instagram")) { assert.equal(await page.locator("[data-story-step]").count(), 5); assert.equal(await page.locator("[data-story-frame] svg").count(), 1, "Teaser preview renders"); }
       assert.equal(await page.locator("[data-profile-setup] .text-destructive").count(), 0, "Profile fields fit their platform limits");
+      // TASK-linkedin-setup-checklist.md: ordered setup, the intro post and the three images.
+      if (route.includes("linkedin")) {
+        assert.ok(await page.locator("[data-setup-checklist] [data-setup-step]").count() >= 15, "Setup steps render");
+        assert.equal(await page.locator("[data-intro-post]").count(), 1, "Introduction post renders");
+        assert.doesNotMatch(await page.locator("[data-intro-post]").textContent(), /https?:\/\//, "Introduction post carries no link");
+        for (const [file, width, height] of [["banner.png", 1584, 396], ["cover.png", 4200, 700], ["logo.png", 400, 400]]) {
+          const image = await fetch(`${origin}/linkedin-plan/${file}`);
+          assert.equal(image.headers.get("content-type"), "image/png", `${file} is a PNG`);
+          const bytes = Buffer.from(await image.arrayBuffer());
+          assert.deepEqual([bytes.readUInt32BE(16), bytes.readUInt32BE(20)], [width, height], `${file} is ${width}×${height}`);
+        }
+        assert.equal((await fetch(`${origin}/linkedin-plan/other.png`)).status, 404);
+      }
       for (const pin of await page.locator("[data-profile-setup] a[aria-label^=\"Pinned post\"]").evaluateAll((links) => links.map((link) => link.getAttribute("href")))) assert.equal(await page.locator(`details${pin.replace("#", "#")}`).count(), 1, `Pinned ${pin} exists`);
       const details = page.locator("details[data-post-id]").first();
       await details.locator("summary").scrollIntoViewIfNeeded();

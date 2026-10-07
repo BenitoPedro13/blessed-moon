@@ -393,7 +393,7 @@ campaign URLs live in `src/lib/social-plan.ts`; enum-only enquiry events in
 morph handoffs. The new strategy offer is linked alongside them. See
 `docs/tasks/TASK-social-strategy-and-service.md` and `docs/social/`.
 
-The channel plans include branded cover studies and navigable post previews.
+The channel plans include branded cover studies and navigable post previews. `/linkedin-plan` opens with an ordered setup checklist (`LINKEDIN_SETUP`, `SetupChecklist`) and an introduction post; LinkedIn has no grid or Stories, so the Instagram launch trio and teaser don't carry over. Its banner, cover and logo are `next/og` PNGs at `/linkedin-plan/[asset]` (`TASK-linkedin-setup-checklist.md`).
 `/post-builder` is another unlinked noindex workspace: browser-only template editing,
 local screenshots and PNG/ZIP/PDF/JSON exports. `social-art.ts` is the single SVG
 source for preview and raster exports; escape imported text and allow only local

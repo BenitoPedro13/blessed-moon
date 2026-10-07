@@ -354,3 +354,66 @@ export const PROFILES: readonly Profile[] = [
 ];
 
 export const profileFor = (id: Profile["id"]) => PROFILES.find((profile) => profile.id === id)!;
+
+// ── LinkedIn setup (TASK-linkedin-setup-checklist.md) ──────────────────────────
+// LinkedIn has no grid and no Stories, so the Instagram launch trio and teaser
+// don't carry over. One introduction post comes before week 1 instead.
+
+export const LINKEDIN_INTRO = {
+  text: "A short introduction, since I'm going to start posting here.\n\nI run Blessed Moon Studio on my own. I take a website or a product from the first question to the code that runs it: strategy, design and engineering, with no handoff between the person you talk to and the person who builds.\n\nThe first question is nearly always the same: what's the one thing a visitor should do? Most of the project follows from answering it honestly.\n\nSome of what that has produced: UniMeet, which sells stands at university fairs and whose quotes can't disagree with its invoices. Renewable Pulse, a live energy dashboard built only on real grid data. Flora, a farm console that turns satellite imagery into field tasks.\n\nHere I'll write about the decisions behind that kind of work: the constraint, the options, the choice and what it doesn't do yet. Twice a week.\n\nIf you're scoping a website or a product, I'd be glad to hear what it needs to do.",
+  limit: 3000,
+  attach: "One real photo of you at work or a plain portrait. No carousel, no link: the profile's Featured section carries the case studies.",
+};
+
+export const LINKEDIN_ASSETS = [
+  { file: "banner.png", label: "Profile banner", size: "1584 × 396", use: "Your profile → the pencil on the banner. The left third stays empty because your photo covers it." },
+  { file: "cover.png", label: "Company cover", size: "4200 × 700", use: "Company page → Edit page → Header. Shown at roughly 1128 × 191; the content is centred so neither the logo nor a phone crop hides it." },
+  { file: "logo.png", label: "Company logo", size: "400 × 400", use: "Company page → Edit page → Logo." },
+] as const;
+
+export type SetupStep = { title: string; detail: string; warning?: string };
+export type SetupPhase = { title: string; when: string; steps: SetupStep[] };
+
+export const LINKEDIN_SETUP: SetupPhase[] = [
+  {
+    title: "Personal profile", when: "Before anything is posted",
+    steps: [
+      { title: "Photo", detail: "A clear photo of your face, not the crescent. On LinkedIn people hire a person; the crescent belongs on the company page." },
+      { title: "Banner", detail: "Upload banner.png from the images above." },
+      { title: "Headline and About", detail: "Paste both from section 03. The counters show they fit. Replace the current \"CEO & CTO at Blessed Moon Studio\": two C-level titles in a one-person studio read as inflated, and the headline is the line people see beside every post and comment." },
+      { title: "Experience", detail: "Retitle the current role \"Founder\" (it reads CEO & CTO today), linked to the company page so the crescent shows beside it. Keep earlier roles under it, and make sure their wording matches how the posts present that work." },
+      { title: "Services page", detail: "Profile → Add profile section → Add services. Choose Web Design, Web Development, Software Development and Social Media Marketing, and reuse the About text. It's free, searchable, and any member can message you about it.", warning: "LinkedIn asks whether services sit on your profile or the company page, and that can't be changed later. Choose your profile." },
+      { title: "Featured", detail: "Add the three tagged links from section 03 as links. After three or four weeks, also add your best-performing post." },
+      { title: "Contact info", detail: "Website: the tagged blessed-moon.vercel.app link in section 03, type \"Company\". A clickable button on the profile itself needs Premium Business; it's optional, Featured does the same job." },
+      { title: "Public profile URL", detail: "Edit public profile & URL → linkedin.com/in/benitopedroxavier, or the nearest free variant." },
+      { title: "Skills", detail: "You have 59 already, so curate rather than add: in About → Top skills, choose five that match the posts (Next.js, Product Design, Software Architecture, Data Engineering, UX Design), and attach each to the Blessed Moon role." },
+    ],
+  },
+  {
+    title: "Company page", when: "Same day, after the profile",
+    steps: [
+      { title: "Logo and cover", detail: "The crescent logo is already set; keep it, or swap in logo.png if the edges look soft. Upload cover.png from the images above." },
+      { title: "Tagline and website", detail: "Paste the tagline from section 03. Website: https://blessed-moon.vercel.app, with the hyphen." },
+      { title: "Overview", detail: "The first two paragraphs of the About text work as the page overview." },
+      { title: "Details", detail: "Industry: Software Development. Company size: 0–1 employees, which is accurate for a one-person studio." },
+    ],
+  },
+  {
+    title: "Launch day", when: "Tuesday to Thursday, morning",
+    steps: [
+      { title: "Post the introduction", detail: "From your profile, the text below, with one photo attached." },
+      { title: "Reshare and pin it on the page", detail: "Reshare from the company page with one line of its own, then pin it there as the welcome post." },
+      { title: "Answer every comment", detail: "In the first hour or two. Replies are what carry a new account's post past your first contacts." },
+      { title: "Invite people to follow the page", detail: "Company page → Grow → Invite to follow. The page gets a free monthly invite allowance; spend it on relevant contacts, not everyone." },
+    ],
+  },
+  {
+    title: "Every post after that", when: "Twice a week, from week 1",
+    steps: [
+      { title: "Text plus a PDF document", detail: "The post text from its draft below, with the carousel exported as a PDF from /post-builder and uploaded as a document. Documents are currently LinkedIn's strongest format." },
+      { title: "No link in the post text", detail: "External links cut a post's reach sharply, and putting the link in the first comment no longer reliably avoids it. The drafts are written to stand alone; Featured and the profile website carry the links." },
+      { title: "Timing and replies", detail: "Tuesday to Thursday mornings. Stay around to answer comments in the first hour." },
+      { title: "Reshare to the page", detail: "From the company page, with one line of its own rather than a bare repost." },
+    ],
+  },
+];
