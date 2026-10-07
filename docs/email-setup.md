@@ -2,7 +2,9 @@
 
 The project form sends a notification to `blessedmoon.studio@gmail.com`. The
 visitor's address is Reply-To, so replying reaches them. After that notification
-is accepted by SMTP, the visitor receives this plain-text confirmation:
+is accepted by SMTP, the visitor receives this confirmation, sent as a branded
+HTML message with the same words as its plain-text alternative
+(`src/lib/enquiry-receipt.ts`):
 
 > Thanks for telling me about your project.
 >
@@ -14,7 +16,11 @@ is accepted by SMTP, the visitor receives this plain-text confirmation:
 > Blessed Moon Studio
 
 The sender is Blessed Moon Studio. Receipt replies reach the studio inbox.
-Visitor-provided text is not copied into the acknowledgement. No automatic
+Visitor-provided text is not copied into the acknowledgement. The HTML uses
+tables, inline styles and system fonts with no remote images, so the pixel
+crescent (table cells from `LOGO_PATH`) shows even when images are blocked.
+Styling does not affect spam filtering; a `gmail.com` sender landing in junk is
+a reputation/domain matter. No automatic
 response deadline, sales qualification or revenue is claimed.
 
 ## Gmail configuration

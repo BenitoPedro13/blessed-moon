@@ -114,7 +114,10 @@ try {
   assert.match(messages[0].content, /Reply-To:.*visitor@example\.invalid/);
   assert.match(messages[0].content, /Private project message/);
   assert.equal(messages[1].recipient, "visitor@example.invalid");
-  assert.match(messages[1].content, /follow up with you personally/);
+  const receipt = messages[1].content.replace(/=\r?\n/g, "");
+  assert.match(receipt, /follow up with you personally/);
+  assert.match(receipt, /Content-Type: text\/plain/);
+  assert.match(receipt, /Content-Type: text\/html/);
   assert.doesNotMatch(messages[1].content, /Private project message|Private Test Company/);
 
   mode = "reject-receipt";

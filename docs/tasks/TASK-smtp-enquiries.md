@@ -58,7 +58,7 @@ limits if spam becomes material.
 
 ## 5. Validation and delivery status
 
-Implemented. Gmail SMTP TLS/authentication passed through `node
+Implemented. (The receipt later gained an HTML part: `TASK-enquiry-receipt-html.md`.) Gmail SMTP TLS/authentication passed through `node
 scripts/verify-smtp.mjs` using the user's saved App Password, without sending a
 message or printing credentials. Production build passed with `next build
 --webpack`; Turbopack's worker port was blocked by this local execution environment.
