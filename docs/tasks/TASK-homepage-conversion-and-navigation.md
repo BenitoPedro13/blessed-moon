@@ -1,8 +1,8 @@
 # TASK: Homepage conversion, quick navigation and stepped scroll
 
 Status: Benito approved the plan ("ok", 10 October 2026). Defaults taken:
-hero line (a), and a live v1 UniMeet capture. **Section 1 is shipped**;
-sections 2–7 follow.
+hero line (a), and a live v1 UniMeet capture. **Sections 1, 2, 5, 6 and 7 are
+built** (see Results); 3 and 4 follow.
 
 ## Current scenario
 
@@ -220,3 +220,31 @@ Rejected:
   exactly one step inside a stage.
 - Reduced motion: no snapping, no boot memory needed, and the page still
   reads in order.
+
+## Results
+
+- **§2 Hero:** line (a) with *Start a project* (amber fill, `/contact`) and
+  *See the work* (outline, `/work`). Checked at 1440×900 and 390×844.
+- **§5 Moon:** `SCALE_BY_MORPH` ends at keyframe 2 (the clamp holds it),
+  `ambientOffsetAt` returns one corner, and rotation stops at
+  `AMBIENT_START`. `pnpm run profile --cpu 4 --runs 5`, production build,
+  medians:
+
+  | Route | Before | After |
+  |---|---|---|
+  | `/` | 58.8 fps, >33ms 0.5% | 59.9 fps, >33ms 0.1% (within noise) |
+  | `/work` | 54.5 fps, >33ms 3.2% | 60.0 fps, >33ms 0.0% |
+
+- **§6 Boot once:** `localStorage['bm-boot-seen']` is set on exit. A
+  `beforeInteractive` script sets `<html data-boot-seen>`, CSS hides the
+  overlay before paint, and `useSyncExternalStore` unmounts it after
+  hydration (server snapshot "not seen", so no mismatch). The first attempt
+  left the overlay mounted but hidden, and the scroll check's second route
+  in one browser waited forever for it to detach. Unmounting is the honest
+  fix, not loosening the check.
+- **§7 Picks:** Apuração 2026, UniMeet (live capture
+  `public/projects/unimeet/live.png`, 10 October 2026), ART'hur.
+- **Scroll check, all 25 routes × 6 configurations:** 146 of 150 pass. The
+  failures were `/instagram-plan` at 320px (both motion settings, a known
+  failure before this task) and `/work` at 390×844, which failed once in the
+  long run and passed 3 of 3 runs on its own (intermittent, not this change).

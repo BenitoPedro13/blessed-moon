@@ -240,6 +240,11 @@
   }
 }
 
+/* Returning visitors skip the boot screen (layout.tsx, boot-seen-flag). */
+html[data-boot-seen] [data-boot-phase] {
+  display: none;
+}
+
 .boot-art {
   /* timing function (steps, one per raster row) is inline. */
   animation: boot-art 440ms backwards;

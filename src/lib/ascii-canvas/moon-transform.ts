@@ -22,7 +22,11 @@
  * large centered text in the middle of the viewport, so the moon shrinks
  * hard and moves to a corner there instead of competing with it — it was
  * previously sitting directly on top of the Services text, unreadable. */
-export const SCALE_BY_MORPH = [6.0, 3.6, 1.3, 1.1, 1.0, 0.9];
+export const SCALE_BY_MORPH = [6.0, 3.6, 1.3];
+// Ends at keyframe 2 on purpose: `interpolate()` clamps, so the moon holds its
+// ambient size from there on. It used to keep shrinking (1.1, 1.0, 0.9) through
+// the later sections, a camera move per step competing with the window's own
+// morph (TASK-homepage-conversion-and-navigation.md §5).
 
 /** Horizontal/vertical drift (scene units) — the moon sweeps across the
  * frame as the page scrolls, breaking the frame edges at Hero, rather than
@@ -42,9 +46,7 @@ const AMBIENT_OFFSET_X = 1.7;
 const AMBIENT_OFFSET_Y = 0.9;
 
 /** The corner the moon parks in at a given (integer) keyframe from
- * `AMBIENT_START` onward: X flips every keyframe, Y flips every *other*
- * keyframe, so the four corners cycle through in turn rather than bouncing
- * between two. A formula instead of a fixed-length table on purpose — this
+ * `AMBIENT_START` onward. It once cycled through all four corners. A formula instead of a fixed-length table on purpose — this
  * one used to be `OFFSET_X_BY_MORPH`/`OFFSET_Y_BY_MORPH`, six entries sized
  * for the four case studies `/work` had when it was written. A fifth and
  * sixth case study each pushed a keyframe past the table's last index, and
@@ -53,12 +55,14 @@ const AMBIENT_OFFSET_Y = 0.9;
  * `TASK-work-moon-keyframe-overflow.md`. Reproduces the old table's values
  * exactly for keyframes 2–5, so every page already using this range is
  * unaffected; it simply never runs out for keyframe 6, 7, or beyond. */
+//
+// Since TASK-homepage-conversion-and-navigation.md §5 it is one corner for
+// every keyframe from AMBIENT_START on: the moon used to hop to a new corner on
+// each section, a second moving thing beside the window's morph. Kept as a
+// function so the "never runs out of keyframes" property above still holds.
 function ambientOffsetAt(index: number): { x: number; y: number } {
-  const step = Math.max(0, index - AMBIENT_START);
-  return {
-    x: step % 2 === 0 ? AMBIENT_OFFSET_X : -AMBIENT_OFFSET_X,
-    y: Math.floor(step / 2) % 2 === 0 ? AMBIENT_OFFSET_Y : -AMBIENT_OFFSET_Y,
-  };
+  void index;
+  return { x: AMBIENT_OFFSET_X, y: AMBIENT_OFFSET_Y };
 }
 
 function offsetXAt(index: number): number {
@@ -184,7 +188,9 @@ export function createMoonEasing(viewport: ViewportScale) {
     },
     step(morph: number): { transform: MoonTransform; cadence: number } {
       const targetScale = interpolate(SCALE_BY_MORPH, morph) * current.scale;
-      const targetRotation = morph * 24;
+      // The scroll-driven turn stops where the moon parks, so later sections
+      // leave only its own ambient float (and the settled 30fps cadence).
+      const targetRotation = Math.min(morph, AMBIENT_START) * 24;
       const targetX = interpolateFn(offsetXAt, morph) * current.x;
       const targetY = interpolateFn(offsetYAt, morph) * current.y;
 

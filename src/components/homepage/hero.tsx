@@ -1,7 +1,12 @@
 "use client";
 
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+
 import { Reveal } from "@/components/reveal";
 import { ScrollStage } from "@/components/scroll-stage";
+import { useSound } from "@/components/sound-provider";
+import { Button } from "@/components/ui/button";
 
 const CORNER_LABELS = [
   { label: "B", className: "top-6 left-7 sm:top-8 sm:left-10" },
@@ -11,6 +16,8 @@ const CORNER_LABELS = [
 ] as const;
 
 export function Hero() {
+  const { playHover, playClick } = useSound();
+
   return (
     <section
       aria-label="Hero"
@@ -47,6 +54,31 @@ export function Hero() {
                 <span className="text-[clamp(2.75rem,8vw,4.5rem)] leading-none text-primary">CLARITY IS</span>
                 <span className="text-[clamp(2.75rem,8vw,4.5rem)] leading-none text-primary">THE FEATURE.</span>
               </h1>
+              {/* The first screen says what the studio does and offers the two
+                  next steps, instead of leaving both to the end of the page
+                  (TASK-homepage-conversion-and-navigation.md §2). */}
+              <p className="mx-auto mt-6 max-w-md text-[14px] leading-[1.65] text-muted-foreground sm:text-[15px]">
+                Strategy, design and engineering for founders who need software that holds up.
+              </p>
+              <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+                <Button
+                  nativeButton={false}
+                  size="lg"
+                  render={<Link href="/contact" onMouseEnter={playHover} onClick={playClick} />}
+                  className="rounded-none bg-primary px-5 font-mono text-[10.5px] tracking-[0.08em] text-primary-foreground uppercase hover:bg-primary/85"
+                >
+                  Start a project
+                  <ArrowRight aria-hidden="true" />
+                </Button>
+                <Link
+                  href="/work"
+                  onMouseEnter={playHover}
+                  onClick={playClick}
+                  className="inline-flex h-9 items-center border border-border px-5 font-mono text-[10.5px] tracking-[0.08em] text-foreground uppercase transition-colors hover:border-primary hover:text-primary focus-visible:border-primary focus-visible:outline-none"
+                >
+                  See the work
+                </Link>
+              </div>
             </Reveal>
           </div>
         </div>

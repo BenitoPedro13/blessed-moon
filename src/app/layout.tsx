@@ -59,6 +59,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
+      // boot-seen-flag below sets data-boot-seen before hydration.
+      suppressHydrationWarning
       data-scroll-behavior="smooth"
       className={`dark ${spaceGrotesk.variable} ${jetbrainsMono.variable} min-h-full antialiased`}
     >
@@ -71,6 +73,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             restoration. */}
         <Script id="disable-scroll-restoration" strategy="beforeInteractive">
           {`if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }`}
+        </Script>
+        {/* The boot screen plays once per visitor. Marked before first paint so
+            a returning visitor never sees the server-rendered overlay flash
+            (globals.css hides it under this attribute). Storage failing just
+            means a first visit. */}
+        <Script id="boot-seen-flag" strategy="beforeInteractive">
+          {`try { if (localStorage.getItem('bm-boot-seen')) document.documentElement.setAttribute('data-boot-seen', ''); } catch (e) {}`}
         </Script>
         {process.env.NODE_ENV === "production" && process.env.NEXT_PUBLIC_UMAMI_SRC && process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID && (
           <Script src="/analytics-policy.js" strategy="beforeInteractive" />

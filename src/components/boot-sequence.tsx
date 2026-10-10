@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from "react";
 import { useReducedMotion } from "motion/react";
 
 import { useSound } from "@/components/sound-provider";
@@ -191,12 +191,23 @@ export function BootLockup({ muted, exiting = false }: { muted: boolean; exiting
  * already complete and correct. That failure mode is structurally impossible
  * rather than avoided. No JS timers drive any of it.
  */
+/** Set once a visitor has passed the boot screen; layout.tsx reads it before paint. */
+const SEEN_KEY = "bm-boot-seen";
+
+/** The flag never changes during a page's life, so there is nothing to
+ * subscribe to; the server snapshot is "not seen" so hydration matches the
+ * server-rendered overlay, then the client snapshot removes it. */
+const noSubscription = () => () => {};
+const readSeen = () => document.documentElement.hasAttribute("data-boot-seen");
+const serverSeen = () => false;
+
 export function BootSequence() {
   const reduceMotion = useReducedMotion();
   const { muted, toggleMuted } = useSound();
   const [phase, setPhase] = useState<Phase>("booting");
   const [soundChoice, setSoundChoice] = useState<"unset" | "enabled" | "muted">("unset");
   const phaseRef = useRef<Phase>("booting");
+  const seen = useSyncExternalStore(noSubscription, readSeen, serverSeen);
 
   useEffect(() => {
     phaseRef.current = phase;
@@ -204,6 +215,11 @@ export function BootSequence() {
 
   function exit() {
     if (phaseRef.current === "exiting" || phaseRef.current === "hidden") return;
+    try {
+      localStorage.setItem(SEEN_KEY, "1");
+    } catch {
+      // No storage: the boot screen simply plays again next time.
+    }
     setPhase("exiting");
     // Teardown is on a timer, never on `animationend` — this overlay covers the
     // entire site, so removing it must not depend on an event that a dropped or
@@ -212,7 +228,10 @@ export function BootSequence() {
   }
 
   // Phase 1: booting → gating (or straight to hidden under reduced motion).
+  // A returning visitor's overlay was hidden by CSS before paint and is
+  // unmounted once hydrated (`seen`).
   useEffect(() => {
+    if (seen) return;
     if (reduceMotion) {
       exit();
       return;
@@ -246,7 +265,7 @@ export function BootSequence() {
       window.removeEventListener("pointerdown", skipBoot);
       window.removeEventListener("keydown", skipBoot);
     };
-  }, [reduceMotion]);
+  }, [reduceMotion, seen]);
 
   // Phase 2: gating → exiting. Locks body scroll for the duration, listens for a
   // real scroll-equivalent gesture, and falls back to a timeout so it can never
@@ -293,7 +312,7 @@ export function BootSequence() {
     };
   }, [phase]);
 
-  if (phase === "hidden") return null;
+  if (seen || phase === "hidden") return null;
 
   return (
     <div

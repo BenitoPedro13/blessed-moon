@@ -11,11 +11,21 @@ import { useSound } from "@/components/sound-provider";
 
 const PROJECTS = [
   {
-    name: "Flora",
-    slug: "flora",
-    image: "/projects/flora/stress-ndmi.png",
-    imageAlt: "Flora Crop Stress screen reading NDMI over a real field boundary",
-    description: "Farm operations console reading a real satellite pipeline.",
+    name: "Apuração 2026",
+    slug: "apuracao-2026",
+    image: "/projects/apuracao-2026/presidente.png",
+    imageAlt: "Apuração 2026 president view: headline result, a municipality map of Brazil and results by region",
+    description: "Election night, recorded file by file so the count can be replayed.",
+  },
+  {
+    name: "UniMeet",
+    slug: "unimeet",
+    // The live v1 site, captured 10 October 2026. The case study's own
+    // screenshots are the proposed v2, which can't sit under "still in
+    // production" (TASK-homepage-conversion-and-navigation.md §7).
+    image: "/projects/unimeet/live.png",
+    imageAlt: "UniMeet's live homepage: the student-recruitment hero above upcoming university fairs",
+    description: "University fairs sold through one page, plus the plan that fills them.",
   },
   {
     name: "ART'hur",
@@ -23,13 +33,6 @@ const PROJECTS = [
     image: "/projects/art-hur/home.png",
     imageAlt: "ART'hur's centered archive stage with the dashed route and walker glyph",
     description: "Motion-led archive for a visual director, one scene at a time.",
-  },
-  {
-    name: "Oishi",
-    slug: "oishi",
-    image: "/projects/oishi/home.png",
-    imageAlt: "Oishi Cozinha Japonesa hero with the 味 kanji set inside the hinomaru disc",
-    description: "A real anti-waste discount, built as a rodízio site's whole thesis.",
   },
 ] as const;
 
