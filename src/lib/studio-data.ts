@@ -12,9 +12,7 @@ export type ProjectVisualVariant =
   | "language"
   | "grid"
   | "election"
-  | "lesson"
-  | "flash"
-  | "compcard";
+  | "lesson";
 
 type ProjectStep = {
   phase: string;
@@ -40,6 +38,16 @@ export type ProjectImage = {
   height: number;
 };
 
+/** Curated filter facet for `/work`'s index. `tags` are descriptive and
+ * uneven ("Motion" / "Motion Design"), so they aren't filtered on. */
+export type ProjectCategory = "product" | "data" | "sites";
+
+export const PROJECT_CATEGORIES: readonly { value: ProjectCategory; label: string }[] = [
+  { value: "product", label: "Product & SaaS" },
+  { value: "data", label: "Data & dashboards" },
+  { value: "sites", label: "Sites & commerce" },
+];
+
 export type StudioProject = {
   slug: string;
   title: string;
@@ -54,6 +62,7 @@ export type StudioProject = {
   approach: string;
   outcome: string;
   tags: readonly string[];
+  category: ProjectCategory;
   stack: readonly string[];
   visual: ProjectVisualVariant;
   cover: ProjectImage;
@@ -66,61 +75,6 @@ export type StudioProject = {
 };
 
 export const STUDIO_PROJECTS: readonly StudioProject[] = [
-  {
-    slug: "comp-card",
-    title: "Comp Card",
-    tagline: "A model's portfolio a booker can decide on in under a minute",
-    index: "16",
-    year: "2026",
-    role: "Research, design and front-end engineering",
-    timeline: "Ongoing — first build, private until she says yes",
-    team: "Solo delivery",
-    description:
-      "A portfolio site for a fashion model, built on a studied talent-agency profile anatomy. Shown here without her name or photographs: she hasn't agreed to the site being public yet.",
-    problem:
-      "A model's site has one reader that matters: a booker, casting director or client with a minute to spare. Instagram interleaves her work with everything else, and agency sites are built for a roster, not one person. The only material in hand was her public Instagram, with credits and usage rights unknown.",
-    approach:
-      "Two rounds of research ended on a talent agency's model-profile page, which is already a portfolio, so it became the spine; the agency homepage contributed only what one person can honestly fill. The grid, type pairing, colour logic and every motion timing were taken from source, never the agency's name, mark, copy, photos, code or licensed fonts. Reveals are CSS classes switched by one in-view observer, each with a no-JS and reduced-motion still state, and scroll work runs on a single frame loop. Her mark, a ringlet monogram, is one geometry rendered by the header, preloader, comp card, favicon and generated share images.",
-    outcome:
-      "The first build of the whole page runs on starter data: preloader, hero cut, categories, selected looks, the book, how to book, contact and latest posts with captions kept verbatim. The repo is private and the site stays noindex; credits, rights and any agency approval are open questions before launch.",
-    tags: ["Portfolio", "Motion", "Unpublished"],
-    stack: ["Next.js", "TypeScript", "Tailwind CSS v4", "shadcn/ui", "Motion", "Lenis"],
-    visual: "compcard",
-    cover: {
-      src: "/projects/comp-card/hero.png",
-      alt: "Comp Card hero: a portrait frame under a gold curl; her photograph replaced by a flat tone and her name by 'First Last'",
-      width: 1440,
-      height: 900,
-    },
-    screenshots: [
-      { src: "/projects/comp-card/hero.png", alt: "Hero cut and statement; the photograph is replaced by a flat tone and the name by 'First Last'", width: 1440, height: 900 },
-      { src: "/projects/comp-card/categories.png", alt: "Her categories set in heavy condensed caps with counts, above the Selected Looks heading", width: 1440, height: 900 },
-      { src: "/projects/comp-card/selected.png", alt: "Selected looks in a staggered three-column grid; photographs replaced by flat tones", width: 1440, height: 900 },
-      { src: "/projects/comp-card/contact.png", alt: "Get in touch, then Latest Posts; the handle and photographs are withheld", width: 1440, height: 900 },
-    ],
-    process: [
-      { phase: "01", title: "Discovery on borrowed material", body: "Her public Instagram imported as placeholder content, every photo marked rights unknown, and the questions that block a launch written down first." },
-      { phase: "02", title: "Research until a reference fits", body: "Studies were rejected, two research rounds produced six finalists, and an agency's profile page won because it already is a model portfolio." },
-      { phase: "03", title: "Take the system, not the brand", body: "Layout, type logic and motion timings read from the reference's own CSS; name, mark, copy, photos, code and licensed fonts left behind." },
-      { phase: "04", title: "One mark, every surface", body: "A ringlet monogram drawn once in code and rendered in the header, the preloader draw-in, the comp card and every generated icon and share image." },
-    ],
-    architecture: [
-      { layer: "App", label: "Next.js App Router, Cache Components", detail: "One page of sections, statically rendered, deployed from main behind noindex." },
-      { layer: "Content", label: "Typed content file", detail: "Photo choices, draft copy and facts to confirm in one file; dashes, never guesses." },
-      { layer: "Motion", label: "CSS reveals on one frame loop", detail: "An in-view class switches CSS transitions; Lenis and canvas work run on Motion's frame loop, reads in the read phase." },
-      { layer: "Photos", label: "Import, then pick", detail: "A local Instagram import stays gitignored; only the photos the page uses are committed." },
-    ],
-    features: [
-      { title: "A booker's path, top to bottom", body: "Categories, selected looks, the book and the booking steps come before anything decorative." },
-      { title: "Every reveal has a still state", body: "Splitline headings, opening images and rising labels all render complete without JavaScript or with reduced motion." },
-      { title: "A share image without her photos", body: "Generated Open Graph cards carry the monogram, never a photograph, so a preview can't outlive a takedown." },
-    ],
-    challenges: [
-      { title: "Borrowing well", body: "The reference was close enough to copy wholesale; the line between its system and its identity was written down section by section before any code." },
-      { title: "Content no one has confirmed", body: "Her name's spelling, credits and rights are unknown, so the page renders a plain tone for any photo not collected and marks every unconfirmed fact." },
-    ],
-    links: [],
-  },
   {
     slug: "apuracao-2026",
     title: "Apuração 2026",
@@ -138,6 +92,7 @@ export const STUDIO_PROJECTS: readonly StudioProject[] = [
       "A recorder on Fargate polls the feed under a self-imposed ceiling of 100 requests a second, keeps each signed file byte for byte in an Object-Lock bucket addressed by its hash, and holds a lease in S3 so two recorders can't both write. A projector folds that log into immutable views with a pure function, so the published data can be rebuilt from scratch at any time. Readers only ever hit static files behind a CDN. A fake TSE replays the captured 1st round at twenty times speed for end-to-end rehearsals.",
     outcome:
       "The recorder has been live on AWS since 8 October and captured the 1st round. The site shows president and governor results with a municipality map, a legislative archive with hemicycles, and an archive of every presidential election since 1994, municipality by municipality, organised as questions. The 2nd round is recorded live on 25 October.",
+    category: "data",
     tags: ["Data Engineering", "Dashboard", "AWS"],
     stack: ["TypeScript", "Next.js", "AWS CDK", "ECS Fargate", "S3", "CloudFront", "TanStack Query", "Turborepo"],
     visual: "election",
@@ -180,60 +135,6 @@ export const STUDIO_PROJECTS: readonly StudioProject[] = [
     ],
   },
   {
-    slug: "direct-flash",
-    title: "Direct Flash",
-    tagline: "A photographer's diary kept with the flash on, and consent written into the build",
-    index: "14",
-    year: "2026",
-    role: "Brand, design and front-end engineering",
-    timeline: "Ongoing — private until she says yes",
-    team: "Solo delivery",
-    description:
-      "A personal site for a photographer's work, made as a gift. Shown here without her name or photographs, because she hasn't agreed to the site being public and her photos include her friends.",
-    problem:
-      "Her Instagram is a diary rather than a portfolio: close, flash-lit, mostly at night, mostly of herself and her friends. A site for it can't pitch anything, and it can't go live on reference material that includes people who never agreed to be on it.",
-    approach:
-      "The brand was read out of the photos: direct flash, light pointed straight at the subject, became the identity. A dark room where photographs are the only light, a flash on every cut that peaks in 60 ms and decays over 520 ms while the next photo develops out of the white, and a wordmark that is her name written backwards, turning once per visit around a letter that never moves. Consent is enforced by code: the build stops if a photo has fewer consent entries than identifiable people in it, and a public build refuses any reference photo at all.",
-    outcome:
-      "A diary home built in eight steps, an earlier study kept for comparison, and four home directions in a lab, all running on reference photos. Every page is noindex, the share card is typographic rather than a photo, and nothing goes public until she says yes.",
-    tags: ["Brand", "Motion", "Unpublished"],
-    stack: ["Next.js", "TypeScript", "Tailwind CSS v4", "Motion", "Lenis", "OGL"],
-    visual: "flash",
-    cover: {
-      src: "/projects/direct-flash/hero.png",
-      alt: "Direct Flash home: a timeline of dated night and day frames across a dark room; photographs and wordmark withheld",
-      width: 1440,
-      height: 900,
-    },
-    screenshots: [
-      { src: "/projects/direct-flash/hero.png", alt: "The diary home: a dated timeline of night and day frames, photographs and wordmark withheld", width: 1440, height: 900 },
-      { src: "/projects/direct-flash/sobre.png", alt: "About strip and highlights, numbered frames on the dark surface; photographs withheld", width: 1440, height: 900 },
-      { src: "/projects/direct-flash/indice.png", alt: "The index: the diary month by month with photo counts", width: 1440, height: 900 },
-    ],
-    process: [
-      { phase: "01", title: "An honest read of the material", body: "Discovery separated what the photos show from what was assumed, and concluded the site can't be built from the Instagram alone." },
-      { phase: "02", title: "Brand book before pixels", body: "Brand idea, visual identity, design system and motion written down first, so the feel could be judged against something." },
-      { phase: "03", title: "Feel on the real stack", body: "The signature moments built in Next.js on reference photos, never deployed publicly, to test the flash and the reversal at full speed." },
-      { phase: "04", title: "A direction from a studied reference", body: "A talent agency's pacing and technique, carried over with her palette, type, name and signature, became the diary home." },
-    ],
-    architecture: [
-      { layer: "App", label: "Next.js, static", detail: "Every page prerendered; no CMS, database, analytics or third-party request." },
-      { layer: "Content", label: "Typed photo records", detail: "Author, consent per identifiable person and source on every photo, checked whenever the content is evaluated." },
-      { layer: "Motion", label: "Motion + CSS flash layer", detail: "FLIP letters for the reversal, one rAF per section, OGL loaded only on demand." },
-      { layer: "Launch", label: "Two switches", detail: "Public and indexable are separate flags; until both are set every response says noindex." },
-    ],
-    features: [
-      { title: "The flash cut", body: "Night to day becomes a burn-in, like stepping out of a club into daylight; day to night is a flash going off in a dark room." },
-      { title: "Photosensitivity designed for", body: "The flash is bounded, never repeats rapidly and can be switched off; anything that moves by itself can be paused." },
-      { title: "A takedown is one edit", body: "Any photo leaves the site with a single array change and a redeploy, which is part of the promise to the people in them." },
-    ],
-    challenges: [
-      { title: "A gift that can't pitch", body: "No services, clients or calls to action; the only job is to give the photographs a room that feels like her." },
-      { title: "Budgets that met a preloader", body: "The diary's intro holds the photos for 1.5 seconds on purpose, so the mobile LCP budget is over; it's recorded as a trade-off rather than gamed." },
-    ],
-    links: [],
-  },
-  {
     slug: "dove-language",
     title: "Dove Lesson Studio",
     tagline: "Volunteer teachers type a lesson and get branded slides and a handout",
@@ -250,6 +151,7 @@ export const STUDIO_PROJECTS: readonly StudioProject[] = [
       "The patterns became blocks and the lesson became data: one schema defines it, types are inferred from it, and it validates imported files. A pure pagination function splits blocks into slides, numbers sections and derives the cover and answer keys; the preview measures every slide and warns rather than clipping. Slide and handout components are pure, so the editor preview, the print routes and the design-system page render the same code. The browser's print engine makes the PDFs, and slides are sized in container units so one slide is exact at 1920 pixels and correct at 320.",
     outcome:
       "Studio v1 works end to end: landing, editor with live preview, autosave to the device, a lesson file to share, slide and handout PDFs, and the design system rendered live from the real templates. Airmail 0.1 is proposed and awaiting review by Dove's staff.",
+    category: "product",
     tags: ["Product", "Design System", "Education"],
     stack: ["Next.js", "TypeScript", "Tailwind CSS v4", "shadcn/ui", "zod", "IndexedDB"],
     visual: "lesson",
@@ -307,6 +209,7 @@ export const STUDIO_PROJECTS: readonly StudioProject[] = [
       "A Go ingestion edge polls each source and normalizes it to one canonical event schema; Redpanda carries the events to idempotent TypeScript consumers that write to TimescaleDB, keyed on source, zone, asset, metric and timestamp, with a dead-letter queue and bounded backpressure. A separate live consumer fans readings out over WebSocket to the Next.js dashboard. The README states plainly that the sources are polled, not pushed: the real-time character comes from the pipeline, not the data.",
     outcome:
       "Live, with Brazil, Europe and USA deep-dives, a plant registry map, country comparison and a pipeline-health panel showing the dead-letter queue and the last successful poll per source. The ONS spine ingested 366,336 real plant/hour readings with zero duplicates on replay.",
+    category: "data",
     tags: ["Data Pipeline", "Dashboard", "Real-time"],
     stack: ["Go", "Redpanda", "TimescaleDB", "TypeScript", "Fastify", "Next.js", "Zod"],
     visual: "grid",
@@ -365,6 +268,7 @@ export const STUDIO_PROJECTS: readonly StudioProject[] = [
       "The whole system is rebuilt around one invariant: no request ever calls the satellite provider. A NestJS worker polls Copernicus's Data Space Ecosystem on a schedule, decodes the returned imagery, computes ten spectral indices from a single Process API call, and writes pre-rendered PNGs to object storage plus rows to Postgres. The API — a separate NestJS service — only ever reads Postgres and Redis, a split enforced by an actual test. Every tenant table sits behind PostGIS row-level security and a repository-level filter, checked by a cross-tenant suite that asserts a 404, never a 403, on another org's data.",
     outcome:
       "A working spine — register a field, watch a real stress zone appear from real Sentinel-2 data, act on it as a task — plus a home dashboard scored by a sourced formula, a ten-index spectral switcher, and a weather screen. Several of the sharpest bugs never showed up in a code review: they only appeared once a manual refresh ran against a real Copernicus account and a real field boundary, and got fixed the same way — by looking at what actually rendered.",
+    category: "product",
     tags: ["Geospatial", "Multi-tenant SaaS", "Satellite Data"],
     stack: [
       "Next.js",
@@ -517,6 +421,7 @@ export const STUDIO_PROJECTS: readonly StudioProject[] = [
       "The CMS, data model, and Next.js foundation stayed. Everything public-facing was rebuilt around a studied 'Marked Frequencies' direction: one fixed, centered project stage where image, atmosphere, title, and metadata morph in place, advanced by a single wheel notch or short touch gesture instead of an open carousel. A dashed white route and a hand-authored 15-frame walking glyph carry the sense of motion instead of a generic loader, and the app cuts between two surfaces — a dark 'room' for media routes and a light 'sheet' for reading — with no cross-fade.",
     outcome:
       "A live archive with five real projects, each carrying production metadata instead of filler copy, where the desktop-simulation shell is gone from every public route, the CMS layer is untouched, and the opening sequence, walker, and morph transition all degrade to a complete, legible page under reduced motion or a failed WebGL context.",
+    category: "sites",
     tags: ["Portfolio", "Motion Design", "WebGL"],
     stack: [
       "Next.js",
@@ -664,6 +569,7 @@ export const STUDIO_PROJECTS: readonly StudioProject[] = [
       "The whole site is built around one sentence already true of the business: 'Coma tudo o que pedir. Pague menos por isso.' Every rodízio tier always shows both prices together with the condition spelled out, never the discounted number alone — R$ 74,90 struck through, R$ 54,90 live, 'sem desperdício' underneath. Reference photography couldn't carry the site — 44 real photographs were graded by mean luminance with ffmpeg, and two-thirds measured too dark for a full-bleed hero — so the design is type-led and colour-led instead, with the brand's own sampled hinomaru gradient (#9A1114 → #E71B23) doing the work a professional photo shoot usually would. Every fact that wasn't confirmed — an exact phone digit, reservation party limits, a neighbourhood detail — renders as an honest '[a confirmar]' inline rather than a plausible guess.",
     outcome:
       "Live at oishicozinha.vercel.app across five routes — home, cardápio, two rodízio chapters, reserva, and contato — where every price tier renders both numbers and the real condition, the reservation form ends in a pre-filled WhatsApp message, and the still-open questions about hours and party limits stay visibly marked rather than silently answered.",
+    category: "sites",
     tags: ["Restaurant", "Local Business", "Motion"],
     stack: ["Next.js", "TypeScript", "Tailwind CSS", "GSAP", "Lenis", "Motion"],
     visual: "rodizio",
@@ -799,6 +705,7 @@ export const STUDIO_PROJECTS: readonly StudioProject[] = [
       "A reseller is an endorsement, not a sub-brand, enforced in the data model itself — no colour field, no logo field, no font field, ever. Every path, brand site or reseller storefront, resolves through one WhatsApp deep-link builder. The catalogue and tenancy layers are built as typed seams over local mock data now, so the CMS arriving in the next phase is a new implementation behind an existing interface, not a rewrite. And where a rule says a number must be a real measurement or a photo must be real, the honest failure state ships instead of a placeholder that would quietly lie to an optician.",
     outcome:
       "A working Fase 0: the homepage, collections, catalogue, product pages, and a path-routed storefront stand-in all render end-to-end against typed mock data, dark-only, with the brand's own gold as the single accent — and every product photo gallery without a real shot renders an honest 'no photo' state rather than an invented one.",
+    category: "product",
     tags: ["Multi-tenant SaaS", "Brand Identity", "Design System"],
     stack: ["Next.js", "TypeScript", "Tailwind CSS v4", "Zustand"],
     visual: "eyewear",
@@ -943,6 +850,7 @@ export const STUDIO_PROJECTS: readonly StudioProject[] = [
       "Bee Dash ingests metrics through social platform APIs, maps incompatible fields into one canonical schema, and renders comparable decision-focused views. The API, client dashboard, and internal admin live in one monorepo with shared types so metric definitions cannot drift silently between applications.",
     outcome:
       "Campaign performance becomes visible in near real time, with creators compared on equivalent metrics instead of platform-specific vanity numbers.",
+    category: "data",
     tags: ["Dashboard", "Marketing", "Integrations"],
     stack: [
       "Next.js",
@@ -1090,6 +998,7 @@ export const STUDIO_PROJECTS: readonly StudioProject[] = [
       "The build is deliberately backend-less: a typed TypeScript catalogue in content/, no CMS, no database, no monthly bill. Every measurement is stored as a number in centimetres and formatted at the edge, never hand-typed as a string, and every wa.me link is built by one function reading her real phone number from a single content module. Nothing outside lib/catalog/source.*.ts is allowed to import a Shopify type, which is what makes a later Shopify upsell a one-module swap instead of a rewrite. Where a price wasn't confirmed, the page says so — 'Consulte o preço' — instead of shipping a plausible number.",
     outcome:
       "Live at fa-moveis.vercel.app with 13 real products — no illustrative filler left on the site — 3 from her own D'Doro line and 10 from a second Novo Horizonte supplier, priced against real supplier sheets and her own WhatsApp confirmations. 10 of the 13 carry a confirmed price; the remaining 3 show an honest 'Consulte o preço' rather than a guess. A production build measured Lighthouse 93 performance and 100 accessibility on /produtos, CLS 0, every product image under 32 KB against a 180 KB budget.",
+    category: "sites",
     tags: ["Local Business", "Catalogue", "No-CMS"],
     stack: ["Next.js", "TypeScript", "Tailwind CSS", "Radix UI", "Vercel"],
     visual: "furniture",
@@ -1213,6 +1122,7 @@ export const STUDIO_PROJECTS: readonly StudioProject[] = [
       "The product puts the credit question first: a six-step pre-qualification flow returns one of five honest outcomes — never a binary yes/no — with zero bureau lookups and zero document uploads. Every policy-sensitive number behind it lives in a CMS global instead of in code, flagged as an illustrative suggestion until confirmed against Caixa's current tables. A proposal sent to a qualified lead freezes its own commercial numbers at creation and refuses outright to generate if its price table has expired.",
     outcome:
       "A live product where a visitor gets a real MCMV verdict without typing a CPF, and where a shared proposal always shows both the installment paid today and the INCC-projected one at handover, because the data model makes it structurally impossible to show only one.",
+    category: "product",
     tags: ["Real Estate", "MCMV Credit", "Lead Qualification"],
     stack: [
       "Next.js",
@@ -1344,6 +1254,7 @@ export const STUDIO_PROJECTS: readonly StudioProject[] = [
       "The brand's own verb, destravar (to unstick), became the signature interaction: a doodled cord untangles as the hero headline resolves, and 'língua' lands as the cord straightens. The brandbook governs palette, Source Sans as the only typeface and the official lockups. Motion uses GSAP and Lenis with WebGL deliberately rejected, to protect mobile performance. Every page exists in three locales with localized URLs, and pricing, FAQ and testimonials read from Payload-shaped stand-ins so the CMS can replace them without touching a page.",
     outcome:
       "All pages built in PT, EN and ES on a preview deployment: a 13-section home, method, pricing, testimonials, FAQ, contact, careers and privacy. The CMS and the final content pass with the client come next; testimonials stay openly placeholder until real ones arrive.",
+    category: "sites",
     tags: ["Landing Page", "Motion", "i18n"],
     stack: ["Next.js", "TypeScript", "Tailwind CSS v4", "shadcn/ui", "GSAP", "Lenis"],
     visual: "language",
@@ -1401,6 +1312,7 @@ export const STUDIO_PROJECTS: readonly StudioProject[] = [
       "One Payload collection with a kind discriminator drives every fair and campus page in a fixed section order, so a new tour is data entry, not design. Pricing is one pure function in integer cents, run identically in the browser's live preview and in the server hook that freezes a quote snapshot at submission, so a confirmation keeps what was actually quoted. Spam protection uses a honeypot and a hashed-IP rate limit, analytics are self-hosted and cookieless, and the site makes no third-party request from a page, which is why it needs no cookie banner. The social work followed the same rule: research first, then a plan and a builder that renders posts from the CMS.",
     outcome:
       "Delivered on the client's v1 identity at unimeet.eu, with registrations persisted and emailed, axe-clean at 390, 768 and 1440 wide, and a sitemap-driven SEO pass with a generated share card per page. The screenshots here are the proposed v2 design system built alongside it; the client chose to keep v1 live.",
+    category: "product",
     tags: ["Event Platform", "CMS", "Social Strategy"],
     stack: ["Next.js", "Payload CMS", "PostgreSQL", "TypeScript", "Tailwind CSS v4", "TanStack Query", "Playwright"],
     visual: "fairs",
@@ -1459,6 +1371,7 @@ export const STUDIO_PROJECTS: readonly StudioProject[] = [
       "The storefront is headless. Shopify remains the source of truth for commerce operations while a separate Hydrogen application renders the customer experience from Storefront API data. Checkout stays on battle-tested Shopify infrastructure instead of being rebuilt unnecessarily.",
     outcome:
       "A custom, server-rendered storefront with fast search and cart shipping calculation, backed by the Shopify operations the client already trusted.",
+    category: "sites",
     tags: ["E-commerce", "Shopify", "Custom storefront"],
     stack: ["Hydrogen", "Remix", "Shopify", "TypeScript", "GraphQL"],
     visual: "commerce",
@@ -1591,6 +1504,7 @@ export const STUDIO_PROJECTS: readonly StudioProject[] = [
       "The product uses one scheduling surface as the source of truth for availability, the calendar event, and the payment. A provider defines working rules once. Every free slot, Google Calendar entry, Meet link, and Stripe checkout derives from those rules instead of being coordinated by hand.",
     outcome:
       "A conversation becomes a confirmed, paid, calendar-synced appointment in about thirty seconds, with no manual step for the provider.",
+    category: "product",
     tags: ["Booking", "Payments", "Automation"],
     stack: [
       "Next.js",

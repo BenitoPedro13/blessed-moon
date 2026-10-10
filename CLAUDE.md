@@ -107,7 +107,9 @@ dependency.
   zero layers between — the pillar letters are already in the data). Adding a stage to a
   new page means choosing what that page has to say, not reusing one of these. Amber's
   other job — small, on a control, meaning *interactive* — must never land on the same
-  glyph, which is why `/work`'s index rows are a listing rather than three links.
+  glyph. `/work`'s index is a grid of cover cards that are links (`TASK-work-index-grid.md`):
+  amber appears there only as a control affordance (focus/hover border, the pressed filter),
+  and the one travelling name keeps it; never put amber on any other project name.
 - **One rAF loop, and reads never interleave with writes.** Every scroll-driven component
   subscribes to `src/components/frame-loop.ts`, which runs all `read` callbacks before any
   `write` callback. Seven components previously owned a loop each, and a write from one

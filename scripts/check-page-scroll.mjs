@@ -111,11 +111,33 @@ try {
         assert.equal(response.status(), 200, label);
         await ready(page, config.reducedMotion);
         if (route === '/work') {
-          assert.equal(await page.locator('[data-morph-mode]').getAttribute('data-morph-mode'), 'flow', `${label}: growing index uses flow`);
+          // The cover grid fits one pinned window at desktop sizes, so either
+          // mode is valid at load (TASK-work-index-grid.md); growth below must
+          // force flow rather than clip.
+          const startMode = await page.locator('[data-morph-mode]').getAttribute('data-morph-mode');
+          assert.ok(['pinned', 'flow'].includes(startMode), `${label}: stage mode reported`);
           const content = page.locator('[data-morph-content]').first();
+          // The pinned window takes the active layer's height, so the index is
+          // only meant to be whole while it is the active layer.
+          if (startMode === 'pinned') {
+            await page.evaluate(() => window.scrollTo(0, 0));
+            await page.waitForTimeout(800);
+          }
           assert.equal(await content.evaluate(unclipped), true, `${label}: complete index is unclipped`);
           // Growth after load must extend the document and remain reachable.
           const previous = await page.evaluate(() => document.documentElement.scrollHeight);
+          // Record every mode the stage reports: from pinned, the switch to flow
+          // rebuilds the window and drops this DOM-injected block (React state
+          // would survive it), after which the stage legitimately pins again.
+          await page.evaluate(() => {
+            window.__stageModes = [];
+            // Both modes render the same root element, so React flips the
+            // attribute in place and may flip it back within one batch: keep
+            // the old values, not the document state read afterwards.
+            new MutationObserver(records => records.forEach(record => {
+              window.__stageModes.push(record.oldValue, record.target.getAttribute('data-morph-mode'));
+            })).observe(document.body, { subtree: true, attributes: true, attributeOldValue: true, attributeFilter: ['data-morph-mode'] });
+          });
           await content.evaluate(element => {
             const addition = document.createElement('div');
             addition.setAttribute('data-scroll-growth-test', '');
@@ -123,7 +145,11 @@ try {
             addition.textContent = 'Additional project content';
             element.append(addition);
           });
-          await page.waitForFunction(height => document.documentElement.scrollHeight > height + 1300, previous);
+          if (startMode === 'flow') {
+            await page.waitForFunction(height => document.documentElement.scrollHeight > height + 1300, previous);
+          } else {
+            await page.waitForFunction(() => window.__stageModes.includes('flow'));
+          }
         }
         // Expand real briefs to check the page's new document length.
         if (route === '/instagram-plan' || route === '/linkedin-plan') {

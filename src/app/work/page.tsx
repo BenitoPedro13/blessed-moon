@@ -30,17 +30,16 @@ export default function WorkPage() {
           code="WORK"
         />
 
-        {/* The window opens narrow on the listing and expands hard for each
-            project, where a cover sits beside its meta — the width morph is
-            carrying the difference between reading an index and reading an
-            entry. `00 / INDEX` is a header record, not one of the seven,
+        {/* The index is a six-column cover grid, so it takes the same width
+            as the case views (it used to open narrow on a text listing; see
+            TASK-work-index-grid.md). `00 / INDEX` is a header record, not one of the seven,
             which is why the projects keep the numbers they carry in the
             listing rather than being renumbered 02–07 by their position
             here. */}
         <ScrollMorphStage
           heightPerLayer={1.6}
           layers={[
-            { number: "00", keyframe: 1, label: "INDEX", width: 860, content: <WorkIndex /> },
+            { number: "00", keyframe: 1, label: "INDEX", width: 1140, content: <WorkIndex /> },
             ...STUDIO_PROJECTS.map((project, i) => ({
               id: project.slug,
               number: project.index,

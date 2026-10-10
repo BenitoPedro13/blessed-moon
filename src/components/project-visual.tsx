@@ -14,9 +14,7 @@ interface ProjectVisualProps {
     | "language"
     | "grid"
     | "election"
-    | "lesson"
-    | "flash"
-    | "compcard";
+    | "lesson";
 }
 
 const QUALIFICATION_STEPS = ["Renda", "Entrada", "Restrições", "Faixa MCMV", "Localidade", "Score"];
@@ -103,22 +101,6 @@ const LESSON_OUTPUTS = [
   [".dove.json file", true],
   ["indexeddb drafts", true],
   ["accounts", false],
-] as const;
-
-const FLASH_GATES = [
-  ["consent per person", true],
-  ["author confirmed", true],
-  ["noindex until yes", true],
-  ["typographic share card", true],
-  ["public build", false],
-] as const;
-
-const BOOKER_PATH = [
-  ["categories", true],
-  ["selected looks", true],
-  ["the book", true],
-  ["how to book", true],
-  ["agency approval", false],
 ] as const;
 
 export function ProjectVisual({ title, variant }: ProjectVisualProps) {
@@ -639,78 +621,6 @@ export function ProjectVisual({ title, variant }: ProjectVisualProps) {
             </div>
             <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">
               type a lesson, get a deck
-            </div>
-          </div>
-        </div>
-      )}
-      {variant === "flash" && (
-        <div className="grid h-[250px] grid-cols-[0.85fr_1.15fr] gap-3 pt-3 sm:h-[282px]">
-          <div className="border border-border/60 p-3">
-            <p className="text-[8px] text-primary uppercase">flash cut</p>
-            <p className="mt-3 font-sans text-lg font-semibold tracking-[-0.03em] text-foreground">60 ms up · 520 ms down</p>
-            <p className="mt-1 text-[7px] text-muted-foreground">the next photo develops out of the white</p>
-            <div className="mt-5 border-t border-border/60 pt-3">
-              <p className="text-[7px] text-muted-foreground uppercase">signature</p>
-              <p className="mt-1 text-[9px] text-primary">the reversal</p>
-            </div>
-            <div className="mt-4 flex items-center gap-1.5 text-[7px] text-muted-foreground">
-              <span className="text-primary">●</span>
-              one flash per cut, never rapid
-            </div>
-          </div>
-          <div className="border border-primary/40 p-3">
-            <p className="text-[8px] text-primary uppercase">build gates</p>
-            <div className="mt-3 space-y-1.5">
-              {FLASH_GATES.map(([label, available]) => (
-                <div
-                  key={label}
-                  className="flex items-center justify-between border-b border-border/50 pb-1 text-[7px] text-muted-foreground"
-                >
-                  <span>{label}</span>
-                  <span className={available ? "text-primary" : "text-muted-foreground"}>
-                    {available ? "[x]" : "[ ]"}
-                  </span>
-                </div>
-              ))}
-            </div>
-            <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">
-              a diary kept with the flash on
-            </div>
-          </div>
-        </div>
-      )}
-      {variant === "compcard" && (
-        <div className="grid h-[250px] grid-cols-[0.85fr_1.15fr] gap-3 pt-3 sm:h-[282px]">
-          <div className="border border-border/60 p-3">
-            <p className="text-[8px] text-primary uppercase">booker / under 1 min</p>
-            <p className="mt-3 font-sans text-lg font-semibold tracking-[-0.03em] text-foreground">splitline 0.55 s</p>
-            <p className="mt-1 text-[7px] text-muted-foreground">each line rises out of its mask</p>
-            <div className="mt-5 border-t border-border/60 pt-3">
-              <p className="text-[7px] text-muted-foreground uppercase">mark</p>
-              <p className="mt-1 text-[9px] text-primary">one geometry, six surfaces</p>
-            </div>
-            <div className="mt-4 flex items-center gap-1.5 text-[7px] text-muted-foreground">
-              <span className="text-primary">●</span>
-              no-js and reduced-motion stills
-            </div>
-          </div>
-          <div className="border border-primary/40 p-3">
-            <p className="text-[8px] text-primary uppercase">the profile, top to bottom</p>
-            <div className="mt-3 space-y-1.5">
-              {BOOKER_PATH.map(([label, available]) => (
-                <div
-                  key={label}
-                  className="flex items-center justify-between border-b border-border/50 pb-1 text-[7px] text-muted-foreground"
-                >
-                  <span>{label}</span>
-                  <span className={available ? "text-primary" : "text-muted-foreground"}>
-                    {available ? "[x]" : "[ ]"}
-                  </span>
-                </div>
-              ))}
-            </div>
-            <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">
-              the photographs are the work
             </div>
           </div>
         </div>

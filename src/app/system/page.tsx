@@ -52,6 +52,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 /**
  * The design system, rendered with the real tokens and the real components —
@@ -215,6 +216,21 @@ export default function SystemPage() {
             placeholder="Textarea field"
             className="min-h-24 resize-y rounded-none border-border/80 bg-background/55 px-3 py-3 font-sans text-[13px] leading-[1.6] placeholder:text-muted-foreground/55 focus-visible:ring-1"
           />
+          {/* Single-select filter, as on /work's index (TASK-work-index-grid.md):
+              amber marks the pressed control, never a project name. */}
+          <ToggleGroup aria-label="Toggle group" defaultValue={["all"]} spacing={0} className="flex-wrap gap-2">
+            {["All", "Product & SaaS", "Data & dashboards"].map((label, i) => (
+              <ToggleGroupItem
+                key={label}
+                value={i === 0 ? "all" : label}
+                size="sm"
+                variant="outline"
+                className="h-7 border-border/60 px-2.5 font-mono text-[10.5px] tracking-[0.5px] text-muted-foreground uppercase hover:bg-transparent hover:text-foreground aria-pressed:border-primary aria-pressed:bg-transparent aria-pressed:text-primary"
+              >
+                {label}
+              </ToggleGroupItem>
+            ))}
+          </ToggleGroup>
         </div>
       </section>
 
