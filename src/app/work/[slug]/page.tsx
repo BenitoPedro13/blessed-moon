@@ -267,25 +267,30 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
             <Reveal>
               <div className="mt-16 flex flex-col gap-8 border-y border-border/60 py-8 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                  <p className="font-mono text-[8.5px] tracking-[0.1em] text-muted-foreground uppercase">
-                    verified project destinations
-                  </p>
-                  <div className="mt-3 flex flex-wrap gap-5">
-                    {project.links.map((link) => (
-                      <a
-                        key={link.href}
-                        href={link.href}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-1.5 font-mono text-[9.5px] tracking-[0.08em] text-primary uppercase transition-colors hover:text-foreground"
-                      >
-                        {link.label}
-                        <ArrowUpRight className="size-3" aria-hidden="true" />
-                      </a>
-                    ))}
+                {/* Unpublished work (no consent to show it yet) has no destinations to list. */}
+                {project.links.length > 0 ? (
+                  <div>
+                    <p className="font-mono text-[8.5px] tracking-[0.1em] text-muted-foreground uppercase">
+                      verified project destinations
+                    </p>
+                    <div className="mt-3 flex flex-wrap gap-5">
+                      {project.links.map((link) => (
+                        <a
+                          key={link.href}
+                          href={link.href}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-1.5 font-mono text-[9.5px] tracking-[0.08em] text-primary uppercase transition-colors hover:text-foreground"
+                        >
+                          {link.label}
+                          <ArrowUpRight className="size-3" aria-hidden="true" />
+                        </a>
+                      ))}
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <div />
+                )}
 
                 <Link
                   href={`/work/${nextProject.slug}`}

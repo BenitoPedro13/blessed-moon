@@ -10,7 +10,11 @@ export type ProjectVisualVariant =
   | "rodizio"
   | "fairs"
   | "language"
-  | "grid";
+  | "grid"
+  | "election"
+  | "lesson"
+  | "flash"
+  | "compcard";
 
 type ProjectStep = {
   phase: string;
@@ -62,6 +66,230 @@ export type StudioProject = {
 };
 
 export const STUDIO_PROJECTS: readonly StudioProject[] = [
+  {
+    slug: "comp-card",
+    title: "Comp Card",
+    tagline: "A model's portfolio a booker can decide on in under a minute",
+    index: "16",
+    year: "2026",
+    role: "Research, design and front-end engineering",
+    timeline: "Ongoing — first build, private until she says yes",
+    team: "Solo delivery",
+    description:
+      "A portfolio site for a fashion model, built on a studied talent-agency profile anatomy. Shown here without her name or photographs: she hasn't agreed to the site being public yet.",
+    problem:
+      "A model's site has one reader that matters: a booker, casting director or client with a minute to spare. Instagram interleaves her work with everything else, and agency sites are built for a roster, not one person. The only material in hand was her public Instagram, with credits and usage rights unknown.",
+    approach:
+      "Two rounds of research ended on a talent agency's model-profile page, which is already a portfolio, so it became the spine; the agency homepage contributed only what one person can honestly fill. The grid, type pairing, colour logic and every motion timing were taken from source, never the agency's name, mark, copy, photos, code or licensed fonts. Reveals are CSS classes switched by one in-view observer, each with a no-JS and reduced-motion still state, and scroll work runs on a single frame loop. Her mark, a ringlet monogram, is one geometry rendered by the header, preloader, comp card, favicon and generated share images.",
+    outcome:
+      "The first build of the whole page runs on starter data: preloader, hero cut, categories, selected looks, the book, how to book, contact and latest posts with captions kept verbatim. The repo is private and the site stays noindex; credits, rights and any agency approval are open questions before launch.",
+    tags: ["Portfolio", "Motion", "Unpublished"],
+    stack: ["Next.js", "TypeScript", "Tailwind CSS v4", "shadcn/ui", "Motion", "Lenis"],
+    visual: "compcard",
+    cover: {
+      src: "/projects/comp-card/hero.png",
+      alt: "Comp Card hero: a portrait frame under a gold curl; her photograph replaced by a flat tone and her name by 'First Last'",
+      width: 1440,
+      height: 900,
+    },
+    screenshots: [
+      { src: "/projects/comp-card/hero.png", alt: "Hero cut and statement; the photograph is replaced by a flat tone and the name by 'First Last'", width: 1440, height: 900 },
+      { src: "/projects/comp-card/categories.png", alt: "Her categories set in heavy condensed caps with counts, above the Selected Looks heading", width: 1440, height: 900 },
+      { src: "/projects/comp-card/selected.png", alt: "Selected looks in a staggered three-column grid; photographs replaced by flat tones", width: 1440, height: 900 },
+      { src: "/projects/comp-card/contact.png", alt: "Get in touch, then Latest Posts; the handle and photographs are withheld", width: 1440, height: 900 },
+    ],
+    process: [
+      { phase: "01", title: "Discovery on borrowed material", body: "Her public Instagram imported as placeholder content, every photo marked rights unknown, and the questions that block a launch written down first." },
+      { phase: "02", title: "Research until a reference fits", body: "Studies were rejected, two research rounds produced six finalists, and an agency's profile page won because it already is a model portfolio." },
+      { phase: "03", title: "Take the system, not the brand", body: "Layout, type logic and motion timings read from the reference's own CSS; name, mark, copy, photos, code and licensed fonts left behind." },
+      { phase: "04", title: "One mark, every surface", body: "A ringlet monogram drawn once in code and rendered in the header, the preloader draw-in, the comp card and every generated icon and share image." },
+    ],
+    architecture: [
+      { layer: "App", label: "Next.js App Router, Cache Components", detail: "One page of sections, statically rendered, deployed from main behind noindex." },
+      { layer: "Content", label: "Typed content file", detail: "Photo choices, draft copy and facts to confirm in one file; dashes, never guesses." },
+      { layer: "Motion", label: "CSS reveals on one frame loop", detail: "An in-view class switches CSS transitions; Lenis and canvas work run on Motion's frame loop, reads in the read phase." },
+      { layer: "Photos", label: "Import, then pick", detail: "A local Instagram import stays gitignored; only the photos the page uses are committed." },
+    ],
+    features: [
+      { title: "A booker's path, top to bottom", body: "Categories, selected looks, the book and the booking steps come before anything decorative." },
+      { title: "Every reveal has a still state", body: "Splitline headings, opening images and rising labels all render complete without JavaScript or with reduced motion." },
+      { title: "A share image without her photos", body: "Generated Open Graph cards carry the monogram, never a photograph, so a preview can't outlive a takedown." },
+    ],
+    challenges: [
+      { title: "Borrowing well", body: "The reference was close enough to copy wholesale; the line between its system and its identity was written down section by section before any code." },
+      { title: "Content no one has confirmed", body: "Her name's spelling, credits and rights are unknown, so the page renders a plain tone for any photo not collected and marks every unconfirmed fact." },
+    ],
+    links: [],
+  },
+  {
+    slug: "apuracao-2026",
+    title: "Apuração 2026",
+    tagline: "Brazil's election night, recorded file by file so the count can be replayed",
+    index: "15",
+    year: "2026",
+    role: "Architecture, data engineering and front-end",
+    timeline: "Ongoing — 1st round live, 2nd round 25 October",
+    team: "Solo delivery",
+    description:
+      "A live vote-count dashboard for Brazil's 2026 elections, built on the TSE's official signed results feed, with a recorder that keeps every version of every file and a static site that never touches the backend.",
+    problem:
+      "The TSE publishes the count as signed files on a CDN that overwrites them every minute; once the night is over, the history is gone. A dashboard on election night also has to survive a viral spike unattended, and every number on it has to be checkable against the official source rather than trusted.",
+    approach:
+      "A recorder on Fargate polls the feed under a self-imposed ceiling of 100 requests a second, keeps each signed file byte for byte in an Object-Lock bucket addressed by its hash, and holds a lease in S3 so two recorders can't both write. A projector folds that log into immutable views with a pure function, so the published data can be rebuilt from scratch at any time. Readers only ever hit static files behind a CDN. A fake TSE replays the captured 1st round at twenty times speed for end-to-end rehearsals.",
+    outcome:
+      "The recorder has been live on AWS since 8 October and captured the 1st round. The site shows president and governor results with a municipality map, a legislative archive with hemicycles, and an archive of every presidential election since 1994, municipality by municipality, organised as questions. The 2nd round is recorded live on 25 October.",
+    tags: ["Data Engineering", "Dashboard", "AWS"],
+    stack: ["TypeScript", "Next.js", "AWS CDK", "ECS Fargate", "S3", "CloudFront", "TanStack Query", "Turborepo"],
+    visual: "election",
+    cover: {
+      src: "/projects/apuracao-2026/presidente.png",
+      alt: "Apuração 2026 president view: headline result, a municipality map of Brazil and results by region",
+      width: 1440,
+      height: 900,
+    },
+    screenshots: [
+      { src: "/projects/apuracao-2026/presidente.png", alt: "President, 1st round final: headline, municipality choropleth with state labels, results by region", width: 1440, height: 900 },
+      { src: "/projects/apuracao-2026/governadores.png", alt: "Governors: a tile per state, the closest races, a map by state and the selected race's detail", width: 1440, height: 900 },
+      { src: "/projects/apuracao-2026/historico.png", alt: "Presidential elections 1994–2022 as questions: how your town voted, who won each election", width: 1440, height: 900 },
+    ],
+    process: [
+      { phase: "01", title: "Read the feed before designing", body: "How the TSE's files are signed, cached and replaced was measured and written up first; capacity numbers came from those measurements, not guesses." },
+      { phase: "02", title: "Record first", body: "The recorder went live on AWS days before the 1st round, so the night was captured even before the site was finished." },
+      { phase: "03", title: "Rehearse on the real night", body: "The captured round replays through a fake TSE with the CDN's caching semantics, recorder and projector included, at twenty times speed." },
+      { phase: "04", title: "Answer questions, not tables", body: "The 1994–2022 archive is organised as questions a reader actually asks, with every calculated number marked as ours and explained on hover." },
+    ],
+    architecture: [
+      { layer: "Ingest", label: "Recorder on Fargate", detail: "Conditional requests under a rate ceiling; an unchanged cycle costs about one request a second." },
+      { layer: "Log", label: "S3 with Object Lock", detail: "Every signed version stored by hash, retained; the source of truth for everything downstream." },
+      { layer: "Views", label: "Projector, a pure fold", detail: "Immutable published views, rebuildable from the raw log with one command." },
+      { layer: "Web", label: "Next.js static export", detail: "Served from S3 behind a CDN; a spike can't reach ingestion and a stall can't take the site down." },
+    ],
+    features: [
+      { title: "Provably faithful", body: "Every number traces to a TSE-signed file that was stored, and anyone can check the signature." },
+      { title: "No projections", body: "No forecasts, no calls and no interpolation between observed versions; a gap in the record is shown as a gap." },
+      { title: "Ours versus theirs", body: "Percentages are the TSE's own; anything calculated here is underlined and explains itself." },
+    ],
+    challenges: [
+      { title: "History the source deletes", body: "The TSE keeps only the latest state of each file, so the minute-by-minute count exists only if it was recorded while it happened." },
+      { title: "A rehearsal signed with a fake key", body: "Replayed files need valid signatures; they're signed with a throwaway key that the recorder and projector refuse to accept against a production bucket." },
+      { title: "Archive files that change underneath you", body: "The TSE regenerated a 2022 archive with its rows reordered, so content identity was redefined to ignore row order and rebuilt from the archived copy." },
+    ],
+    links: [
+      { label: "Open dashboard", href: "https://apuracao26-pub-860897618882.s3.sa-east-1.amazonaws.com/index.html" },
+      { label: "View source", href: "https://github.com/BenitoPedro13/apuracao-2026" },
+    ],
+  },
+  {
+    slug: "direct-flash",
+    title: "Direct Flash",
+    tagline: "A photographer's diary kept with the flash on, and consent written into the build",
+    index: "14",
+    year: "2026",
+    role: "Brand, design and front-end engineering",
+    timeline: "Ongoing — private until she says yes",
+    team: "Solo delivery",
+    description:
+      "A personal site for a photographer's work, made as a gift. Shown here without her name or photographs, because she hasn't agreed to the site being public and her photos include her friends.",
+    problem:
+      "Her Instagram is a diary rather than a portfolio: close, flash-lit, mostly at night, mostly of herself and her friends. A site for it can't pitch anything, and it can't go live on reference material that includes people who never agreed to be on it.",
+    approach:
+      "The brand was read out of the photos: direct flash, light pointed straight at the subject, became the identity. A dark room where photographs are the only light, a flash on every cut that peaks in 60 ms and decays over 520 ms while the next photo develops out of the white, and a wordmark that is her name written backwards, turning once per visit around a letter that never moves. Consent is enforced by code: the build stops if a photo has fewer consent entries than identifiable people in it, and a public build refuses any reference photo at all.",
+    outcome:
+      "A diary home built in eight steps, an earlier study kept for comparison, and four home directions in a lab, all running on reference photos. Every page is noindex, the share card is typographic rather than a photo, and nothing goes public until she says yes.",
+    tags: ["Brand", "Motion", "Unpublished"],
+    stack: ["Next.js", "TypeScript", "Tailwind CSS v4", "Motion", "Lenis", "OGL"],
+    visual: "flash",
+    cover: {
+      src: "/projects/direct-flash/hero.png",
+      alt: "Direct Flash home: a timeline of dated night and day frames across a dark room; photographs and wordmark withheld",
+      width: 1440,
+      height: 900,
+    },
+    screenshots: [
+      { src: "/projects/direct-flash/hero.png", alt: "The diary home: a dated timeline of night and day frames, photographs and wordmark withheld", width: 1440, height: 900 },
+      { src: "/projects/direct-flash/sobre.png", alt: "About strip and highlights, numbered frames on the dark surface; photographs withheld", width: 1440, height: 900 },
+      { src: "/projects/direct-flash/indice.png", alt: "The index: the diary month by month with photo counts", width: 1440, height: 900 },
+    ],
+    process: [
+      { phase: "01", title: "An honest read of the material", body: "Discovery separated what the photos show from what was assumed, and concluded the site can't be built from the Instagram alone." },
+      { phase: "02", title: "Brand book before pixels", body: "Brand idea, visual identity, design system and motion written down first, so the feel could be judged against something." },
+      { phase: "03", title: "Feel on the real stack", body: "The signature moments built in Next.js on reference photos, never deployed publicly, to test the flash and the reversal at full speed." },
+      { phase: "04", title: "A direction from a studied reference", body: "A talent agency's pacing and technique, carried over with her palette, type, name and signature, became the diary home." },
+    ],
+    architecture: [
+      { layer: "App", label: "Next.js, static", detail: "Every page prerendered; no CMS, database, analytics or third-party request." },
+      { layer: "Content", label: "Typed photo records", detail: "Author, consent per identifiable person and source on every photo, checked whenever the content is evaluated." },
+      { layer: "Motion", label: "Motion + CSS flash layer", detail: "FLIP letters for the reversal, one rAF per section, OGL loaded only on demand." },
+      { layer: "Launch", label: "Two switches", detail: "Public and indexable are separate flags; until both are set every response says noindex." },
+    ],
+    features: [
+      { title: "The flash cut", body: "Night to day becomes a burn-in, like stepping out of a club into daylight; day to night is a flash going off in a dark room." },
+      { title: "Photosensitivity designed for", body: "The flash is bounded, never repeats rapidly and can be switched off; anything that moves by itself can be paused." },
+      { title: "A takedown is one edit", body: "Any photo leaves the site with a single array change and a redeploy, which is part of the promise to the people in them." },
+    ],
+    challenges: [
+      { title: "A gift that can't pitch", body: "No services, clients or calls to action; the only job is to give the photographs a room that feels like her." },
+      { title: "Budgets that met a preloader", body: "The diary's intro holds the photos for 1.5 seconds on purpose, so the mobile LCP budget is over; it's recorded as a trade-off rather than gamed." },
+    ],
+    links: [],
+  },
+  {
+    slug: "dove-language",
+    title: "Dove Lesson Studio",
+    tagline: "Volunteer teachers type a lesson and get branded slides and a handout",
+    index: "13",
+    year: "2026",
+    role: "Brand system, product design and engineering",
+    timeline: "September 2026 — v1 live",
+    team: "Solo delivery",
+    description:
+      "A free tool for The Dove Language, a Discord community of about 4,600 people learning languages together: type a lesson, get 16:9 slides for the voice classroom and an A4 study handout as PDFs. Plus Airmail, the community's design system.",
+    problem:
+      "Lessons were hand-built in Canva, 58 slides for a single beginner session. The teaching was already solid and very regular, about a dozen repeating patterns, but every deck was laid out by hand. The teachers are volunteers, so a tool that is merely prettier than Canva and not faster won't be used.",
+    approach:
+      "The patterns became blocks and the lesson became data: one schema defines it, types are inferred from it, and it validates imported files. A pure pagination function splits blocks into slides, numbers sections and derives the cover and answer keys; the preview measures every slide and warns rather than clipping. Slide and handout components are pure, so the editor preview, the print routes and the design-system page render the same code. The browser's print engine makes the PDFs, and slides are sized in container units so one slide is exact at 1920 pixels and correct at 320.",
+    outcome:
+      "Studio v1 works end to end: landing, editor with live preview, autosave to the device, a lesson file to share, slide and handout PDFs, and the design system rendered live from the real templates. Airmail 0.1 is proposed and awaiting review by Dove's staff.",
+    tags: ["Product", "Design System", "Education"],
+    stack: ["Next.js", "TypeScript", "Tailwind CSS v4", "shadcn/ui", "zod", "IndexedDB"],
+    visual: "lesson",
+    cover: {
+      src: "/projects/dove-language/home.png",
+      alt: "Dove Lesson Studio landing: 'Make your lesson. We'll make it look like Dove.' beside a cover slide and a vocabulary slide",
+      width: 1440,
+      height: 900,
+    },
+    screenshots: [
+      { src: "/projects/dove-language/home.png", alt: "Landing page with the three steps and a live cover and vocabulary slide from the example lesson", width: 1440, height: 900 },
+      { src: "/projects/dove-language/studio.png", alt: "The studio: block list, lesson settings and the live slide preview", width: 1440, height: 900 },
+      { src: "/projects/dove-language/brand.png", alt: "The design system page: four kinds of slide by colour and word, and the type chosen for readers still learning", width: 1440, height: 900 },
+    ],
+    process: [
+      { phase: "01", title: "Audit the real deck", body: "A 58-slide session was read slide by slide; the pedagogy was kept, only the layout work was taken away." },
+      { phase: "02", title: "A system with one idea", body: "Every lesson is a letter between two languages: a flight path, a stamp, a postmark and paper, and nothing else is decoration." },
+      { phase: "03", title: "The lesson is data", body: "A schema, a pure pagination function and pure renderers, so preview, print and documentation can't disagree." },
+      { phase: "04", title: "No backend on purpose", body: "Drafts autosave on the device and travel as files, because accounts would mean a login before anyone saw the value." },
+    ],
+    architecture: [
+      { layer: "Schema", label: "zod lesson model", detail: "Types inferred, imports validated; a target language plus up to two translations." },
+      { layer: "Layout", label: "paginate()", detail: "Blocks to slides by estimated height, with a measured overflow warning in the preview." },
+      { layer: "Render", label: "Pure slide and handout components", detail: "One renderer for the studio, the print routes and the design-system page." },
+      { layer: "Output", label: "The browser's print engine", detail: "Per-route page size, real selectable text, no server and no uploaded images." },
+    ],
+    features: [
+      { title: "Faster than the old way", body: "Teachers write content in their language and the translations; the deck lays itself out." },
+      { title: "Any script", body: "Fallback faces for Japanese, Korean, Chinese, Arabic, Hebrew, Devanagari and Thai, and right-to-left lessons." },
+      { title: "Colour is never the only signal", body: "Each kind of slide carries a word as well as a colour, and every text pair was measured against AA." },
+    ],
+    challenges: [
+      { title: "Never clip a lesson", body: "Height estimates can be wrong for unusual scripts, so the preview measures every rendered slide and warns instead of silently cutting teaching material." },
+      { title: "A slide with no width in print", body: "The first PDF export rendered every slide at zero pixels; the print deck needed an explicit width, which also removed a trailing blank page." },
+    ],
+    links: [
+      { label: "Open the studio", href: "https://dove-language.vercel.app" },
+      { label: "View source", href: "https://github.com/BenitoPedro13/dove-language" },
+    ],
+  },
   {
     slug: "renewable-pulse",
     title: "Renewable Pulse",

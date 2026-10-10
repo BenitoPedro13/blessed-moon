@@ -78,7 +78,9 @@ Complete for the design-handoff scope: `/`, `/work`, `/about`, and `/contact` ar
 responsive, statically generated, and included in the sitemap. The homepage includes the nav,
 hero, about teaser, services, process, selected work, pricing, the shared closing CTA band, and
 footer inside the scroll-reactive ASCII/particle system. Work presents Markado, Bee Dash, Sua Mesa Fit, Prumo, ART'hur,
-Flora, Trísion, Oishi, F&A Móveis, UniMeet (its proposed v2 design, labelled as a proposal; the client kept v1 live), Outubro Idiomas (in progress) and Renewable Pulse using verified portfolio data and project-specific terminal schematics — Prumo's
+Flora, Trísion, Oishi, F&A Móveis, UniMeet (its proposed v2 design, labelled as a proposal; the client kept v1 live), Outubro Idiomas (in progress), Renewable Pulse, Dove Lesson Studio, Apuração 2026, and two unpublished personal sites shown anonymised
+— Direct Flash and Comp Card, with no names, handles or photographs and no links, because their subjects haven't agreed
+to go public (`docs/tasks/TASK-add-four-recent-case-studies.md`) — using verified portfolio data and project-specific terminal schematics — Prumo's
 is a real-estate credit-qualification schematic (`docs/tasks/TASK-add-prumo-case-study.md`) and
 Trísion's is a numeração/tenancy schematic (`docs/tasks/TASK-add-trision-case-study.md`). About includes the final
 mission, values, two disciplines handled by Benito alone, and direct delivery statement. Contact includes a real
