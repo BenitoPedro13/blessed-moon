@@ -391,7 +391,8 @@ quotes. `/social-plan`, `/instagram-plan`, `/linkedin-plan`, `/analytics-plan` a
 unlinked noindex working documents, not confidential dashboards. They use ordinary
 flow and shared terminal panels, not another pinned sequence. Typed content and
 campaign URLs live in `src/lib/social-plan.ts`; enum-only enquiry events in
-`src/lib/analytics.ts`. Preserve the eight homepage build cards and their existing
+`src/lib/analytics.ts`, plus `home-section-reached` (fired by `ScrollMorphStage` for layers
+with an `analytics` key, after a 600ms dwell, read on `/analytics-plan/live` panel 06). Preserve the eight homepage build cards and their existing
 morph handoffs. The new strategy offer is linked alongside them. See
 `docs/tasks/TASK-social-strategy-and-service.md` and `docs/social/`.
 

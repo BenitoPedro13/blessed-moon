@@ -1,4 +1,5 @@
 import "server-only";
+import { HOME_SECTIONS, type SectionCounts } from "@/lib/insight-readings";
 import { STUDIO_PROJECTS } from "@/lib/studio-data";
 
 // Server-side reader for the self-hosted Umami 3.4 API, used only by the gated
@@ -79,6 +80,7 @@ export type Insights = {
   posts: Result<PostRow[]>;
   cases: Result<CaseRow[]>;
   speed: Result<SpeedRow[]>;
+  sections: Result<SectionCounts>;
 };
 
 export async function loadInsights(range: RangeKey): Promise<Insights | { status: "unavailable"; reason: string }> {
@@ -123,6 +125,20 @@ export async function loadInsights(range: RangeKey): Promise<Insights | { status
     };
     return { ladder, contact, accepted };
   };
+
+  const [homeViews, sectionValues] = await Promise.all([
+    get<{ x: string; y: unknown }[]>("/metrics", { ...period, type: "path", limit: 100 }),
+    get<{ value: string; total: unknown }[]>("/event-data/values", { ...period, event: "home-section-reached", propertyName: "section" }),
+  ]);
+  const sections: Result<SectionCounts> =
+    homeViews.status !== "ok" ? homeViews : sectionValues.status !== "ok" ? sectionValues : {
+      status: "ok",
+      data: {
+        views: n(homeViews.data.find((row) => row.x === "/")?.y),
+        reached: Object.fromEntries(HOME_SECTIONS.map(({ key }) =>
+          [key, n(sectionValues.data.find((row) => row.value === key)?.total)])) as SectionCounts["reached"],
+      },
+    };
 
   const [current, before, postVisits, casePages, ...speed] = await Promise.all([
     ladderFor(period),
@@ -174,6 +190,6 @@ export async function loadInsights(range: RangeKey): Promise<Insights | { status
   return {
     range, period, previous,
     ladder: current.ladder, previousLadder: before.ladder,
-    posts, cases, speed: speedRows as Result<SpeedRow[]>,
+    posts, cases, speed: speedRows as Result<SpeedRow[]>, sections,
   };
 }

@@ -77,6 +77,36 @@ export function readCases(rows: CaseCounts[]): Reading {
   return { tone: "fine", text: `${persuading[0].title} leads to contact most often. It's a good candidate to promote or pin.` };
 }
 
+/** The homepage stage in order. Mirrors `HomeSection` in analytics.ts, which
+ * is client code this pure module doesn't import. */
+export const HOME_SECTIONS = [
+  { key: "about", label: "01 About" },
+  { key: "services", label: "02 Services" },
+  { key: "process", label: "03 Process" },
+  { key: "work", label: "04 Selected work" },
+  { key: "pricing", label: "05 Pricing" },
+] as const;
+
+export type SectionCounts = { views: number; reached: Record<(typeof HOME_SECTIONS)[number]["key"], number> };
+
+/** Homepage views, then how many of them reached each section. Events started
+ * on 10 October 2026, so earlier views have no section data. */
+export function readSections(counts: SectionCounts): Reading {
+  const first = counts.reached[HOME_SECTIONS[0].key];
+  if (first === 0) return { tone: "wait", text: "No section has been reported yet in this period. Tracking started on 10 October 2026." };
+  if (counts.views < MIN_VISITORS) return { tone: "wait", text: `Too few homepage views to read (${counts.views}; the page starts reading at ${MIN_VISITORS}).` };
+  // The step that keeps the smallest share of the step before it, starting from the hero.
+  let worst: { from: string; to: string; kept: number } = { from: "the hero", to: HOME_SECTIONS[0].label, kept: first / counts.views };
+  for (let i = 1; i < HOME_SECTIONS.length; i++) {
+    const before = counts.reached[HOME_SECTIONS[i - 1].key];
+    if (before <= 0) break;
+    const kept = counts.reached[HOME_SECTIONS[i].key] / before;
+    if (kept < worst.kept) worst = { from: HOME_SECTIONS[i - 1].label, to: HOME_SECTIONS[i].label, kept };
+  }
+  if (worst.kept >= 0.7) return { tone: "fine", text: "No step loses more than 30% of the people who reached the one before. Distance isn't the main problem." };
+  return { tone: "act", text: `The biggest drop is from ${worst.from} to ${worst.to}: ${Math.round(worst.kept * 100)}% continue. That is where to shorten, or where to bring the next step forward.` };
+}
+
 // Google's Core Web Vitals thresholds at the 75th percentile (web.dev/vitals).
 export const SPEED_THRESHOLDS = {
   lcp: { good: 2500, poor: 4000, label: "Largest paint", unit: "ms" },

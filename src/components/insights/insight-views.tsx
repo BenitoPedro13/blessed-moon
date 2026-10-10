@@ -1,7 +1,7 @@
 import { CountBar } from "@/components/insights/insight-panel";
 import {
-  LADDER_STEPS, MIN_SPEED_SAMPLES, SPEED_THRESHOLDS, formatSpeed, rateSpeed, share,
-  type CaseCounts, type LadderCounts, type PostCounts, type SpeedCounts,
+  HOME_SECTIONS, LADDER_STEPS, MIN_SPEED_SAMPLES, SPEED_THRESHOLDS, formatSpeed, rateSpeed, share,
+  type CaseCounts, type LadderCounts, type PostCounts, type SectionCounts, type SpeedCounts,
 } from "@/lib/insight-readings";
 
 const TABLE = "w-full border-collapse text-left text-sm";
@@ -140,5 +140,22 @@ export function PeriodCompare({ current, previous }: { current: LadderCounts; pr
         </tbody>
       </table>
     </div>
+  );
+}
+
+/** Homepage views, then how many reached each step of the stage. */
+export function SectionReach({ counts }: { counts: SectionCounts }) {
+  const steps = [{ label: "Homepage views", value: counts.views }, ...HOME_SECTIONS.map((section) => ({ label: section.label, value: counts.reached[section.key] }))];
+  return (
+    <ol className="space-y-4">
+      {steps.map((step, i) => (
+        <li key={step.label} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-1.5">
+          <span className="text-sm">{step.label}</span>
+          <span className="font-mono text-lg tabular-nums">{step.value}</span>
+          <span className="col-span-2"><CountBar value={step.value} max={counts.views} /></span>
+          {i > 0 && <span className="col-span-2 font-mono text-xs text-muted-foreground">kept {share(step.value, steps[i - 1].value)} of the step before</span>}
+        </li>
+      ))}
+    </ol>
   );
 }

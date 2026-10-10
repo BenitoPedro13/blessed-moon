@@ -11,6 +11,19 @@ declare global {
   }
 }
 
+/** Homepage stage sections, in order. Enum-only, like every event here: it
+ * says how far down the page a visit got, nothing about who. */
+export type HomeSection = "about" | "services" | "process" | "work" | "pricing";
+
+export function trackHomeSection(section: HomeSection) {
+  if (typeof window === "undefined") return;
+  try {
+    window.umami?.track("home-section-reached", { section });
+  } catch {
+    // A blocked or unavailable tracker is an ordinary supported state.
+  }
+}
+
 // Optional measurement must never prevent the real enquiry action. No form
 // content, email addresses, storage or client-side attribution cache is sent.
 export function trackEnquiry(event: EnquiryEvent) {

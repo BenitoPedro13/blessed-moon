@@ -38,11 +38,11 @@ export default function Home() {
         <ScrollMorphStage
           heightPerLayer={1.6}
           layers={[
-            { number: "01", keyframe: 1, label: "ABOUT", width: 900, content: <AboutTeaser /> },
-            { number: "02", id: "services", keyframe: 2, label: "SERVICES", width: 1120, content: <ServicesFocus /> },
-            { number: "03", keyframe: 2, label: "PROCESS", width: 980, content: <HowWeWork /> },
-            { number: "04", keyframe: 3, label: "SELECTED WORK", width: 1120, content: <SelectedWork /> },
-            { number: "05", id: "pricing", keyframe: 4, label: "PRICING", width: 660, content: <PricingTable /> },
+            { number: "01", keyframe: 1, label: "ABOUT", analytics: "about", width: 900, content: <AboutTeaser /> },
+            { number: "02", id: "services", keyframe: 2, label: "SERVICES", analytics: "services", width: 1120, content: <ServicesFocus /> },
+            { number: "03", keyframe: 2, label: "PROCESS", analytics: "process", width: 980, content: <HowWeWork /> },
+            { number: "04", keyframe: 3, label: "SELECTED WORK", analytics: "work", width: 1120, content: <SelectedWork /> },
+            { number: "05", id: "pricing", keyframe: 4, label: "PRICING", analytics: "pricing", width: 660, content: <PricingTable /> },
           ]}
         />
         <hr className="border-border/60" />

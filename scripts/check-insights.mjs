@@ -31,6 +31,11 @@ assert.equal(r.readSpeed([{ page: "/", metric: "lcp", p75: 6000, samples: 3 }]).
 assert.match(r.readSpeed([{ page: "/work", metric: "lcp", p75: 6000, samples: 40 }]).text, /^\/work is slow/);
 assert.equal(r.readCompare({ visitors: 5, contact: 1, started: 0, accepted: 0 }, { visitors: 3, contact: 0, started: 0, accepted: 0 }).tone, "wait");
 assert.equal(r.readCases([{ title: "A", sessions: 4, contact: 1 }]).tone, "wait");
+const reached = (about, services, process, work, pricing) => ({ about, services, process, work, pricing });
+assert.equal(r.readSections({ views: 80, reached: reached(0, 0, 0, 0, 0) }).tone, "wait", "No events yet: no verdict, and not read as a measured zero");
+assert.equal(r.readSections({ views: 10, reached: reached(8, 6, 5, 4, 3) }).tone, "wait", "Under the minimum, no verdict");
+assert.match(r.readSections({ views: 100, reached: reached(90, 85, 40, 35, 30) }).text, /from 02 Services to 03 Process/);
+assert.equal(r.readSections({ views: 100, reached: reached(95, 90, 85, 80, 75) }).tone, "fine");
 
 const { isInsightsAuthorized } = await load("../src/lib/insights-auth.ts");
 const basic = (user, pass) => `Basic ${btoa(`${user}:${pass}`)}`;

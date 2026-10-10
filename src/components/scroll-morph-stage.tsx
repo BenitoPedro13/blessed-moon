@@ -5,6 +5,7 @@ import { LayoutGroup, motion } from "motion/react";
 
 import { CellGrid } from "@/components/cell-grid";
 import { subscribeFrame } from "@/components/frame-loop";
+import { trackHomeSection, type HomeSection } from "@/lib/analytics";
 import { usePageReducedMotion } from "@/lib/use-page-reduced-motion";
 import { ScrollParticles } from "@/components/scroll-particles";
 import { SectionHeading } from "@/components/section-heading";
@@ -69,6 +70,8 @@ const CROSSFADE_GAMMA = 1.7;
  * and last layers get half the screen time of the middle ones, so the stage
  * opens by immediately dissolving the section you just arrived at. */
 const END_HOLD = 0.5;
+/** How long a layer must stay the one on screen before it counts as reached. */
+const DWELL_MS = 600;
 
 /** Where `createScrollTracker` samples the page (its `anchorRatio`). Keyframe
  * markers are offset by this so each crosses the tracker's anchor line exactly
@@ -127,6 +130,9 @@ export interface MorphLayerSpec {
    * window interpolates between neighbours, so this is what makes it expand
    * and contract rather than sit at one size for the whole journey. */
   width: number;
+  /** Reported once per page view as `home-section-reached` when this layer
+   * first becomes the one on screen (TASK-homepage-conversion-and-navigation.md). */
+  analytics?: HomeSection;
   content: React.ReactNode;
 }
 
@@ -157,6 +163,19 @@ export function ScrollMorphStage({
    * for every layer would force a layout flush 60 times a second. */
   const heightsRef = useRef<number[]>([]);
   const [active, setActive] = useState(0);
+  /** Sections already reported this page view, and the specs the rAF loop
+   * reads them from (it is set up once, so it can't close over `layers`). */
+  const reportedRef = useRef(new Set<HomeSection>());
+  const analyticsRef = useRef<(HomeSection | undefined)[]>([]);
+  useEffect(() => {
+    analyticsRef.current = layers.map((layer) => layer.analytics);
+  });
+  function report(index: number) {
+    const section = analyticsRef.current[index];
+    if (!section || reportedRef.current.has(section)) return;
+    reportedRef.current.add(section);
+    trackHomeSection(section);
+  }
   const reduceMotion = usePageReducedMotion();
   const [contentOverflow, setContentOverflow] = useState(false);
   const flow = reduceMotion || contentOverflow;
@@ -230,9 +249,16 @@ export function ScrollMorphStage({
     // Written in the read phase, consumed in the write phase — see frame-loop.ts
     // for why the two are separated across every subscriber on the page.
     let progress = 0;
+    // Whether the window is actually on screen yet. Progress clamps to 0 above
+    // the stage, so without this the first layer would count as reached on
+    // load.
+    let engaged = false;
+    let dwellIndex = -1;
+    let dwellSince = 0;
 
     function read() {
       const rect = wrapper!.getBoundingClientRect();
+      engaged = rect.top <= window.innerHeight * 0.25 && rect.bottom >= window.innerHeight * 0.75;
       const scrollable = rect.height - window.innerHeight;
       const t = scrollable > 0 ? Math.min(1, Math.max(0, -rect.top / scrollable)) : 0;
       progress = Math.min(count - 1, Math.max(0, t * span - END_HOLD));
@@ -292,6 +318,11 @@ export function ScrollMorphStage({
         lastActive = next;
         setActive(next);
       }
+      // Counted only after a short dwell, so flying past a section (an anchor
+      // jump, a fast fling) doesn't record it as read.
+      const now = performance.now();
+      if (!engaged || next !== dwellIndex) { dwellIndex = engaged ? next : -1; dwellSince = now; }
+      else if (now - dwellSince >= DWELL_MS) report(next);
     }
 
     return subscribeFrame({ read, write });
@@ -300,6 +331,20 @@ export function ScrollMorphStage({
     // rAF loop constantly. Everything the loop needs from it comes through
     // widthsRef/heightsRef instead.
   }, [count, span, flow]);
+
+  // Flow mode has no active layer, so reaching a section is the section
+  // crossing the middle of the viewport.
+  const flowSectionsRef = useRef<(HTMLElement | null)[]>([]);
+  useEffect(() => {
+    if (!flow) return;
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) report(flowSectionsRef.current.indexOf(entry.target as HTMLElement));
+      });
+    }, { rootMargin: "-45% 0px -45% 0px" });
+    flowSectionsRef.current.forEach((el) => el && observer.observe(el));
+    return () => observer.disconnect();
+  }, [flow, count]);
 
   // Stacked, unpinned, every section legible and reachable in its own static
   // window, nothing crossfading or flying. Deliberately not "the same thing,
@@ -313,7 +358,7 @@ export function ScrollMorphStage({
             key={layer.label}
             value={{ index: i, active: i, isActive: true, morphing: false }}
           >
-            <section id={layer.id} data-ascii-keyframe={layer.keyframe} data-frame-label={layer.label}>
+            <section ref={(el) => { flowSectionsRef.current[i] = el; }} id={layer.id} data-ascii-keyframe={layer.keyframe} data-frame-label={layer.label}>
               <TerminalPanel
                 number={layer.number}
                 label={layer.label}

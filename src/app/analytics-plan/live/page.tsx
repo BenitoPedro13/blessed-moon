@@ -3,9 +3,9 @@ import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { PlanShell, PlanSection, PLAN_TEXT, PLAN_LINK } from "@/components/social/plan-shell";
 import { InsightPanel } from "@/components/insights/insight-panel";
-import { CaseContact, FunnelLadder, MobileSpeed, PeriodCompare, PostScorecard } from "@/components/insights/insight-views";
+import { CaseContact, FunnelLadder, MobileSpeed, PeriodCompare, PostScorecard, SectionReach } from "@/components/insights/insight-views";
 import { isInsightsAuthorized } from "@/lib/insights-auth";
-import { readCases, readCompare, readLadder, readPosts, readSpeed } from "@/lib/insight-readings";
+import { readCases, readCompare, readLadder, readPosts, readSections, readSpeed } from "@/lib/insight-readings";
 import { RANGES, loadInsights, parseRange } from "@/lib/umami-insights";
 
 export const metadata: Metadata = {
@@ -75,10 +75,16 @@ export default async function LiveInsightsPage({ searchParams }: { searchParams:
             reading={insights.ladder.status === "ok" && insights.previousLadder.status === "ok" ? readCompare(insights.ladder.data, insights.previousLadder.data) : undefined}>
             {insights.ladder.status === "ok" && insights.previousLadder.status === "ok" && <PeriodCompare current={insights.ladder.data} previous={insights.previousLadder.data} />}
           </InsightPanel>
+
+          <InsightPanel number="06" question="How far down the homepage do people get?"
+            unavailable={insights.sections.status === "unavailable" ? insights.sections.reason : undefined}
+            reading={insights.sections.status === "ok" ? readSections(insights.sections.data) : undefined}>
+            {insights.sections.status === "ok" && <SectionReach counts={insights.sections.data} />}
+          </InsightPanel>
         </>
       )}
 
-      <PlanSection number="06" title="What this page can't see.">
+      <PlanSection number="07" title="What this page can't see.">
         <p className={PLAN_TEXT}>
           Reach, saves and replies live in the native apps. Whether an enquiry was a good fit, became a proposal or paid is in your inbox and sales register.
           A session isn&apos;t a person: one buyer on a phone and a laptop counts twice, and blocked trackers count zero. The definitions behind each number are on the{" "}
