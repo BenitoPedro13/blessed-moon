@@ -1,5 +1,7 @@
 "use client";
 
+import { useI18n } from "@/components/locale-provider";
+
 import { TOKEN_DISPLAY } from "@/components/morph-tokens";
 import { MorphToken, morphDrift } from "@/components/scroll-morph-stage";
 
@@ -14,6 +16,7 @@ import { MorphToken, morphDrift } from "@/components/scroll-morph-stage";
  * content.
  */
 export function AboutDynamic() {
+  const { t } = useI18n();
   return (
     <div>
       {/* Untransformed: holds the arriving token. */}
@@ -21,20 +24,13 @@ export function AboutDynamic() {
         <MorphToken id="about-0" side="to" className={TOKEN_DISPLAY}>
           0
         </MorphToken>
-        <span className="font-sans text-xl font-semibold tracking-[-0.02em] text-foreground sm:text-2xl">
-          layers in between.
-        </span>
+        <span className="font-sans text-xl font-semibold tracking-[-0.02em] text-foreground sm:text-2xl">{t("layers in between.")}</span>
       </p>
 
       <p
         className="mt-8 max-w-xl text-[14px] leading-[1.75] text-muted-foreground"
         style={morphDrift({ y: 44, order: 1 })}
-      >
-        Blessed Moon Studio is Benito&apos;s solo practice. You speak directly with
-        the person researching, designing and building your project. A clear
-        scope and one point of responsibility keep decisions and delivery
-        connected from the first conversation to the handover.
-      </p>
+      >{t("Blessed Moon Studio is Benito's solo practice. You speak directly with the person researching, designing and building your project. A clear scope and one point of responsibility keep decisions and delivery connected from the first conversation to the handover.")}</p>
     </div>
   );
 }

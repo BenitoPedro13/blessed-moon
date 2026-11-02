@@ -142,7 +142,12 @@ try {
   for (const width of [1440, 390, 320]) {
     await motionPage.setViewportSize({ width, height: 568 });
     await motionPage.goto(`${origin}/`, { waitUntil: "load" });
-    await motionPage.getByRole("button", { name: "begin", exact: true }).click({ timeout: 20000 });
+    // The boot runs once per visitor; later widths reuse the same browser session.
+    await motionPage.waitForFunction(() => {
+      const boot = document.querySelector('[data-boot-phase]');
+      return !boot || boot.dataset.bootPhase === 'gating';
+    });
+    if (await motionPage.locator('[data-boot-phase]').count()) await motionPage.keyboard.press('End');
     await motionPage.locator('[data-boot-phase]').waitFor({ state: 'detached' });
     // The zero-height marker defines the centre of this morph layer. Native
     // scrollIntoView applies the site's navigation scroll-padding and samples

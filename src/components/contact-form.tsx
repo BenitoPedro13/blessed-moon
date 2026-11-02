@@ -1,5 +1,7 @@
 "use client";
 
+import { useI18n } from "@/components/locale-provider";
+
 import { useRef, useState, type FormEvent } from "react";
 import { ArrowUpRight, Check, LoaderCircle } from "lucide-react";
 
@@ -28,6 +30,7 @@ const FIELD_CLASS =
 type FormStatus = "idle" | "working" | "sent" | "failed";
 
 export function ContactForm({ deliveryReady, agencyEmail, initialProjectType = PROJECT_TYPES[0] }: { deliveryReady: boolean; agencyEmail: string | null; initialProjectType?: ProjectType }) {
+  const { t, locale } = useI18n();
   const [projectType, setProjectType] = useState<ProjectType>(initialProjectType);
   const [status, setStatus] = useState<FormStatus>("idle");
   const [error, setError] = useState("");
@@ -55,6 +58,7 @@ export function ContactForm({ deliveryReady, agencyEmail, initialProjectType = P
           message: String(form.get("message") ?? ""),
           website: String(form.get("website") ?? ""),
           projectType,
+          locale,
         }),
       });
       const result = await response.json();
@@ -82,10 +86,10 @@ export function ContactForm({ deliveryReady, agencyEmail, initialProjectType = P
   if (status === "sent") {
     return <div className="rr-block space-y-4" role="status" aria-live="polite">
       <Check className="size-6 text-primary" aria-hidden="true" />
-      <h2 className="font-sans text-2xl font-semibold">Thanks for reaching out.</h2>
-      <p className="text-sm leading-7 text-muted-foreground">Your enquiry has been sent to Blessed Moon Studio. I&apos;ll review your project and follow up with you personally.</p>
-      {confirmationSent && <p className="text-sm leading-7 text-muted-foreground">A confirmation email is on its way. Check your spam folder if you don&apos;t see it.</p>}
-      {agencyEmail && <a href={`mailto:${agencyEmail}`} className="inline-block text-sm text-primary underline underline-offset-4">Have something to add? Email the studio.</a>}
+      <h2 className="font-sans text-2xl font-semibold">{t("Thanks for reaching out.")}</h2>
+      <p className="text-sm leading-7 text-muted-foreground">{t("Your enquiry has been sent to Blessed Moon Studio. I'll review your project and follow up with you personally.")}</p>
+      {confirmationSent && <p className="text-sm leading-7 text-muted-foreground">{t("A confirmation email is on its way. Check your spam folder if you don't see it.")}</p>}
+      {agencyEmail && <a href={`mailto:${agencyEmail}`} className="inline-block text-sm text-primary underline underline-offset-4">{t("Have something to add? Email the studio.")}</a>}
     </div>;
   }
 
@@ -98,22 +102,22 @@ export function ContactForm({ deliveryReady, agencyEmail, initialProjectType = P
     }}>
       <fieldset disabled={!deliveryReady || status === "working"} className="space-y-5">
         <div aria-hidden="true" className="absolute -left-[10000px] h-px w-px overflow-hidden">
-          <label htmlFor="website">Leave this field empty</label>
+          <label htmlFor="website">{t("Leave this field empty")}</label>
           <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
         </div>
         <div className="grid gap-5 sm:grid-cols-2">
-          <Field label="Name" htmlFor="name">
+          <Field label={t("Name")} htmlFor="name">
             <Input
               id="name"
               name="name"
               autoComplete="name"
               required
               maxLength={ENQUIRY_LIMITS.name}
-              placeholder="Your name"
+              placeholder={t("Your name")}
               className={FIELD_CLASS}
             />
           </Field>
-          <Field label="Email" htmlFor="email">
+          <Field label={t("Email")} htmlFor="email">
             <Input
               id="email"
               name="email"
@@ -121,24 +125,24 @@ export function ContactForm({ deliveryReady, agencyEmail, initialProjectType = P
               autoComplete="email"
               required
               maxLength={ENQUIRY_LIMITS.email}
-              placeholder="you@company.com"
+              placeholder={t("you@company.com")}
               className={FIELD_CLASS}
             />
           </Field>
         </div>
 
-        <Field label="Company" htmlFor="company">
+        <Field label={t("Company")} htmlFor="company">
           <Input
             id="company"
             name="company"
             autoComplete="organization"
             maxLength={ENQUIRY_LIMITS.company}
-            placeholder="Company or project name"
+            placeholder={t("Company or project name")}
             className={FIELD_CLASS}
           />
         </Field>
 
-        <Field label="Project type" htmlFor="project-type">
+        <Field label={t("Project type")} htmlFor="project-type">
           <Select
             value={projectType}
             onValueChange={(value) => isProjectType(value) && setProjectType(value)}
@@ -147,26 +151,26 @@ export function ContactForm({ deliveryReady, agencyEmail, initialProjectType = P
               id="project-type"
               className="h-11 w-full rounded-none border-border/80 bg-panel px-3 font-sans text-[13px] focus-visible:ring-1"
             >
-              <SelectValue />
+              <SelectValue>{t(projectType)}</SelectValue>
             </SelectTrigger>
             <SelectContent align="start" className="rounded-none border border-border bg-popover shadow-none">
               {PROJECT_TYPES.map((type) => (
                 <SelectItem key={type} value={type} className="rounded-none font-sans text-[13px]">
-                  {type}
+                  {t(type)}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
         </Field>
 
-        <Field label="Message" htmlFor="message">
+        <Field label={t("Message")} htmlFor="message">
           <Textarea
             id="message"
             name="message"
             required
             maxLength={ENQUIRY_LIMITS.message}
             rows={7}
-            placeholder="What are you building, who is it for, and what needs to be true when it ships?"
+            placeholder={t("What are you building, who is it for, and what needs to be true when it ships?")}
             className="min-h-40 resize-y rounded-none border-border/80 bg-panel px-3 py-3 font-sans text-[13px] leading-[1.6] placeholder:text-muted-foreground/55 focus-visible:ring-1"
           />
         </Field>
@@ -179,15 +183,15 @@ export function ContactForm({ deliveryReady, agencyEmail, initialProjectType = P
             onMouseEnter={playHover}
             className="rounded-none bg-primary px-5 font-mono text-[10.5px] tracking-[0.08em] text-primary-foreground uppercase hover:bg-primary/85"
           >
-            {status === "working" ? <>Sending enquiry<LoaderCircle className="animate-spin" aria-hidden="true" /></> : <>Send enquiry<ArrowUpRight aria-hidden="true" /></>}
+            {t(status === "working" ? <>{t("Sending enquiry")}<LoaderCircle className="animate-spin" aria-hidden="true" /></> : <>{t("Send enquiry")}<ArrowUpRight aria-hidden="true" /></>)}
           </Button>
           <p className="max-w-sm font-mono text-[9px] leading-[1.55] text-muted-foreground" aria-live="polite">
-            {deliveryReady ? "Your details go directly to the studio. We'll email a confirmation and follow up personally." : "The enquiry form is temporarily unavailable. Please email the studio directly."}
+            {t(deliveryReady ? "Your details go directly to the studio. We'll email a confirmation and follow up personally." : "The enquiry form is temporarily unavailable. Please email the studio directly.")}
           </p>
         </div>
       </fieldset>
-      {error && <p role="alert" className="text-sm leading-6 text-destructive">{error}</p>}
-      {(!deliveryReady || status === "failed") && agencyEmail && <a href={`mailto:${agencyEmail}`} className="inline-block text-sm text-primary underline underline-offset-4">Email {agencyEmail}</a>}
+      {error && <p role="alert" className="text-sm leading-6 text-destructive">{t(error)}</p>}
+      {(!deliveryReady || status === "failed") && agencyEmail && <a href={`mailto:${agencyEmail}`} className="inline-block text-sm text-primary underline underline-offset-4">{t("Email ")}{t(agencyEmail)}</a>}
     </form>
   );
 }
@@ -201,15 +205,16 @@ function Field({
   htmlFor: string;
   children: React.ReactNode;
 }) {
+  const { t } = useI18n();
   return (
     <div>
       <label
         htmlFor={htmlFor}
         className="mb-2 block font-mono text-[9.5px] tracking-[0.1em] text-muted-foreground uppercase"
       >
-        {label}
+        {t(label)}
       </label>
-      {children}
+      {t(children)}
     </div>
   );
 }

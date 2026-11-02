@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from "react";
-import { useReducedMotion } from "motion/react";
+import { useI18n } from "@/components/locale-provider";
+
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from "react";
+import { usePageReducedMotion } from "@/lib/use-page-reduced-motion";
 
 import { useSound } from "@/components/sound-provider";
 import { BOOT_FACTS, BOOT_SWATCHES, bootLeader, type BootFact } from "@/lib/boot-info";
@@ -50,6 +52,7 @@ type Phase = "booting" | "gating" | "exiting" | "hidden";
  * hand-copied preview that would drift from it.
  */
 export function BootLockup({ muted, exiting = false }: { muted: boolean; exiting?: boolean }) {
+  const { t } = useI18n();
   // `sound` is the one live field: it's the state the gate is about to ask the
   // visitor to change, so it should already be on screen as a fact rather than
   // arrive only as a question.
@@ -97,9 +100,9 @@ export function BootLockup({ muted, exiting = false }: { muted: boolean; exiting
 
       <div className="w-full min-w-0 sm:flex-1">
         <div className="boot-line whitespace-pre" style={delay(80, 0)}>
-          <span className="text-primary">blessed_moon</span>
+          <span className="text-primary">{t("blessed_moon")}</span>
           <span className="text-muted-foreground">@</span>
-          <span className="text-foreground">studio</span>
+          <span className="text-foreground">{t("studio")}</span>
         </div>
         <div className="boot-line mt-1 mb-2 border-t border-border" style={delay(160, 0)} />
 
@@ -109,11 +112,11 @@ export function BootLockup({ muted, exiting = false }: { muted: boolean; exiting
             className="boot-line flex items-baseline"
             style={delay(factsStart + index * 80, 30 + index * 25)}
           >
-            <span className="whitespace-pre text-primary">{fact.key}</span>
+            <span className="whitespace-pre text-primary">{t(fact.key)}</span>
             <span className="hidden whitespace-pre text-muted-foreground/35 sm:inline">
               {bootLeader(fact.key)}
             </span>
-            <span className="whitespace-pre text-muted-foreground/60">{": "}</span>
+            <span className="whitespace-pre text-muted-foreground/60">{t(": ")}</span>
             {/* min-w-0 so a long value wraps on a very narrow phone rather than
                 pushing the fixed overlay into horizontal scroll. */}
             <span
@@ -124,7 +127,7 @@ export function BootLockup({ muted, exiting = false }: { muted: boolean; exiting
                 animationTimingFunction: `steps(${fact.value.length})`,
               }}
             >
-              {fact.value}
+              {t(fact.value)}
             </span>
             {fact.key === "status" && (
               <span
@@ -202,7 +205,8 @@ const readSeen = () => document.documentElement.hasAttribute("data-boot-seen");
 const serverSeen = () => false;
 
 export function BootSequence() {
-  const reduceMotion = useReducedMotion();
+  const { t } = useI18n();
+  const reduceMotion = usePageReducedMotion();
   const { muted, toggleMuted } = useSound();
   const [phase, setPhase] = useState<Phase>("booting");
   const [soundChoice, setSoundChoice] = useState<"unset" | "enabled" | "muted">("unset");
@@ -213,7 +217,7 @@ export function BootSequence() {
     phaseRef.current = phase;
   }, [phase]);
 
-  function exit() {
+  const exit = useCallback(() => {
     if (phaseRef.current === "exiting" || phaseRef.current === "hidden") return;
     try {
       localStorage.setItem(SEEN_KEY, "1");
@@ -225,7 +229,7 @@ export function BootSequence() {
     // entire site, so removing it must not depend on an event that a dropped or
     // disabled animation would never fire.
     window.setTimeout(() => setPhase("hidden"), reduceMotion ? REDUCED_EXIT_MS : EXIT_MS);
-  }
+  }, [reduceMotion]);
 
   // Phase 1: booting → gating (or straight to hidden under reduced motion).
   // A returning visitor's overlay was hidden by CSS before paint and is
@@ -265,7 +269,7 @@ export function BootSequence() {
       window.removeEventListener("pointerdown", skipBoot);
       window.removeEventListener("keydown", skipBoot);
     };
-  }, [reduceMotion, seen]);
+  }, [reduceMotion, seen, exit]);
 
   // Phase 2: gating → exiting. Locks body scroll for the duration, listens for a
   // real scroll-equivalent gesture, and falls back to a timeout so it can never
@@ -310,7 +314,7 @@ export function BootSequence() {
       window.removeEventListener("keydown", onKeyDown);
       window.clearTimeout(fallback);
     };
-  }, [phase]);
+  }, [phase, exit]);
 
   if (seen || phase === "hidden") return null;
 
@@ -330,7 +334,7 @@ export function BootSequence() {
       {phase === "gating" && (
         <div className="boot-line boot-gate flex w-full max-w-[660px] flex-col gap-5 border-t border-border/60 pt-6 font-mono text-[11px]">
           <div className="flex flex-wrap items-center gap-3">
-            <span className="text-muted-foreground">enable sound for the full experience?</span>
+            <span className="text-muted-foreground">{t("enable sound for the full experience?")}</span>
             <button
               type="button"
               onClick={() => {
@@ -343,7 +347,7 @@ export function BootSequence() {
                   : "border-primary/60 text-primary hover:bg-primary hover:text-primary-foreground"
               }`}
             >
-              {soundChoice === "enabled" ? "sound on" : "enable sound"}
+              {t(soundChoice === "enabled" ? "sound on" : "enable sound")}
             </button>
             <button
               type="button"
@@ -353,20 +357,16 @@ export function BootSequence() {
                   ? "border-border bg-muted text-foreground"
                   : "border-border/60 text-muted-foreground hover:text-foreground"
               }`}
-            >
-              continue muted
-            </button>
+            >{t("continue muted")}</button>
           </div>
 
           <div className="flex items-center justify-between gap-3">
-            <span className="text-muted-foreground">scroll to begin</span>
+            <span className="text-muted-foreground">{t("scroll to begin")}</span>
             <button
               type="button"
               onClick={exit}
               className="inline-flex items-center gap-2 border border-primary/60 px-4 py-2 text-primary uppercase tracking-[0.06em] transition-colors hover:bg-primary hover:text-primary-foreground"
-            >
-              begin
-              <span aria-hidden="true" className="animate-bounce">
+            >{t("begin")}<span aria-hidden="true" className="animate-bounce">
                 ↓
               </span>
             </button>

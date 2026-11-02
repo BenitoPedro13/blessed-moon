@@ -1,6 +1,8 @@
 "use client";
 
-import Link from "next/link";
+import { useI18n } from "@/components/locale-provider";
+
+import Link from "@/components/localized-link";
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import { motion } from "motion/react";
@@ -50,6 +52,7 @@ const PROJECTS = [
  * regardless of viewport width.
  */
 export function SelectedWork() {
+  const { t } = useI18n();
   const { playHover, playClick } = useSound();
 
   return (
@@ -61,17 +64,12 @@ export function SelectedWork() {
             <MorphToken id="count-3" side="to" className={COUNT_DISPLAY}>
               3
             </MorphToken>
-            <span className="font-sans text-xl font-semibold tracking-[-0.02em] text-foreground sm:text-2xl">
-              still in production.
-            </span>
+            <span className="font-sans text-xl font-semibold tracking-[-0.02em] text-foreground sm:text-2xl">{t("still in production.")}</span>
           </p>
-          <p className="mt-5 max-w-sm text-[14px] leading-[2.1] text-muted-foreground">
-            Every one of them priced the same way:{" "}
+          <p className="mt-5 max-w-sm text-[14px] leading-[2.1] text-muted-foreground">{t("Every one of them priced the same way:")}{t(" ")}
             <MorphToken id="count-1" side="from" className={COUNT_INLINE}>
               1
-            </MorphToken>{" "}
-            number, agreed before a line was written.
-          </p>
+            </MorphToken>{t(" ")}{t("number, agreed before a line was written.")}</p>
         </div>
 
         <div
@@ -86,12 +84,12 @@ export function SelectedWork() {
                 className={`group flex items-center gap-5 focus-visible:outline-none sm:gap-7 ${
                   i % 2 === 1 ? "flex-row-reverse" : ""
                 }`}
-                aria-label={`View ${project.name} case study`}
+                aria-label={t(`View ${project.name} case study`)}
               >
                 <div className="relative h-24 w-36 short:h-16 short:w-24 flex-none overflow-hidden border border-border/60 bg-muted/20 transition-colors group-focus-visible:border-primary group-hover:border-primary/60 sm:h-32 sm:w-48 short:sm:h-20 short:sm:w-32">
                   <Image
                     src={project.image}
-                    alt={project.imageAlt}
+                    alt={t(project.imageAlt)}
                     fill
                     sizes="(min-width: 640px) 192px, 144px"
                     // Held slightly back at rest, full on hover. These are
@@ -104,12 +102,11 @@ export function SelectedWork() {
                   />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <span className="block font-mono text-[9.5px] tracking-[0.1em] text-muted-foreground/70 uppercase">
-                    Project 0{i + 1}
+                  <span className="block font-mono text-[9.5px] tracking-[0.1em] text-muted-foreground/70 uppercase">{t("Project 0")}{i + 1}
                   </span>
                   <div className="mt-1.5 flex items-center gap-2.5">
                     <h3 className="font-sans text-xl text-foreground sm:text-2xl">
-                      {project.name}
+                      {t(project.name)}
                     </h3>
                     <ArrowUpRight
                       className="size-4 text-primary transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
@@ -117,7 +114,7 @@ export function SelectedWork() {
                     />
                   </div>
                   <p className="mt-1.5 max-w-sm text-[12.5px] leading-[1.5] text-muted-foreground">
-                    {project.description}
+                    {t(project.description)}
                   </p>
                 </div>
               </Link>

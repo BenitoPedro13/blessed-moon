@@ -1,3 +1,7 @@
+"use client";
+
+import { useI18n } from "@/components/locale-provider";
+
 import { SectionHeading } from "@/components/section-heading";
 
 /**
@@ -55,18 +59,19 @@ export function TerminalPanel({
   style?: React.CSSProperties;
   children: React.ReactNode;
 }) {
+  const { t } = useI18n();
   return (
     <div style={style} className={`${WINDOW_FRAME} mx-auto w-full ${className}`}>
       <div className={WINDOW_TITLEBAR}>
-        <SectionHeading number={number} label={label} className="whitespace-nowrap" />
+        <SectionHeading number={number} label={t(label)} className="whitespace-nowrap" />
         <TitleRule />
         {status && (
           <span className="shrink-0 font-mono text-[10.5px] tracking-[0.5px] text-muted-foreground">
-            {status}
+            {t(status)}
           </span>
         )}
       </div>
-      <div className={`${padded ? WINDOW_BODY : ""} ${bodyClassName}`}>{children}</div>
+      <div className={`${padded ? WINDOW_BODY : ""} ${bodyClassName}`}>{t(children)}</div>
     </div>
   );
 }

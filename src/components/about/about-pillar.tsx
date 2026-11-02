@@ -1,5 +1,7 @@
 "use client";
 
+import { useI18n } from "@/components/locale-provider";
+
 import { TOKEN_DISPLAY, TOKEN_INLINE } from "@/components/morph-tokens";
 import { MorphToken, morphDrift } from "@/components/scroll-morph-stage";
 import type { StudioPillar } from "@/lib/studio-data";
@@ -38,6 +40,7 @@ const HANDOFF: Record<string, { id: string; glyph: string; before: string; after
 };
 
 export function AboutPillar({ pillar }: { pillar: StudioPillar }) {
+  const { t } = useI18n();
   const handoff = HANDOFF[pillar.id];
 
   return (
@@ -51,18 +54,18 @@ export function AboutPillar({ pillar }: { pillar: StudioPillar }) {
               side="to"
               className={TOKEN_DISPLAY}
             >
-              {pillar.id}
+              {t(pillar.id)}
             </MorphToken>
           </p>
           <h2 className="mt-6 font-sans text-2xl font-semibold tracking-[-0.025em] text-foreground">
-            {pillar.title}
+            {t(pillar.title)}
           </h2>
           <div className="mt-6 border-t border-border/60 pt-5">
             <p className="font-sans text-[15px] font-medium text-foreground">
-              {pillar.lead}
+              {t(pillar.lead)}
             </p>
             <p className="mt-1.5 font-mono text-[10.5px] leading-[1.6] text-muted-foreground">
-              {pillar.titleLine}
+              {t(pillar.titleLine)}
             </p>
           </div>
         </div>
@@ -74,7 +77,7 @@ export function AboutPillar({ pillar }: { pillar: StudioPillar }) {
                 key={role}
                 className="border border-border/80 px-3 py-2 font-mono text-[10px] tracking-[0.06em] text-muted-foreground"
               >
-                {role}
+                {t(role)}
               </li>
             ))}
           </ul>
@@ -88,7 +91,7 @@ export function AboutPillar({ pillar }: { pillar: StudioPillar }) {
                     : "text-[13px] leading-[1.75] text-muted-foreground"
                 }
               >
-                {paragraph}
+                {t(paragraph)}
               </p>
             ))}
           </div>
@@ -98,11 +101,11 @@ export function AboutPillar({ pillar }: { pillar: StudioPillar }) {
       {/* Untransformed: holds the departing token. */}
       {handoff && (
         <p className="mt-10 max-w-xl border-t border-border/60 pt-6 text-[13.5px] leading-[2.1] text-muted-foreground">
-          {handoff.before}{" "}
+          {t(handoff.before)}{t(" ")}
           <MorphToken id={handoff.id} side="from" className={TOKEN_INLINE}>
-            {handoff.glyph}
+            {t(handoff.glyph)}
           </MorphToken>
-          {handoff.after}
+          {t(handoff.after)}
         </p>
       )}
     </div>

@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
+import { usePageReducedMotion } from "@/lib/use-page-reduced-motion";
 
 interface RevealProps {
   children: React.ReactNode;
@@ -21,7 +22,7 @@ interface RevealProps {
  * §5/§6). Respects prefers-reduced-motion.
  */
 export function Reveal({ children, delay = 0, className }: RevealProps) {
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = usePageReducedMotion();
 
   if (reduceMotion) {
     return <div className={className}>{children}</div>;

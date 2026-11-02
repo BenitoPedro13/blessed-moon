@@ -1,3 +1,5 @@
+
+import { getServerI18n, localizedMetadata } from "@/lib/i18n/server";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
 import { PageCta } from "@/components/page-cta";
@@ -9,7 +11,12 @@ import { PricingTable } from "@/components/homepage/pricing-table";
 import { SelectedWork } from "@/components/homepage/selected-work";
 import { ServicesFocus } from "@/components/homepage/services-focus";
 
-export default function Home() {
+export async function generateMetadata() {
+  return localizedMetadata({ title: { absolute: "Blessed Moon Studio" } }, "/");
+}
+
+export default async function Home() {
+  const { t } = await getServerI18n();
   return (
     <>
       <SiteNav />
@@ -53,8 +60,8 @@ export default function Home() {
             costing a second three.js scene. The copy is kept — it is the
             homepage's landing beat and more specific than the shared default. */}
         <PageCta
-          title="Let's build something that lasts."
-          description="Tell us what you're building — we'll tell you what it takes."
+          title={t("Let's build something that lasts.")}
+          description={t("Tell us what you're building — we'll tell you what it takes.")}
           keyframe="5"
         />
       </main>

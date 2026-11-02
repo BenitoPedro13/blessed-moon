@@ -1,7 +1,9 @@
 "use client";
 
+import { useI18n } from "@/components/locale-provider";
+
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
+import Link from "@/components/localized-link";
 import { Menu, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 
@@ -9,6 +11,8 @@ import { subscribeFrame } from "@/components/frame-loop";
 import { LogoMark } from "@/components/logo-mark";
 import { useSound } from "@/components/sound-provider";
 import { SoundToggle } from "@/components/sound-toggle";
+import { LanguageSwitch } from "@/components/language-switch";
+import { stripLocale } from "@/lib/i18n/shared";
 import { createScrollTracker } from "@/lib/ascii-canvas/scroll-progress";
 
 const NAV_LINKS = [
@@ -26,8 +30,9 @@ const NAV_LINKS = [
 const EASE = 0.12;
 
 export function SiteNav() {
+  const { t } = useI18n();
   const { playHover, playClick } = useSound();
-  const pathname = usePathname();
+  const pathname = stripLocale(usePathname());
   const [menuOpen, setMenuOpen] = useState(false);
   const chromeRef = useRef<HTMLElement>(null);
 
@@ -111,12 +116,10 @@ export function SiteNav() {
         onMouseEnter={playHover}
         onClick={playClick}
         className="group flex items-center gap-2"
-        aria-label="Blessed Moon Studio — home"
+        aria-label={t("Blessed Moon Studio — home")}
       >
         <LogoMark className="h-4 w-4 text-primary transition-colors group-hover:text-foreground" />
-        <span className="hidden font-mono text-xs font-semibold tracking-[3px] text-foreground uppercase transition-colors group-hover:text-primary sm:inline">
-          Blessed_Moon
-        </span>
+        <span className="hidden font-mono text-xs font-semibold tracking-[3px] text-foreground uppercase transition-colors group-hover:text-primary sm:inline">{t("Blessed_Moon")}</span>
       </Link>
       <nav className="hidden items-center gap-6 font-mono text-[10.5px] tracking-[0.6px] text-muted-foreground uppercase md:flex">
         {NAV_LINKS.map((link) => (
@@ -130,15 +133,16 @@ export function SiteNav() {
               isActive(link.href) ? "text-primary" : ""
             }`}
           >
-            {link.label}
+            {t(link.label)}
           </Link>
         ))}
       </nav>
       <div className="flex items-center gap-3">
+        <LanguageSwitch />
         <SoundToggle />
         <button
           type="button"
-          aria-label={menuOpen ? "Close navigation" : "Open navigation"}
+          aria-label={t(menuOpen ? "Close navigation" : "Open navigation")}
           aria-expanded={menuOpen}
           aria-controls="mobile-navigation"
           onMouseEnter={playHover}
@@ -148,7 +152,7 @@ export function SiteNav() {
           }}
           className="inline-flex size-7 items-center justify-center border border-border/80 text-muted-foreground transition-colors hover:border-primary hover:text-primary md:hidden"
         >
-          {menuOpen ? <X className="size-3.5" /> : <Menu className="size-3.5" />}
+          {t(menuOpen ? <X className="size-3.5" /> : <Menu className="size-3.5" />)}
         </button>
         {/* A plain Link, not `<Button variant="outline">`. That variant carries
             `dark:hover:bg-input/50`, and a `.dark`-scoped selector outranks the
@@ -163,15 +167,13 @@ export function SiteNav() {
           onMouseEnter={playHover}
           onClick={playClick}
           className="hidden items-center border border-primary px-4 py-2 font-mono text-[10px] tracking-[0.6px] text-primary uppercase transition-colors hover:bg-primary hover:text-primary-foreground sm:inline-flex"
-        >
-          Start a project
-        </Link>
+        >{t("Start a project")}</Link>
       </div>
 
       {menuOpen && (
         <nav
           id="mobile-navigation"
-          aria-label="Mobile navigation"
+          aria-label={t("Mobile navigation")}
           className="absolute inset-x-0 top-full border-b border-primary/30 bg-background/95 px-4 py-3 backdrop-blur-md md:hidden"
         >
           <div className="grid grid-cols-2 gap-px border border-border/60 bg-border/60">
@@ -189,7 +191,7 @@ export function SiteNav() {
                   isActive(link.href) ? "text-primary" : "text-muted-foreground"
                 }`}
               >
-                {link.label}
+                {t(link.label)}
               </Link>
             ))}
             <Link
@@ -200,9 +202,7 @@ export function SiteNav() {
                 setMenuOpen(false);
               }}
               className="col-span-2 bg-primary px-4 py-4 text-center font-mono text-[9.5px] tracking-[0.08em] text-primary-foreground uppercase"
-            >
-              Start a project
-            </Link>
+            >{t("Start a project")}</Link>
           </div>
         </nav>
       )}

@@ -1,5 +1,7 @@
 "use client";
 
+import { useI18n } from "@/components/locale-provider";
+
 import { COUNT_DISPLAY, COUNT_INLINE } from "@/components/homepage/morph-count";
 import { Counter } from "@/components/react-bits/counter";
 import { MorphToken, morphDrift, useMorphLayer } from "@/components/scroll-morph-stage";
@@ -55,6 +57,7 @@ function StepNumber({ target }: { target: number }) {
  * dominant element and the text under each is a caption, not a paragraph.
  */
 export function HowWeWork() {
+  const { t } = useI18n();
   return (
     <div>
       {/* Untransformed: holds the arriving token. */}
@@ -62,9 +65,7 @@ export function HowWeWork() {
         <MorphToken id="count-4" side="to" className={COUNT_DISPLAY}>
           4
         </MorphToken>
-        <span className="font-sans text-xl font-semibold tracking-[-0.02em] text-foreground sm:text-2xl">
-          steps, every time.
-        </span>
+        <span className="font-sans text-xl font-semibold tracking-[-0.02em] text-foreground sm:text-2xl">{t("steps, every time.")}</span>
       </p>
 
       <div
@@ -78,20 +79,17 @@ export function HowWeWork() {
           >
             <StepNumber target={i + 1} />
             <p className="mt-3 max-w-[16ch] font-sans text-[15px] leading-[1.4] text-foreground/85">
-              {step}
+              {t(step)}
             </p>
           </div>
         ))}
       </div>
 
       {/* Untransformed: holds the outgoing token. */}
-      <p className="mt-10 short:mt-6 max-w-md text-[14px] leading-[2.1] text-muted-foreground sm:mt-12 short:sm:mt-7">
-        We&apos;ve run it enough times that{" "}
+      <p className="mt-10 short:mt-6 max-w-md text-[14px] leading-[2.1] text-muted-foreground sm:mt-12 short:sm:mt-7">{t("We've run it enough times that")}{t(" ")}
         <MorphToken id="count-3" side="from" className={COUNT_INLINE}>
           3
-        </MorphToken>{" "}
-        of the systems built this way are still in production today.
-      </p>
+        </MorphToken>{t(" ")}{t("of the systems built this way are still in production today.")}</p>
     </div>
   );
 }

@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-html-link-for-pages -- Native navigation preserves the HTTP Basic authentication challenge. */
 import { PlanShell, PlanSection, PLAN_TEXT, PLAN_LINK, planMetadata } from "@/components/social/plan-shell";
 
 export const metadata = planMetadata("Social measurement plan", "/analytics-plan", "A practical measurement plan for content, campaign visits, enquiry intent and actual sales records, using Blessed Moon's existing Umami setup.");

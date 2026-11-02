@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 import { isEmail, type Enquiry } from "@/lib/enquiry";
-import { notificationHtml, notificationSubject, notificationText, RECEIPT_SUBJECT, receiptHtml, receiptText } from "@/lib/enquiry-emails";
+import { notificationHtml, notificationSubject, notificationText, receiptSubject, receiptHtml, receiptText } from "@/lib/enquiry-emails";
 
 // Imported exclusively by the server page and Node route handler. These values
 // must never use NEXT_PUBLIC_ prefixes or become client component props.
@@ -48,9 +48,9 @@ export async function sendEnquiry(enquiry: Enquiry, config: NonNullable<ReturnTy
         from: { name: "Blessed Moon Studio", address: config.from },
         to: enquiry.email,
         replyTo: config.to,
-        subject: RECEIPT_SUBJECT,
-        text: receiptText(),
-        html: receiptHtml(),
+        subject: receiptSubject(enquiry.locale),
+        text: receiptText(enquiry.locale),
+        html: receiptHtml(enquiry.locale),
       });
       const confirmationSent = receipt.accepted.some((address) => String(address).toLowerCase() === enquiry.email.toLowerCase());
       if (!confirmationSent) console.error("Project enquiry confirmation SMTP delivery failed.");

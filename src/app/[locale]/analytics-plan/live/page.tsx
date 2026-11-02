@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-html-link-for-pages -- Native navigation preserves the HTTP Basic authentication challenge. */
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";

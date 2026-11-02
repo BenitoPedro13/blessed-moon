@@ -1,6 +1,8 @@
 "use client";
 
-import Link from "next/link";
+import { useI18n } from "@/components/locale-provider";
+
+import Link from "@/components/localized-link";
 
 import { useSound } from "@/components/sound-provider";
 
@@ -14,6 +16,7 @@ const FOOTER_LINKS = [
 ] as const;
 
 export function SiteFooter() {
+  const { t } = useI18n();
   const { playHover, playClick } = useSound();
 
   return (
@@ -27,7 +30,7 @@ export function SiteFooter() {
               onClick={playClick}
               className="transition-colors hover:text-foreground"
             >
-              {link.label}
+              {t(link.label)}
             </Link>
             {i < FOOTER_LINKS.length - 1 && (
               <span aria-hidden="true">&middot;</span>
@@ -35,7 +38,7 @@ export function SiteFooter() {
           </span>
         ))}
       </div>
-      <span>&copy; 2026 Blessed Moon Studio</span>
+      <span>{t("© 2026 Blessed Moon Studio")}</span>
     </footer>
   );
 }

@@ -1,6 +1,7 @@
 import type { Enquiry } from "@/lib/enquiry";
 import { LOGO_BOUNDS, LOGO_PATH } from "@/lib/logo-mark";
 import { SITE_URL } from "@/lib/site-config";
+import type { Locale } from "@/lib/i18n/shared";
 
 // Both enquiry emails, each as a plain-text part and an HTML part. The HTML is
 // written for mail clients, not browsers: tables, inline styles, bgcolor
@@ -57,9 +58,9 @@ const paragraph = (html: string) => `<p style="margin:0 0 16px;font-family:${SAN
 
 // The studio frame: wordmark, one terminal window with a title bar, a footer
 // line. Every argument is already-safe HTML.
-function shell({ title, preheader, eyebrow, content, footer }: { title: string; preheader: string; eyebrow: string; content: string; footer: string }) {
+function shell({ title, preheader, eyebrow, content, footer, locale = "en" }: { title: string; preheader: string; eyebrow: string; content: string; footer: string; locale?: Locale }) {
   return `<!doctype html>
-<html lang="en">
+<html lang="${locale === "pt" ? "pt-BR" : "en"}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -110,19 +111,34 @@ const RECEIPT = {
 
 export const RECEIPT_SUBJECT = RECEIPT.subject;
 
-export function receiptText() {
-  return [RECEIPT.heading, "", ...RECEIPT.body.flatMap((p) => [p, ""]), ...RECEIPT.signature, "", SITE].join("\n");
+const RECEIPT_PT = {
+  subject: "Obrigado pelo contato com o Blessed Moon Studio",
+  preheader: "Sua mensagem chegou ao estúdio. Vou responder pessoalmente.",
+  heading: "Obrigado por contar sobre seu projeto.",
+  body: ["Sua mensagem chegou ao Blessed Moon Studio. Vou analisar seu projeto e responder pessoalmente.", "Se quiser acrescentar algo, é só responder a este e-mail."],
+  signature: RECEIPT.signature,
+};
+
+export function receiptSubject(locale: Locale = "en") {
+  return locale === "pt" ? RECEIPT_PT.subject : RECEIPT.subject;
 }
 
-export function receiptHtml() {
+export function receiptText(locale: Locale = "en") {
+  const receipt = locale === "pt" ? RECEIPT_PT : RECEIPT;
+  return [receipt.heading, "", ...receipt.body.flatMap((p) => [p, ""]), ...receipt.signature, "", `${SITE}${locale === "pt" ? "/pt" : ""}`].join("\n");
+}
+
+export function receiptHtml(locale: Locale = "en") {
+  const receipt = locale === "pt" ? RECEIPT_PT : RECEIPT;
   return shell({
-    title: RECEIPT.subject,
-    preheader: RECEIPT.preheader,
-    eyebrow: "Enquiry / received",
-    content: `<h1 style="margin:0 0 20px;font-family:${SANS};font-size:22px;line-height:30px;font-weight:600;color:${C.text};">${RECEIPT.heading}</h1>
-          ${RECEIPT.body.map(paragraph).join("")}
+    locale,
+    title: receipt.subject,
+    preheader: receipt.preheader,
+    eyebrow: locale === "pt" ? "Mensagem / recebida" : "Enquiry / received",
+    content: `<h1 style="margin:0 0 20px;font-family:${SANS};font-size:22px;line-height:30px;font-weight:600;color:${C.text};">${receipt.heading}</h1>
+          ${receipt.body.map(paragraph).join("")}
           <p style="margin:8px 0 0;font-family:${MONO};font-size:13px;line-height:22px;color:${C.text};">${RECEIPT.signature[0]}<br><span style="color:${C.muted};">${RECEIPT.signature[1]}</span></p>`,
-    footer: siteLink(),
+    footer: siteLink(locale === "pt" ? "/pt" : ""),
   });
 }
 

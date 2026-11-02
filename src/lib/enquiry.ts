@@ -1,4 +1,5 @@
 import { isProjectType, type ProjectType } from "@/lib/project-types";
+import { isLocale, type Locale } from "@/lib/i18n/shared";
 
 export const ENQUIRY_LIMITS = { name: 120, email: 254, company: 160, message: 6000 } as const;
 
@@ -8,6 +9,7 @@ export type Enquiry = {
   company: string;
   projectType: ProjectType;
   message: string;
+  locale?: Locale;
 };
 
 // A single mailbox only: never accept a header, display name or recipient list.
@@ -18,6 +20,7 @@ export function isEmail(value: string) {
 export function parseEnquiry(value: unknown): Enquiry | null {
   if (!value || typeof value !== "object" || Array.isArray(value)) return null;
   const data = value as Record<string, unknown>;
+  if (data.locale !== undefined && (typeof data.locale !== "string" || !isLocale(data.locale))) return null;
   const fields: Record<string, string> = {};
   for (const [key, limit] of Object.entries(ENQUIRY_LIMITS)) {
     if (typeof data[key] !== "string" || data[key].length > limit) return null;
@@ -25,5 +28,5 @@ export function parseEnquiry(value: unknown): Enquiry | null {
     if (key !== "message" && /[\r\n\u0000]/.test(fields[key])) return null;
   }
   if (!fields.name || !isEmail(fields.email) || !fields.message || /\u0000/.test(fields.message) || !isProjectType(data.projectType)) return null;
-  return { name: fields.name, email: fields.email, company: fields.company, message: fields.message, projectType: data.projectType };
+  return { name: fields.name, email: fields.email, company: fields.company, message: fields.message, projectType: data.projectType, ...(data.locale ? { locale: data.locale as Locale } : {}) };
 }

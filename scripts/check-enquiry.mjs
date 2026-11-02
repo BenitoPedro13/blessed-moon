@@ -216,6 +216,13 @@ try {
   assert.equal(unavailableResult.status, 503, "Missing SMTP settings fail closed without sending mail");
   process.env.SOCIAL_CHECK_URL = origin;
   await import("./check-social-strategy.mjs");
+  mode = "accept";
+  const portuguese = await post({ ...valid, email: "portugues@example.invalid", locale: "pt" });
+  assert.equal(portuguese.status, 200, "Portuguese enquiries use the same validated delivery flow");
+  const portugueseReceipt = messages.at(-1).content.replace(/=\r?\n/g, "");
+  assert.match(portugueseReceipt, /Obrigado por contar sobre seu projeto/);
+  assert.match(portugueseReceipt, /lang=(?:3D)?"pt-BR"/);
+  assert.equal((await post({ ...valid, locale: "invalid" })).status, 400);
   console.log("Enquiry checks passed: TLS SMTP, both emails, independent receipt failure, validation, throttling, browser retry, personal-data exclusion and blocked analytics.");
 } finally {
   if (browser) await browser.close();

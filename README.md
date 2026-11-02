@@ -29,7 +29,7 @@ interactions, design tokens, reference links). Process/working rules: [`CLAUDE.m
   fastfetch-style brand lockup (the pixel crescent at display size, true `key: value` facts
   from `src/lib/boot-info.ts`, the site palette as a swatch row), a scroll-to-begin gate, and
   a choreographed exit that dissolves onto the hero rather than cutting to it
-- SEO: expanded `Metadata` in `src/app/layout.tsx` (title template, Open Graph, Twitter card,
+- SEO: expanded `Metadata` in `src/app/[locale]/layout.tsx` (title template, Open Graph, Twitter card,
   robots), plus `src/app/robots.ts` and `src/app/sitemap.ts`
 - Favicon, apple touch icon, and the Open Graph/Twitter share image (`src/app/icon.tsx`,
   `apple-icon.tsx`, `opengraph-image.tsx`, `twitter-image.tsx`) are generated via `next/og`
@@ -47,6 +47,24 @@ pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
+
+### Languages
+
+English keeps the original URLs; Brazilian Portuguese lives at `/pt` (for example,
+`/pt/work/lunares`). The EN/PT control preserves the current page, query and section.
+The public homepage, About, Work, all case studies, Contact and social strategy service
+are translated, including metadata, image descriptions and enquiry confirmation emails.
+Editorial plans and production tools retain their existing English URLs.
+
+Page layouts live in `src/app/[locale]`. `src/proxy.ts` rewrites the original English
+URLs internally, while leaving APIs, public assets and the existing insights gate intact.
+Portuguese copy lives in `src/lib/i18n/pt.json`, keyed by the English source text. Update
+both when changing copy; names, technology names and project screenshots retain their
+original form. Server pages use `getServerI18n`; interactive components use `useI18n`
+and `LocalizedLink` to keep internal navigation in the current language.
+
+After `pnpm build`, start a preview and run `LOCALE_CHECK_URL=http://localhost:3000 pnpm check:locales`
+to check both languages, metadata, case studies, language switching and mobile navigation.
 
 ### Optional: environment variables
 

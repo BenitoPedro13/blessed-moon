@@ -1,3 +1,7 @@
+"use client";
+
+import { useI18n } from "@/components/locale-provider";
+
 interface ProjectVisualProps {
   title: string;
   variant:
@@ -105,25 +109,24 @@ const LESSON_OUTPUTS = [
 ] as const;
 
 export function ProjectVisual({ title, variant }: ProjectVisualProps) {
+  const { t } = useI18n();
   return (
     <div className="relative min-h-72 overflow-hidden border border-panel-edge bg-panel p-3 font-mono backdrop-blur-sm sm:min-h-80">
       <div className="flex items-center justify-between border-b border-border/60 pb-2 text-[8px] tracking-[0.12em] text-muted-foreground uppercase">
-        <span>{title.toLowerCase().replaceAll(" ", "_")}.sys</span>
-        <span className="text-primary">● online</span>
+        <span>{title.toLowerCase().replaceAll(" ", "_")}{t(".sys")}</span>
+        <span className="text-primary">{t("● online")}</span>
       </div>
 
       {variant === "calendar" && (
         <div className="grid h-[250px] grid-cols-[0.72fr_1.28fr] gap-3 pt-3 sm:h-[282px]">
           <div className="border border-border/60 p-3">
-            <p className="text-[8px] text-primary uppercase">availability</p>
-            <p className="mt-3 font-sans text-2xl font-semibold tracking-[-0.04em] text-foreground">
-              30 min
-            </p>
+            <p className="text-[8px] text-primary uppercase">{t("availability")}</p>
+            <p className="mt-3 font-sans text-2xl font-semibold tracking-[-0.04em] text-foreground">{t("30 min")}</p>
             <div className="mt-5 space-y-2">
               {["Calendar linked", "Payment ready", "Meet enabled"].map((item) => (
                 <div key={item} className="flex items-center gap-2 text-[8px] text-muted-foreground">
-                  <span className="text-primary">[x]</span>
-                  {item}
+                  <span className="text-primary">{t("[x]")}</span>
+                  {t(item)}
                 </div>
               ))}
             </div>
@@ -131,7 +134,7 @@ export function ProjectVisual({ title, variant }: ProjectVisualProps) {
           <div className="border border-border/60 p-3">
             <div className="grid grid-cols-5 gap-1 text-center text-[7px] text-muted-foreground">
               {CALENDAR_DAYS.map((day, index) => (
-                <span key={`${day}-${index}`}>{day}</span>
+                <span key={`${day}-${index}`}>{t(day)}</span>
               ))}
             </div>
             <div className="mt-2 grid grid-cols-5 gap-1">
@@ -165,8 +168,8 @@ export function ProjectVisual({ title, variant }: ProjectVisualProps) {
               ["active", "24"],
             ].map(([label, value]) => (
               <div key={label} className="border border-border/60 p-3">
-                <p className="text-[7px] text-muted-foreground uppercase">{label}</p>
-                <p className="mt-2 font-sans text-lg font-semibold text-foreground">{value}</p>
+                <p className="text-[7px] text-muted-foreground uppercase">{t(label)}</p>
+                <p className="mt-2 font-sans text-lg font-semibold text-foreground">{t(value)}</p>
               </div>
             ))}
           </div>
@@ -193,27 +196,25 @@ export function ProjectVisual({ title, variant }: ProjectVisualProps) {
                 </div>
                 <div className="mt-2 h-px w-4/5 bg-foreground/40" />
                 <div className="mt-1.5 h-px w-2/5 bg-muted-foreground/40" />
-                <p className="mt-2 text-[7px] text-primary">R$ {index}9,90</p>
+                <p className="mt-2 text-[7px] text-primary">{t("R$ ")}{t(index)}9,90</p>
               </div>
             ))}
           </div>
           <div className="border border-primary/40 p-3">
-            <p className="text-[8px] text-primary uppercase">cart / 03</p>
+            <p className="text-[8px] text-primary uppercase">{t("cart / 03")}</p>
             <div className="mt-4 space-y-3">
               {["Meal plan", "Protein box", "Juice set"].map((item, index) => (
                 <div key={item} className="border-b border-border/60 pb-2 text-[7px] text-muted-foreground">
-                  <span className="block text-foreground">{item}</span>
-                  <span>qty 0{index + 1}</span>
+                  <span className="block text-foreground">{t(item)}</span>
+                  <span>{t("qty 0")}{index + 1}</span>
                 </div>
               ))}
             </div>
             <div className="mt-4 flex justify-between text-[7px] text-foreground">
-              <span>shipping</span>
-              <span className="text-primary">calculated</span>
+              <span>{t("shipping")}</span>
+              <span className="text-primary">{t("calculated")}</span>
             </div>
-            <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">
-              checkout
-            </div>
+            <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">{t("checkout")}</div>
           </div>
         </div>
       )}
@@ -221,38 +222,32 @@ export function ProjectVisual({ title, variant }: ProjectVisualProps) {
       {variant === "realestate" && (
         <div className="grid h-[250px] grid-cols-[0.85fr_1.15fr] gap-3 pt-3 sm:h-[282px]">
           <div className="border border-border/60 p-3">
-            <p className="text-[8px] text-primary uppercase">unidade</p>
-            <p className="mt-3 font-sans text-lg font-semibold tracking-[-0.03em] text-foreground">
-              Studio 32m²
-            </p>
-            <p className="mt-1 text-[7px] text-muted-foreground">Porto Maravilha, RJ</p>
+            <p className="text-[8px] text-primary uppercase">{t("unidade")}</p>
+            <p className="mt-3 font-sans text-lg font-semibold tracking-[-0.03em] text-foreground">{t("Studio 32m²")}</p>
+            <p className="mt-1 text-[7px] text-muted-foreground">{t("Porto Maravilha, RJ")}</p>
             <div className="mt-5 border-t border-border/60 pt-3">
-              <p className="text-[7px] text-muted-foreground uppercase">faixa indicativa</p>
-              <p className="mt-1 text-[9px] text-primary">R$ 210.000</p>
+              <p className="text-[7px] text-muted-foreground uppercase">{t("faixa indicativa")}</p>
+              <p className="mt-1 text-[9px] text-primary">{t("R$ 210.000")}</p>
             </div>
             <div className="mt-4 flex items-center gap-1.5 text-[7px] text-muted-foreground">
-              <span className="text-primary">●</span>
-              consultar disponibilidade
-            </div>
+              <span className="text-primary">●</span>{t("consultar disponibilidade")}</div>
           </div>
           <div className="border border-primary/40 p-3">
-            <p className="text-[8px] text-primary uppercase">pré-qualificação</p>
+            <p className="text-[8px] text-primary uppercase">{t("pré-qualificação")}</p>
             <div className="mt-3 space-y-1.5">
               {QUALIFICATION_STEPS.map((step, index) => (
                 <div
                   key={step}
                   className="flex items-center justify-between border-b border-border/50 pb-1 text-[7px] text-muted-foreground"
                 >
-                  <span>{step}</span>
+                  <span>{t(step)}</span>
                   <span className={index < 5 ? "text-primary" : "text-muted-foreground"}>
-                    {index < 5 ? "[x]" : "[ ]"}
+                    {t(index < 5 ? "[x]" : "[ ]")}
                   </span>
                 </div>
               ))}
             </div>
-            <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">
-              dentro da faixa 2
-            </div>
+            <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">{t("dentro da faixa 2")}</div>
           </div>
         </div>
       )}
@@ -265,8 +260,8 @@ export function ProjectVisual({ title, variant }: ProjectVisualProps) {
             ["03 · publishing", "Payload → cached pages → CDN"],
           ].map(([label, detail]) => (
             <div key={label} className="border border-border/60 p-4">
-              <p className="text-[8px] text-primary uppercase">{label}</p>
-              <p className="mt-2 text-[9px] text-muted-foreground">{detail}</p>
+              <p className="text-[8px] text-primary uppercase">{t(label)}</p>
+              <p className="mt-2 text-[9px] text-muted-foreground">{t(detail)}</p>
             </div>
           ))}
         </div>
@@ -275,369 +270,325 @@ export function ProjectVisual({ title, variant }: ProjectVisualProps) {
       {variant === "portfolio" && (
         <div className="grid h-[250px] grid-cols-[0.85fr_1.15fr] gap-3 pt-3 sm:h-[282px]">
           <div className="border border-border/60 p-3">
-            <p className="text-[8px] text-primary uppercase">active_project</p>
-            <p className="mt-3 font-sans text-lg font-semibold tracking-[-0.03em] text-foreground">
-              Casa 264
-            </p>
-            <p className="mt-1 text-[7px] text-muted-foreground">01 / 05 · 10 frames</p>
+            <p className="text-[8px] text-primary uppercase">{t("active_project")}</p>
+            <p className="mt-3 font-sans text-lg font-semibold tracking-[-0.03em] text-foreground">{t("Casa 264")}</p>
+            <p className="mt-1 text-[7px] text-muted-foreground">{t("01 / 05 · 10 frames")}</p>
             <div className="mt-5 border-t border-border/60 pt-3">
-              <p className="text-[7px] text-muted-foreground uppercase">surface</p>
-              <p className="mt-1 text-[9px] text-primary">room · vinyl black</p>
+              <p className="text-[7px] text-muted-foreground uppercase">{t("surface")}</p>
+              <p className="mt-1 text-[9px] text-primary">{t("room · vinyl black")}</p>
             </div>
             <div className="mt-4 flex items-center gap-1.5 text-[7px] text-muted-foreground">
-              <span className="text-primary">●</span>
-              walker holding anchor
-            </div>
+              <span className="text-primary">●</span>{t("walker holding anchor")}</div>
           </div>
           <div className="border border-primary/40 p-3">
-            <p className="text-[8px] text-primary uppercase">transition</p>
+            <p className="text-[8px] text-primary uppercase">{t("transition")}</p>
             <div className="mt-3 space-y-1.5">
               {TRANSITION_STATUS.map(([label, value]) => (
                 <div
                   key={label}
                   className="flex items-center justify-between border-b border-border/50 pb-1 text-[7px] text-muted-foreground"
                 >
-                  <span>{label}</span>
-                  <span className="text-primary">{value}</span>
+                  <span>{t(label)}</span>
+                  <span className="text-primary">{t(value)}</span>
                 </div>
               ))}
             </div>
-            <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">
-              project 02 / 05 queued
-            </div>
+            <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">{t("project 02 / 05 queued")}</div>
           </div>
         </div>
       )}
       {variant === "geospatial" && (
         <div className="grid h-[250px] grid-cols-[0.85fr_1.15fr] gap-3 pt-3 sm:h-[282px]">
           <div className="border border-border/60 p-3">
-            <p className="text-[8px] text-primary uppercase">field_01</p>
-            <p className="mt-3 font-sans text-lg font-semibold tracking-[-0.03em] text-foreground">
-              25.4 ac
-            </p>
-            <p className="mt-1 text-[7px] text-muted-foreground">15.9469°S / 48.6035°W</p>
+            <p className="text-[8px] text-primary uppercase">{t("field_01")}</p>
+            <p className="mt-3 font-sans text-lg font-semibold tracking-[-0.03em] text-foreground">{t("25.4 ac")}</p>
+            <p className="mt-1 text-[7px] text-muted-foreground">{t("15.9469°S / 48.6035°W")}</p>
             <div className="mt-5 border-t border-border/60 pt-3">
-              <p className="text-[7px] text-muted-foreground uppercase">stress detected</p>
-              <p className="mt-1 text-[9px] text-primary">20 zones</p>
+              <p className="text-[7px] text-muted-foreground uppercase">{t("stress detected")}</p>
+              <p className="mt-1 text-[9px] text-primary">{t("20 zones")}</p>
             </div>
             <div className="mt-4 flex items-center gap-1.5 text-[7px] text-muted-foreground">
-              <span className="text-primary">●</span>
-              worker polling · request path idle
-            </div>
+              <span className="text-primary">●</span>{t("worker polling · request path idle")}</div>
           </div>
           <div className="border border-primary/40 p-3">
-            <p className="text-[8px] text-primary uppercase">layers / 4.667 pu</p>
+            <p className="text-[8px] text-primary uppercase">{t("layers / 4.667 pu")}</p>
             <div className="mt-3 space-y-1.5">
               {SPECTRAL_LAYERS.map(([label, available]) => (
                 <div
                   key={label}
                   className="flex items-center justify-between border-b border-border/50 pb-1 text-[7px] text-muted-foreground"
                 >
-                  <span>{label}</span>
+                  <span>{t(label)}</span>
                   <span className={available ? "text-primary" : "text-muted-foreground"}>
-                    {available ? "[x]" : "[ ]"}
+                    {t(available ? "[x]" : "[ ]")}
                   </span>
                 </div>
               ))}
             </div>
-            <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">
-              10 indices / 1 process call
-            </div>
+            <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">{t("10 indices / 1 process call")}</div>
           </div>
         </div>
       )}
       {variant === "eyewear" && (
         <div className="grid h-[250px] grid-cols-[0.85fr_1.15fr] gap-3 pt-3 sm:h-[282px]">
           <div className="border border-border/60 p-3">
-            <p className="text-[8px] text-primary uppercase">armação / tri-ex-14</p>
+            <p className="text-[8px] text-primary uppercase">{t("armação / tri-ex-14")}</p>
             <p className="mt-3 font-sans text-lg font-semibold tracking-[-0.03em] text-foreground">
               52 □ 18-145
             </p>
-            <p className="mt-1 text-[7px] text-muted-foreground">aviador · titânio · bronze</p>
+            <p className="mt-1 text-[7px] text-muted-foreground">{t("aviador · titânio · bronze")}</p>
             <div className="mt-5 border-t border-border/60 pt-3">
-              <p className="text-[7px] text-muted-foreground uppercase">foto</p>
-              <p className="mt-1 text-[9px] text-primary">sem foto — honesto</p>
+              <p className="text-[7px] text-muted-foreground uppercase">{t("foto")}</p>
+              <p className="mt-1 text-[9px] text-primary">{t("sem foto — honesto")}</p>
             </div>
             <div className="mt-4 flex items-center gap-1.5 text-[7px] text-muted-foreground">
-              <span className="text-primary">●</span>
-              nenhum valor inventado
-            </div>
+              <span className="text-primary">●</span>{t("nenhum valor inventado")}</div>
           </div>
           <div className="border border-primary/40 p-3">
-            <p className="text-[8px] text-primary uppercase">revendedores / 8</p>
+            <p className="text-[8px] text-primary uppercase">{t("revendedores / 8")}</p>
             <div className="mt-3 space-y-1.5">
               {TENANCY_SEAM.map(([label, available]) => (
                 <div
                   key={label}
                   className="flex items-center justify-between border-b border-border/50 pb-1 text-[7px] text-muted-foreground"
                 >
-                  <span>{label}</span>
+                  <span>{t(label)}</span>
                   <span className={available ? "text-primary" : "text-muted-foreground"}>
-                    {available ? "[x]" : "[ ]"}
+                    {t(available ? "[x]" : "[ ]")}
                   </span>
                 </div>
               ))}
             </div>
-            <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">
-              one catalogue, many storefronts
-            </div>
+            <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">{t("one catalogue, many storefronts")}</div>
           </div>
         </div>
       )}
       {variant === "furniture" && (
         <div className="grid h-[250px] grid-cols-[0.85fr_1.15fr] gap-3 pt-3 sm:h-[282px]">
           <div className="border border-border/60 p-3">
-            <p className="text-[8px] text-primary uppercase">roupeiro mônaco plus</p>
+            <p className="text-[8px] text-primary uppercase">{t("roupeiro mônaco plus")}</p>
             <p className="mt-3 font-sans text-lg font-semibold tracking-[-0.03em] text-foreground">
               240 × 230 × 55
             </p>
-            <p className="mt-1 text-[7px] text-muted-foreground">l × a × p, em cm reais</p>
+            <p className="mt-1 text-[7px] text-muted-foreground">{t("l × a × p, em cm reais")}</p>
             <div className="mt-5 border-t border-border/60 pt-3">
-              <p className="text-[7px] text-muted-foreground uppercase">preço</p>
-              <p className="mt-1 text-[9px] text-primary">R$ 3.073 à vista</p>
+              <p className="text-[7px] text-muted-foreground uppercase">{t("preço")}</p>
+              <p className="mt-1 text-[9px] text-primary">{t("R$ 3.073 à vista")}</p>
             </div>
             <div className="mt-4 flex items-center gap-1.5 text-[7px] text-muted-foreground">
-              <span className="text-primary">●</span>
-              10 de 13 com preço confirmado
-            </div>
+              <span className="text-primary">●</span>{t("10 de 13 com preço confirmado")}</div>
           </div>
           <div className="border border-primary/40 p-3">
-            <p className="text-[8px] text-primary uppercase">catálogo / 13</p>
+            <p className="text-[8px] text-primary uppercase">{t("catálogo / 13")}</p>
             <div className="mt-3 space-y-1.5">
               {CATALOGO_RULES.map(([label, available]) => (
                 <div
                   key={label}
                   className="flex items-center justify-between border-b border-border/50 pb-1 text-[7px] text-muted-foreground"
                 >
-                  <span>{label}</span>
+                  <span>{t(label)}</span>
                   <span className={available ? "text-primary" : "text-muted-foreground"}>
-                    {available ? "[x]" : "[ ]"}
+                    {t(available ? "[x]" : "[ ]")}
                   </span>
                 </div>
               ))}
             </div>
-            <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">
-              da fábrica para a sua casa
-            </div>
+            <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">{t("da fábrica para a sua casa")}</div>
           </div>
         </div>
       )}
       {variant === "rodizio" && (
         <div className="grid h-[250px] grid-cols-[0.85fr_1.15fr] gap-3 pt-3 sm:h-[282px]">
           <div className="border border-border/60 p-3">
-            <p className="text-[8px] text-primary uppercase">rodízio chisai</p>
+            <p className="text-[8px] text-primary uppercase">{t("rodízio chisai")}</p>
             <p className="mt-3 font-sans text-lg font-semibold tracking-[-0.03em] text-foreground">
-              <span className="text-muted-foreground line-through">R$ 74,90</span>{" "}
-              <span className="text-primary">R$ 54,90</span>
+              <span className="text-muted-foreground line-through">{t("R$ 74,90")}</span>{t(" ")}
+              <span className="text-primary">{t("R$ 54,90")}</span>
             </p>
-            <p className="mt-1 text-[7px] text-muted-foreground">sem desperdício — mesa toda</p>
+            <p className="mt-1 text-[7px] text-muted-foreground">{t("sem desperdício — mesa toda")}</p>
             <div className="mt-5 border-t border-border/60 pt-3">
-              <p className="text-[7px] text-muted-foreground uppercase">fotos usáveis</p>
-              <p className="mt-1 text-[9px] text-primary">15 de 44, medidas</p>
+              <p className="text-[7px] text-muted-foreground uppercase">{t("fotos usáveis")}</p>
+              <p className="mt-1 text-[9px] text-primary">{t("15 de 44, medidas")}</p>
             </div>
             <div className="mt-4 flex items-center gap-1.5 text-[7px] text-muted-foreground">
-              <span className="text-primary">●</span>
-              nenhum preço sem a condição
-            </div>
+              <span className="text-primary">●</span>{t("nenhum preço sem a condição")}</div>
           </div>
           <div className="border border-primary/40 p-3">
-            <p className="text-[8px] text-primary uppercase">saídas / 3</p>
+            <p className="text-[8px] text-primary uppercase">{t("saídas / 3")}</p>
             <div className="mt-3 space-y-1.5">
               {TRES_SAIDAS.map(([label, available]) => (
                 <div
                   key={label}
                   className="flex items-center justify-between border-b border-border/50 pb-1 text-[7px] text-muted-foreground"
                 >
-                  <span>{label}</span>
+                  <span>{t(label)}</span>
                   <span className={available ? "text-primary" : "text-muted-foreground"}>
-                    {available ? "[x]" : "[ ]"}
+                    {t(available ? "[x]" : "[ ]")}
                   </span>
                 </div>
               ))}
             </div>
-            <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">
-              coma tudo, pague menos
-            </div>
+            <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">{t("coma tudo, pague menos")}</div>
           </div>
         </div>
       )}
       {variant === "fairs" && (
         <div className="grid h-[250px] grid-cols-[0.85fr_1.15fr] gap-3 pt-3 sm:h-[282px]">
           <div className="border border-border/60 p-3">
-            <p className="text-[8px] text-primary uppercase">ebeuf 2027 / tour</p>
-            <p className="mt-3 font-sans text-lg font-semibold tracking-[-0.03em] text-foreground">4 cities · 16–20 mar</p>
-            <p className="mt-1 text-[7px] text-muted-foreground">skopje · pristina · podgorica · sarajevo</p>
+            <p className="text-[8px] text-primary uppercase">{t("ebeuf 2027 / tour")}</p>
+            <p className="mt-3 font-sans text-lg font-semibold tracking-[-0.03em] text-foreground">{t("4 cities · 16–20 mar")}</p>
+            <p className="mt-1 text-[7px] text-muted-foreground">{t("skopje · pristina · podgorica · sarajevo")}</p>
             <div className="mt-5 border-t border-border/60 pt-3">
-              <p className="text-[7px] text-muted-foreground uppercase">registration</p>
-              <p className="mt-1 text-[9px] text-primary">persisted + emailed</p>
+              <p className="text-[7px] text-muted-foreground uppercase">{t("registration")}</p>
+              <p className="mt-1 text-[9px] text-primary">{t("persisted + emailed")}</p>
             </div>
             <div className="mt-4 flex items-center gap-1.5 text-[7px] text-muted-foreground">
-              <span className="text-primary">●</span>
-              quote in integer cents
-            </div>
+              <span className="text-primary">●</span>{t("quote in integer cents")}</div>
           </div>
           <div className="border border-primary/40 p-3">
-            <p className="text-[8px] text-primary uppercase">event engine</p>
+            <p className="text-[8px] text-primary uppercase">{t("event engine")}</p>
             <div className="mt-3 space-y-1.5">
               {FAIR_ENGINE.map(([label, available]) => (
                 <div
                   key={label}
                   className="flex items-center justify-between border-b border-border/50 pb-1 text-[7px] text-muted-foreground"
                 >
-                  <span>{label}</span>
+                  <span>{t(label)}</span>
                   <span className={available ? "text-primary" : "text-muted-foreground"}>
-                    {available ? "[x]" : "[ ]"}
+                    {t(available ? "[x]" : "[ ]")}
                   </span>
                 </div>
               ))}
             </div>
-            <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">
-              one record, one standard page
-            </div>
+            <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">{t("one record, one standard page")}</div>
           </div>
         </div>
       )}
       {variant === "language" && (
         <div className="grid h-[250px] grid-cols-[0.85fr_1.15fr] gap-3 pt-3 sm:h-[282px]">
           <div className="border border-border/60 p-3">
-            <p className="text-[8px] text-primary uppercase">outubro / hero</p>
-            <p className="mt-3 font-sans text-lg font-semibold tracking-[-0.03em] text-foreground">destravar</p>
-            <p className="mt-1 text-[7px] text-muted-foreground">the cord untangles, língua lands</p>
+            <p className="text-[8px] text-primary uppercase">{t("outubro / hero")}</p>
+            <p className="mt-3 font-sans text-lg font-semibold tracking-[-0.03em] text-foreground">{t("destravar")}</p>
+            <p className="mt-1 text-[7px] text-muted-foreground">{t("the cord untangles, língua lands")}</p>
             <div className="mt-5 border-t border-border/60 pt-3">
-              <p className="text-[7px] text-muted-foreground uppercase">locales</p>
-              <p className="mt-1 text-[9px] text-primary">pt · en · es</p>
+              <p className="text-[7px] text-muted-foreground uppercase">{t("locales")}</p>
+              <p className="mt-1 text-[9px] text-primary">{t("pt · en · es")}</p>
             </div>
             <div className="mt-4 flex items-center gap-1.5 text-[7px] text-muted-foreground">
-              <span className="text-primary">●</span>
-              one route map, no i18n library
-            </div>
+              <span className="text-primary">●</span>{t("one route map, no i18n library")}</div>
           </div>
           <div className="border border-primary/40 p-3">
-            <p className="text-[8px] text-primary uppercase">pages / 3 locales</p>
+            <p className="text-[8px] text-primary uppercase">{t("pages / 3 locales")}</p>
             <div className="mt-3 space-y-1.5">
               {LOCALES.map(([label, available]) => (
                 <div
                   key={label}
                   className="flex items-center justify-between border-b border-border/50 pb-1 text-[7px] text-muted-foreground"
                 >
-                  <span>{label}</span>
+                  <span>{t(label)}</span>
                   <span className={available ? "text-primary" : "text-muted-foreground"}>
-                    {available ? "[x]" : "[ ]"}
+                    {t(available ? "[x]" : "[ ]")}
                   </span>
                 </div>
               ))}
             </div>
-            <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">
-              bora destravar
-            </div>
+            <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">{t("bora destravar")}</div>
           </div>
         </div>
       )}
       {variant === "grid" && (
         <div className="grid h-[250px] grid-cols-[0.85fr_1.15fr] gap-3 pt-3 sm:h-[282px]">
           <div className="border border-border/60 p-3">
-            <p className="text-[8px] text-primary uppercase">ons / plant-hour</p>
-            <p className="mt-3 font-sans text-lg font-semibold tracking-[-0.03em] text-foreground">366,336 readings</p>
-            <p className="mt-1 text-[7px] text-muted-foreground">zero duplicates on replay</p>
+            <p className="text-[8px] text-primary uppercase">{t("ons / plant-hour")}</p>
+            <p className="mt-3 font-sans text-lg font-semibold tracking-[-0.03em] text-foreground">{t("366,336 readings")}</p>
+            <p className="mt-1 text-[7px] text-muted-foreground">{t("zero duplicates on replay")}</p>
             <div className="mt-5 border-t border-border/60 pt-3">
-              <p className="text-[7px] text-muted-foreground uppercase">idempotency key</p>
-              <p className="mt-1 text-[9px] text-primary">source · zone · asset · metric · time</p>
+              <p className="text-[7px] text-muted-foreground uppercase">{t("idempotency key")}</p>
+              <p className="mt-1 text-[9px] text-primary">{t("source · zone · asset · metric · time")}</p>
             </div>
             <div className="mt-4 flex items-center gap-1.5 text-[7px] text-muted-foreground">
-              <span className="text-primary">●</span>
-              polled, said plainly
-            </div>
+              <span className="text-primary">●</span>{t("polled, said plainly")}</div>
           </div>
           <div className="border border-primary/40 p-3">
-            <p className="text-[8px] text-primary uppercase">sources / 3</p>
+            <p className="text-[8px] text-primary uppercase">{t("sources / 3")}</p>
             <div className="mt-3 space-y-1.5">
               {GRID_SOURCES.map(([label, available]) => (
                 <div
                   key={label}
                   className="flex items-center justify-between border-b border-border/50 pb-1 text-[7px] text-muted-foreground"
                 >
-                  <span>{label}</span>
+                  <span>{t(label)}</span>
                   <span className={available ? "text-primary" : "text-muted-foreground"}>
-                    {available ? "[x]" : "[ ]"}
+                    {t(available ? "[x]" : "[ ]")}
                   </span>
                 </div>
               ))}
             </div>
-            <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">
-              go → redpanda → timescale
-            </div>
+            <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">{t("go → redpanda → timescale")}</div>
           </div>
         </div>
       )}
       {variant === "election" && (
         <div className="grid h-[250px] grid-cols-[0.85fr_1.15fr] gap-3 pt-3 sm:h-[282px]">
           <div className="border border-border/60 p-3">
-            <p className="text-[8px] text-primary uppercase">tse / 1º turno</p>
-            <p className="mt-3 font-sans text-lg font-semibold tracking-[-0.03em] text-foreground">5,757 municipalities</p>
-            <p className="mt-1 text-[7px] text-muted-foreground">every version, byte for byte</p>
+            <p className="text-[8px] text-primary uppercase">{t("tse / 1º turno")}</p>
+            <p className="mt-3 font-sans text-lg font-semibold tracking-[-0.03em] text-foreground">{t("5,757 municipalities")}</p>
+            <p className="mt-1 text-[7px] text-muted-foreground">{t("every version, byte for byte")}</p>
             <div className="mt-5 border-t border-border/60 pt-3">
-              <p className="text-[7px] text-muted-foreground uppercase">rate ceiling</p>
-              <p className="mt-1 text-[9px] text-primary">100 req/s · 16 in flight</p>
+              <p className="text-[7px] text-muted-foreground uppercase">{t("rate ceiling")}</p>
+              <p className="mt-1 text-[9px] text-primary">{t("100 req/s · 16 in flight")}</p>
             </div>
             <div className="mt-4 flex items-center gap-1.5 text-[7px] text-muted-foreground">
-              <span className="text-primary">●</span>
-              a gap shows as a gap
-            </div>
+              <span className="text-primary">●</span>{t("a gap shows as a gap")}</div>
           </div>
           <div className="border border-primary/40 p-3">
-            <p className="text-[8px] text-primary uppercase">raw log / s3</p>
+            <p className="text-[8px] text-primary uppercase">{t("raw log / s3")}</p>
             <div className="mt-3 space-y-1.5">
               {TSE_RECORD.map(([label, available]) => (
                 <div
                   key={label}
                   className="flex items-center justify-between border-b border-border/50 pb-1 text-[7px] text-muted-foreground"
                 >
-                  <span>{label}</span>
+                  <span>{t(label)}</span>
                   <span className={available ? "text-primary" : "text-muted-foreground"}>
-                    {available ? "[x]" : "[ ]"}
+                    {t(available ? "[x]" : "[ ]")}
                   </span>
                 </div>
               ))}
             </div>
-            <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">
-              recorder → s3 → projector → cdn
-            </div>
+            <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">{t("recorder → s3 → projector → cdn")}</div>
           </div>
         </div>
       )}
       {variant === "lesson" && (
         <div className="grid h-[250px] grid-cols-[0.85fr_1.15fr] gap-3 pt-3 sm:h-[282px]">
           <div className="border border-border/60 p-3">
-            <p className="text-[8px] text-primary uppercase">lesson / a1–a2</p>
-            <p className="mt-3 font-sans text-lg font-semibold tracking-[-0.03em] text-foreground">58 slides → blocks</p>
-            <p className="mt-1 text-[7px] text-muted-foreground">the layout follows the system</p>
+            <p className="text-[8px] text-primary uppercase">{t("lesson / a1–a2")}</p>
+            <p className="mt-3 font-sans text-lg font-semibold tracking-[-0.03em] text-foreground">{t("58 slides → blocks")}</p>
+            <p className="mt-1 text-[7px] text-muted-foreground">{t("the layout follows the system")}</p>
             <div className="mt-5 border-t border-border/60 pt-3">
-              <p className="text-[7px] text-muted-foreground uppercase">airmail devices</p>
-              <p className="mt-1 text-[9px] text-primary">flight path · stamp · postmark · paper</p>
+              <p className="text-[7px] text-muted-foreground uppercase">{t("airmail devices")}</p>
+              <p className="mt-1 text-[9px] text-primary">{t("flight path · stamp · postmark · paper")}</p>
             </div>
             <div className="mt-4 flex items-center gap-1.5 text-[7px] text-muted-foreground">
-              <span className="text-primary">●</span>
-              faster than canva or unused
-            </div>
+              <span className="text-primary">●</span>{t("faster than canva or unused")}</div>
           </div>
           <div className="border border-primary/40 p-3">
-            <p className="text-[8px] text-primary uppercase">outputs / one renderer</p>
+            <p className="text-[8px] text-primary uppercase">{t("outputs / one renderer")}</p>
             <div className="mt-3 space-y-1.5">
               {LESSON_OUTPUTS.map(([label, available]) => (
                 <div
                   key={label}
                   className="flex items-center justify-between border-b border-border/50 pb-1 text-[7px] text-muted-foreground"
                 >
-                  <span>{label}</span>
+                  <span>{t(label)}</span>
                   <span className={available ? "text-primary" : "text-muted-foreground"}>
-                    {available ? "[x]" : "[ ]"}
+                    {t(available ? "[x]" : "[ ]")}
                   </span>
                 </div>
               ))}
             </div>
-            <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">
-              type a lesson, get a deck
-            </div>
+            <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">{t("type a lesson, get a deck")}</div>
           </div>
         </div>
       )}

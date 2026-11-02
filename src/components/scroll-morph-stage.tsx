@@ -1,5 +1,7 @@
 "use client";
 
+import { useI18n } from "@/components/locale-provider";
+
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { LayoutGroup, motion } from "motion/react";
 import { useLenis } from "lenis/react";
@@ -155,6 +157,7 @@ export function ScrollMorphStage({
   particles?: boolean;
   className?: string;
 }) {
+  const { t } = useI18n();
   const count = layers.length;
   const span = count - 1 + END_HOLD * 2;
 
@@ -460,15 +463,15 @@ export function ScrollMorphStage({
             key={layer.label}
             value={{ index: i, active: i, isActive: true, morphing: false }}
           >
-            <section ref={(el) => { flowSectionsRef.current[i] = el; }} id={layer.id} data-ascii-keyframe={layer.keyframe} data-frame-label={layer.label}>
+            <section ref={(el) => { flowSectionsRef.current[i] = el; }} id={layer.id} data-ascii-keyframe={layer.keyframe} data-frame-label={t(layer.label)}>
               <TerminalPanel
                 number={layer.number}
-                label={layer.label}
+                label={t(layer.label)}
                 style={{ maxWidth: layer.width }}
                 padded={false}
               >
                 <div ref={(el) => { contentRefs.current[i] = el; }} data-morph-content className={WINDOW_BODY}>
-                  {layer.content}
+                  {t(layer.content)}
                 </div>
               </TerminalPanel>
             </section>
@@ -488,7 +491,7 @@ export function ScrollMorphStage({
       className={`relative ${className}`}
     >
       {layers.map((layer, i) => {
-        const t = (i + END_HOLD) / span;
+        const markerProgress = (i + END_HOLD) / span;
         return (
           <div key={`markers-${layer.label}`} aria-hidden="true">
             {/* Anchor-link target: the exact scroll offset that centers this
@@ -497,15 +500,15 @@ export function ScrollMorphStage({
                 want. */}
             <div
               id={layer.id}
-              style={{ top: `calc(${t} * (100% - 100dvh))` }}
+              style={{ top: `calc(${markerProgress} * (100% - 100dvh))` }}
               className="pointer-events-none absolute left-0 h-0 w-0"
             />
             {/* Moon-morph marker, offset down by the tracker's anchor ratio so
                 it crosses that line at the same moment. */}
             <div
               data-ascii-keyframe={layer.keyframe}
-              data-frame-label={layer.label}
-              style={{ top: `calc(${t} * (100% - 100dvh) + ${ANCHOR_DVH}dvh)` }}
+              data-frame-label={t(layer.label)}
+              style={{ top: `calc(${markerProgress} * (100% - 100dvh) + ${ANCHOR_DVH}dvh)` }}
               className="pointer-events-none absolute left-0 h-0 w-0"
             />
           </div>
@@ -551,7 +554,7 @@ export function ScrollMorphStage({
                   >
                     <SectionHeading
                       number={layer.number}
-                      label={layer.label}
+                      label={t(layer.label)}
                       className="whitespace-nowrap"
                     />
                     <TitleRule />
@@ -619,7 +622,7 @@ export function ScrollMorphStage({
                     <MorphLayerContext.Provider
                       value={{ index: i, active, isActive: i === active, morphing: true }}
                     >
-                      {layer.content}
+                      {t(layer.content)}
                     </MorphLayerContext.Provider>
                   </div>
                 </div>
@@ -662,6 +665,7 @@ export function MorphToken({
   className?: string;
   children: React.ReactNode;
 }) {
+  const { t } = useI18n();
   const { index, active, morphing } = useMorphLayer();
 
   // inline-block, always: transforms don't apply to inline boxes, so an inline
@@ -669,14 +673,14 @@ export function MorphToken({
   const base = `inline-block ${className}`;
 
   if (!morphing) {
-    return <span className={base}>{children}</span>;
+    return <span className={base}>{t(children)}</span>;
   }
 
   const mounted = side === "from" ? active <= index : active >= index;
   if (!mounted) {
     return (
       <span aria-hidden="true" className={`${base} invisible`}>
-        {children}
+        {t(children)}
       </span>
     );
   }
@@ -689,7 +693,7 @@ export function MorphToken({
       // beats, and it has to stay legible for the whole crossfade band.
       transition={{ type: "spring", stiffness: 180, damping: 26, mass: 1.1 }}
     >
-      {children}
+      {t(children)}
     </motion.span>
   );
 }

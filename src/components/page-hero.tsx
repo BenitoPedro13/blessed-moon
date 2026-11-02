@@ -1,3 +1,7 @@
+"use client";
+
+import { useI18n } from "@/components/locale-provider";
+
 import { CellGrid } from "@/components/cell-grid";
 import { Reveal } from "@/components/reveal";
 import { ScrollStage } from "@/components/scroll-stage";
@@ -23,10 +27,11 @@ interface PageHeroProps {
  * that space instead, keeping the same bottom-anchored look.
  */
 export function PageHero({ eyebrow, title, description, code }: PageHeroProps) {
+  const { t } = useI18n();
   return (
     <section
       data-ascii-keyframe="0"
-      data-frame-label={code}
+      data-frame-label={t(code)}
       className="relative isolate overflow-hidden border-b border-panel-edge"
     >
       <ScrollStage heightMultiplier={1.6}>
@@ -45,14 +50,12 @@ export function PageHero({ eyebrow, title, description, code }: PageHeroProps) {
         <span
           style={{ opacity: "calc(1 - var(--stage-progress, 0) * 0.85)" }}
           className="absolute left-7 top-24 font-mono text-[9px] tracking-[0.25em] text-primary/70 uppercase"
-        >
-          B / S / M
-        </span>
+        >{t("B / S / M")}</span>
         <span
           style={{ opacity: "calc(1 - var(--stage-progress, 0) * 0.85)" }}
           className="absolute right-7 top-24 font-mono text-[9px] tracking-[0.25em] text-muted-foreground uppercase"
         >
-          {code} / 26
+          {t(code)} / 26
         </span>
 
         <div
@@ -69,17 +72,17 @@ export function PageHero({ eyebrow, title, description, code }: PageHeroProps) {
           <div className="relative mx-auto w-full max-w-6xl bg-panel p-4 backdrop-blur-md sm:bg-transparent sm:p-0 sm:backdrop-blur-none">
             <Reveal>
               <p className="font-mono text-[10.5px] tracking-[0.08em] text-primary uppercase">
-                {eyebrow}
+                {t(eyebrow)}
               </p>
             </Reveal>
             <Reveal delay={0.08}>
               <h1 className="mt-4 max-w-4xl font-sans text-4xl font-semibold tracking-[-0.045em] text-foreground sm:text-6xl lg:text-7xl">
-                {title}
+                {t(title)}
               </h1>
             </Reveal>
             <Reveal delay={0.16}>
               <p className="mt-5 max-w-xl text-[13px] leading-[1.7] text-muted-foreground sm:text-sm">
-                {description}
+                {t(description)}
               </p>
             </Reveal>
           </div>

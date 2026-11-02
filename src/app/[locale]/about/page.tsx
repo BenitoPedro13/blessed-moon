@@ -1,3 +1,5 @@
+
+import { getServerI18n, localizedMetadata } from "@/lib/i18n/server";
 import type { Metadata } from "next";
 
 import { AboutDynamic } from "@/components/about/about-dynamic";
@@ -10,21 +12,26 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteNav } from "@/components/site-nav";
 import { STUDIO_PILLARS } from "@/lib/studio-data";
 
-export const metadata: Metadata = {
+const pageMetadata: Metadata = {
   title: "About",
   description:
     "Blessed Moon Studio is Benito Pedro Xavier's solo studio for strategy, content planning, design and full-stack development.",
 };
 
-export default function AboutPage() {
+export async function generateMetadata(): Promise<Metadata> {
+  return localizedMetadata(pageMetadata, "/about");
+}
+
+export default async function AboutPage() {
+  const { t } = await getServerI18n();
   return (
     <>
       <SiteNav />
       <main>
         <PageHero
-          eyebrow="— About"
-          title="About Blessed Moon Studio"
-          description="A solo studio led by Benito Pedro Xavier. Strategy, design and engineering stay connected, from the first conversation to the finished work."
+          eyebrow={t("— About")}
+          title={t("About Blessed Moon Studio")}
+          description={t("A solo studio led by Benito Pedro Xavier. Strategy, design and engineering stay connected, from the first conversation to the finished work.")}
           code="ABOUT"
         />
 

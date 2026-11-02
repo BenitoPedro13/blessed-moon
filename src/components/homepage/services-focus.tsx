@@ -1,7 +1,9 @@
 "use client";
 
+import { useI18n } from "@/components/locale-provider";
+
 import { motion } from "motion/react";
-import Link from "next/link";
+import Link from "@/components/localized-link";
 
 import { COUNT_DISPLAY, COUNT_INLINE } from "@/components/homepage/morph-count";
 import { MorphToken, morphDrift } from "@/components/scroll-morph-stage";
@@ -69,6 +71,7 @@ const SERVICES = [
  * below" is its own kind of monotony.
  */
 export function ServicesFocus() {
+  const { t } = useI18n();
   const { playHover } = useSound();
 
   return (
@@ -80,25 +83,15 @@ export function ServicesFocus() {
             <MorphToken id="count-8" side="to" className={`${COUNT_DISPLAY} short:text-[3.5rem] short:sm:text-[4rem] short:lg:text-[6rem]`}>
               8
             </MorphToken>
-            <span className="font-sans text-xl font-semibold tracking-[-0.02em] text-foreground sm:text-2xl">
-              kinds of systems.
-            </span>
+            <span className="font-sans text-xl font-semibold tracking-[-0.02em] text-foreground sm:text-2xl">{t("kinds of systems.")}</span>
           </p>
-          <p className="mt-5 max-w-sm text-[14px] leading-[1.6] text-muted-foreground short:hidden lg:short:block">
-            Different shape, same standard. Benito handles the design and
-            engineering directly, with a clear scope for each project.
-          </p>
-          <p className="mt-4 short:mt-2 max-w-sm text-[14px] leading-[2.1] text-muted-foreground">
-            Each build follows{" "}
+          <p className="mt-5 max-w-sm text-[14px] leading-[1.6] text-muted-foreground short:hidden lg:short:block">{t("Different shape, same standard. Benito handles the design and engineering directly, with a clear scope for each project.")}</p>
+          <p className="mt-4 short:mt-2 max-w-sm text-[14px] leading-[2.1] text-muted-foreground">{t("Each build follows")}{t(" ")}
             <MorphToken id="count-4" side="from" className={COUNT_INLINE}>
               4
-            </MorphToken>{" "}
-            steps.
-          </p>
+            </MorphToken>{t(" ")}{t("steps.")}</p>
           <Link href="/services/social-media" onMouseEnter={playHover}
-            className="mt-4 short:mt-2 inline-block text-[13px] leading-6 text-primary underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-primary">
-            Also available: Social Media Strategy &amp; Content Planning →
-          </Link>
+            className="mt-4 short:mt-2 inline-block text-[13px] leading-6 text-primary underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-primary">{t("Also available: Social Media Strategy & Content Planning →")}</Link>
         </div>
 
         {/* Card padding and description visibility are deliberately smaller at
@@ -132,13 +125,13 @@ export function ServicesFocus() {
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
               >
                 <span className="mb-1.5 block font-mono text-[9px] text-muted-foreground/70 sm:mb-3 sm:text-[10px]">
-                  {service.index}
+                  {t(service.index)}
                 </span>
                 <span className="block font-sans text-[13px] text-foreground sm:mb-2 sm:text-base">
-                  {service.name}
+                  {t(service.name)}
                 </span>
                 <span className="hidden text-[12px] leading-[1.55] text-muted-foreground sm:block">
-                  {service.description}
+                  {t(service.description)}
                 </span>
               </motion.div>
             </motion.div>

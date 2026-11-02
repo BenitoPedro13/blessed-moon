@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "check:enquiry": "node scripts/check-enquiry.mjs",
+    "check:locales": "node scripts/check-locales.mjs",
     "smtp:verify": "node scripts/verify-smtp.mjs",
     "profile": "node scripts/profile-scroll.mjs",
     "social:fonts": "node scripts/social-fonts.mjs",

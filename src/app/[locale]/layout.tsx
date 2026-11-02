@@ -7,7 +7,11 @@ import { BootSequence } from "@/components/boot-sequence";
 import { LenisProvider } from "@/components/lenis-provider";
 import { SoundProvider } from "@/components/sound-provider";
 import { SITE_URL } from "@/lib/site-config";
-import "./globals.css";
+import { LocaleProvider } from "@/components/locale-provider";
+import { isLocale } from "@/lib/i18n/shared";
+import { translator } from "@/lib/i18n/translate";
+import { notFound } from "next/navigation";
+import "@/app/globals.css";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-sans",
@@ -22,7 +26,7 @@ const jetbrainsMono = JetBrains_Mono({
 const DESCRIPTION =
   "Blessed Moon Studio designs and builds digital systems for founders and product leaders who value craftsmanship over hype — clarity is the feature.";
 
-export const metadata: Metadata = {
+const baseMetadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
     default: "Blessed Moon Studio",
@@ -55,10 +59,27 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export function generateStaticParams() {
+  return [{ locale: "en" }, { locale: "pt" }];
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const t = translator(locale === "pt" ? "pt" : "en");
+  return {
+    ...baseMetadata,
+    description: t(DESCRIPTION),
+    openGraph: { ...baseMetadata.openGraph, description: t(DESCRIPTION), locale: locale === "pt" ? "pt_BR" : "en_US", alternateLocale: locale === "pt" ? "en_US" : "pt_BR" },
+    twitter: { ...baseMetadata.twitter, description: t(DESCRIPTION) },
+  };
+}
+
+export default async function RootLayout({ children, params }: { children: React.ReactNode; params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  if (!isLocale(locale)) notFound();
   return (
     <html
-      lang="en"
+      lang={locale === "pt" ? "pt-BR" : "en"}
       // boot-seen-flag below sets data-boot-seen before hydration.
       suppressHydrationWarning
       data-scroll-behavior="smooth"
@@ -108,6 +129,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               strategy="afterInteractive"
             />
           )}
+        <LocaleProvider locale={locale}>
         <LenisProvider>
           <StarsBackground
             className="fixed inset-0 -z-10 bg-transparent"
@@ -123,6 +145,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             </div>
           </SoundProvider>
         </LenisProvider>
+        </LocaleProvider>
       </body>
     </html>
   );

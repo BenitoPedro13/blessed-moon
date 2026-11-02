@@ -1,3 +1,7 @@
+"use client";
+
+import { useI18n } from "@/components/locale-provider";
+
 import Image from "next/image";
 
 import type { ProjectImage } from "@/lib/studio-data";
@@ -9,6 +13,7 @@ export function ProjectCover({
   image: ProjectImage;
   title: string;
 }) {
+  const { t } = useI18n();
   // Panel tokens, and no amber frame. An amber border around a static image
   // put the "interactive" reading on something that isn't, and inside a
   // `/work` layer it competed directly with the traveling token, which is the
@@ -18,13 +23,13 @@ export function ProjectCover({
   return (
     <figure className="overflow-hidden border border-panel-edge bg-panel font-mono">
       <figcaption className="flex items-center justify-between gap-4 border-b border-border/60 px-3 py-2 text-[8px] tracking-[0.12em] text-muted-foreground uppercase">
-        <span>{title.toLowerCase().replaceAll(" ", "_")}.capture</span>
-        <span className="text-primary">● verified</span>
+        <span>{title.toLowerCase().replaceAll(" ", "_")}{t(".capture")}</span>
+        <span className="text-primary">{t("● verified")}</span>
       </figcaption>
       <div className="relative aspect-[16/10] overflow-hidden bg-muted/20">
         <Image
           src={image.src}
-          alt={image.alt}
+          alt={t(image.alt)}
           fill
           sizes="(min-width: 1024px) 52vw, 100vw"
           className="object-cover object-top transition-transform duration-700 hover:scale-[1.015]"
@@ -45,6 +50,7 @@ export function ProjectGallery({
   images: readonly ProjectImage[];
   title: string;
 }) {
+  const { t } = useI18n();
   return (
     <div className="grid gap-6 md:grid-cols-2">
       {images.map((image, index) => (
@@ -53,15 +59,15 @@ export function ProjectGallery({
           className="overflow-hidden border border-panel-edge bg-panel font-mono backdrop-blur-md"
         >
           <figcaption className="flex items-center justify-between gap-4 border-b border-border/60 px-3 py-2 text-[8px] tracking-[0.1em] uppercase">
-            <span className="truncate text-muted-foreground">{image.alt}</span>
+            <span className="truncate text-muted-foreground">{t(image.alt)}</span>
             <span className="shrink-0 text-primary">
               {String(index + 1).padStart(2, "0")} / {String(images.length).padStart(2, "0")}
             </span>
           </figcaption>
-          <div aria-label={`${title} screenshot`} className="bg-[#f3f2ef]">
+          <div aria-label={t(`${title} screenshot`)} className="bg-[#f3f2ef]">
             <Image
               src={image.src}
-              alt={image.alt}
+              alt={t(image.alt)}
               width={image.width}
               height={image.height}
               sizes="(min-width: 768px) 50vw, 100vw"

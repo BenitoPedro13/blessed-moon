@@ -2,15 +2,24 @@ import { ImageResponse } from "next/og";
 
 import { LOGO_BOUNDS, LOGO_PATH } from "@/lib/logo-mark";
 import { loadGoogleFont } from "@/lib/og-fonts";
+import { translator } from "@/lib/i18n/translate";
 
 export const alt = "Blessed Moon Studio — Clarity is the feature.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
+// Metadata handlers enumerate their own parameters; the page layout's list
+// does not prerender these images. Generate both cards during the build.
+export const dynamic = "force-static";
+export function generateStaticParams() {
+  return [{ locale: "en" }, { locale: "pt" }];
+}
 
 const HEADLINE = "BLESSED MOON STUDIO";
-const TAGLINE = "Clarity is the feature.";
 
-export default async function Image() {
+export default async function Image({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = translator(locale === "pt" ? "pt" : "en");
+  const TAGLINE = t("Clarity is the feature.");
   const [spaceGrotesk, jetbrainsMono] = await Promise.all([
     loadGoogleFont("Space Grotesk", 700, HEADLINE),
     loadGoogleFont("JetBrains Mono", 400, TAGLINE),

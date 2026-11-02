@@ -1,8 +1,10 @@
 "use client";
 
+import { useI18n } from "@/components/locale-provider";
+
 import { useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/localized-link";
 
 import { TOKEN_INLINE_WORD } from "@/components/morph-tokens";
 import { MorphToken, morphDrift } from "@/components/scroll-morph-stage";
@@ -48,6 +50,7 @@ const FILTERS: readonly { value: Filter; label: string; count: number }[] = [
  * morph layer (see scroll-morph-stage.tsx).
  */
 export function WorkIndex() {
+  const { t } = useI18n();
   const [filter, setFilter] = useState<Filter>("all");
   const { playHover, playClick } = useSound();
 
@@ -62,11 +65,10 @@ export function WorkIndex() {
         className="max-w-2xl font-sans text-3xl font-semibold tracking-[-0.025em] text-foreground sm:text-4xl"
         style={morphDrift({ y: 44, order: 1 })}
       >
-        {STUDIO_PROJECTS.length} systems, still running.
-      </h2>
+        {t(STUDIO_PROJECTS.length)}{t(" systems, still running.")}</h2>
 
       <ToggleGroup
-        aria-label="Filter projects by category"
+        aria-label={t("Filter projects by category")}
         value={[filter]}
         // Pressing the active filter again would empty the group; keep it.
         onValueChange={(value) => value[0] && setFilter(value[0] as Filter)}
@@ -82,8 +84,8 @@ export function WorkIndex() {
             onClick={playClick}
             className="h-7 border-border/60 px-2.5 font-mono text-[10.5px] tracking-[0.5px] text-muted-foreground uppercase hover:bg-transparent hover:text-foreground aria-pressed:border-primary aria-pressed:bg-transparent aria-pressed:text-primary"
           >
-            {option.label}
-            <span className="text-muted-foreground/60">{option.count}</span>
+            {t(option.label)}
+            <span className="text-muted-foreground/60">{t(option.count)}</span>
           </ToggleGroupItem>
         ))}
       </ToggleGroup>
@@ -101,7 +103,7 @@ export function WorkIndex() {
               <div className="relative aspect-[16/10] overflow-hidden border border-border/60 bg-muted/20 transition-colors group-hover:border-primary/60 group-focus-visible:border-primary">
                 <Image
                   src={project.cover.src}
-                  alt=""
+                  alt={t("")}
                   fill
                   sizes="(min-width: 1024px) 180px, (min-width: 640px) 33vw, 50vw"
                   // Held back at rest for the same reason as the homepage's
@@ -115,23 +117,23 @@ export function WorkIndex() {
                   window at 1440×900. */}
               <span className="mt-2 flex items-baseline gap-2">
                 <span className="font-mono text-[10.5px] tracking-[0.5px] text-muted-foreground">
-                  {project.index}
+                  {t(project.index)}
                 </span>
-                {project === STUDIO_PROJECTS[0] ? (
+                {t(project === STUDIO_PROJECTS[0] ? (
                   <MorphToken
                     id={`work-${project.slug}`}
                     side="from"
                     className={TOKEN_INLINE_WORD}
                   >
-                    {project.title}
+                    {t(project.title)}
                   </MorphToken>
                 ) : (
                   <span className="font-mono text-[15px] leading-[1.1] font-semibold tracking-[-0.01em] text-foreground">
-                    {project.title}
+                    {t(project.title)}
                   </span>
-                )}
+                ))}
               </span>
-              <span className="sr-only">: {project.tagline}</span>
+              <span className="sr-only">: {t(project.tagline)}</span>
             </Link>
           </li>
         ))}
@@ -142,9 +144,9 @@ export function WorkIndex() {
         className="mt-5 font-mono text-[10.5px] tracking-[0.5px] text-muted-foreground"
         style={morphDrift({ y: 30, order: 2 })}
       >
-        {filter === "all"
+        {t(filter === "all"
           ? "Each one below, in full."
-          : `${shown.length} of ${STUDIO_PROJECTS.length} shown. All ${STUDIO_PROJECTS.length} below, in full.`}
+          : `${shown.length} of ${STUDIO_PROJECTS.length} shown. All ${STUDIO_PROJECTS.length} below, in full.`)}
       </p>
     </div>
   );

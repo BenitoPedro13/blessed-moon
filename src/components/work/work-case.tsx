@@ -1,6 +1,8 @@
 "use client";
 
-import Link from "next/link";
+import { useI18n } from "@/components/locale-provider";
+
+import Link from "@/components/localized-link";
 import { ArrowRight } from "lucide-react";
 
 import { TOKEN_DISPLAY_WORD, TOKEN_INLINE_WORD } from "@/components/morph-tokens";
@@ -41,6 +43,7 @@ export function WorkCase({
   position: number;
   total: number;
 }) {
+  const { t } = useI18n();
   const { playHover, playClick } = useSound();
 
   return (
@@ -53,11 +56,11 @@ export function WorkCase({
             side="to"
             className={TOKEN_DISPLAY_WORD}
           >
-            {project.title}
+            {t(project.title)}
           </MorphToken>
         </h2>
         <p className="font-mono text-[10.5px] tracking-[0.5px] text-muted-foreground">
-          {project.year} · {project.role} · {project.timeline}
+          {t(project.year)} · {t(project.role)} · {t(project.timeline)}
         </p>
       </div>
 
@@ -65,16 +68,16 @@ export function WorkCase({
         className="mt-8 grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12"
         style={morphDrift({ y: 46, order: 1 })}
       >
-        <ProjectCover image={project.cover} title={project.title} />
+        <ProjectCover image={project.cover} title={t(project.title)} />
 
         <div className="flex flex-col">
           <p className="text-[14px] leading-[1.7] text-foreground/75">
-            {project.tagline}.
+            {t(project.tagline)}.
           </p>
           {/* Phones get the summary only; the full text is one tap away on
               /work/[slug] (TASK-mobile-scroll-pacing-and-work-order.md). */}
           <p className="mt-4 hidden text-[13px] leading-[1.75] text-muted-foreground md:block">
-            {project.description}
+            {t(project.description)}
           </p>
 
           <ul className="mt-6 hidden flex-wrap gap-2 md:flex">
@@ -83,17 +86,15 @@ export function WorkCase({
                 key={tag}
                 className="border border-border/80 px-2.5 py-1.5 font-mono text-[8.5px] tracking-[0.06em] text-muted-foreground uppercase"
               >
-                {tag}
+                {t(tag)}
               </li>
             ))}
           </ul>
 
           <div className="mt-7 border-l border-primary pl-4">
-            <p className="font-mono text-[8.5px] tracking-[0.1em] text-primary uppercase">
-              shipped outcome
-            </p>
+            <p className="font-mono text-[8.5px] tracking-[0.1em] text-primary uppercase">{t("shipped outcome")}</p>
             <p className="mt-2 text-[12.5px] leading-[1.7] text-foreground/80">
-              {project.outcome}
+              {t(project.outcome)}
             </p>
           </div>
 
@@ -102,9 +103,7 @@ export function WorkCase({
             onMouseEnter={playHover}
             onClick={playClick}
             className="mt-7 inline-flex w-fit items-center gap-1.5 border border-primary/60 px-5 py-2.5 font-mono text-[10.5px] tracking-[0.5px] text-primary uppercase transition-colors hover:bg-primary hover:text-primary-foreground"
-          >
-            View case study
-            <ArrowRight className="size-3" aria-hidden="true" />
+          >{t("View case study")}<ArrowRight className="size-3" aria-hidden="true" />
           </Link>
         </div>
       </div>
@@ -116,20 +115,18 @@ export function WorkCase({
         <span>
           {String(position).padStart(2, "0")} / {String(total).padStart(2, "0")}
         </span>
-        {next ? (
-          <span className="flex items-baseline gap-2.5">
-            next
-            <MorphToken
+        {t(next ? (
+          <span className="flex items-baseline gap-2.5">{t("next")}<MorphToken
               id={`work-${next.slug}`}
               side="from"
               className={TOKEN_INLINE_WORD}
             >
-              {next.title}
+              {t(next.title)}
             </MorphToken>
           </span>
         ) : (
-          <span>end of index</span>
-        )}
+          <span>{t("end of index")}</span>
+        ))}
       </div>
     </div>
   );

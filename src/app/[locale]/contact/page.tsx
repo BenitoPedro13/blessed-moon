@@ -1,3 +1,5 @@
+
+import { getServerI18n, localizedMetadata } from "@/lib/i18n/server";
 import type { Metadata } from "next";
 import { ArrowUpRight, CalendarClock, CalendarDays, Mail } from "lucide-react";
 
@@ -14,7 +16,7 @@ import { getEnquiryMailConfig } from "@/lib/enquiry-mail";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
+const pageMetadata: Metadata = {
   title: "Contact",
   description:
     "Tell Blessed Moon Studio about your project. Send an enquiry and Benito will follow up personally.",
@@ -28,7 +30,12 @@ export const metadata: Metadata = {
  * scroll journey would make the single thing this page exists to make easy the
  * hardest thing on the site. A form should open, not unfold.
  */
+export async function generateMetadata(): Promise<Metadata> {
+  return localizedMetadata(pageMetadata, "/contact");
+}
+
 export default async function ContactPage({ searchParams }: { searchParams: Promise<{ project?: string | string[] }> }) {
+  const { t } = await getServerI18n();
   const { project } = await searchParams;
   const initialProjectType = isProjectType(project) ? project : PROJECT_TYPES[0];
   const agencyEmail = process.env.AGENCY_CONTACT_EMAIL?.trim() || null;
@@ -40,16 +47,16 @@ export default async function ContactPage({ searchParams }: { searchParams: Prom
       <SiteNav />
       <main>
         <PageHero
-          eyebrow="— Contact"
-          title="Start a project"
-          description="Tell me what you're building, who it's for, and what needs to be true when it ships. I'll review your brief and follow up personally."
+          eyebrow={t("— Contact")}
+          title={t("Start a project")}
+          description={t("Tell me what you're building, who it's for, and what needs to be true when it ships. I'll review your brief and follow up personally.")}
           code="CONTACT"
         />
 
         <section
           id="project-enquiry"
           data-ascii-keyframe="2"
-          data-frame-label="PROJECT ENQUIRY"
+          data-frame-label={t("PROJECT ENQUIRY")}
           className="relative scroll-mt-24 px-7 py-16 sm:py-24"
         >
           <CellGrid />
@@ -57,8 +64,8 @@ export default async function ContactPage({ searchParams }: { searchParams: Prom
             <Reveal>
               <TerminalPanel
                 number="01"
-                label="PROJECT ENQUIRY"
-                status={deliveryReady ? "ready" : "email directly"}
+                label={t("PROJECT ENQUIRY")}
+                status={t(deliveryReady ? "ready" : "email directly")}
               >
                 <ContactForm key={initialProjectType} deliveryReady={deliveryReady} agencyEmail={agencyEmail} initialProjectType={initialProjectType} />
               </TerminalPanel>
@@ -72,50 +79,46 @@ export default async function ContactPage({ searchParams }: { searchParams: Prom
                     square one read as wallpaper. */}
                 <TerminalPanel
                   number="02"
-                  label="SCHEDULING"
-                  status={bookingUrl ? "open" : "provisioning"}
+                  label={t("SCHEDULING")}
+                  status={t(bookingUrl ? "open" : "provisioning")}
                 >
                   <CalendarDays className="size-6 text-primary" aria-hidden="true" />
                   <h2 className="mt-7 font-sans text-2xl font-semibold tracking-[-0.025em] text-foreground">
-                    {bookingUrl
+                    {t(bookingUrl
                       ? "Pick a clear 30-minute window."
-                      : "Scheduling opens with the agency calendar."}
+                      : "Scheduling opens with the agency calendar.")}
                   </h2>
                   <p className="mt-3 max-w-sm text-[12.5px] leading-[1.65] text-muted-foreground">
-                    {bookingUrl
+                    {t(bookingUrl
                       ? "Choose a time in your timezone. The invite and meeting details are handled automatically."
-                      : "Send a project enquiry and we'll arrange a time to talk by email."}
+                      : "Send a project enquiry and we'll arrange a time to talk by email.")}
                   </p>
-                  {bookingUrl ? (
+                  {t(bookingUrl ? (
                     <BookingLink href={bookingUrl} />
                   ) : (
-                    <span className="mt-7 inline-flex w-fit items-center gap-2 border border-border/80 px-4 py-3 font-mono text-[10.5px] tracking-[0.5px] text-muted-foreground uppercase">
-                      Calendar not live yet
-                      <CalendarClock className="size-3" aria-hidden="true" />
+                    <span className="mt-7 inline-flex w-fit items-center gap-2 border border-border/80 px-4 py-3 font-mono text-[10.5px] tracking-[0.5px] text-muted-foreground uppercase">{t("Calendar not live yet")}<CalendarClock className="size-3" aria-hidden="true" />
                     </span>
-                  )}
+                  ))}
                 </TerminalPanel>
               </Reveal>
 
               <Reveal delay={0.16}>
                 <TerminalPanel
                   number="03"
-                  label="AGENCY CHANNEL"
+                  label={t("AGENCY CHANNEL")}
                   padded={false}
-                  status={agencyEmail ? "live" : "pending"}
+                  status={t(agencyEmail ? "live" : "pending")}
                 >
-                  {agencyEmail ? (
+                  {t(agencyEmail ? (
                     <a
                       href={`mailto:${agencyEmail}`}
                       className="group flex items-center gap-4 px-5 py-4 hover:bg-primary/[0.04]"
                     >
                       <Mail className="size-4 text-primary" aria-hidden="true" />
                       <div className="min-w-0 flex-1">
-                        <span className="block font-mono text-[8px] tracking-[0.1em] text-muted-foreground uppercase">
-                          Email
-                        </span>
+                        <span className="block font-mono text-[8px] tracking-[0.1em] text-muted-foreground uppercase">{t("Email")}</span>
                         <span className="mt-1 block truncate text-[12px] text-foreground/80 transition-colors group-hover:text-primary">
-                          {agencyEmail}
+                          {t(agencyEmail)}
                         </span>
                       </div>
                       <ArrowUpRight
@@ -127,22 +130,16 @@ export default async function ContactPage({ searchParams }: { searchParams: Prom
                     <div className="flex items-center gap-4 px-5 py-4">
                       <Mail className="size-4 text-primary" aria-hidden="true" />
                       <div className="min-w-0 flex-1">
-                        <span className="block font-mono text-[8px] tracking-[0.1em] text-muted-foreground uppercase">
-                          Email
-                        </span>
-                        <span className="mt-1 block text-[12px] text-foreground/80">
-                          Agency inbox provisioning
-                        </span>
+                        <span className="block font-mono text-[8px] tracking-[0.1em] text-muted-foreground uppercase">{t("Email")}</span>
+                        <span className="mt-1 block text-[12px] text-foreground/80">{t("Agency inbox provisioning")}</span>
                       </div>
                     </div>
-                  )}
+                  ))}
                 </TerminalPanel>
               </Reveal>
 
               <Reveal delay={0.24}>
-                <p className="font-mono text-[8.5px] leading-[1.7] text-muted-foreground">
-                  Benito reads every project enquiry and follows up personally.
-                </p>
+                <p className="font-mono text-[8.5px] leading-[1.7] text-muted-foreground">{t("Benito reads every project enquiry and follows up personally.")}</p>
               </Reveal>
             </div>
           </div>

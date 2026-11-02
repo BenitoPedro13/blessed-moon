@@ -1,5 +1,7 @@
 "use client";
 
+import { useI18n } from "@/components/locale-provider";
+
 import { ChevronDown, ChevronUp } from "lucide-react";
 
 import { useSound } from "@/components/sound-provider";
@@ -29,6 +31,7 @@ export function StageSteps({
   active: number;
   onSelect: (index: number) => void;
 }) {
+  const { t } = useI18n();
   const { playClick } = useSound();
   const select = (index: number) => {
     playClick();
@@ -39,7 +42,7 @@ export function StageSteps({
 
   return (
     <nav
-      aria-label="Sections"
+      aria-label={t("Sections")}
       className="pointer-events-auto absolute inset-x-0 bottom-3 z-10 flex justify-center px-4 sm:bottom-5"
     >
       {listAll && (
@@ -54,7 +57,7 @@ export function StageSteps({
                   i === active ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                <span className="text-muted-foreground/60">{step.number}</span> {step.label}
+                <span className="text-muted-foreground/60">{t(step.number)}</span> {t(step.label)}
               </button>
             </li>
           ))}
@@ -70,20 +73,20 @@ export function StageSteps({
           type="button"
           onClick={() => select(active - 1)}
           disabled={active === 0}
-          aria-label="Previous section"
+          aria-label={t("Previous section")}
           className={`${STEP_BUTTON} p-1.5 text-muted-foreground hover:text-foreground disabled:opacity-30`}
         >
           <ChevronUp className="size-3.5" aria-hidden="true" />
         </button>
         <span aria-live="polite" className={`${STEP_BUTTON} min-w-16 text-center text-foreground`}>
-          <span className="sr-only">{current?.label}, section </span>
+          <span className="sr-only">{t(current?.label)}{t(", section ")}</span>
           {String(active + 1).padStart(2, "0")} / {String(steps.length).padStart(2, "0")}
         </span>
         <button
           type="button"
           onClick={() => select(active + 1)}
           disabled={active === steps.length - 1}
-          aria-label="Next section"
+          aria-label={t("Next section")}
           className={`${STEP_BUTTON} p-1.5 text-muted-foreground hover:text-foreground disabled:opacity-30`}
         >
           <ChevronDown className="size-3.5" aria-hidden="true" />

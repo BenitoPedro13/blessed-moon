@@ -1,7 +1,9 @@
 "use client";
 
+import { useI18n } from "@/components/locale-provider";
+
 import { motion } from "motion/react";
-import Link from "next/link";
+import Link from "@/components/localized-link";
 
 import { COUNT_DISPLAY } from "@/components/homepage/morph-count";
 import { MorphToken, morphDrift } from "@/components/scroll-morph-stage";
@@ -25,6 +27,7 @@ const TIERS = [
  * Negative space is the distinguishing move here, not more visual weight.
  */
 export function PricingTable() {
+  const { t } = useI18n();
   const { playHover } = useSound();
 
   return (
@@ -34,18 +37,13 @@ export function PricingTable() {
         <MorphToken id="count-1" side="to" className={COUNT_DISPLAY}>
           1
         </MorphToken>
-        <span className="font-sans text-xl font-semibold tracking-[-0.02em] text-foreground sm:text-2xl">
-          number, agreed up front.
-        </span>
+        <span className="font-sans text-xl font-semibold tracking-[-0.02em] text-foreground sm:text-2xl">{t("number, agreed up front.")}</span>
       </p>
 
       <p
         className="mx-auto mt-6 max-w-md text-[14px] leading-[1.6] text-muted-foreground"
         style={morphDrift({ y: 44, order: 1 })}
-      >
-        Priced like the work it actually is — project-based, confirmed on a
-        call, and it does not move afterwards.
-      </p>
+      >{t("Priced like the work it actually is — project-based, confirmed on a call, and it does not move afterwards.")}</p>
 
       <div
         className="mt-10 short:mt-6 flex flex-col text-left sm:mt-12 short:sm:mt-8"
@@ -62,10 +60,8 @@ export function PricingTable() {
             onHoverStart={playHover}
             transition={{ type: "spring", stiffness: 300, damping: 24 }}
           >
-            <span className="font-sans text-base text-foreground">{tier.href ? <Link href={tier.href} className="text-primary underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-primary">{tier.name} →</Link> : tier.name}</span>
-            <span className="text-right text-muted-foreground">
-              range confirmed on call
-            </span>
+            <span className="font-sans text-base text-foreground">{t(tier.href ? <Link href={tier.href} className="text-primary underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-primary">{t(tier.name)} →</Link> : tier.name)}</span>
+            <span className="text-right text-muted-foreground">{t("range confirmed on call")}</span>
           </motion.div>
         ))}
       </div>

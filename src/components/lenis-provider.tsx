@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactLenis } from "lenis/react";
-import { useReducedMotion } from "motion/react";
+import { usePageReducedMotion } from "@/lib/use-page-reduced-motion";
 
 /**
  * Wraps the whole app in Lenis's eased scroll — the "buttery" scroll feel
@@ -31,7 +31,7 @@ import { useReducedMotion } from "motion/react";
  * nested scroller (a modal, a dropdown).
  */
 export function LenisProvider({ children }: { children: React.ReactNode }) {
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = usePageReducedMotion();
 
   if (reduceMotion) return children;
 

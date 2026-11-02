@@ -2,18 +2,25 @@ import { ImageResponse } from "next/og";
 
 import { LOGO_BOUNDS, LOGO_PATH } from "@/lib/logo-mark";
 import { loadGoogleFont } from "@/lib/og-fonts";
+import { translator } from "@/lib/i18n/translate";
 
 // TASK-service-share-card.md: the page sets its own openGraph, so it doesn't
 // inherit the root card; this is its thumbnail on LinkedIn Featured and in shares.
 export const alt = "Social Media Strategy & Content Planning — Blessed Moon Studio. The plan before the posts.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
+export const dynamic = "force-static";
+export function generateStaticParams() {
+  return [{ locale: "en" }, { locale: "pt" }];
+}
 
 const STUDIO = "BLESSED MOON STUDIO";
-const TITLE = "Social Media Strategy & Content Planning";
-const LINE = "The plan before the posts.";
 
-export default async function Image() {
+export default async function Image({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = translator(locale === "pt" ? "pt" : "en");
+  const TITLE = t("Social Media Strategy & Content Planning");
+  const LINE = t("The plan before the posts.");
   const [spaceGrotesk, jetbrainsMono] = await Promise.all([
     loadGoogleFont("Space Grotesk", 700, TITLE),
     loadGoogleFont("JetBrains Mono", 400, `${LINE}${STUDIO}`),

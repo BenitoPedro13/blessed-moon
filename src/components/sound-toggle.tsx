@@ -1,10 +1,13 @@
 "use client";
 
+import { useI18n } from "@/components/locale-provider";
+
 import { Volume2, VolumeX } from "lucide-react";
 
 import { TOGGLE_SRC, useSound } from "@/components/sound-provider";
 
 export function SoundToggle() {
+  const { t } = useI18n();
   const { muted, toggleMuted } = useSound();
 
   function handleClick() {
@@ -20,14 +23,14 @@ export function SoundToggle() {
       type="button"
       onClick={handleClick}
       aria-pressed={!muted}
-      aria-label={muted ? "Unmute sound" : "Mute sound"}
+      aria-label={t(muted ? "Unmute sound" : "Mute sound")}
       className="flex size-8 items-center justify-center border border-border/60 text-muted-foreground transition-colors hover:border-primary hover:text-primary"
     >
-      {muted ? (
+      {t(muted ? (
         <VolumeX className="size-3.5" aria-hidden="true" />
       ) : (
         <Volume2 className="size-3.5" aria-hidden="true" />
-      )}
+      ))}
     </button>
   );
 }

@@ -1,3 +1,5 @@
+
+import { getServerI18n, localizedMetadata } from "@/lib/i18n/server";
 import type { Metadata } from "next";
 
 import { PageCta } from "@/components/page-cta";
@@ -9,13 +11,18 @@ import { WorkCase } from "@/components/work/work-case";
 import { WorkIndex } from "@/components/work/work-index";
 import { STUDIO_PROJECTS } from "@/lib/studio-data";
 
-export const metadata: Metadata = {
+const pageMetadata: Metadata = {
   title: "Work",
   description:
     "Selected digital products from Blessed Moon Studio: scheduling, marketing analytics, headless commerce, credit-qualification, motion portfolios, geospatial farm operations, multi-tenant brand platforms, restaurant menus, furniture catalogues, university fair registration, a multilingual language-school site and a real-time energy data pipeline, built for real operations.",
 };
 
-export default function WorkPage() {
+export async function generateMetadata(): Promise<Metadata> {
+  return localizedMetadata(pageMetadata, "/work");
+}
+
+export default async function WorkPage() {
+  const { t, locale } = await getServerI18n();
   return (
     <>
       <SiteNav />
@@ -24,9 +31,9 @@ export default function WorkPage() {
             own pins, and everything between them is one window morphing
             through its views (TASK-subpage-morph-expansion.md). */}
         <PageHero
-          eyebrow="— Selected work"
-          title="Selected Work"
-          description={`Built to last longer than the brief. ${STUDIO_PROJECTS.length} systems where product clarity, interface craft, and reliable engineering had to arrive together.`}
+          eyebrow={t("— Selected work")}
+          title={t("Selected Work")}
+          description={locale === "pt" ? `Feito para durar além do briefing. ${STUDIO_PROJECTS.length} sistemas em que clareza de produto, cuidado com a interface e engenharia confiável precisaram caminhar juntos.` : `Built to last longer than the brief. ${STUDIO_PROJECTS.length} systems where product clarity, interface craft, and reliable engineering had to arrive together.`}
           code="WORK"
         />
 
