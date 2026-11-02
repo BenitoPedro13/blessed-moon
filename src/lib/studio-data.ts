@@ -4,6 +4,7 @@ export type ProjectVisualVariant =
   | "commerce"
   | "realestate"
   | "portfolio"
+  | "photography"
   | "geospatial"
   | "eyewear"
   | "furniture"
@@ -67,6 +68,7 @@ export type StudioProject = {
   visual: ProjectVisualVariant;
   cover: ProjectImage;
   screenshots: readonly ProjectImage[];
+  video?: { src: string; poster: string; caption: string };
   process: readonly ProjectStep[];
   architecture: readonly ArchitectureLayer[];
   features: readonly ProjectDetail[];
@@ -75,6 +77,76 @@ export type StudioProject = {
 };
 
 export const STUDIO_PROJECTS: readonly StudioProject[] = [
+  {
+    slug: "lunares",
+    title: "Lunares",
+    tagline: "A photographer's world, painted into motion before the first photograph",
+    index: "16",
+    year: "2026",
+    role: "Visual identity, motion and full-stack development",
+    timeline: "November 2026 — live",
+    team: "Solo delivery; photography by Luna",
+    description:
+      "A portfolio for Luna's photographs, with a painted opening sequence, gallery backgrounds that take their colours from the work, and an editorial rhythm that keeps each photograph whole.",
+    problem:
+      "The site needed a recognisable identity without turning the photographs into decoration. The opening could be expressive, but reaching the galleries had to stay simple, including for visitors who skip animation or prefer reduced motion. Publishing a new series also needed to work without editing code.",
+    approach:
+      "The identity starts with suminagashi ribbons that become a butterfly, a vortex, sun and moon, an eye and a lily, rendered as moving paint strokes in WebGL. That painted world continues behind the galleries, changing palette with each series and sweeping across page transitions. Photos follow aspect-aware rows with captions and chapters. Payload CMS owns the galleries and media; edits invalidate the site's cached gallery data.",
+    outcome:
+      "Live with four photographic series, an opening that plays once per session, painted page transitions, and a CMS for publishing galleries and photographs. Visitors can skip the intro, pause the moving paint, or browse with reduced motion. Photographs are served from S3 through CloudFront.",
+    category: "sites",
+    tags: ["Photography", "Motion Design", "CMS"],
+    stack: ["Next.js", "TypeScript", "React", "WebGL / OGL", "Payload CMS", "PostgreSQL", "S3", "CloudFront"],
+    visual: "photography",
+    cover: {
+      src: "/projects/lunares/galleries.png",
+      alt: "Lunares gallery scene: a photograph from Cinelândia beside its title on a purple and red painted background",
+      width: 1440,
+      height: 900,
+    },
+    screenshots: [
+      { src: "/projects/lunares/home.png", alt: "Dark mode: Lunares wordmark and the index of four photographic series", width: 1440, height: 900 },
+      { src: "/projects/lunares/home-light.png", alt: "Light mode: the opening page on a pale painted ground", width: 1440, height: 900 },
+      { src: "/projects/lunares/galleries.png", alt: "Dark mode: Cinelândia cover and metadata against purple and red paint", width: 1440, height: 900 },
+      { src: "/projects/lunares/galleries-light.png", alt: "Light mode: the same Cinelândia gallery scene on a paper background", width: 1440, height: 900 },
+      { src: "/projects/lunares/photographs-light.png", alt: "Light mode: the Cartazes chapter of Cinelândia, with photographs and captions", width: 1440, height: 900 },
+      { src: "/projects/lunares/estrela-light.png", alt: "Light mode: A estrela brilhou gallery, with its title, caption and photograph count", width: 1440, height: 900 },
+      { src: "/projects/lunares/angra-dark.png", alt: "Dark mode: the Angra dos Reis gallery and its painted palette", width: 1440, height: 900 },
+      { src: "/projects/lunares/evelyn-dark.png", alt: "Dark mode: Os sete maridos de Evelyn Hugo gallery, with its introductory caption", width: 1440, height: 900 },
+      { src: "/projects/lunares/about-dark.png", alt: "Dark mode: Luna's About page with her own words and Instagram link", width: 1440, height: 900 },
+      { src: "/projects/lunares/about-light.png", alt: "Light mode: Luna's About page on a pale painted ground", width: 1440, height: 900 },
+    ],
+    video: {
+      src: "/projects/lunares/walkthrough.mp4",
+      poster: "/projects/lunares/galleries-light.png",
+      caption: "A full tour of the live site: the opening animation, light and dark modes, paint pause and resume, all four galleries scrolled from beginning to end, chapter navigation, painted page transitions, and the About page. Silent walkthrough.",
+    },
+    process: [
+      { phase: "01", title: "Find the visual language", body: "Marbled ribbons, thick paint strokes and a sequence of connected forms establish the identity before the gallery appears." },
+      { phase: "02", title: "Carry the paint into the site", body: "The opening, gallery backgrounds and navigation share a painted language; each series brings its own palette." },
+      { phase: "03", title: "Let the photographs set the rhythm", body: "Aspect ratios guide single and paired rows, with chapters and captions providing the structure around the images." },
+      { phase: "04", title: "Make publishing independent", body: "Galleries, chapters, covers and photographs are edited in Payload, with cached public pages refreshed after changes." },
+    ],
+    architecture: [
+      { layer: "Motion", label: "WebGL opening and painted ground", detail: "A timed sequence of paint strokes opens into a persistent background that responds to the current gallery." },
+      { layer: "Web", label: "Next.js and React", detail: "Server-rendered gallery content, aspect-aware photo layouts and painted page transitions." },
+      { layer: "Content", label: "Payload CMS and PostgreSQL", detail: "Galleries contain ordered chapters and photographs; publishing invalidates tagged gallery caches." },
+      { layer: "Media", label: "S3 behind CloudFront", detail: "Display images and thumbnails are stored separately from the application and delivered through a CDN." },
+    ],
+    features: [
+      { title: "An opening with a way through", body: "The intro plays once per session, has a visible skip button, and ends on Escape or when keyboard focus leaves it." },
+      { title: "Paint that follows the work", body: "Each gallery has its own background palette, carried into the transition between pages." },
+      { title: "A gallery Luna can maintain", body: "The CMS manages covers, photographs, captions and chapters without a code change or redeploy." },
+    ],
+    challenges: [
+      { title: "Expressive motion, accessible browsing", body: "Reduced motion uses a brief still opening and a still painted ground. The moving background has its own pause control." },
+      { title: "Keeping every photograph whole", body: "The layout uses image dimensions to arrange single photographs and pairs, preserving their proportions." },
+      { title: "Publishing without stale galleries", body: "CMS edits revalidate the cached gallery data so the public pages follow the editorial changes." },
+    ],
+    links: [
+      { label: "Visit website", href: "https://lunaresfotografados.vercel.app" },
+    ],
+  },
   {
     slug: "apuracao-2026",
     title: "Apuração 2026",

@@ -37,7 +37,7 @@ export default function WorkPage() {
             listing rather than being renumbered 02–07 by their position
             here. */}
         <ScrollMorphStage
-          heightPerLayer={1.6}
+          heightPerLayer={1}
           layers={[
             { number: "00", keyframe: 1, label: "INDEX", width: 1140, content: <WorkIndex /> },
             ...STUDIO_PROJECTS.map((project, i) => ({

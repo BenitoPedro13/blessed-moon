@@ -6,6 +6,7 @@ interface ProjectVisualProps {
     | "commerce"
     | "realestate"
     | "portfolio"
+    | "photography"
     | "geospatial"
     | "eyewear"
     | "furniture"
@@ -253,6 +254,21 @@ export function ProjectVisual({ title, variant }: ProjectVisualProps) {
               dentro da faixa 2
             </div>
           </div>
+        </div>
+      )}
+
+      {variant === "photography" && (
+        <div className="grid min-h-[250px] content-center gap-4 pt-3 sm:min-h-[282px]">
+          {[
+            ["01 · opening", "ribbons → butterfly → lily"],
+            ["02 · gallery", "photographs → palette → painted ground"],
+            ["03 · publishing", "Payload → cached pages → CDN"],
+          ].map(([label, detail]) => (
+            <div key={label} className="border border-border/60 p-4">
+              <p className="text-[8px] text-primary uppercase">{label}</p>
+              <p className="mt-2 text-[9px] text-muted-foreground">{detail}</p>
+            </div>
+          ))}
         </div>
       )}
 

@@ -150,6 +150,35 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           </div>
         </section>
 
+        {project.video && (
+          <section aria-labelledby="walkthrough-heading" className="px-7 pb-16 sm:pb-24">
+            <div className="mx-auto max-w-6xl">
+              <h2 id="walkthrough-heading" className="font-sans text-3xl font-semibold tracking-[-0.035em] text-foreground sm:text-4xl">
+                The site in motion
+              </h2>
+              <figure className="mt-8 overflow-hidden border border-panel-edge bg-panel">
+                <video
+                  controls
+                  playsInline
+                  preload="none"
+                  poster={project.video.poster}
+                  width={1440}
+                  height={900}
+                  aria-label={`${project.title} website walkthrough`}
+                  aria-describedby="walkthrough-caption"
+                  className="aspect-[16/10] w-full bg-black"
+                >
+                  <source src={project.video.src} type="video/mp4" />
+                  <a href={project.video.src}>Download the silent walkthrough</a>
+                </video>
+                <figcaption id="walkthrough-caption" className="border-t border-border/60 px-4 py-3 text-[12.5px] leading-[1.7] text-muted-foreground">
+                  {project.video.caption}
+                </figcaption>
+              </figure>
+            </div>
+          </section>
+        )}
+
         <section data-ascii-keyframe="2" data-frame-label="CASE STUDY" className="border-y border-border/60 bg-panel px-7 py-16 backdrop-blur-sm sm:py-24">
           <div className="mx-auto grid max-w-6xl gap-px border border-border/60 bg-border/60 lg:grid-cols-3">
             <CaseTextBlock index="01" label="The problem" body={project.problem} />

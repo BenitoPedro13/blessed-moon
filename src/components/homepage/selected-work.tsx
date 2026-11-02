@@ -28,11 +28,11 @@ const PROJECTS = [
     description: "University fairs sold through one page, plus the plan that fills them.",
   },
   {
-    name: "ART'hur",
-    slug: "art-hur",
-    image: "/projects/art-hur/home.png",
-    imageAlt: "ART'hur's centered archive stage with the dashed route and walker glyph",
-    description: "Motion-led archive for a visual director, one scene at a time.",
+    name: "Lunares",
+    slug: "lunares",
+    image: "/projects/lunares/galleries.png",
+    imageAlt: "Lunares photography gallery on a purple and red painted background",
+    description: "A photographer's world, from moving paint to the photographs themselves.",
   },
 ] as const;
 

@@ -36,7 +36,7 @@ export default function Home() {
             wide grids and contracts hard for Pricing, whose restraint is the
             content. One window, five views — not five windows. */}
         <ScrollMorphStage
-          heightPerLayer={1.6}
+          heightPerLayer={1}
           layers={[
             { number: "01", keyframe: 1, label: "ABOUT", analytics: "about", width: 900, content: <AboutTeaser /> },
             { number: "02", id: "services", keyframe: 2, label: "SERVICES", analytics: "services", width: 1120, content: <ServicesFocus /> },

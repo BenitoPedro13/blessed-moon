@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { LayoutGroup, motion } from "motion/react";
+import { useLenis } from "lenis/react";
 
 import { CellGrid } from "@/components/cell-grid";
 import { subscribeFrame } from "@/components/frame-loop";
@@ -9,6 +10,7 @@ import { trackHomeSection, type HomeSection } from "@/lib/analytics";
 import { usePageReducedMotion } from "@/lib/use-page-reduced-motion";
 import { ScrollParticles } from "@/components/scroll-particles";
 import { SectionHeading } from "@/components/section-heading";
+import { StageSteps } from "@/components/stage-steps";
 import {
   TerminalPanel,
   TitleRule,
@@ -72,6 +74,12 @@ const CROSSFADE_GAMMA = 1.7;
 const END_HOLD = 0.5;
 /** How long a layer must stay the one on screen before it counts as reached. */
 const DWELL_MS = 600;
+/** Fraction of one step that, once scrolling settles, carries the stage on to
+ * the next step in the direction of travel; less settles back. Small on
+ * purpose: a small scroll means "next" (TASK-homepage-conversion-and-navigation.md §4). */
+const STEP_THRESHOLD = 0.08;
+/** Quiet time after the last scroll event before the stage settles on a step. */
+const SETTLE_MS = 140;
 
 /** Where `createScrollTracker` samples the page (its `anchorRatio`). Keyframe
  * markers are offset by this so each crosses the tracker's anchor line exactly
@@ -332,6 +340,100 @@ export function ScrollMorphStage({
     // widthsRef/heightsRef instead.
   }, [count, span, flow]);
 
+  const lenis = useLenis();
+
+  /** Document Y at which layer `index` is the one centred in the window. */
+  function stepY(index: number) {
+    const wrapper = wrapperRef.current;
+    if (!wrapper) return 0;
+    const top = wrapper.getBoundingClientRect().top + window.scrollY;
+    return top + ((index + END_HOLD) / span) * (wrapper.offsetHeight - window.innerHeight);
+  }
+
+  const snappingRef = useRef(false);
+  function goToStep(index: number) {
+    const target = stepY(Math.max(0, Math.min(count - 1, index)));
+    if (!lenis) {
+      window.scrollTo({ top: target });
+      return;
+    }
+    snapTo(target, 0.7);
+  }
+
+  /** Programmatic step scroll. `onComplete` never fires if the visitor scrolls
+   * again mid-animation (Lenis cancels it), so the flag is also cleared by any
+   * user input and by a timeout; otherwise snapping would switch itself off
+   * for the rest of the visit. */
+  const snapTimeoutRef = useRef(0);
+  function snapTo(target: number, duration: number, onDone?: () => void) {
+    if (!lenis) return;
+    snappingRef.current = true;
+    window.clearTimeout(snapTimeoutRef.current);
+    const done = () => {
+      snappingRef.current = false;
+      window.clearTimeout(snapTimeoutRef.current);
+      onDone?.();
+    };
+    snapTimeoutRef.current = window.setTimeout(done, duration * 1000 + 250);
+    lenis.scrollTo(target, { duration, onComplete: done });
+  }
+
+  // Stepped scroll. Input is never intercepted: once scrolling goes quiet
+  // inside the stage, it settles on a step, the next one in the direction of
+  // travel if it moved more than STEP_THRESHOLD of a step. Above the first
+  // step and below the last, scrolling is free. No Lenis (reduced motion)
+  // means no stepping, and the stage is in flow mode then anyway.
+  useEffect(() => {
+    if (flow || !lenis || count < 2) return;
+    let timer = 0;
+    let lastSettledY = window.scrollY;
+    let inputDirection = 0;
+    function settle() {
+      if (snappingRef.current) return;
+      const y = window.scrollY;
+      const first = stepY(0);
+      const stride = stepY(1) - first;
+      const p = (y - first) / stride;
+      const previous = (lastSettledY - first) / stride;
+      // The gesture's own direction, when there was one: input that lands
+      // mid-snap can stop short of the snap's target and would otherwise
+      // read as a scroll back. Keyboard and scrollbar fall back to position.
+      const direction = inputDirection || Math.sign(y - lastSettledY);
+      inputDirection = 0;
+      lastSettledY = y;
+      if (stride <= 0 || p < -STEP_THRESHOLD || p > count - 1 + STEP_THRESHOLD || direction === 0) return;
+      // Arriving from outside the stage settles on the nearest step; the
+      // small-scroll rule only applies between steps.
+      const arriving = previous < 0 || previous > count - 1;
+      const target = arriving
+        ? Math.round(p)
+        : direction > 0 ? Math.ceil(p - STEP_THRESHOLD) : Math.floor(p + STEP_THRESHOLD);
+      const clamped = Math.max(0, Math.min(count - 1, target));
+      if (Math.abs(stepY(clamped) - y) < 2) return;
+      // The next gesture's direction is measured from where this snap is
+      // headed, so input that interrupts it still counts from the right step.
+      lastSettledY = stepY(clamped);
+      snapTo(lastSettledY, 0.6);
+    }
+    const offScroll = lenis.on("scroll", () => {
+      if (snappingRef.current) return;
+      window.clearTimeout(timer);
+      timer = window.setTimeout(settle, SETTLE_MS);
+    });
+    // Wheel or touch input: the visitor takes over from any snap in flight.
+    const offInput = lenis.on("virtual-scroll", ({ deltaY }) => {
+      if (deltaY) inputDirection = Math.sign(deltaY);
+      snappingRef.current = false;
+    });
+    return () => {
+      offScroll();
+      offInput();
+      window.clearTimeout(timer);
+    };
+    // stepY reads refs and `span`/`count`, which are in the deps.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [flow, lenis, count, span]);
+
   // Flow mode has no active layer, so reaching a section is the section
   // crossing the middle of the viewport.
   const flowSectionsRef = useRef<(HTMLElement | null)[]>([]);
@@ -417,6 +519,11 @@ export function ScrollMorphStage({
       >
         <CellGrid />
         {particles && <ScrollParticles />}
+        <StageSteps
+          steps={layers.map((layer) => ({ number: layer.number, label: layer.label }))}
+          active={active}
+          onSelect={goToStep}
+        />
 
         <LayoutGroup>
           <div
