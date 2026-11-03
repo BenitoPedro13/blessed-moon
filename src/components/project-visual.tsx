@@ -19,7 +19,8 @@ interface ProjectVisualProps {
     | "language"
     | "grid"
     | "election"
-    | "lesson";
+    | "lesson"
+    | "transit";
 }
 
 const QUALIFICATION_STEPS = ["Renda", "Entrada", "Restrições", "Faixa MCMV", "Localidade", "Score"];
@@ -106,6 +107,14 @@ const LESSON_OUTPUTS = [
   [".dove.json file", true],
   ["indexeddb drafts", true],
   ["accounts", false],
+] as const;
+
+const COVERAGE_TIERS = [
+  ["ônibus · brt · live", true],
+  ["gtfs routes · scheduled", true],
+  ["rebuilt from raw log", true],
+  ["trem · metrô · barcas", false],
+  ["invented positions", false],
 ] as const;
 
 export function ProjectVisual({ title, variant }: ProjectVisualProps) {
@@ -589,6 +598,38 @@ export function ProjectVisual({ title, variant }: ProjectVisualProps) {
               ))}
             </div>
             <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">{t("type a lesson, get a deck")}</div>
+          </div>
+        </div>
+      )}
+      {variant === "transit" && (
+        <div className="grid h-[250px] grid-cols-[0.85fr_1.15fr] gap-3 pt-3 sm:h-[282px]">
+          <div className="border border-border/60 p-3">
+            <p className="text-[8px] text-primary uppercase">{t("letreiro / rio")}</p>
+            <p className="mt-3 font-sans text-lg font-semibold tracking-[-0.03em] text-foreground">{t("live · stale · failed")}</p>
+            <p className="mt-1 text-[7px] text-muted-foreground">{t("no vehicles ≠ fetch failed")}</p>
+            <div className="mt-5 border-t border-border/60 pt-3">
+              <p className="text-[7px] text-muted-foreground uppercase">{t("api snapshot")}</p>
+              <p className="mt-1 text-[9px] text-primary">{t("from memory · 1 query / min")}</p>
+            </div>
+            <div className="mt-4 flex items-center gap-1.5 text-[7px] text-muted-foreground">
+              <span className="text-primary">●</span>{t("recorded before it's drawn")}</div>
+          </div>
+          <div className="border border-primary/40 p-3">
+            <p className="text-[8px] text-primary uppercase">{t("coverage / 3 tiers")}</p>
+            <div className="mt-3 space-y-1.5">
+              {COVERAGE_TIERS.map(([label, available]) => (
+                <div
+                  key={label}
+                  className="flex items-center justify-between border-b border-border/50 pb-1 text-[7px] text-muted-foreground"
+                >
+                  <span>{t(label)}</span>
+                  <span className={available ? "text-primary" : "text-muted-foreground"}>
+                    {t(available ? "[x]" : "[ ]")}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">{t("raw log → redpanda → timescale")}</div>
           </div>
         </div>
       )}

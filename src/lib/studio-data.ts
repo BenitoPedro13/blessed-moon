@@ -13,7 +13,8 @@ export type ProjectVisualVariant =
   | "language"
   | "grid"
   | "election"
-  | "lesson";
+  | "lesson"
+  | "transit";
 
 type ProjectStep = {
   phase: string;
@@ -145,6 +146,71 @@ export const STUDIO_PROJECTS: readonly StudioProject[] = [
     ],
     links: [
       { label: "Visit website", href: "https://lunaresfotografados.vercel.app" },
+    ],
+  },
+  {
+    slug: "transit-pulse",
+    title: "Transit Pulse",
+    tagline: "A live public-transport map for Rio, honest about which data exists",
+    index: "17",
+    year: "2026",
+    role: "Data platform and product engineering",
+    timeline: "2026 — recorded demo live",
+    team: "Solo",
+    description:
+      "A live map of Greater Rio's buses and BRT where every operator is shown as live, scheduled-only or no-public-data, fed by a resilient streaming pipeline that records each provider's response byte-for-byte before it ever draws a vehicle.",
+    problem:
+      "Rio has no single source for where its transit is. Three public SMTR paths cover the city's buses and BRT; the trains, metro, tram, ferries and intercity buses have no public machine-readable data at all. A naive map would paper over that — inventing positions, collapsing a failed fetch into 'no vehicles', or drawing a days-old parked snapshot as a moving bus.",
+    approach:
+      "One adapter per provider normalizes to a single canonical event; nothing downstream knows which provider it came from. Every response is written to an immutable raw log on S3 before anything is published, so the broker (Redpanda, 24-hour retention) is only a buffer and the database is a rebuildable projection. The API serves a snapshot from memory — it queries the database at most once per new minute, never per request — and the web app draws vehicles with MapLibre and deck.gl behind an amber letreiro that states live, stale or failed plainly. Coverage is shown in three honest tiers, and within 'live', 'no vehicles', 'fetch failed' and 'stale past five minutes' stay distinct, never zero.",
+    outcome:
+      "A recorded demo that keeps working with the live backend switched off: the real Rio map, line and bus exploration with the view held in the URL, colour-by-speed, static GTFS routes and stop lists for selected lines, and a time machine that scrubs the recorded hours and plays them at 1×/10×/60× with fading trails. The production raw log ships to S3 with checksum manifests, and a separate rebuild job writes the same tables as the live consumer, so a projection lost to a crash is reproduced exactly from the log.",
+    category: "data",
+    tags: ["Real-time", "Geospatial", "Data Pipeline"],
+    stack: ["Go", "Redpanda", "TimescaleDB + PostGIS", "Next.js", "MapLibre", "deck.gl", "TypeScript", "AWS S3 + CloudFront"],
+    visual: "transit",
+    cover: {
+      src: "/projects/transit-pulse/map.png",
+      alt: "Transit Pulse replay: a MapLibre map of Greater Rio with buses and BRT, an amber letreiro reading REPLAY 11:27, and an 'Agora' stats panel, labelled 'não é ao vivo'",
+      width: 1440,
+      height: 900,
+    },
+    screenshots: [
+      { src: "/projects/transit-pulse/map.png", alt: "The replay map of Greater Rio: buses (circles) and BRT (squares), the amber letreiro, and an 'Agora' panel with fleet stats — marked 'não é ao vivo'", width: 1440, height: 900 },
+      { src: "/projects/transit-pulse/linha.png", alt: "Line 35 selected: its GTFS reference route from Terminal Madureira to Terminal Alvorada drawn on the map, with destination variants and a 25-stop list in the Linhas panel", width: 1440, height: 900 },
+      { src: "/projects/transit-pulse/velocidade.png", alt: "The fleet coloured by speed, with the km/h legend (a ring means no speed reported), over the full line index in the Linhas panel", width: 1440, height: 900 },
+      { src: "/projects/transit-pulse/tabela.png", alt: "The non-map alternative at /tabela: a table of vehicles in the recording — line, vehicle, mode, operator, age, speed and heading", width: 1440, height: 900 },
+    ],
+    video: {
+      src: "/projects/transit-pulse/walkthrough.mp4",
+      poster: "/projects/transit-pulse/map.png",
+      caption: "A silent tour of the recorded demo: the Rio map with its honest 'not live' label, a BRT line's static GTFS route, playback through the recorded minutes at 60×, and the fleet coloured by speed. Runs with the live backend switched off.",
+    },
+    process: [
+      { phase: "01", title: "A truthful source inventory", body: "Every Rio operator checked against live sources: city buses (SPPO and the new Sistema RIO) and BRT are public through three keyless SMTR paths; rail, metro, tram, ferries and intercity buses have no public machine-readable data. The map says so rather than guessing." },
+      { phase: "02", title: "One canonical event", body: "An adapter polls the ITS API one UTC minute at a time, stores each response byte-for-byte in the raw log, and publishes a single versioned event shape to Redpanda — the supplier made part of a vehicle's identity after two AVL suppliers were found reusing the same id." },
+      { phase: "03", title: "Rebuildable projections", body: "A consumer writes positions and feed-status to TimescaleDB; a separate rebuild job replays the raw log into the same tables through the same code, idempotently, so live and rebuilt tables match. The API answers from an in-memory snapshot, never a per-request query." },
+      { phase: "04", title: "The screen, and a time machine", body: "A full-bleed Rio map with the letreiro, line and bus panels whose view lives in the URL, static GTFS routes, a non-map table, and a timeline that scrubs and plays the recorded hours with fading trails — then a static replay exported to S3 and CloudFront that outlives the backend." },
+    ],
+    architecture: [
+      { layer: "Ingest", label: "Go adapters", detail: "One adapter per provider, each emitting one canonical event; the raw provider response is written to S3 before anything is published." },
+      { layer: "Broker", label: "Redpanda", detail: "Versioned topics for positions and feed-status; the broker is a 24-hour buffer, the raw log on S3 is the system of record." },
+      { layer: "Storage", label: "TimescaleDB + PostGIS", detail: "A positions hypertable and a feed-status table; the live consumer and the rebuild job share one idempotent, order-independent write path." },
+      { layer: "Serve", label: "Go API + Next.js", detail: "The API answers from an in-memory snapshot refreshed at most once per minute; the web app draws it with MapLibre and deck.gl, with a static replay on CloudFront." },
+    ],
+    features: [
+      { title: "Honest coverage, in three tiers", body: "Every operator is live, scheduled-only or no-public-data; within live, 'no vehicles', 'fetch failed' and 'stale past five minutes' are each shown as themselves, never collapsed into zero." },
+      { title: "A time machine over recorded hours", body: "Scrub the last hours and play them at 1×/10×/60× with fading trails; the playhead minute lives in the URL, and 'Só posições reais' turns off the interpolation between real fixes." },
+      { title: "A replay that outlives the backend", body: "The deployed demo runs entirely from a compact, checksum-pinned export on S3 and CloudFront — the live pipeline can be switched off and the recording still plays." },
+    ],
+    challenges: [
+      { title: "The same bus reported twice", body: "Two AVL suppliers reported the same SPPO vehicle id from different devices — 3,114 colliding (vehicle, time) pairs with different positions. Resolved by making the supplier part of a vehicle's identity, so neither fix is silently dropped." },
+      { title: "A timestamp that lied about its zone", body: "The legacy SPPO feed stamps positions with a 'Z' that is not UTC — it is São Paulo time. Each source's clock is converted explicitly to real UTC in the adapter, so the time machine scrubs the right minute." },
+      { title: "'Real-time' over polled sources", body: "Nothing is pushed; the adapter polls one minute at a time and the map interpolates between the real fixes. The product says so plainly — the honesty is the feature, and the streaming rigour lives in the pipeline." },
+    ],
+    links: [
+      { label: "Open the recorded demo", href: "https://transit-pulse-tau.vercel.app/replay" },
+      { label: "View source", href: "https://github.com/BenitoPedro13/transit-pulse" },
     ],
   },
   {
