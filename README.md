@@ -95,11 +95,15 @@ sandbox for design work in progress before it reaches a live page. See
 Complete for the design-handoff scope: `/`, `/work`, `/about`, and `/contact` are implemented,
 responsive, statically generated, and included in the sitemap. The homepage includes the nav,
 hero, about teaser, services, process, selected work, pricing, the shared closing CTA band, and
-footer inside the scroll-reactive ASCII/particle system. Work presents Markado, Bee Dash, Sua Mesa Fit, Prumo, ART'hur,
-Flora, Trísion, Oishi, F&A Móveis, UniMeet (its proposed v2 design, labelled as a proposal; the client kept v1 live), Outubro Idiomas (in progress), Renewable Pulse, Dove Lesson Studio, Apuração 2026 (`docs/tasks/TASK-add-four-recent-case-studies.md`; the two
-anonymised personal sites it also added were taken down again, `docs/tasks/TASK-remove-unpublished-portraits.md`) — using verified portfolio data and project-specific terminal schematics — Prumo's
-is a real-estate credit-qualification schematic (`docs/tasks/TASK-add-prumo-case-study.md`) and
-Trísion's is a numeração/tenancy schematic (`docs/tasks/TASK-add-trision-case-study.md`). About includes the final
+footer inside the scroll-reactive ASCII/particle system. Work presents 22 case studies, including Lunares, Transit Pulse, Plexus,
+Reelcast, Insta2Figma, Network Monitor, Benibot and Video Converter alongside Markado,
+Bee Dash, Sua Mesa Fit, Prumo, ART'hur, Flora, Trísion, Oishi, F&A Móveis, UniMeet,
+Outubro Idiomas, Renewable Pulse, Dove Lesson Studio and Apuração 2026. Each uses
+source-backed project data and a domain-specific terminal schematic. UniMeet shows its
+proposed v2 design (the client kept v1 live); Network Monitor's Grafana captures use
+explicitly labelled synthetic data; Benibot remains offline and uses a labelled source-based
+architecture illustration. Insta2Figma imports image layers, without reconstructing text
+inside posts. See `docs/tasks/TASK-add-six-portfolio-case-studies.md`. About includes the final
 mission, values, two disciplines handled by Benito alone, and direct delivery statement. Contact includes a real
 project form, booking link, email, LinkedIn, and GitHub; the project form sends enquiries through a server-side SMTP endpoint. After the studio
 notification is accepted, it sends a thank-you email promising a personal follow-up.

@@ -186,3 +186,43 @@ Each project (or small batch) is verified with `pnpm exec tsc --noEmit`, `pnpm e
 - `pnpm exec tsc --noEmit`, `pnpm lint`, `pnpm build`, `git diff --check`: passed.
 - Production Chromium: English and Portuguese case pages return 200, render the Reelcast heading,
   and fit a 390px viewport without horizontal overflow.
+
+### Remaining case-study implementation
+
+- Insta2Figma `21`: original portfolio plugin capture reused at 1440×1071 (whole image, no crop).
+  Current Figma/Framer adapters, shared UI and queue pipeline verified against the cloned source.
+  The older portfolio's claims of typography/layout reconstruction are superseded by image-layer placement.
+- Network Monitor `22`: the source's four provisioned Grafana dashboards run against an isolated
+  throwaway Postgres instance. Seed: 3 demo devices, 2,800 generated DNS events, 1,600 generated
+  flows, 6 illustrative destination locations and 2 example alerts. IPs use RFC 5737 documentation
+  ranges. Every screenshot includes a visible synthetic-data banner. No AdGuard or Zeek was started.
+  Grafana image: `grafana/grafana@sha256:488984b716c0862639f91a698adbe2862677a5a07bad42da5f03f3030883b205`.
+- Benibot `23`: source-reviewed help/social/leveling/autoslash cogs, labelled architecture cover
+  (SVG source + PNG export), empty screenshot list. No Discord session, server, token or AI call.
+- The four newly completed cases have bespoke system schematics and complete English/PT prose.
+  `ProjectVisual` now shares the existing `ProjectVisualVariant` type, avoiding a duplicate union.
+- Schematic headers say "system schematic" instead of implying live availability with "online".
+- Expanded `/work` metadata and README coverage. Existing project IDs/order and the homepage's
+  selected-work list are preserved; the three June 2026 projects precede the older foundational work.
+- Source revisions reviewed: Insta2Figma `d142b2e`, Network Monitor `b7ade90`, Benibot `5338e64`.
+  The isolated Grafana/Postgres demo was removed after the four captures; no cloud resources were used.
+
+### Final validation
+
+- TypeScript, ESLint, production build (84 generated pages), and `git diff --check`: passed.
+- All four cases' cover/gallery files exist and match their declared dimensions. Catalogue slugs
+  and IDs are unique; all newly authored case prose, image alternatives and schematic labels have PT copy.
+- `pnpm check:locales`: passed, including 54 English/PT rendered pages, case text, metadata,
+  language switching, sitemap and image assets, with navigation at 1440, 390 and 320px.
+- Scroll checks: all 30 combinations passed for `/work` and the four new cases at 1440×900,
+  390×844 and 320×568, both normal and reduced motion, including wheel/End reachability,
+  no competing main-content scroller, dynamic index growth and stage reflow.
+  The first headless-shell attempt timed out and logged GPU shared-memory errors. An isolated
+  Reelcast run reached the footer; the complete suite then passed using the same assertions
+  in full Chromium with Metal selected and WebGL disabled to cover the site's fallback path.
+- Additional Chromium/Metal visual checks with WebGL available: all four PT cases fit 1440px/320px,
+  all index cards and category filters work, and Benibot omits the interface-evidence gallery.
+  No uncaught browser errors. Review captures: `/private/tmp/bm-new-cases-review/`.
+- All six requested additions are now represented: Plexus and Video Converter from earlier commits,
+  followed by Reelcast and the three source-reviewed cases in this continuation. No push or deployment
+  was performed; the production build is available locally on port 3199 for review.

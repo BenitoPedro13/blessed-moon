@@ -17,7 +17,10 @@ export type ProjectVisualVariant =
   | "transit"
   | "pipeline"
   | "microservices"
-  | "streaming";
+  | "streaming"
+  | "network"
+  | "design-automation"
+  | "bot";
 
 type ProjectStep = {
   phase: string;
@@ -1101,6 +1104,378 @@ export const STUDIO_PROJECTS: readonly StudioProject[] = [
         href: "https://github.com/BenitoPedro13/trision",
       },
     ],
+  },
+  {
+    slug: "benibot",
+    title: "Benibot",
+    index: "23",
+    year: "2026",
+    category: "product",
+    visual: "bot",
+    tagline: "Discord community tools, organised into small, independently configurable modules",
+    role: "Custom bot development and deployment setup",
+    timeline: "2026 — source-reviewed case study; bot offline",
+    team: "Solo",
+    description: "A self-hosted Discord bot built on Red-DiscordBot, with custom help menus, community interactions, member levels and automatic slash-command registration. The case study documents the source; the bot remains offline.",
+    problem: "Community features become difficult to discover and maintain when every command grows inside one bot file. Moderators also need controls that apply to their own server.",
+    approach: "Red supplies the command framework and configuration backend. Separate custom cogs implement a category-based help browser, social interactions, XP with cooldowns and slash-command synchronisation. Configuration is scoped to the server or member as appropriate.",
+    outcome: "The repository contains custom help, social, leveling and autoslash modules plus container deployment scripts. The illustration maps those source modules; it is not a Discord session or a claim of current uptime.",
+    tags: [
+      "Discord Automation",
+      "Community Tools",
+      "Python"
+    ],
+    stack: [
+      "Python",
+      "Red-DiscordBot",
+      "discord.py",
+      "PostgreSQL",
+      "Docker"
+    ],
+    cover: {
+      src: "/projects/benibot/architecture.png",
+      alt: "Benibot architecture illustration based on source: Discord commands routed to help, social, leveling and autoslash cogs, with PostgreSQL configuration; bot offline",
+      width: 1440,
+      height: 900
+    },
+    screenshots: [],
+    process: [
+      {
+        phase: "01",
+        title: "Build on the command framework",
+        body: "Use Red for permissions, configuration and cog loading rather than rebuilding the bot framework."
+      },
+      {
+        phase: "02",
+        title: "Make commands discoverable",
+        body: "A selectable help menu navigates from category to cog, command and syntax, with a way back."
+      },
+      {
+        phase: "03",
+        title: "Keep server state separate",
+        body: "Store engagement settings per server and XP per member; ignore bot messages and apply a cooldown."
+      },
+      {
+        phase: "04",
+        title: "Sync only when commands change",
+        body: "AutoSlash compares command signatures before syncing, avoiding unnecessary global registration calls."
+      }
+    ],
+    architecture: [
+      {
+        layer: "Entry",
+        label: "Discord commands and events",
+        detail: "Prefix and hybrid commands enter Red’s permission and dispatch system."
+      },
+      {
+        layer: "Framework",
+        label: "Red-DiscordBot",
+        detail: "Loads cogs and provides configuration scoped to servers and members."
+      },
+      {
+        layer: "Custom modules",
+        label: "Help · social · leveling · autoslash",
+        detail: "Independent modules handle discovery, interactions, XP and command registration."
+      },
+      {
+        layer: "Persistence",
+        label: "PostgreSQL configuration",
+        detail: "The configured Red backend stores settings outside the bot process."
+      }
+    ],
+    features: [
+      {
+        title: "Navigable help",
+        body: "Select menus expose categories, modules and command syntax without a long flat command list."
+      },
+      {
+        title: "Member progression",
+        body: "XP, rank and leaderboards use server settings and an anti-spam cooldown."
+      },
+      {
+        title: "Hybrid command registration",
+        body: "Slash-capable commands are enabled and synced automatically when the available set changes."
+      }
+    ],
+    challenges: [
+      {
+        title: "Command visibility has limits",
+        body: "Only hybrid commands can become slash commands; prefix-only framework commands keep their original form."
+      },
+      {
+        title: "Avoid repeated global syncs",
+        body: "Persisting the last command signature avoids spending Discord registration calls on unchanged restarts."
+      },
+      {
+        title: "Keep the evidence honest",
+        body: "No bot was started for this case study. Source-backed architecture replaces an invented chat screenshot."
+      }
+    ],
+    links: [
+      {
+        label: "View source",
+        href: "https://github.com/BenitoPedro13/benibot"
+      }
+    ]
+  },
+  {
+    slug: "insta2figma",
+    title: "Insta2Figma",
+    index: "21",
+    year: "2026",
+    category: "product",
+    visual: "design-automation",
+    tagline: "Bring Instagram posts into a design canvas as organised image layers",
+    role: "Plugin UI, backend and import pipeline",
+    timeline: "2026 — Figma and Framer plugin codebase",
+    team: "Solo",
+    description: "A design workflow tool with a shared interface for Figma and Framer. It previews an Instagram profile, imports selected posts and carousel images through a queued backend, and places the images into the canvas.",
+    problem: "Collecting social references by hand means downloading images, sorting carousels and arranging them again inside the design file. That repetitive preparation interrupts the design work.",
+    approach: "A shared plugin UI talks to the host through an adapter. NestJS manages previews, jobs and quotas; BullMQ workers fetch assets and store them in object storage. The Figma plugin groups assets by post and places image-filled rectangles in rows while preserving carousel order.",
+    outcome: "The repository includes both host adapters, asynchronous imports, history and favourites. The real plugin capture shows profile preview and import controls. Imported images are movable layers; text and graphics inside each post remain raster content.",
+    tags: [
+      "Design Automation",
+      "Figma Plugin",
+      "Asset Import"
+    ],
+    stack: [
+      "TypeScript",
+      "React",
+      "Figma Plugin API",
+      "Framer",
+      "NestJS",
+      "BullMQ / Redis",
+      "PostgreSQL",
+      "S3 / MinIO"
+    ],
+    cover: {
+      src: "/projects/insta2figma/plugin-ui.png",
+      alt: "Real Insta2Figma plugin panel showing the mainnet.design profile preview, post count, carousel options, history and favourites tabs",
+      width: 1440,
+      height: 1071
+    },
+    screenshots: [
+      {
+        src: "/projects/insta2figma/plugin-ui.png",
+        alt: "The original plugin capture: import options beside a grid of profile images; no typography reconstruction is shown",
+        width: 1440,
+        height: 1071
+      }
+    ],
+    process: [
+      {
+        phase: "01",
+        title: "Share the interface",
+        body: "Use one React UI and a PluginHost contract for Figma and Framer."
+      },
+      {
+        phase: "02",
+        title: "Preview before importing",
+        body: "Expose profile results, post ranges and carousel choices before starting a background job."
+      },
+      {
+        phase: "03",
+        title: "Fetch outside the plugin",
+        body: "The API queues the import while workers collect assets and prepare storage URLs."
+      },
+      {
+        phase: "04",
+        title: "Place ordered image layers",
+        body: "Group by post, sort carousel slots and place images at their original aspect ratios."
+      }
+    ],
+    architecture: [
+      {
+        layer: "Interface",
+        label: "Shared React plugin UI",
+        detail: "Preview, import choices, history and favourites share a host-independent component package."
+      },
+      {
+        layer: "Host bridge",
+        label: "Figma and Framer adapters",
+        detail: "Each adapter translates the shared contract into its host’s APIs."
+      },
+      {
+        layer: "Jobs",
+        label: "NestJS + BullMQ",
+        detail: "The API owns job status and quotas; workers collect and upload media."
+      },
+      {
+        layer: "Assets",
+        label: "Object storage + canvas layers",
+        detail: "Signed asset URLs feed image layers grouped by post and carousel position."
+      }
+    ],
+    features: [
+      {
+        title: "Profile preview",
+        body: "Review the source profile and import options before sending work to the queue."
+      },
+      {
+        title: "Carousel-aware placement",
+        body: "Image slots retain their order and are laid out together by post."
+      },
+      {
+        title: "Reusable import history",
+        body: "History and favourites persist through the host storage adapter."
+      }
+    ],
+    challenges: [
+      {
+        title: "Two hosts, one workflow",
+        body: "Keep plugin behaviour consistent while isolating Figma’s message bridge from Framer’s direct API calls."
+      },
+      {
+        title: "Partial image failures",
+        body: "Bounded concurrent downloads and per-image error handling let other assets continue when one download fails."
+      },
+      {
+        title: "Describe what remains editable",
+        body: "The plugin creates image layers, not reconstructed text or vector artwork inside an Instagram post."
+      }
+    ],
+    links: [
+      {
+        label: "View source",
+        href: "https://github.com/BenitoPedro13/insta2figma"
+      }
+    ]
+  },
+  {
+    slug: "network-monitor",
+    title: "Network Monitor",
+    index: "22",
+    year: "2026",
+    category: "data",
+    visual: "network",
+    tagline: "DNS queries and passive connection logs, joined into a readable network picture",
+    role: "Telemetry pipeline and dashboard development",
+    timeline: "2026 — local telemetry system; synthetic demo shown",
+    team: "Solo",
+    description: "A home-network telemetry system combining AdGuard Home DNS logs, passive Zeek connection records, PostgreSQL and MaxMind geolocation. Grafana presents queries, destinations, flows and alerts. The screenshots use generated demo records only.",
+    problem: "DNS logs show requested domains but miss connections that have no matching DNS trail. Understanding network activity requires both views, with a clear distinction between observed traffic and missing coverage.",
+    approach: "A NestJS collector polls AdGuard logs and tails Zeek connection and TLS logs. It maps devices, deduplicates events and enriches public destinations through a cached MaxMind lookup. PostgreSQL keeps DNS and flow records separately; provisioned Grafana dashboards query both.",
+    outcome: "The source includes DNS ingestion, passive flow mapping, anomaly checks and four provisioned dashboards. For this case study, an isolated Grafana and PostgreSQL instance renders synthetic DNS, flow and geolocation records. No home-network sensor or real device data was used.",
+    tags: [
+      "Network Telemetry",
+      "Grafana",
+      "Passive Monitoring"
+    ],
+    stack: [
+      "NestJS",
+      "TypeScript",
+      "PostgreSQL",
+      "Prisma",
+      "AdGuard Home",
+      "Zeek",
+      "MaxMind GeoLite2",
+      "Grafana",
+      "Docker"
+    ],
+    cover: {
+      src: "/projects/network-monitor/overview.png",
+      alt: "Real Grafana overview dashboard with a synthetic-demo banner, generated query counts, device timelines and alert examples",
+      width: 1440,
+      height: 900
+    },
+    screenshots: [
+      {
+        src: "/projects/network-monitor/world-map.png",
+        alt: "Grafana destination map and details table populated with synthetic geolocation records, explicitly labelled demo data",
+        width: 1440,
+        height: 900
+      },
+      {
+        src: "/projects/network-monitor/flows.png",
+        alt: "Grafana flow dashboard showing generated connections, protocol breakdown and missing-DNS examples; synthetic demo data",
+        width: 1440,
+        height: 900
+      },
+      {
+        src: "/projects/network-monitor/device.png",
+        alt: "Grafana per-device dashboard for a synthetic demo device with query history and example alerts",
+        width: 1440,
+        height: 900
+      }
+    ],
+    process: [
+      {
+        phase: "01",
+        title: "Collect DNS observations",
+        body: "Poll AdGuard queries and associate them with registered device identities."
+      },
+      {
+        phase: "02",
+        title: "Add the passive flow view",
+        body: "Read Zeek connection and TLS logs to cover traffic that DNS alone cannot explain."
+      },
+      {
+        phase: "03",
+        title: "Enrich destinations once",
+        body: "Cache IP geolocation and ASN lookups before joining them into dashboard queries."
+      },
+      {
+        phase: "04",
+        title: "Separate demonstration from observation",
+        body: "Capture the real dashboards against generated records, with a visible synthetic-data banner."
+      }
+    ],
+    architecture: [
+      {
+        layer: "DNS",
+        label: "AdGuard Home",
+        detail: "Query logs provide domains, client addresses and blocked-query status."
+      },
+      {
+        layer: "Flows",
+        label: "Passive Zeek sensor",
+        detail: "Connection and TLS metadata add protocols, bytes and available server names."
+      },
+      {
+        layer: "Ingestion",
+        label: "NestJS + PostgreSQL + GeoLite2",
+        detail: "Collectors map devices, deduplicate records and cache destination enrichment."
+      },
+      {
+        layer: "Presentation",
+        label: "Provisioned Grafana dashboards",
+        detail: "Overview, device, destination-map and flow views use committed SQL queries."
+      }
+    ],
+    features: [
+      {
+        title: "DNS and connection views",
+        body: "Separate records expose both domain queries and observed internet-egress flows."
+      },
+      {
+        title: "Destination geography",
+        body: "Cached location and ASN fields support a map and destination detail tables."
+      },
+      {
+        title: "Traceable alert rules",
+        body: "Source-defined checks flag frequent domains and connections without a recent DNS match."
+      }
+    ],
+    challenges: [
+      {
+        title: "DNS is incomplete evidence",
+        body: "A connection can exist without a visible DNS query; the flow view preserves that distinction."
+      },
+      {
+        title: "Device attribution depends on deployment",
+        body: "Docker Desktop relays hide original client addresses, so the source uses native AdGuard for device attribution."
+      },
+      {
+        title: "Demonstrate without exposing a household",
+        body: "Documentation IP ranges, demo device names and generated events keep the portfolio independent of private traffic."
+      }
+    ],
+    links: [
+      {
+        label: "View source",
+        href: "https://github.com/BenitoPedro13/network-monitor"
+      }
+    ]
   },
   {
     slug: "bee-dash",

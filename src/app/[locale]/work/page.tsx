@@ -14,7 +14,7 @@ import { STUDIO_PROJECTS } from "@/lib/studio-data";
 const pageMetadata: Metadata = {
   title: "Work",
   description:
-    "Selected digital products from Blessed Moon Studio: scheduling, marketing analytics, headless commerce, credit-qualification, motion portfolios, geospatial farm operations, multi-tenant brand platforms, restaurant menus, furniture catalogues, university fair registration, a multilingual language-school site, a real-time energy data pipeline and a live public-transport map for Rio, built for real operations.",
+    "Selected work from Blessed Moon Studio: web products, commerce, geospatial dashboards, photography portfolios, media-processing and streaming pipelines, network telemetry, design plugins and Discord automation.",
 };
 
 export async function generateMetadata(): Promise<Metadata> {

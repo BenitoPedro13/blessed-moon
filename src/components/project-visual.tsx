@@ -1,29 +1,11 @@
 "use client";
 
 import { useI18n } from "@/components/locale-provider";
+import type { ProjectVisualVariant } from "@/lib/studio-data";
 
 interface ProjectVisualProps {
   title: string;
-  variant:
-    | "calendar"
-    | "analytics"
-    | "commerce"
-    | "realestate"
-    | "portfolio"
-    | "photography"
-    | "geospatial"
-    | "eyewear"
-    | "furniture"
-    | "rodizio"
-    | "fairs"
-    | "language"
-    | "grid"
-    | "election"
-    | "lesson"
-    | "transit"
-    | "pipeline"
-    | "microservices"
-    | "streaming";
+  variant: ProjectVisualVariant;
 }
 
 const QUALIFICATION_STEPS = ["Renda", "Entrada", "Restrições", "Faixa MCMV", "Localidade", "Score"];
@@ -150,7 +132,7 @@ export function ProjectVisual({ title, variant }: ProjectVisualProps) {
     <div className="relative min-h-72 overflow-hidden border border-panel-edge bg-panel p-3 font-mono backdrop-blur-sm sm:min-h-80">
       <div className="flex items-center justify-between border-b border-border/60 pb-2 text-[8px] tracking-[0.12em] text-muted-foreground uppercase">
         <span>{title.toLowerCase().replaceAll(" ", "_")}{t(".sys")}</span>
-        <span className="text-primary">{t("● online")}</span>
+        <span className="text-primary">{t("system schematic")}</span>
       </div>
 
       {variant === "calendar" && (
@@ -753,6 +735,69 @@ export function ProjectVisual({ title, variant }: ProjectVisualProps) {
               ))}
             </div>
             <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">{t("upload → queue → go/ffmpeg → hls → play")}</div>
+          </div>
+        </div>
+      )}
+      {variant === "network" && (
+        <div className="grid min-h-[250px] grid-cols-2 gap-3 pt-3 sm:min-h-[282px]">
+          <div className="border border-border/60 p-3">
+            <p className="text-[8px] text-primary uppercase">{t("two observation paths")}</p>
+            <p className="mt-4 font-sans text-lg font-semibold">DNS</p>
+            <p className="text-[9px] text-muted-foreground">AdGuard Home</p>
+            <p className="mt-4 border-t border-border/60 pt-3 font-sans text-lg font-semibold">{t("Flows")}</p>
+            <p className="text-[9px] text-muted-foreground">Zeek · TLS / UDP</p>
+            <p className="mt-4 text-[8px] text-primary">{t("queries ≠ all connections")}</p>
+          </div>
+          <div className="border border-primary/40 p-3">
+            <p className="text-[8px] text-primary uppercase">{t("join / enrich / read")}</p>
+            <ol className="mt-4 space-y-3 text-[9px] text-muted-foreground">
+              {["device identity", "PostgreSQL event history", "cached location + ASN", "Grafana views"].map((item) => (
+                <li key={item} className="border-b border-border/50 pb-2">{t(item)}</li>
+              ))}
+            </ol>
+            <p className="mt-4 text-[8px] text-primary">{t("captures: synthetic data only")}</p>
+          </div>
+        </div>
+      )}
+      {variant === "design-automation" && (
+        <div className="grid min-h-[250px] grid-cols-2 gap-3 pt-3 sm:min-h-[282px]">
+          <div className="border border-border/60 p-3">
+            <p className="text-[8px] text-primary uppercase">{t("source / selected posts")}</p>
+            <div aria-hidden="true" className="mt-4 grid grid-cols-3 gap-1">
+              {Array.from({ length: 9 }, (_, i) => <span key={i} className={`aspect-square border ${i < 3 ? "border-primary bg-primary/15" : "border-border/50"}`} />)}
+            </div>
+            <p className="mt-4 text-[9px] text-muted-foreground">{t("preview → queue → assets")}</p>
+            <p className="mt-4 text-[8px] text-primary">{t("carousel order preserved")}</p>
+          </div>
+          <div className="border border-primary/40 p-3">
+            <p className="text-[8px] text-primary uppercase">{t("canvas / image layers")}</p>
+            <ol className="mt-4 space-y-3 text-[9px] text-muted-foreground">
+              {["shared plugin interface", "Figma + Framer adapters", "group images by post", "place at original ratio"].map((item) => (
+                <li key={item} className="border-b border-border/50 pb-2">{t(item)}</li>
+              ))}
+            </ol>
+            <p className="mt-4 text-[8px] text-primary">{t("post contents remain raster")}</p>
+          </div>
+        </div>
+      )}
+      {variant === "bot" && (
+        <div className="grid min-h-[250px] grid-cols-2 gap-3 pt-3 sm:min-h-[282px]">
+          <div className="border border-border/60 p-3">
+            <p className="text-[8px] text-primary uppercase">{t("command / discover")}</p>
+            <p className="mt-4 font-sans text-2xl font-semibold">$help</p>
+            <ol className="mt-4 space-y-3 text-[9px] text-muted-foreground">
+              {["category → cog", "command → syntax", "back to previous menu"].map((item) => <li key={item}>{t(item)}</li>)}
+            </ol>
+            <p className="mt-4 text-[8px] text-primary">{t("source map · bot offline")}</p>
+          </div>
+          <div className="border border-primary/40 p-3">
+            <p className="text-[8px] text-primary uppercase">{t("cogs / isolated concerns")}</p>
+            <ol className="mt-4 space-y-3 text-[9px] text-muted-foreground">
+              {["help navigation", "social interactions", "XP with cooldown", "sync changed slash commands"].map((item) => (
+                <li key={item} className="border-b border-border/50 pb-2">{t(item)}</li>
+              ))}
+            </ol>
+            <p className="mt-4 text-[8px] text-primary">{t("configuration per server / member")}</p>
           </div>
         </div>
       )}
