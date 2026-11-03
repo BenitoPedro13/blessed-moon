@@ -185,20 +185,29 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           </div>
         </section>
 
-        <section data-ascii-keyframe="3" data-frame-label={t("INTERFACE EVIDENCE")} className="px-7 py-16 sm:py-24">
-          <div className="mx-auto max-w-6xl">
-            <Reveal>
-              <SectionIntro
-                eyebrow={t("— Interface evidence")}
-                title={t("The product, not a placeholder")}
-                body="These are the verified interface captures from the project build. Scroll inside taller frames to inspect each complete page."
-              />
-            </Reveal>
-            <div className="mt-10">
-              <ProjectGallery images={project.screenshots} title={t(project.title)} />
+        {/* Some projects — a message broker, a passive sensor, a Discord bot —
+            have no product screen to capture. Rather than show an empty gallery
+            under a heading that promises "verified captures", the section is
+            omitted and the case leans on its schematic + architecture. The
+            moon's keyframe tracker (scroll-progress.ts) interpolates across
+            whatever `data-ascii-keyframe` markers exist, so a missing "3" just
+            morphs a little faster between 2 and 4 — it never breaks. */}
+        {project.screenshots.length > 0 && (
+          <section data-ascii-keyframe="3" data-frame-label={t("INTERFACE EVIDENCE")} className="px-7 py-16 sm:py-24">
+            <div className="mx-auto max-w-6xl">
+              <Reveal>
+                <SectionIntro
+                  eyebrow={t("— Interface evidence")}
+                  title={t("The product, not a placeholder")}
+                  body="These are the verified interface captures from the project build. Scroll inside taller frames to inspect each complete page."
+                />
+              </Reveal>
+              <div className="mt-10">
+                <ProjectGallery images={project.screenshots} title={t(project.title)} />
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        )}
 
         <section data-ascii-keyframe="4" data-frame-label={t("DELIVERY PROCESS")} className="border-y border-border/60 bg-panel px-7 py-16 backdrop-blur-sm sm:py-24">
           <div className="mx-auto max-w-6xl">

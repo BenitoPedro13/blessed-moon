@@ -21,7 +21,8 @@ interface ProjectVisualProps {
     | "election"
     | "lesson"
     | "transit"
-    | "pipeline";
+    | "pipeline"
+    | "microservices";
 }
 
 const QUALIFICATION_STEPS = ["Renda", "Entrada", "Restrições", "Faixa MCMV", "Localidade", "Score"];
@@ -124,6 +125,14 @@ const PIPELINE_ENGINE = [
   ["sse progress off nats", true],
   ["crash-safe dispatch", true],
   ["grpc plugins", false],
+] as const;
+
+const SERVICE_MESH = [
+  ["gateway · only public entry", true],
+  ["rabbitmq · durable queue", true],
+  ["converter · scales alone", true],
+  ["gridfs · large files", true],
+  ["sync calls on heavy path", false],
 ] as const;
 
 export function ProjectVisual({ title, variant }: ProjectVisualProps) {
@@ -671,6 +680,38 @@ export function ProjectVisual({ title, variant }: ProjectVisualProps) {
               ))}
             </div>
             <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">{t("edit once → dag → go workers → export")}</div>
+          </div>
+        </div>
+      )}
+      {variant === "microservices" && (
+        <div className="grid h-[250px] grid-cols-[0.85fr_1.15fr] gap-3 pt-3 sm:h-[282px]">
+          <div className="border border-border/60 p-3">
+            <p className="text-[8px] text-primary uppercase">{t("gateway / public edge")}</p>
+            <p className="mt-3 font-sans text-lg font-semibold tracking-[-0.03em] text-foreground">{t("accept → return")}</p>
+            <p className="mt-1 text-[7px] text-muted-foreground">{t("an upload never blocks a request")}</p>
+            <div className="mt-5 border-t border-border/60 pt-3">
+              <p className="text-[7px] text-muted-foreground uppercase">{t("heavy path")}</p>
+              <p className="mt-1 text-[9px] text-primary">{t("async only · off the request")}</p>
+            </div>
+            <div className="mt-4 flex items-center gap-1.5 text-[7px] text-muted-foreground">
+              <span className="text-primary">●</span>{t("crash = retried message")}</div>
+          </div>
+          <div className="border border-primary/40 p-3">
+            <p className="text-[8px] text-primary uppercase">{t("services / decoupled")}</p>
+            <div className="mt-3 space-y-1.5">
+              {SERVICE_MESH.map(([label, available]) => (
+                <div
+                  key={label}
+                  className="flex items-center justify-between border-b border-border/50 pb-1 text-[7px] text-muted-foreground"
+                >
+                  <span>{t(label)}</span>
+                  <span className={available ? "text-primary" : "text-muted-foreground"}>
+                    {t(available ? "[x]" : "[ ]")}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">{t("upload → queue → converter → notify")}</div>
           </div>
         </div>
       )}

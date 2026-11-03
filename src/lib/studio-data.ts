@@ -15,7 +15,8 @@ export type ProjectVisualVariant =
   | "election"
   | "lesson"
   | "transit"
-  | "pipeline";
+  | "pipeline"
+  | "microservices";
 
 type ProjectStep = {
   phase: string;
@@ -1830,6 +1831,68 @@ export const STUDIO_PROJECTS: readonly StudioProject[] = [
         label: "View source",
         href: "https://github.com/BenitoPedro13/markado",
       },
+    ],
+  },
+  {
+    slug: "video-converter",
+    title: "Video Converter",
+    tagline: "Heavy, bursty video work split off behind a queue, so one upload never freezes the app",
+    index: "19",
+    year: "2024",
+    role: "Solo architecture and development",
+    timeline: "2024 — 3-month build, open source",
+    team: "Solo",
+    description:
+      "A microservices pipeline that turns a video upload into an MP3 without ever blocking the request: a gateway accepts the file and returns immediately, a message goes onto RabbitMQ, and a dedicated converter does the transcoding whenever it has capacity — so conversion capacity scales on its own and a crashed worker means a retried message, not a lost file.",
+    problem:
+      "Converting video is slow and CPU-hungry. Done inside the web request, one upload blocks the server, the user watches a spinner, and a browser timeout loses the whole job. Scaling that naive design means scaling the entire application just to buy more conversion capacity, even though the API itself is cheap and constant.",
+    approach:
+      "The system is split into small services that talk through a message queue instead of calling each other directly. The gateway is the only public entry point: it validates the request, stores the file, publishes a job, and returns. A converter service consumes those jobs whenever it has capacity, runs the transcode, and publishes a completion message that a notification service reacts to. None of them call each other synchronously on the heavy path, so 'work requested' is fully decoupled from 'work performed' — the one thing that makes the converter scalable on its own. Large files go to MongoDB GridFS, which chunks them across documents so an upload or result is streamed rather than held whole in memory; the relational data — users, jobs, statuses — stays in PostgreSQL.",
+    outcome:
+      "Uploads return instantly, conversion capacity scales independently of the web tier, and a worker crash re-queues the message instead of dropping the file. The whole stack comes up with one Docker Compose command, every service ships as an image with health checks and Kubernetes manifests, and an end-to-end test drives a real upload through a real queue and both databases rather than mocking them.",
+    category: "product",
+    tags: ["Microservices", "Message Queues", "Kubernetes"],
+    stack: ["NestJS", "Next.js", "RabbitMQ", "PostgreSQL", "MongoDB GridFS", "Docker", "Kubernetes", "TypeScript"],
+    visual: "microservices",
+    cover: {
+      src: "/projects/video-converter/dashboard.png",
+      alt: "Video Converter dashboard — an upload dropzone titled 'Video to MP3 Converter', with 'Upload a video file to convert it to MP3 audio'",
+      width: 1440,
+      height: 900,
+    },
+    screenshots: [
+      { src: "/projects/video-converter/login.png", alt: "The sign-in page — the gateway validates authentication before any upload is accepted", width: 1440, height: 900 },
+      { src: "/projects/video-converter/ready.png", alt: "A video file selected and ready, with the 'Convert to MP3' action", width: 1440, height: 900 },
+      { src: "/projects/video-converter/converting.png", alt: "A real upload in progress — the file is queued and shows 'Converting…' while a worker transcodes it off the request path", width: 1440, height: 900 },
+    ],
+    process: [
+      { phase: "01", title: "Find the bottleneck first", body: "A naive single-service version was profiled before anything was split. The conversion step dominated everything, which is what justified microservices — they were a measured conclusion, not a starting assumption." },
+      { phase: "02", title: "Design the message contracts", body: "The payloads on the wire were written before any service was extracted. In a queue-based system the message contract is the real API, so it was designed deliberately rather than falling out of the code." },
+      { phase: "03", title: "Extract one service at a time", body: "Auth first, then conversion, then notifications. Each extraction kept the system running, so there was never a big-bang rewrite to debug." },
+      { phase: "04", title: "Containerise and orchestrate", body: "Every service ships as a Docker image with health checks; Kubernetes manifests then define replicas, resources and restart behaviour." },
+      { phase: "05", title: "Prove it end to end", body: "An end-to-end test uploads a real file and asserts the MP3 comes back, exercising the queue and both databases rather than stubs." },
+    ],
+    architecture: [
+      { layer: "Client", label: "Next.js frontend", detail: "Upload UI with job-status polling and download of the finished audio — a deliberately thin surface over the pipeline." },
+      { layer: "Edge", label: "API Gateway (NestJS)", detail: "The single public entry point: validates requests, checks auth, publishes jobs, and never blocks on conversion." },
+      { layer: "Identity", label: "Auth service", detail: "Owns users and tokens so no other service touches credentials." },
+      { layer: "Async", label: "RabbitMQ", detail: "Durable queues decouple request from processing and provide retries and backpressure for free." },
+      { layer: "Workers", label: "Converter + Notification services", detail: "Independently scalable consumers: conversion runs off queue depth, notifications fire on completion events." },
+      { layer: "Storage", label: "PostgreSQL + MongoDB GridFS", detail: "Relational data for users and jobs; chunked binary storage for the media itself, streamed rather than held in memory." },
+    ],
+    features: [
+      { title: "Non-blocking uploads", body: "The request returns as soon as the file is safely stored and the job is queued." },
+      { title: "Independent scaling", body: "Add converter replicas without touching the API tier — the whole reason for the split." },
+      { title: "Automatic retries", body: "A worker crash re-queues the message instead of dropping the job." },
+      { title: "Completion notifications", body: "A dedicated service watches for finished jobs and tells the user when the file is ready." },
+    ],
+    challenges: [
+      { title: "At-least-once delivery means idempotency", body: "Queues can deliver a job twice, so consumers check job state before working — reprocessing a message is harmless by construction, not by luck." },
+      { title: "Six moving parts, one command", body: "A distributed system is hostile to onboarding, so Docker Compose brings the entire stack up with one command and seeded data." },
+      { title: "Tracing a failure across services", body: "A job id propagates through every message, so a single upload can be followed across the gateway, converter and notification service." },
+    ],
+    links: [
+      { label: "View source", href: "https://github.com/BenitoPedro13/video-converter" },
     ],
   },
 ] as const;
