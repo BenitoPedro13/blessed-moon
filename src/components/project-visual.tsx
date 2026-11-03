@@ -20,7 +20,8 @@ interface ProjectVisualProps {
     | "grid"
     | "election"
     | "lesson"
-    | "transit";
+    | "transit"
+    | "pipeline";
 }
 
 const QUALIFICATION_STEPS = ["Renda", "Entrada", "Restrições", "Faixa MCMV", "Localidade", "Score"];
@@ -115,6 +116,14 @@ const COVERAGE_TIERS = [
   ["rebuilt from raw log", true],
   ["trem · metrô · barcas", false],
   ["invented positions", false],
+] as const;
+
+const PIPELINE_ENGINE = [
+  ["webgpu preview · no round-trip", true],
+  ["apply to batch (real dag)", true],
+  ["sse progress off nats", true],
+  ["crash-safe dispatch", true],
+  ["grpc plugins", false],
 ] as const;
 
 export function ProjectVisual({ title, variant }: ProjectVisualProps) {
@@ -630,6 +639,38 @@ export function ProjectVisual({ title, variant }: ProjectVisualProps) {
               ))}
             </div>
             <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">{t("raw log → redpanda → timescale")}</div>
+          </div>
+        </div>
+      )}
+      {variant === "pipeline" && (
+        <div className="grid h-[250px] grid-cols-[0.85fr_1.15fr] gap-3 pt-3 sm:h-[282px]">
+          <div className="border border-border/60 p-3">
+            <p className="text-[8px] text-primary uppercase">{t("recipe / one shape")}</p>
+            <p className="mt-3 font-sans text-lg font-semibold tracking-[-0.03em] text-foreground">{t("editor = pipeline")}</p>
+            <p className="mt-1 text-[7px] text-muted-foreground">{t("one photo by hand = 500 in batch")}</p>
+            <div className="mt-5 border-t border-border/60 pt-3">
+              <p className="text-[7px] text-muted-foreground uppercase">{t("steps")}</p>
+              <p className="mt-1 text-[9px] text-primary">{t("[ { processor, params } ]")}</p>
+            </div>
+            <div className="mt-4 flex items-center gap-1.5 text-[7px] text-muted-foreground">
+              <span className="text-primary">●</span>{t("go runs the same recipe")}</div>
+          </div>
+          <div className="border border-primary/40 p-3">
+            <p className="text-[8px] text-primary uppercase">{t("engine / guarantees")}</p>
+            <div className="mt-3 space-y-1.5">
+              {PIPELINE_ENGINE.map(([label, available]) => (
+                <div
+                  key={label}
+                  className="flex items-center justify-between border-b border-border/50 pb-1 text-[7px] text-muted-foreground"
+                >
+                  <span>{t(label)}</span>
+                  <span className={available ? "text-primary" : "text-muted-foreground"}>
+                    {t(available ? "[x]" : "[ ]")}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">{t("edit once → dag → go workers → export")}</div>
           </div>
         </div>
       )}

@@ -14,7 +14,8 @@ export type ProjectVisualVariant =
   | "grid"
   | "election"
   | "lesson"
-  | "transit";
+  | "transit"
+  | "pipeline";
 
 type ProjectStep = {
   phase: string;
@@ -211,6 +212,71 @@ export const STUDIO_PROJECTS: readonly StudioProject[] = [
     links: [
       { label: "Open the recorded demo", href: "https://transit-pulse-tau.vercel.app/replay" },
       { label: "View source", href: "https://github.com/BenitoPedro13/transit-pulse" },
+    ],
+  },
+  {
+    slug: "plexus",
+    title: "Plexus",
+    tagline: "The edit made by hand on one photo is the exact pipeline that runs across five hundred",
+    index: "18",
+    year: "2026",
+    role: "Solo architecture and full-stack development",
+    timeline: "2026 — feature-complete case study",
+    team: "Solo",
+    description:
+      "An extensible media-processing engine with a non-destructive, WebGPU photo editor on top, built so the recipe assembled by hand on a single image is the exact pipeline definition a Go worker runs, unmodified, across a whole folder — live preview in the browser, full-resolution execution on the backend, one data structure behind both.",
+    problem:
+      "A fixed pipeline — upload, one transformation, download — is a demo, not infrastructure. Nothing in the portfolio behaved like a general-purpose, extensible media engine: the kind of thing a Cloudinary or a Zapier-for-media actually has to solve. And engineering-first tools like that usually expose their internals — queues, jobs, DAGs — directly in the interface, which reads as powerful to their author and unapproachable to the person dragging a slider.",
+    approach:
+      "Plexus is built around one idea: an edit made by hand on a single photo and a batch pipeline definition are the same data structure. Every editor control writes to a small ordered list of processor-and-parameter steps — a recipe — instead of touching a pixel. That recipe previews live in the browser over WebGPU (with a WebGL2 fallback), and the identical recipe is what a Go worker executes, unmodified, whether it is one image or five hundred. NestJS owns the pipeline DAG resolution and the job state machine; Go owns the CPU-bound ffmpeg and libvips work; NATS JetStream is the one piece of infrastructure behind both job dispatch and the real-time progress stream the front-end subscribes to.",
+    outcome:
+      "A working system where dropping a photo into the editor and dragging Light, Color and Sharpen feels instant with no server round-trip, and 'apply to batch' runs that exact recipe as a real DAG pipeline across a whole folder — with live per-step progress and no worker able to silently lose a job. The gRPC plugin contract, which lets a third party add a processor in any language without touching the core, is deliberately phased last because it is additive to an already-working engine, not a dependency of it.",
+    category: "product",
+    tags: ["Media Pipeline", "WebGPU", "Distributed Systems"],
+    stack: ["Next.js", "TypeScript", "NestJS", "Go", "WebGPU / WebGL2", "NATS JetStream", "PostgreSQL", "MinIO"],
+    visual: "pipeline",
+    cover: {
+      src: "/projects/plexus/editor-with-image.png",
+      alt: "Plexus editor with an image loaded, the Light / Color / Sharpen controls on the right and a live WebGPU preview of the current recipe",
+      width: 1440,
+      height: 803,
+    },
+    screenshots: [
+      { src: "/projects/plexus/home.png", alt: "Plexus home — drop a file, or choose photo, video or audio to start", width: 1440, height: 781 },
+      { src: "/projects/plexus/quick-actions.png", alt: "The quick-actions menu: photo, video and audio entry points", width: 1440, height: 800 },
+      { src: "/projects/plexus/photo-actions.png", alt: "Photo quick actions — edit, convert, or compress", width: 1440, height: 715 },
+      { src: "/projects/plexus/video-actions.png", alt: "Video quick actions — shrink, convert, or extract audio", width: 1440, height: 705 },
+      { src: "/projects/plexus/audio-actions.png", alt: "Audio quick actions — convert to MP3, WAV or AAC", width: 1440, height: 696 },
+      { src: "/projects/plexus/editor-empty.png", alt: "The non-destructive editor before an image is loaded", width: 1440, height: 800 },
+      { src: "/projects/plexus/editor-with-image.png", alt: "The editor with an image loaded, previewing the recipe live over WebGPU", width: 1440, height: 803 },
+      { src: "/projects/plexus/jobs.png", alt: "The jobs page — batch runs in progress and completed, with per-step progress", width: 1440, height: 804 },
+    ],
+    process: [
+      { phase: "01", title: "Core pipeline engine", body: "The orchestrator, one Go worker type, Postgres and NATS — linear pipelines only, with built-in resize, convert and compress processors for image, video and audio. No editor yet; the point was proving a job could be dispatched, run and tracked reliably." },
+      { phase: "02", title: "Editor MVP", body: "The non-destructive recipe model, the WebGPU/WebGL2 live-preview renderer, and the curated composite sliders — Light, Color, B&W, Sharpen, Crop — with synchronous export. Shippable as its own milestone, independent of the batch machinery." },
+      { phase: "03", title: "Real DAGs, realtime and Apply to Batch", body: "Presigned MinIO upload, the shared recipe package, an SSE progress stream off the same NATS events, and branching, parallel DAG resolution — the point where 'edit once, apply to five hundred files' became a real button instead of an architectural claim." },
+      { phase: "04", title: "Plugin system — not started", body: "The gRPC plugin contract that lets a third party add a new processor in any language without touching the core. Phased last on purpose: it is additive to an already-working engine, not something the engine depends on." },
+    ],
+    architecture: [
+      { layer: "Client", label: "Next.js + WebGPU/WebGL2 editor", detail: "Upload, dashboard, live progress and the in-browser non-destructive preview renderer — no pixel ever leaves the browser during editing, only the recipe." },
+      { layer: "API", label: "NestJS orchestrator", detail: "Auth, pipeline DAG resolution and the job state machine: queued, running, partial, complete or failed." },
+      { layer: "Async", label: "NATS JetStream", detail: "A persistent, replayable event log backing both job dispatch to workers and the SSE progress stream to the browser — one piece of infrastructure doing two jobs." },
+      { layer: "Workers", label: "Go worker pool", detail: "ffmpeg and libvips-backed built-in processors, horizontally scalable, executing the same recipe at full resolution for export and batch runs." },
+      { layer: "Storage", label: "PostgreSQL + MinIO", detail: "Drizzle-managed jobs, pipelines, recipes and plugin registry in Postgres; presigned-URL upload and download through MinIO so the API never proxies large files." },
+    ],
+    features: [
+      { title: "Non-destructive recipe editing", body: "Every control — crop, light, color, sharpen — writes recipe parameters, never pixels. Undo and redo are just recipe history." },
+      { title: "Live WebGPU preview", body: "Slider drags render in the browser with no server round-trip, falling back to WebGL2 where WebGPU is unavailable." },
+      { title: "Apply to Batch", body: "The recipe built by hand on one photo runs, unmodified, as a pipeline across an entire folder of files." },
+      { title: "Real-time job progress", body: "Per-step progress over SSE, driven off the same NATS event stream used for dispatch, not a separate polling loop." },
+    ],
+    challenges: [
+      { title: "Preview-to-export fidelity drift", body: "The browser's WebGPU approximation and the Go server's ground-truth render must agree closely enough that export never surprises. Drift per composite control is measured numerically against a bound and enforced by a test, not checked by eye." },
+      { title: "Crash-safe job dispatch", body: "A worker killed mid-job must not silently drop it. JetStream's persistence, plus explicit ack and heartbeat handling, means another replica picks the message back up instead of the job vanishing." },
+      { title: "A language boundary that stays a contract", body: "With Go and TypeScript on either side of gRPC, NATS subjects and a shared Postgres schema, the boundary is easy to let dissolve into ad-hoc JSON. The recipe schema has exactly one canonical definition, and everything else imports or generates from it." },
+    ],
+    links: [
+      { label: "View source", href: "https://github.com/BenitoPedro13/plexus" },
     ],
   },
   {
