@@ -16,7 +16,8 @@ export type ProjectVisualVariant =
   | "lesson"
   | "transit"
   | "pipeline"
-  | "microservices";
+  | "microservices"
+  | "streaming";
 
 type ProjectStep = {
   phase: string;
@@ -278,6 +279,69 @@ export const STUDIO_PROJECTS: readonly StudioProject[] = [
     ],
     links: [
       { label: "View source", href: "https://github.com/BenitoPedro13/plexus" },
+    ],
+  },
+  {
+    slug: "reelcast",
+    title: "Reelcast",
+    tagline: "One upload, several video qualities, and a player that adapts to the connection",
+    index: "20",
+    year: "2026",
+    role: "Solo architecture and development",
+    timeline: "2026 — local streaming case study",
+    team: "Solo",
+    description:
+      "An on-demand video platform that turns an uploaded file into an adaptive HLS stream. Go and ffmpeg produce the renditions; an hls.js player selects the quality the connection can sustain.",
+    problem:
+      "Adaptive streaming is easy to use and harder to build. This project follows the entire path from an uploaded file to aligned video segments, reliable background jobs and a browser player that can change quality during playback.",
+    approach:
+      "The browser uploads directly to object storage through a presigned URL. NestJS records metadata and queues a BullMQ job. A TypeScript consumer holds the job lock while a Go process runs ffprobe and ffmpeg, generating an HLS ladder and thumbnail. Four-second keyframes align the renditions so hls.js can switch between them.",
+    outcome:
+      "Upload, transcoding, browsing and playback work locally with PostgreSQL, Redis and MinIO. The worker's documented tests cover aligned segments, video bitrate within ±15% of target and retry after a worker is killed. The screenshots show a generated 75-second test clip, including Auto and manually selected 360p playback.",
+    category: "product",
+    tags: ["Video Streaming", "HLS / ABR", "Go + ffmpeg"],
+    stack: ["Next.js", "NestJS", "Go", "ffmpeg", "hls.js", "BullMQ / Redis", "PostgreSQL", "S3 / MinIO"],
+    visual: "streaming",
+    cover: {
+      src: "/projects/reelcast/watch.png",
+      alt: "Reelcast playing a generated test clip at 720p, with Auto quality selected and the 720p, 480p and 360p renditions listed below",
+      width: 1440,
+      height: 900,
+    },
+    screenshots: [
+      { src: "/projects/reelcast/upload.png", alt: "The Reelcast upload form with title, description and a video file picker", width: 1440, height: 900 },
+      { src: "/projects/reelcast/processing.png", alt: "A submitted video's status moving through uploading, queued, processing and ready without a page reload", width: 1440, height: 900 },
+      { src: "/projects/reelcast/browse.png", alt: "The Reelcast browse page listing a ready video with its generated thumbnail", width: 1440, height: 900 },
+      { src: "/projects/reelcast/watch-low.png", alt: "The same generated clip playing with the quality selector set manually to 360p", width: 1440, height: 900 },
+    ],
+    process: [
+      { phase: "01", title: "Keep the pipeline focused", body: "One product flow: upload a source, produce the renditions, play the result. The editor and general processing tools belong to the separate Plexus project." },
+      { phase: "02", title: "Define the service boundary", body: "The queue message carries videoId and sourceKey. Shared video and rendition records connect the TypeScript services to the Go worker." },
+      { phase: "03", title: "Align the segments", body: "Generate all renditions in one ffmpeg pass, force a keyframe every four seconds and handle source videos with no audio track." },
+      { phase: "04", title: "Show progress without a reload", body: "After the direct upload, a completion request queues the job. The browser polls its status until the player is ready." },
+      { phase: "05", title: "Test the failure path", body: "The worker test suite kills the Go child during an encode and checks that BullMQ retries the job to completion." },
+    ],
+    architecture: [
+      { layer: "Client", label: "Next.js + hls.js", detail: "Browse, direct uploads, status polling and adaptive playback." },
+      { layer: "API", label: "NestJS API", detail: "Stores metadata, issues upload URLs and queues transcoding jobs." },
+      { layer: "Queue", label: "Redis + BullMQ", detail: "Retries, backoff and stalled-job recovery outside the HTTP request path." },
+      { layer: "Queue consumer", label: "TypeScript job-lock shim", detail: "Holds the BullMQ lock and starts the Go transcoder as a child process." },
+      { layer: "Transcoder", label: "Go + ffmpeg", detail: "Probes the source, encodes the HLS ladder, uploads the output and updates video status." },
+      { layer: "Storage + DB", label: "Object storage + PostgreSQL", detail: "MinIO serves manifests, segments and thumbnails locally. Drizzle manages video and rendition records in PostgreSQL." },
+    ],
+    features: [
+      { title: "Adaptive bitrate playback", body: "hls.js selects the rendition according to bandwidth; the quality selector also supports manual playback checks." },
+      { title: "Aligned quality levels", body: "Forced keyframes keep four-second segment boundaries consistent across the ladder." },
+      { title: "Non-blocking uploads", body: "Presigned uploads send the file directly to storage without passing through the API." },
+      { title: "Recoverable background jobs", body: "BullMQ retries interrupted work instead of relying on a single long-running HTTP request." },
+    ],
+    challenges: [
+      { title: "Segment boundaries affect playback", body: "Natural keyframes produced uneven 4.8s and 3.2s segments. Forcing keyframes every four seconds made the rendition boundaries match." },
+      { title: "Measure the video stream", body: "Audio and MPEG-TS overhead made 360p appear 19% above its bitrate target. Probing only video packets separated encoder accuracy from packaging overhead." },
+      { title: "Separate queue locks from media work", body: "A small TypeScript consumer keeps BullMQ's delivery semantics while Go handles the CPU-intensive encoding work." },
+    ],
+    links: [
+      { label: "View source", href: "https://github.com/BenitoPedro13/reelcast" },
     ],
   },
   {

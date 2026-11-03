@@ -154,3 +154,35 @@ to the real system in the process.
 
 Each project (or small batch) is verified with `pnpm exec tsc --noEmit`, `pnpm exec eslint`,
 `pnpm build` before committing (auto-commit per CLAUDE.md §4.1; **no `Co-Authored-By`**).
+
+## 6. Continuation — 2026-11-03
+
+- Plexus (`18`) and Video Converter (`19`) are committed. Reelcast (`20`) has five genuine
+  local screenshots and its entry/schematic in the working tree; finish its PT copy and verification.
+- Review the remaining repositories directly before adapting the older portfolio's descriptions.
+- Network Monitor: use an isolated local Grafana/Postgres demo with clearly labelled synthetic data.
+  Never connect a sensor to this machine's network or read the production/home configuration.
+- Insta2Figma: reuse its real plugin-panel screenshot if the original runtime cannot be restored
+  without accessing an Instagram account. Describe only source-supported functionality.
+- Benibot stays disabled. Use a source-based architecture illustration, explicitly labelled as such,
+  and no interface-evidence gallery. Do not create a Discord server, log in to Discord or invoke Claude.
+  The earlier proposal to temporarily start the bot in §2.4 is superseded by the user's prohibition.
+- Retain the existing terminal palette, Space Grotesk display and JetBrains Mono utility type.
+  Each schematic explains a different actual boundary: HLS rendition ladder, passive telemetry,
+  plugin-to-editable-layers, or isolated bot cogs. Do not add a new UI library or motion system.
+- The three homepage selected projects remain unchanged. Publishing is outside this continuation;
+  verified changes are committed locally for review.
+- Source correction: current Insta2Figma creates image-filled rectangles and lays out posts/carousels.
+  It does not reconstruct text inside the post. Describe editable image layers, not inferred typography.
+- Source correction: the current Benibot tree contains help, social, leveling and autoslash cogs.
+  Its README mentions a Claude cog absent from the tree; omit that feature from the case study.
+
+### Reelcast verification
+
+- Completed entry `20`, streaming schematic and full PT copy. Five genuine 1440×900 local captures
+  show upload, processing, browse and a generated 75-second clip playing at Auto/720p and manual 360p.
+  Manual 360p is described as manual, not evidence of automatic bandwidth switching.
+- Verified against the cloned project's README and `TASK-hls-worker.md`; no live deployment link.
+- `pnpm exec tsc --noEmit`, `pnpm lint`, `pnpm build`, `git diff --check`: passed.
+- Production Chromium: English and Portuguese case pages return 200, render the Reelcast heading,
+  and fit a 390px viewport without horizontal overflow.

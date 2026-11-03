@@ -22,7 +22,8 @@ interface ProjectVisualProps {
     | "lesson"
     | "transit"
     | "pipeline"
-    | "microservices";
+    | "microservices"
+    | "streaming";
 }
 
 const QUALIFICATION_STEPS = ["Renda", "Entrada", "Restrições", "Faixa MCMV", "Localidade", "Score"];
@@ -133,6 +134,14 @@ const SERVICE_MESH = [
   ["converter · scales alone", true],
   ["gridfs · large files", true],
   ["sync calls on heavy path", false],
+] as const;
+
+const STREAM_LADDER = [
+  ["presigned put · api skips bytes", true],
+  ["bullmq retry · no lost jobs", true],
+  ["hls.js abr · drops on bandwidth", true],
+  ["bitrate ±15% · video stream", true],
+  ["live · dash · drm", false],
 ] as const;
 
 export function ProjectVisual({ title, variant }: ProjectVisualProps) {
@@ -712,6 +721,38 @@ export function ProjectVisual({ title, variant }: ProjectVisualProps) {
               ))}
             </div>
             <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">{t("upload → queue → converter → notify")}</div>
+          </div>
+        </div>
+      )}
+      {variant === "streaming" && (
+        <div className="grid h-[250px] grid-cols-[0.9fr_1.1fr] gap-3 pt-3 sm:h-[282px]">
+          <div className="border border-border/60 p-3">
+            <p className="text-[8px] text-primary uppercase">{t("source / one upload")}</p>
+            <p className="mt-3 font-sans text-lg font-semibold tracking-[-0.03em] text-foreground">{t("1 file → 3 renditions")}</p>
+            <p className="mt-1 text-[7px] text-muted-foreground">{t("720p · 480p · 360p (never upscaled)")}</p>
+            <div className="mt-5 border-t border-border/60 pt-3">
+              <p className="text-[7px] text-muted-foreground uppercase">{t("segments")}</p>
+              <p className="mt-1 text-[9px] text-primary">{t("4s · keyframe-aligned")}</p>
+            </div>
+            <div className="mt-4 flex items-center gap-1.5 text-[7px] text-muted-foreground">
+              <span className="text-primary">●</span>{t("align or every switch stalls")}</div>
+          </div>
+          <div className="border border-primary/40 p-3">
+            <p className="text-[8px] text-primary uppercase">{t("player / guarantees")}</p>
+            <div className="mt-3 space-y-1.5">
+              {STREAM_LADDER.map(([label, available]) => (
+                <div
+                  key={label}
+                  className="flex items-center justify-between border-b border-border/50 pb-1 text-[7px] text-muted-foreground"
+                >
+                  <span>{t(label)}</span>
+                  <span className={available ? "text-primary" : "text-muted-foreground"}>
+                    {t(available ? "[x]" : "[ ]")}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-4 bg-primary py-2 text-center text-[7px] text-primary-foreground uppercase">{t("upload → queue → go/ffmpeg → hls → play")}</div>
           </div>
         </div>
       )}
