@@ -171,12 +171,12 @@ export const STUDIO_PROJECTS: readonly StudioProject[] = [
     visual: "transit",
     cover: {
       src: "/projects/transit-pulse/map.png",
-      alt: "Transit Pulse replay: a MapLibre map of Greater Rio with buses and BRT, an amber letreiro reading REPLAY 11:27, and an 'Agora' stats panel, labelled 'não é ao vivo'",
+      alt: "Transit Pulse replay: a MapLibre map of Greater Rio blanketed with buses and BRT at a busy midday minute, an amber letreiro reading REPLAY 12:00 · 2.080 ÔNIBUS, and an 'Agora' stats panel, labelled 'não é ao vivo'",
       width: 1440,
       height: 900,
     },
     screenshots: [
-      { src: "/projects/transit-pulse/map.png", alt: "The replay map of Greater Rio: buses (circles) and BRT (squares), the amber letreiro, and an 'Agora' panel with fleet stats — marked 'não é ao vivo'", width: 1440, height: 900 },
+      { src: "/projects/transit-pulse/map.png", alt: "The replay map of Greater Rio at midday, the whole fleet on screen: buses (circles) and BRT (squares), the amber letreiro, and an 'Agora' panel with fleet stats — marked 'não é ao vivo'", width: 1440, height: 900 },
       { src: "/projects/transit-pulse/linha.png", alt: "Line 35 selected: its GTFS reference route from Terminal Madureira to Terminal Alvorada drawn on the map, with destination variants and a 25-stop list in the Linhas panel", width: 1440, height: 900 },
       { src: "/projects/transit-pulse/velocidade.png", alt: "The fleet coloured by speed, with the km/h legend (a ring means no speed reported), over the full line index in the Linhas panel", width: 1440, height: 900 },
       { src: "/projects/transit-pulse/tabela.png", alt: "The non-map alternative at /tabela: a table of vehicles in the recording — line, vehicle, mode, operator, age, speed and heading", width: 1440, height: 900 },
@@ -184,7 +184,7 @@ export const STUDIO_PROJECTS: readonly StudioProject[] = [
     video: {
       src: "/projects/transit-pulse/walkthrough.mp4",
       poster: "/projects/transit-pulse/map.png",
-      caption: "A silent tour of the recorded demo: the Rio map with its honest 'not live' label, a BRT line's static GTFS route, playback through the recorded minutes at 60×, and the fleet coloured by speed. Runs with the live backend switched off.",
+      caption: "A silent tour of the recorded demo at a busy midday minute — over two thousand buses and BRT across Greater Rio, shown in both light and dark — with its honest 'not live' letreiro: 60× playback through the recorded hours, the fleet coloured by speed, and line 324's static GTFS route and stops. Runs with the live backend switched off.",
     },
     process: [
       { phase: "01", title: "A truthful source inventory", body: "Every Rio operator checked against live sources: city buses (SPPO and the new Sistema RIO) and BRT are public through three keyless SMTR paths; rail, metro, tram, ferries and intercity buses have no public machine-readable data. The map says so rather than guessing." },
